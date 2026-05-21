@@ -1,7 +1,7 @@
 import { useState, useRef } from 'react'
 import { useNavigate, Link } from 'react-router-dom'
 import { useAuth } from '../lib/AuthContext'
-import { DISTRICTS, SERVICES, uploadAvatar } from '../lib/supabase'
+import { supabase, DISTRICTS, SERVICES, uploadAvatar } from '../lib/supabase'
 import { Footer, ServiceCheckGrid, Spinner } from '../components/UI'
 
 export default function Register() {
@@ -54,7 +54,6 @@ export default function Register() {
       if (avatarFile && user) {
         try {
           const url = await uploadAvatar(user.id, avatarFile)
-          const { supabase } = await import('../lib/supabase')
           await supabase.from('profiles').update({ avatar_url: url }).eq('id', user.id)
         } catch (_) {}
       }
