@@ -10,10 +10,8 @@
   },
   "dependencies": {
     "@astrojs/react": "^4.0.0",
-    "@nanostores/react": "^0.8.0",
     "@supabase/supabase-js": "^2.49.4",
     "astro": "^5.0.0",
-    "nanostores": "^0.11.0",
     "react": "^18.3.1",
     "react-dom": "^18.3.1"
   },

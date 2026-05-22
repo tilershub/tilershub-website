@@ -1,6 +1,5 @@
 ---
 import '../index.css'
-import NavActions from '../components/NavActions.jsx'
 
 const { title = 'TilersHub · ශ්‍රී ලංකාවේ #1 ටයිල් සේවා වේදිකාව' } = Astro.props
 ---
@@ -26,16 +25,17 @@ const { title = 'TilersHub · ශ්‍රී ලංකාවේ #1 ටයිල
       </div>
       <span class="logo-wordmark">TILERS<span>HUB</span></span>
     </a>
-    <NavActions client:only="react" />
+    <div class="nav-actions">
+      <a href="/explore" class="nav-btn">ටයිලර් සොයන්න</a>
+    </div>
   </nav>
 
   <slot />
 
   <footer>
     <div style="display: flex; justify-content: center; gap: 28px; margin-bottom: 20px; flex-wrap: wrap;">
+      <a href="/" style="color: rgba(245,240,232,0.4); font-size: 12px;">මුල් පිටුව</a>
       <a href="/explore" style="color: rgba(245,240,232,0.4); font-size: 12px;">ටයිලර් සොයන්න</a>
-      <a href="/register" style="color: rgba(245,240,232,0.4); font-size: 12px;">ලියාපදිංචිය</a>
-      <a href="/login" style="color: rgba(245,240,232,0.4); font-size: 12px;">පිවිසෙන්න</a>
     </div>
     <strong>TILERSHUB</strong> · ශ්‍රී ලංකාවේ විශ්වාසනීය ටයිල් සේවා වේදිකාව
     <br />
