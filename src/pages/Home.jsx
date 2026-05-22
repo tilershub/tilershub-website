@@ -87,16 +87,20 @@ export default function Home() {
           </div>
 
           {/* Stats */}
-          <div style={{ marginTop: 72, display: 'flex', justifyContent: 'center', gap: 'clamp(24px, 6vw, 64px)', flexWrap: 'wrap' }}>
+          <div style={{ marginTop: 64, display: 'flex', justifyContent: 'center', alignItems: 'stretch', flexWrap: 'wrap', borderTop: '1px solid rgba(245,240,232,0.07)' }}>
             {[
               { num: '500+', label: 'ලියාපදිංචි ටයිලර්' },
               { num: '25', label: 'දිස්ත්‍රික්ක' },
               { num: '2,000+', label: 'සාර්ථක ව්‍යාපෘති' },
               { num: 'නොමිලේ', label: 'සේවාව' },
-            ].map(s => (
-              <div key={s.label} style={{ textAlign: 'center' }}>
-                <div style={{ fontFamily: "'Playfair Display', serif", fontSize: 'clamp(26px,4vw,38px)', color: 'var(--terracotta)', fontWeight: 700 }}>{s.num}</div>
-                <div style={{ fontSize: 12, color: 'rgba(245,240,232,0.4)', marginTop: 3 }}>{s.label}</div>
+            ].map((s, i, arr) => (
+              <div key={s.label} style={{
+                textAlign: 'center',
+                padding: '28px clamp(16px, 4vw, 48px)',
+                borderRight: i < arr.length - 1 ? '1px solid rgba(245,240,232,0.07)' : 'none'
+              }}>
+                <div style={{ fontFamily: "'Playfair Display', serif", fontSize: 'clamp(26px,4vw,40px)', color: 'var(--terracotta)', fontWeight: 700 }}>{s.num}</div>
+                <div style={{ fontSize: 11, color: 'rgba(245,240,232,0.38)', marginTop: 4, letterSpacing: 0.3 }}>{s.label}</div>
               </div>
             ))}
           </div>
@@ -112,11 +116,20 @@ export default function Home() {
         </div>
         <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(240px,1fr))', gap: 24 }}>
           {HOW_STEPS.map(s => (
-            <div key={s.num} className="card" style={{ padding: '32px 28px', position: 'relative' }}>
-              <div style={{ position: 'absolute', top: 16, right: 20, fontFamily: "'Playfair Display', serif", fontSize: 52, color: 'var(--cream-dark)', fontWeight: 700, lineHeight: 1 }}>{s.num}</div>
-              <div style={{ fontSize: 38, marginBottom: 18 }}>{s.icon}</div>
+            <div key={s.num} className="card" style={{ padding: '36px 28px', position: 'relative' }}>
+              <div style={{
+                position: 'absolute', top: 20, right: 24,
+                fontFamily: "'Playfair Display', serif",
+                fontSize: 72, color: 'var(--cream-dark)', fontWeight: 700, lineHeight: 1, userSelect: 'none'
+              }}>{s.num}</div>
+              <div style={{
+                width: 52, height: 52,
+                background: 'linear-gradient(135deg, var(--terracotta) 0%, var(--terracotta-light) 100%)',
+                borderRadius: 14, display: 'flex', alignItems: 'center', justifyContent: 'center',
+                fontSize: 24, marginBottom: 22, boxShadow: '0 4px 16px rgba(193,96,58,0.25)'
+              }}>{s.icon}</div>
               <h3 style={{ fontSize: 16, fontWeight: 700, marginBottom: 10, color: 'var(--charcoal)' }}>{s.title}</h3>
-              <p style={{ fontSize: 13, color: 'var(--text-mid)', lineHeight: 1.8 }}>{s.desc}</p>
+              <p style={{ fontSize: 13, color: 'var(--text-mid)', lineHeight: 1.85 }}>{s.desc}</p>
             </div>
           ))}
         </div>
@@ -136,9 +149,17 @@ export default function Home() {
           <h2 style={{ fontFamily: "'Playfair Display', serif", fontSize: 'clamp(24px,4vw,40px)', color: 'var(--white)', margin: '12px 0', fontWeight: 700 }}>
             ව්‍යාපාරය <span style={{ color: 'var(--terracotta)' }}>ව්‍යාප්ත</span> කරගන්න
           </h2>
-          <p style={{ color: 'rgba(245,240,232,0.45)', fontSize: 14, maxWidth: 420, margin: '0 auto 36px', lineHeight: 1.9 }}>
+          <p style={{ color: 'rgba(245,240,232,0.45)', fontSize: 14, maxWidth: 420, margin: '0 auto 28px', lineHeight: 1.9 }}>
             TilersHub හරහා නව ගනුදෙනුකරුවන් ලබා ගෙන ශ්‍රී ලංකාව පුරා ඔබේ ව්‍යාපාරය ප්‍රවර්ධනය කරගන්න — නොමිලේ
           </p>
+          <div style={{ display: 'flex', flexDirection: 'column', gap: 10, maxWidth: 340, margin: '0 auto 36px', textAlign: 'left' }}>
+            {['නොමිලේ ලියාපදිංචිය — ගෙවීමක් නැත', 'ශ්‍රී ලංකාව පුරා ගෘහ හිමිකරුවන්ට ළඟා වන්න', 'WhatsApp හරහා කෙලින්ම ව්‍යාපෘති ලබා ගන්න'].map(b => (
+              <div key={b} style={{ display: 'flex', alignItems: 'center', gap: 12, color: 'rgba(245,240,232,0.65)', fontSize: 13 }}>
+                <span style={{ flexShrink: 0, background: 'rgba(193,96,58,0.2)', color: 'var(--terracotta)', width: 22, height: 22, borderRadius: '50%', display: 'inline-flex', alignItems: 'center', justifyContent: 'center', fontSize: 11, fontWeight: 700 }}>✓</span>
+                {b}
+              </div>
+            ))}
+          </div>
           <div style={{ display: 'flex', gap: 12, justifyContent: 'center', flexWrap: 'wrap' }}>
             <button className="btn btn-primary btn-lg" onClick={() => navigate('/register')}>
               ✦ දැන්ම ලියාපදිංචි වන්න

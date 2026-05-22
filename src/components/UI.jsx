@@ -56,6 +56,11 @@ export function Navbar() {
 export function Footer() {
   return (
     <footer>
+      <div style={{ display: 'flex', justifyContent: 'center', gap: 28, marginBottom: 20, flexWrap: 'wrap' }}>
+        <Link to="/explore" style={{ color: 'rgba(245,240,232,0.4)', fontSize: 12 }}>ටයිලර් සොයන්න</Link>
+        <Link to="/register" style={{ color: 'rgba(245,240,232,0.4)', fontSize: 12 }}>ලියාපදිංචිය</Link>
+        <Link to="/login" style={{ color: 'rgba(245,240,232,0.4)', fontSize: 12 }}>පිවිසෙන්න</Link>
+      </div>
       <strong>TILERSHUB</strong> · ශ්‍රී ලංකාවේ විශ්වාසනීය ටයිල් සේවා වේදිකාව
       <br />
       <span>© 2025 TilersHub · Powered by Supabase · Hosted on Cloudflare</span>

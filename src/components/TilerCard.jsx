@@ -25,9 +25,9 @@ export function TilerCard({ tiler, onClick }) {
   const availLabel = { available: '✓ ලබාගත හැකිය', busy: '⏳ කාර්යබහුලයි', unavailable: '✗ නොමැත' }[tiler.availability]
 
   return (
-    <div className="card" style={{ cursor: 'pointer' }} onClick={() => onClick(tiler)}>
+    <div className="card" style={{ cursor: 'pointer', borderTop: '3px solid var(--terracotta)' }} onClick={() => onClick(tiler)}>
       {/* Card header */}
-      <div style={{ background: 'linear-gradient(135deg, #2c2c2c 0%, #1e1e1e 100%)', padding: '22px 22px 18px', position: 'relative' }}>
+      <div style={{ background: 'linear-gradient(135deg, #2a2118 0%, #1e1e1e 100%)', padding: '22px 22px 18px', position: 'relative' }}>
         <span style={{
           position: 'absolute', top: 14, right: 14,
           background: availColor.bg, border: `1px solid ${availColor.border}`,
