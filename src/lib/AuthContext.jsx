@@ -51,6 +51,7 @@ export function AuthProvider({ children }) {
         daily_rate_min: profileData.daily_rate_min,
         daily_rate_max: profileData.daily_rate_max,
         services: profileData.services,
+        availability: profileData.availability || 'available',
       })
       if (tilerError) throw tilerError
     }

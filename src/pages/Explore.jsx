@@ -96,7 +96,7 @@ export default function Explore() {
           දක්ෂ <span style={{ color: 'var(--terracotta)' }}>ටයිලර්වරුන්</span> සොයා ගන්න
         </h1>
         <p style={{ fontSize: 14, color: 'rgba(245,240,232,0.45)', maxWidth: 440, margin: '0 auto' }}>
-          ශ්‍රී ලංකාව පුරා ටයිල් ප්‍රවීණයන් WhatsApp හරහා සෙජෙ සම්බන්ධ වෙන්න
+          ශ්‍රී ලංකාව පුරා ටයිල් ප්‍රවීණයන් WhatsApp හරහා කෙලින්ම සම්බන්ධ වෙන්න
         </p>
       </div>
 

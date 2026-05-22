@@ -209,7 +209,7 @@ export default function Dashboard() {
               {reviews.map(r => (
                 <div key={r.id} style={{ background: 'var(--cream)', borderRadius: 12, padding: '16px' }}>
                   <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'flex-start', marginBottom: 8 }}>
-                    <div style={{ fontWeight: 600, fontSize: 13 }}>{r.profiles?.full_name || '익명'}</div>
+                    <div style={{ fontWeight: 600, fontSize: 13 }}>{r.profiles?.full_name || 'නිර්නාමික'}</div>
                     <StarRating rating={r.rating} size={13} />
                   </div>
                   {r.comment && <p style={{ fontSize: 13, color: 'var(--text-mid)', lineHeight: 1.7 }}>{r.comment}</p>}
