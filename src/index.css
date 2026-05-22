@@ -222,7 +222,7 @@ nav {
   overflow: hidden;
   transition: transform 0.2s, box-shadow 0.2s;
 }
-.card:hover { transform: translateY(-4px); box-shadow: 0 16px 48px rgba(0,0,0,0.09); }
+.card:hover { transform: translateY(-4px); box-shadow: 0 20px 52px rgba(193,96,58,0.1), 0 4px 16px rgba(0,0,0,0.06); }
 
 /* ─── AVATAR ─── */
 .avatar {
@@ -314,7 +314,26 @@ footer {
 footer strong { color: var(--terracotta); }
 footer a { color: var(--sage-light); }
 
+/* ─── SCROLLBAR ─── */
+::-webkit-scrollbar { width: 6px; }
+::-webkit-scrollbar-track { background: transparent; }
+::-webkit-scrollbar-thumb { background: var(--cream-dark); border-radius: 3px; }
+::-webkit-scrollbar-thumb:hover { background: var(--terracotta-muted); }
+
+/* ─── ANIMATION UTILITIES ─── */
+@keyframes fadeUp {
+  from { opacity: 0; transform: translateY(18px); }
+  to { opacity: 1; transform: translateY(0); }
+}
+.fade-up { animation: fadeUp 0.4s ease both; }
+
 /* ─── RESPONSIVE ─── */
+@media (max-width: 768px) {
+  .section { padding: 52px 0; }
+  .modal-overlay { align-items: flex-end; padding: 0; }
+  .modal { border-radius: 20px 20px 0 0; max-height: 92vh; }
+}
+
 @media (max-width: 600px) {
   .form-row { grid-template-columns: 1fr; }
   nav { padding: 0 16px; }

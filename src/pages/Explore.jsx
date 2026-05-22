@@ -74,11 +74,11 @@ export default function Explore() {
         </p>
       </div>
 
-      <div style={{ maxWidth: 1100, margin: '0 auto', padding: '40px 24px' }}>
-        {/* Filters */}
-        <div style={{ display: 'flex', gap: 10, flexWrap: 'wrap', marginBottom: 32, alignItems: 'center' }}>
+      {/* Sticky filter bar */}
+      <div style={{ background: 'var(--white)', borderBottom: '1px solid var(--cream-dark)', position: 'sticky', top: 64, zIndex: 50 }}>
+        <div style={{ maxWidth: 1100, margin: '0 auto', padding: '14px 24px', display: 'flex', gap: 10, flexWrap: 'wrap', alignItems: 'center' }}>
           <input
-            style={{ ...inputStyle, flex: 1, minWidth: 180 }}
+            style={{ ...inputStyle, flex: 1, minWidth: 160 }}
             placeholder="🔍 නම, දිස්ත්‍රික්කය හෝ සේවාව..."
             value={search}
             onChange={e => setSearch(e.target.value)}
@@ -105,25 +105,24 @@ export default function Explore() {
               ✕ ඉවත් කරන්න
             </button>
           )}
+          {!loading && (
+            <span style={{ fontSize: 12, color: 'var(--text-light)', marginLeft: 'auto', whiteSpace: 'nowrap' }}>
+              {filtered.length} ටයිලර්
+            </span>
+          )}
         </div>
+      </div>
 
-        {/* Results count */}
-        {!loading && (
-          <div style={{ fontSize: 13, color: 'var(--text-light)', marginBottom: 24 }}>
-            {filtered.length} ටයිලර්වරුන් හමු විය
-          </div>
-        )}
-
-        {/* Grid */}
+      <div style={{ maxWidth: 1100, margin: '0 auto', padding: '32px 24px' }}>
         {loading ? (
           <div style={{ textAlign: 'center', padding: '80px 0', color: 'var(--text-light)' }}>
             <Spinner /> <span style={{ marginLeft: 12, fontSize: 14 }}>ලබා ගනිමින්...</span>
           </div>
         ) : filtered.length === 0 ? (
           <div style={{ textAlign: 'center', padding: '80px 24px' }}>
-            <div style={{ fontSize: 52, marginBottom: 16 }}>🔍</div>
-            <h3 style={{ fontSize: 18, color: 'var(--charcoal)', marginBottom: 8 }}>ගැළපෙන ටයිලර්වරුන් නැත</h3>
-            <p style={{ fontSize: 13, color: 'var(--text-light)' }}>වෙනත් සෙවුමක් හෝ වෙනත් Filter එකක් උත්සාහ කරන්න</p>
+            <div style={{ width: 72, height: 72, background: 'var(--cream)', borderRadius: '50%', display: 'flex', alignItems: 'center', justifyContent: 'center', margin: '0 auto 20px', fontSize: 32 }}>🔍</div>
+            <h3 style={{ fontFamily: "'Playfair Display', serif", fontSize: 18, color: 'var(--charcoal)', marginBottom: 8 }}>ගැළපෙන ටයිලර්වරුන් නැත</h3>
+            <p style={{ fontSize: 13, color: 'var(--text-light)', maxWidth: 280, margin: '0 auto' }}>වෙනත් සෙවුමක් හෝ වෙනත් Filter එකක් උත්සාහ කරන්න</p>
           </div>
         ) : (
           <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fill, minmax(300px,1fr))', gap: 20 }}>
