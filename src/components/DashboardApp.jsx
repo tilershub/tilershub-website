@@ -1,12 +1,12 @@
 import { useEffect, useState } from 'react'
-import { useNavigate } from 'react-router-dom'
-import { useAuth } from '../lib/AuthContext'
+import { useStore } from '@nanostores/react'
+import { $user, $profile } from '../lib/authStore'
 import { supabase, DISTRICTS, SERVICES, uploadAvatar } from '../lib/supabase'
-import { Footer, ServiceCheckGrid, Spinner, StarRating } from '../components/UI'
+import { ServiceCheckGrid, Spinner, StarRating } from './UI'
 
-export default function Dashboard() {
-  const { user, profile } = useAuth()
-  const navigate = useNavigate()
+export default function DashboardApp() {
+  const user = useStore($user)
+  const profile = useStore($profile)
   const [tiler, setTiler] = useState(null)
   const [contacts, setContacts] = useState(0)
   const [reviews, setReviews] = useState([])
@@ -18,8 +18,9 @@ export default function Dashboard() {
   const [avatarPreview, setAvatarPreview] = useState(null)
 
   useEffect(() => {
-    if (!user) { navigate('/login'); return }
-    if (profile && profile.role !== 'tiler') { navigate('/explore'); return }
+    if (user === null) return
+    if (!user) { window.location.href = '/login'; return }
+    if (profile && profile.role !== 'tiler') { window.location.href = '/explore'; return }
     fetchData()
   }, [user, profile])
 
@@ -37,10 +38,8 @@ export default function Dashboard() {
         availability: tilerData.availability,
         district: tilerData.district,
       })
-      // Contacts count
       const { count } = await supabase.from('contact_events').select('*', { count: 'exact', head: true }).eq('tiler_id', tilerData.id)
       setContacts(count || 0)
-      // Reviews
       const { data: reviewData } = await supabase.from('reviews').select('*, profiles(full_name)').eq('tiler_id', tilerData.id).order('created_at', { ascending: false })
       setReviews(reviewData || [])
     }
@@ -85,7 +84,6 @@ export default function Dashboard() {
 
   return (
     <div>
-      {/* Header */}
       <div style={{ background: 'var(--charcoal)', padding: '40px 24px 36px' }}>
         <div style={{ maxWidth: 900, margin: '0 auto', display: 'flex', gap: 24, alignItems: 'flex-end', flexWrap: 'wrap' }}>
           <div style={{
@@ -118,7 +116,6 @@ export default function Dashboard() {
       <div style={{ maxWidth: 900, margin: '0 auto', padding: '36px 24px' }}>
         {saved && <div className="alert alert-success">✓ ප්‍රොෆයිලය සාර්ථකව යාවත්කාලීන කළා!</div>}
 
-        {/* Stats */}
         <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(160px,1fr))', gap: 16, marginBottom: 36 }}>
           {[
             { icon: '💬', num: contacts, label: 'WhatsApp සම්බන්ධ' },
@@ -134,12 +131,10 @@ export default function Dashboard() {
           ))}
         </div>
 
-        {/* Edit form */}
         {editing && (
           <div style={{ background: 'var(--white)', borderRadius: 16, padding: '28px', border: '1px solid var(--cream-dark)', marginBottom: 28 }}>
             <h3 style={{ fontSize: 16, fontWeight: 700, marginBottom: 20, color: 'var(--charcoal)' }}>ප්‍රොෆයිලය සංස්කරණය</h3>
 
-            {/* Avatar upload */}
             <div style={{ display: 'flex', alignItems: 'center', gap: 16, marginBottom: 20 }}>
               <div style={{ width: 64, height: 64, borderRadius: 12, background: 'var(--cream)', border: '2px dashed var(--cream-dark)', display: 'flex', alignItems: 'center', justifyContent: 'center', overflow: 'hidden', cursor: 'pointer', flexShrink: 0 }}
                 onClick={() => document.getElementById('dashAvatarInput').click()}>
@@ -197,7 +192,6 @@ export default function Dashboard() {
           </div>
         )}
 
-        {/* Reviews */}
         <div style={{ background: 'var(--white)', borderRadius: 16, padding: '24px 28px', border: '1px solid var(--cream-dark)' }}>
           <h3 style={{ fontSize: 16, fontWeight: 700, marginBottom: 20, color: 'var(--charcoal)' }}>සමාලෝචන ({reviews.length})</h3>
           {reviews.length === 0 ? (
@@ -220,7 +214,6 @@ export default function Dashboard() {
           )}
         </div>
       </div>
-      <Footer />
     </div>
   )
 }

@@ -1,12 +1,9 @@
 import { useState } from 'react'
-import { useNavigate, Link } from 'react-router-dom'
-import { useAuth } from '../lib/AuthContext'
+import { signIn } from '../lib/authStore'
 import { supabase } from '../lib/supabase'
-import { Footer, Spinner } from '../components/UI'
+import { Spinner } from './UI'
 
-export default function Login() {
-  const { signIn } = useAuth()
-  const navigate = useNavigate()
+export default function LoginForm() {
   const [form, setForm] = useState({ email: '', password: '' })
   const [loading, setLoading] = useState(false)
   const [error, setError] = useState('')
@@ -27,7 +24,7 @@ export default function Login() {
         .select('role')
         .eq('id', data.user.id)
         .single()
-      navigate(prof?.role === 'tiler' ? '/dashboard' : '/explore')
+      window.location.href = prof?.role === 'tiler' ? '/dashboard' : '/explore'
     } catch {
       setError('ඊමේල් හෝ මුරපදය වැරදිය. නැවත උත්සාහ කරන්න.')
     } finally {
@@ -60,7 +57,6 @@ export default function Login() {
       <div style={{ maxWidth: 440, margin: '0 auto', padding: '64px 20px' }}>
         <div style={{ background: 'var(--white)', borderRadius: 20, overflow: 'hidden', boxShadow: '0 8px 48px rgba(0,0,0,0.08)' }}>
 
-          {/* Card header */}
           <div style={{
             background: 'linear-gradient(135deg, var(--charcoal) 0%, #2c2c2c 100%)',
             padding: '36px', position: 'relative', overflow: 'hidden', textAlign: 'center'
@@ -68,7 +64,6 @@ export default function Login() {
             <div style={{ position: 'absolute', bottom: -40, right: -40, width: 160, height: 160, background: 'radial-gradient(circle, var(--terracotta) 0%, transparent 70%)', opacity: 0.22 }} />
             <div style={{ position: 'absolute', top: -50, left: -50, width: 130, height: 130, background: 'radial-gradient(circle, var(--sage) 0%, transparent 70%)', opacity: 0.08 }} />
             <div style={{ position: 'relative' }}>
-              {/* Mini logo mark */}
               <div style={{ display: 'flex', justifyContent: 'center', marginBottom: 18 }}>
                 <div style={{ display: 'grid', gridTemplateColumns: 'repeat(3,1fr)', gap: 3, width: 30, height: 30 }}>
                   {[0,1,2,3,4,5,6,7,8].map(i => (
@@ -86,11 +81,9 @@ export default function Login() {
             </div>
           </div>
 
-          {/* Card body */}
           <div style={{ padding: '32px 36px' }}>
             {error && <div className="alert alert-error">{error}</div>}
 
-            {/* Forgot password mode */}
             {forgotMode ? (
               resetSent ? (
                 <div style={{ textAlign: 'center', padding: '8px 0 16px' }}>
@@ -130,7 +123,6 @@ export default function Login() {
                 </>
               )
             ) : (
-              /* Normal login */
               <>
                 <div className="form-group">
                   <label className="form-label">ඊමේල් <span className="req">*</span></label>
@@ -193,14 +185,13 @@ export default function Login() {
 
                 <p style={{ textAlign: 'center', marginTop: 20, fontSize: 13, color: 'var(--text-light)' }}>
                   ගිණුමක් නැද්ද?{' '}
-                  <Link to="/register" style={{ color: 'var(--terracotta)', fontWeight: 600 }}>ලියාපදිංචි වන්න</Link>
+                  <a href="/register" style={{ color: 'var(--terracotta)', fontWeight: 600 }}>ලියාපදිංචි වන්න</a>
                 </p>
               </>
             )}
           </div>
         </div>
       </div>
-      <Footer />
     </div>
   )
 }

@@ -1,0 +1,22 @@
+---
+import Layout from '../layouts/Layout.astro'
+import ExploreApp from '../components/ExploreApp.jsx'
+---
+
+<Layout title="ටයිලර් සොයන්න · TilersHub">
+
+  <!-- Static page header -->
+  <div style="background: var(--charcoal); padding: 40px 24px; text-align: center;">
+    <span class="section-tag">ටයිලර් සොයන්න</span>
+    <h1 class="section-title" style="color: var(--white); margin-bottom: 8px;">
+      දක්ෂ <span style="color: var(--terracotta);">ටයිලර්වරුන්</span> සොයා ගන්න
+    </h1>
+    <p style="font-size: 14px; color: rgba(245,240,232,0.45); max-width: 440px; margin: 0 auto;">
+      ශ්‍රී ලංකාව පුරා ටයිල් ප්‍රවීණයන් WhatsApp හරහා කෙලින්ම සම්බන්ධ වෙන්න
+    </p>
+  </div>
+
+  <!-- Interactive explore app (React island) -->
+  <ExploreApp client:only="react" />
+
+</Layout>
