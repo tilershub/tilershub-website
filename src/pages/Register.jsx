@@ -4,13 +4,56 @@ import { useAuth } from '../lib/AuthContext'
 import { supabase, DISTRICTS, SERVICES, uploadAvatar } from '../lib/supabase'
 import { Footer, ServiceCheckGrid, Spinner } from '../components/UI'
 
+function StepIndicator({ currentStep }) {
+  const steps = ['භූමිකාව', 'ගිණුම', 'ප්‍රොෆයිලය']
+  return (
+    <div style={{ display: 'flex', alignItems: 'flex-start', justifyContent: 'center', marginBottom: 36 }}>
+      {steps.map((label, i) => {
+        const num = i + 1
+        const done   = currentStep > num
+        const active = currentStep === num
+        return (
+          <div key={label} style={{ display: 'flex', alignItems: 'flex-start' }}>
+            {i > 0 && (
+              <div style={{
+                width: 52, height: 2, flexShrink: 0, marginTop: 15,
+                background: done ? 'var(--terracotta)' : 'var(--cream-dark)',
+                transition: 'background 0.3s',
+              }} />
+            )}
+            <div style={{ display: 'flex', flexDirection: 'column', alignItems: 'center', gap: 8, minWidth: 60 }}>
+              <div style={{
+                width: 32, height: 32, borderRadius: '50%', flexShrink: 0,
+                background: done ? 'var(--terracotta)' : active ? 'var(--charcoal)' : 'var(--cream)',
+                border: active ? '2.5px solid var(--terracotta)' : done ? 'none' : '2px solid var(--cream-dark)',
+                color: done || active ? 'white' : 'var(--text-light)',
+                display: 'flex', alignItems: 'center', justifyContent: 'center',
+                fontSize: 13, fontWeight: 700, transition: 'all 0.3s',
+                boxShadow: active ? '0 0 0 4px rgba(193,96,58,0.12)' : 'none',
+              }}>
+                {done ? '✓' : num}
+              </div>
+              <div style={{
+                fontSize: 10, fontWeight: active ? 700 : 400, whiteSpace: 'nowrap', textAlign: 'center',
+                color: done ? 'var(--terracotta)' : active ? 'var(--charcoal)' : 'var(--text-light)',
+              }}>
+                {label}
+              </div>
+            </div>
+          </div>
+        )
+      })}
+    </div>
+  )
+}
+
 export default function Register() {
   const { signUp } = useAuth()
   const navigate = useNavigate()
   const avatarRef = useRef()
 
-  const [role, setRole] = useState('') // 'tiler' | 'homeowner'
-  const [step, setStep] = useState(1) // 1=role, 2=account, 3=profile
+  const [role, setRole] = useState('')
+  const [step, setStep] = useState(1)
   const [loading, setLoading] = useState(false)
   const [error, setError] = useState('')
   const [avatarFile, setAvatarFile] = useState(null)
@@ -20,7 +63,7 @@ export default function Register() {
     email: '', password: '', confirmPassword: '',
     full_name: '', phone: '', district: '',
     bio: '', experience_years: '', daily_rate_min: '', daily_rate_max: '',
-    services: []
+    services: [], availability: 'available',
   })
   const set = (k, v) => setForm(f => ({ ...f, [k]: v }))
 
@@ -31,12 +74,33 @@ export default function Register() {
     setAvatarPreview(URL.createObjectURL(file))
   }
 
+  function advanceToStep3() {
+    setError('')
+    if (!form.email || !/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(form.email)) {
+      setError('නිවැරදි ඊමේල් ලිපිනයක් ඇතුළු කරන්න')
+      return
+    }
+    if (!form.phone || form.phone.replace(/\D/g, '').length < 9) {
+      setError('නිවැරදි WhatsApp අංකයක් ඇතුළු කරන්න (07XXXXXXXX)')
+      return
+    }
+    if (form.password.length < 6) {
+      setError('මුරපදය අවම අකුරු 6ක් විය යුතුය')
+      return
+    }
+    if (form.password !== form.confirmPassword) {
+      setError('මුරපද දෙක නොගැළපේ')
+      return
+    }
+    setStep(3)
+  }
+
   async function handleSubmit() {
     setError('')
-    if (form.password !== form.confirmPassword) { setError('මුරපද දෙක නොගැළපේ'); return }
-    if (form.password.length < 6) { setError('මුරපදය අවම අකුරු 6ක් විය යුතුය'); return }
-    if (role === 'tiler' && form.services.length === 0) { setError('අවම සේවාවක් තෝරන්න'); return }
-
+    if (role === 'tiler' && form.services.length === 0) {
+      setError('අවම සේවාවක් තෝරන්න')
+      return
+    }
     setLoading(true)
     try {
       const profileData = {
@@ -48,6 +112,7 @@ export default function Register() {
         daily_rate_min: parseInt(form.daily_rate_min) || null,
         daily_rate_max: parseInt(form.daily_rate_max) || null,
         services: form.services,
+        availability: form.availability,
       }
       const { user } = await signUp(form.email, form.password, role, profileData)
 
@@ -60,17 +125,38 @@ export default function Register() {
 
       navigate(role === 'tiler' ? '/dashboard' : '/explore')
     } catch (err) {
-      setError(err.message === 'User already registered' ? 'මෙම ඊමේල් ලිපිනය දැනටමත් ලියාපදිංචි වී ඇත' : err.message)
+      setError(err.message === 'User already registered'
+        ? 'මෙම ඊමේල් ලිපිනය දැනටමත් ලියාපදිංචි වී ඇත'
+        : err.message)
     } finally {
       setLoading(false)
     }
   }
 
+  const cardStyle = {
+    background: 'var(--white)', borderRadius: 20,
+    overflow: 'hidden', boxShadow: '0 8px 48px rgba(0,0,0,0.08)',
+  }
+  const darkHeader = (title, sub, onBack) => (
+    <div style={{ background: 'linear-gradient(135deg, var(--charcoal) 0%, #2c2c2c 100%)', padding: '32px 36px', position: 'relative', overflow: 'hidden' }}>
+      <div style={{ position: 'absolute', bottom: -40, right: -40, width: 120, height: 120, background: 'radial-gradient(circle, var(--terracotta) 0%, transparent 70%)', opacity: 0.28 }} />
+      {onBack && (
+        <button onClick={onBack} style={{ background: 'none', border: 'none', color: 'rgba(245,240,232,0.45)', cursor: 'pointer', fontSize: 13, marginBottom: 14, padding: 0, fontFamily: "'Noto Sans Sinhala', sans-serif" }}>
+          ← ආපසු
+        </button>
+      )}
+      <h2 style={{ fontFamily: "'Playfair Display', serif", fontSize: 24, color: 'var(--white)', fontWeight: 700, marginBottom: 4, position: 'relative' }}>{title}</h2>
+      <p style={{ fontSize: 13, color: 'rgba(245,240,232,0.45)', position: 'relative' }}>{sub}</p>
+    </div>
+  )
+
   return (
     <div>
       <div style={{ maxWidth: 620, margin: '0 auto', padding: '48px 20px' }}>
 
-        {/* Step 1: Role selection */}
+        <StepIndicator currentStep={step} />
+
+        {/* ── Step 1: Role selection ── */}
         {step === 1 && (
           <div style={{ textAlign: 'center' }}>
             <span className="section-tag">ලියාපදිංචිය</span>
@@ -78,7 +164,7 @@ export default function Register() {
             <p style={{ color: 'var(--text-mid)', fontSize: 14, marginBottom: 40 }}>ඔබේ භූමිකාව තෝරා ලියාපදිංචිය ආරම්භ කරන්න</p>
             <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: 16, marginBottom: 24 }}>
               {[
-                { r: 'tiler', icon: '🔨', title: 'ටයිලර්', desc: 'ගෙදර හිමියන් හා ව්‍යාපෘති සොයා ඔබේ ව්‍යාපාරය ව්‍යාප්ත කරගන්න' },
+                { r: 'tiler',     icon: '🔨', title: 'ටයිලර්',      desc: 'ගෙදර හිමියන් හා ව්‍යාපෘති සොයා ඔබේ ව්‍යාපාරය ව්‍යාප්ත කරගන්න' },
                 { r: 'homeowner', icon: '🏠', title: 'ගෘහ හිමිකරු', desc: 'ඔබේ ව්‍යාපෘතිය සඳහා දක්ෂ ටයිලර් සොයා ගෙදර ලස්සන කරගන්න' },
               ].map(({ r, icon, title, desc }) => (
                 <div
@@ -89,12 +175,15 @@ export default function Register() {
                     padding: '32px 24px', cursor: 'pointer', textAlign: 'center',
                     border: role === r ? '2px solid var(--terracotta)' : '1.5px solid var(--cream-dark)',
                     background: role === r ? 'rgba(193,96,58,0.04)' : 'var(--white)',
-                    transition: 'all 0.2s'
+                    transition: 'all 0.2s',
                   }}
                 >
                   <div style={{ fontSize: 44, marginBottom: 16 }}>{icon}</div>
                   <div style={{ fontSize: 18, fontWeight: 700, color: 'var(--charcoal)', marginBottom: 8 }}>{title}</div>
                   <div style={{ fontSize: 12, color: 'var(--text-mid)', lineHeight: 1.7 }}>{desc}</div>
+                  {role === r && (
+                    <div style={{ marginTop: 14, fontSize: 11, color: 'var(--terracotta)', fontWeight: 700 }}>✓ තෝරා ගත්තා</div>
+                  )}
                 </div>
               ))}
             </div>
@@ -102,20 +191,20 @@ export default function Register() {
               ඉදිරියට →
             </button>
             <p style={{ marginTop: 20, fontSize: 13, color: 'var(--text-light)' }}>
-              දැනටමත් ගිණුමක් ඇතිද? <Link to="/login" style={{ color: 'var(--terracotta)', fontWeight: 600 }}>පිවිසෙන්න</Link>
+              දැනටමත් ගිණුමක් ඇතිද?{' '}
+              <Link to="/login" style={{ color: 'var(--terracotta)', fontWeight: 600 }}>පිවිසෙන්න</Link>
             </p>
           </div>
         )}
 
-        {/* Step 2: Account details */}
+        {/* ── Step 2: Account details ── */}
         {step === 2 && (
-          <div style={{ background: 'var(--white)', borderRadius: 20, overflow: 'hidden', boxShadow: '0 8px 48px rgba(0,0,0,0.08)' }}>
-            <div style={{ background: 'linear-gradient(135deg, var(--charcoal) 0%, #2c2c2c 100%)', padding: '32px 36px', position: 'relative', overflow: 'hidden' }}>
-              <div style={{ position: 'absolute', bottom: -40, right: -40, width: 120, height: 120, background: 'radial-gradient(circle, var(--terracotta) 0%, transparent 70%)', opacity: 0.3 }} />
-              <button onClick={() => setStep(1)} style={{ background: 'none', border: 'none', color: 'rgba(245,240,232,0.4)', cursor: 'pointer', fontSize: 13, marginBottom: 16, padding: 0 }}>← ආපසු</button>
-              <h2 style={{ fontFamily: "'Playfair Display', serif", fontSize: 24, color: 'var(--white)', fontWeight: 700, marginBottom: 4 }}>ගිණුම් විස්තර</h2>
-              <p style={{ fontSize: 13, color: 'rgba(245,240,232,0.45)' }}>{role === 'tiler' ? 'ටයිලර් ගිණුමක්' : 'ගෘහ හිමිකරු ගිණුමක්'} සාදා ගන්න</p>
-            </div>
+          <div style={cardStyle}>
+            {darkHeader(
+              'ගිණුම් විස්තර',
+              role === 'tiler' ? 'ටයිලර් ගිණුමක් සාදා ගන්න' : 'ගෘහ හිමිකරු ගිණුමක් සාදා ගන්න',
+              () => setStep(1)
+            )}
             <div style={{ padding: '32px 36px' }}>
               {error && <div className="alert alert-error">{error}</div>}
               <div className="form-row">
@@ -137,48 +226,58 @@ export default function Register() {
                 <div className="form-group">
                   <label className="form-label">මුරපදය නැවත <span className="req">*</span></label>
                   <input className="form-input" type="password" placeholder="නැවත ලියන්න" value={form.confirmPassword} onChange={e => set('confirmPassword', e.target.value)} />
+                  {form.confirmPassword && form.password !== form.confirmPassword && (
+                    <div className="form-error">මුරපද දෙක නොගැළපේ</div>
+                  )}
                 </div>
               </div>
-              <button className="btn btn-primary btn-full btn-lg" disabled={!form.email || !form.password} onClick={() => { setError(''); setStep(3) }}>
+              <button
+                className="btn btn-primary btn-full btn-lg"
+                disabled={!form.email || !form.password}
+                onClick={advanceToStep3}
+              >
                 ඉදිරියට →
               </button>
             </div>
           </div>
         )}
 
-        {/* Step 3: Profile details */}
+        {/* ── Step 3: Profile details ── */}
         {step === 3 && (
-          <div style={{ background: 'var(--white)', borderRadius: 20, overflow: 'hidden', boxShadow: '0 8px 48px rgba(0,0,0,0.08)' }}>
-            <div style={{ background: 'linear-gradient(135deg, var(--charcoal) 0%, #2c2c2c 100%)', padding: '32px 36px' }}>
-              <button onClick={() => setStep(2)} style={{ background: 'none', border: 'none', color: 'rgba(245,240,232,0.4)', cursor: 'pointer', fontSize: 13, marginBottom: 16, padding: 0 }}>← ආපසු</button>
-              <h2 style={{ fontFamily: "'Playfair Display', serif", fontSize: 24, color: 'var(--white)', fontWeight: 700, marginBottom: 4 }}>
-                {role === 'tiler' ? 'ටයිලර් ප්‍රොෆයිලය' : 'ඔබ ගැන'}
-              </h2>
-              <p style={{ fontSize: 13, color: 'rgba(245,240,232,0.45)' }}>ඔබ ගැන ගෘහ හිමිකරුවන්ට දන්වන්න</p>
-            </div>
+          <div style={cardStyle}>
+            {darkHeader(
+              role === 'tiler' ? 'ටයිලර් ප්‍රොෆයිලය' : 'ඔබ ගැන',
+              'ඔබ ගැන ගෘහ හිමිකරුවන්ට දන්වන්න',
+              () => setStep(2)
+            )}
             <div style={{ padding: '32px 36px' }}>
               {error && <div className="alert alert-error">{error}</div>}
 
               {/* Avatar upload */}
-              <div style={{ display: 'flex', alignItems: 'center', gap: 20, marginBottom: 24 }}>
+              <div style={{ display: 'flex', alignItems: 'center', gap: 20, marginBottom: 24, padding: '16px', background: 'var(--cream)', borderRadius: 12 }}>
                 <div
                   onClick={() => avatarRef.current?.click()}
                   style={{
-                    width: 80, height: 80, borderRadius: 14,
-                    background: avatarPreview ? 'transparent' : 'var(--cream)',
+                    width: 72, height: 72, borderRadius: 12, flexShrink: 0,
+                    background: avatarPreview ? 'transparent' : 'var(--white)',
                     border: '2px dashed var(--cream-dark)',
                     display: 'flex', alignItems: 'center', justifyContent: 'center',
-                    cursor: 'pointer', overflow: 'hidden', flexShrink: 0,
-                    transition: 'border-color 0.2s'
+                    cursor: 'pointer', overflow: 'hidden', transition: 'border-color 0.2s',
                   }}
                 >
-                  {avatarPreview ? <img src={avatarPreview} alt="" style={{ width: '100%', height: '100%', objectFit: 'cover' }} /> : <span style={{ fontSize: 28 }}>📷</span>}
+                  {avatarPreview
+                    ? <img src={avatarPreview} alt="" style={{ width: '100%', height: '100%', objectFit: 'cover' }} />
+                    : <span style={{ fontSize: 26 }}>📷</span>
+                  }
                 </div>
                 <div>
-                  <button className="btn btn-ghost" style={{ fontSize: 12, padding: '8px 16px' }} onClick={() => avatarRef.current?.click()}>
-                    ඡායාරූපය අップ්ලෝඩ් කරන්න
+                  <div style={{ fontSize: 13, fontWeight: 600, color: 'var(--charcoal)', marginBottom: 4 }}>
+                    {avatarPreview ? 'ඡායාරූපය තෝරා ඇත ✓' : 'ඡායාරූපයක් එකතු කරන්න'}
+                  </div>
+                  <div className="form-hint" style={{ marginBottom: 8 }}>JPG, PNG · 5MB දක්වා (ऐच්ඡිකව)</div>
+                  <button className="btn btn-ghost" style={{ fontSize: 11, padding: '6px 14px' }} onClick={() => avatarRef.current?.click()}>
+                    {avatarPreview ? '↺ වෙනස් කරන්න' : '+ ඡායාරූපය තෝරන්න'}
                   </button>
-                  <div className="form-hint" style={{ marginTop: 6 }}>JPG, PNG · 5MB දක්වා</div>
                 </div>
                 <input ref={avatarRef} type="file" accept="image/*" onChange={handleAvatarChange} style={{ display: 'none' }} />
               </div>
@@ -205,25 +304,51 @@ export default function Register() {
                       <input className="form-input" type="number" min="0" max="60" placeholder="5" value={form.experience_years} onChange={e => set('experience_years', e.target.value)} />
                     </div>
                     <div className="form-group">
-                      <label className="form-label">දෛනික ගාස්තු (Rs.)</label>
-                      <div style={{ display: 'flex', gap: 8, alignItems: 'center' }}>
-                        <input className="form-input" type="number" placeholder="අවම" value={form.daily_rate_min} onChange={e => set('daily_rate_min', e.target.value)} />
-                        <span style={{ color: 'var(--text-light)', flexShrink: 0 }}>–</span>
-                        <input className="form-input" type="number" placeholder="උපරිම" value={form.daily_rate_max} onChange={e => set('daily_rate_max', e.target.value)} />
-                      </div>
+                      <label className="form-label">ලබාගත හැකි බව <span className="req">*</span></label>
+                      <select className="form-select" value={form.availability} onChange={e => set('availability', e.target.value)}>
+                        <option value="available">✓ දැනට ලබාගත හැකිය</option>
+                        <option value="busy">⏳ දැනට කාර්යබහුලයි</option>
+                        <option value="unavailable">✗ දැනට නොමැත</option>
+                      </select>
                     </div>
                   </div>
 
                   <div className="form-group">
-                    <label className="form-label">ඔබ ගැන <span className="req">*</span></label>
-                    <textarea className="form-textarea" placeholder="ඔබේ විශේෂඥ ක්ෂේත්‍ර, ව්‍යාපෘති, ඔබේ ශෛලිය..." value={form.bio} onChange={e => set('bio', e.target.value)} />
+                    <label className="form-label">දෛනික ගාස්තු (Rs.)</label>
+                    <div style={{ display: 'flex', gap: 8, alignItems: 'center' }}>
+                      <input className="form-input" type="number" placeholder="අවම (උදා: 3000)" value={form.daily_rate_min} onChange={e => set('daily_rate_min', e.target.value)} />
+                      <span style={{ color: 'var(--text-light)', flexShrink: 0 }}>–</span>
+                      <input className="form-input" type="number" placeholder="උපරිම (උදා: 6000)" value={form.daily_rate_max} onChange={e => set('daily_rate_max', e.target.value)} />
+                    </div>
+                    <div className="form-hint">හිස්ව තැබුවහොත් "සාකච්ඡා කළ හැකිය" ලෙස දිස් වේ</div>
+                  </div>
+
+                  <div className="form-group">
+                    <label className="form-label">ඔබ ගැන</label>
+                    <textarea
+                      className="form-textarea"
+                      placeholder="ඔබේ විශේෂඥ ක්ෂේත්‍ර, ව්‍යාපෘති, ශෛලිය... (උදා: වසර 8ක් තිස්සේ නාන කාමර සහ මහල් ටයිල් කිරීමේ අත්දැකීම ඇත)"
+                      value={form.bio}
+                      onChange={e => set('bio', e.target.value)}
+                      style={{ minHeight: 90 }}
+                    />
                   </div>
 
                   <div className="form-group">
                     <label className="form-label">සේවා <span className="req">*</span></label>
+                    <div className="form-hint" style={{ marginBottom: 10 }}>ඔබ ලබා දෙන සේවා තෝරන්න</div>
                     <ServiceCheckGrid services={SERVICES} selected={form.services} onChange={v => set('services', v)} />
                   </div>
                 </>
+              )}
+
+              {role === 'homeowner' && (
+                <div style={{ background: 'rgba(193,96,58,0.05)', border: '1px solid rgba(193,96,58,0.15)', borderRadius: 12, padding: '16px 18px', marginBottom: 20 }}>
+                  <div style={{ fontSize: 13, color: 'var(--terracotta)', fontWeight: 700, marginBottom: 6 }}>🏠 ගෘහ හිමිකරු ගිණුම</div>
+                  <p style={{ fontSize: 12, color: 'var(--text-mid)', lineHeight: 1.8 }}>
+                    ගිණුම සාදා ගැනීමෙන් පසු ශ්‍රී ලංකාව පුරා දක්ෂ ටයිලර්වරුන් WhatsApp හරහා සෙවිය හැකිය.
+                  </p>
+                </div>
               )}
 
               <button
@@ -232,11 +357,12 @@ export default function Register() {
                 disabled={loading || !form.full_name || !form.district || (role === 'tiler' && form.services.length === 0)}
                 onClick={handleSubmit}
               >
-                {loading ? <><Spinner /> ලියාපදිංචි කරමින්...</> : '✓ ප්‍රොෆයිලය සාදන්න'}
+                {loading ? <><Spinner /> ලියාපදිංචි කරමින්...</> : '✓ ගිණුම සාදන්න'}
               </button>
             </div>
           </div>
         )}
+
       </div>
       <Footer />
     </div>
