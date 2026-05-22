@@ -13,7 +13,6 @@ const HOW_STEPS = [
 
   <!-- Hero -->
   <section style="background: var(--charcoal); position: relative; overflow: hidden; padding: 90px 24px 100px; text-align: center;">
-    <!-- Grid pattern -->
     <div style="position: absolute; inset: 0; opacity: 0.04; background-image: repeating-linear-gradient(0deg, transparent, transparent 39px, rgba(193,96,58,0.6) 39px, rgba(193,96,58,0.6) 40px), repeating-linear-gradient(90deg, transparent, transparent 39px, rgba(193,96,58,0.6) 39px, rgba(193,96,58,0.6) 40px);"></div>
     <div style="position: absolute; bottom: -80px; left: -80px; width: 350px; height: 350px; background: radial-gradient(circle, var(--terracotta) 0%, transparent 70%); opacity: 0.13;"></div>
     <div style="position: absolute; top: -100px; right: -100px; width: 450px; height: 450px; background: radial-gradient(circle, var(--sage) 0%, transparent 70%); opacity: 0.07;"></div>
@@ -32,13 +31,12 @@ const HOW_STEPS = [
         ශ්‍රී ලංකාව පුරා දක්ෂ ටයිලර්වරුන් සෙවිය හැකි, WhatsApp හරහා කෙලින්ම සාකච්ඡා කළ හැකි නොමිලේ සේවාවකි
       </p>
 
-      <!-- CTA buttons -->
+      <!-- Single CTA -->
       <div style="display: flex; gap: 14px; justify-content: center; flex-wrap: wrap; margin-bottom: 44px;">
         <a href="/explore" class="btn btn-primary btn-lg">🔍 ටයිලර් සොයන්න</a>
-        <a href="/register" class="btn btn-lg" style="background: rgba(245,240,232,0.07); color: var(--cream); border: 1.5px solid rgba(245,240,232,0.2);">✦ ටයිලර් ලෙස එකතු වන්න</a>
       </div>
 
-      <!-- Ad slider (React island) -->
+      <!-- Ad slider -->
       <AdSlider client:load />
 
       <!-- Stats bar -->
@@ -77,29 +75,26 @@ const HOW_STEPS = [
     </div>
   </section>
 
-  <!-- Tiler CTA -->
+  <!-- Explore CTA -->
   <section style="background: var(--charcoal); padding: 80px 24px; text-align: center; position: relative; overflow: hidden;">
     <div style="position: absolute; inset: 0; opacity: 0.04; background-image: repeating-linear-gradient(45deg, transparent, transparent 20px, rgba(193,96,58,0.6) 20px, rgba(193,96,58,0.6) 21px);"></div>
     <div style="position: relative;">
-      <span class="section-tag">ටයිලර්වරුනි</span>
+      <span class="section-tag">ශ්‍රී ලංකාව පුරා</span>
       <h2 style="font-family: 'Playfair Display', serif; font-size: clamp(24px,4vw,40px); color: var(--white); margin: 12px 0; font-weight: 700;">
-        ව්‍යාපාරය <span style="color: var(--terracotta);">ව්‍යාප්ත</span> කරගන්න
+        ඔබේ ටයිලර් <span style="color: var(--terracotta);">හමු කරගන්න</span>
       </h2>
       <p style="color: rgba(245,240,232,0.45); font-size: 14px; max-width: 420px; margin: 0 auto 28px; line-height: 1.9;">
-        TilersHub හරහා නව ගනුදෙනුකරුවන් ලබා ගෙන ශ්‍රී ලංකාව පුරා ඔබේ ව්‍යාපාරය ප්‍රවර්ධනය කරගන්න — නොමිලේ
+        දිස්ත්‍රික්කය, සේවා වර්ගය සහ ශ්‍රේණිගත කිරීම් අනුව ශ්‍රී ලංකාවේ සහතිකගත ටයිලර්වරුන් WhatsApp හරහා සොයා ගන්න
       </p>
       <div style="display: flex; flex-direction: column; gap: 10px; max-width: 340px; margin: 0 auto 36px; text-align: left;">
-        {['නොමිලේ ලියාපදිංචිය — ගෙවීමක් නැත', 'ශ්‍රී ලංකාව පුරා ගෘහ හිමිකරුවන්ට ළඟා වන්න', 'WhatsApp හරහා කෙලින්ම ව්‍යාපෘති ලබා ගන්න'].map(b => (
+        {['25+ දිස්ත්‍රික්කවල ටයිලර්වරුන්', 'sqft ගාස්තු සැසඳිය හැකිය', 'WhatsApp හරහා කෙලින්ම සාකච්ඡා කරන්න'].map(b => (
           <div style="display: flex; align-items: center; gap: 12px; color: rgba(245,240,232,0.65); font-size: 13px;">
             <span style="flex-shrink: 0; background: rgba(193,96,58,0.2); color: var(--terracotta); width: 22px; height: 22px; border-radius: 50%; display: inline-flex; align-items: center; justify-content: center; font-size: 11px; font-weight: 700;">✓</span>
             {b}
           </div>
         ))}
       </div>
-      <div style="display: flex; gap: 12px; justify-content: center; flex-wrap: wrap;">
-        <a href="/register" class="btn btn-primary btn-lg">✦ දැන්ම ලියාපදිංචි වන්න</a>
-        <a href="/explore" class="btn btn-lg" style="background: rgba(255,255,255,0.07); color: var(--cream); border: 1.5px solid rgba(255,255,255,0.15);">ටයිලර් බලන්න</a>
-      </div>
+      <a href="/explore" class="btn btn-primary btn-lg">🔍 දැන්ම ටයිලර් සොයන්න</a>
     </div>
   </section>
 
