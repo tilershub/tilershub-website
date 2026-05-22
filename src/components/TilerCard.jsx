@@ -40,9 +40,8 @@ export function TilerCard({ tiler, onClick }) {
           <div>
             <div style={{ fontSize: 16, fontWeight: 700, color: 'var(--white)', marginBottom: 3 }}>{tiler.full_name}</div>
             <div style={{ fontSize: 12, color: 'rgba(245,240,232,0.45)', display: 'flex', gap: 8, flexWrap: 'wrap' }}>
-              <span>📍 {tiler.district}</span>
-              <span>·</span>
-              <span>⏱ {tiler.experience_years} වසර</span>
+              <span>📍 {tiler.city || tiler.district}</span>
+              {tiler.experience_years > 1 && <><span>·</span><span>⏱ {tiler.experience_years} වසර</span></>}
             </div>
             <div style={{ marginTop: 6, display: 'flex', alignItems: 'center', gap: 6 }}>
               <StarRating rating={Number(tiler.avg_rating)} size={12} />
@@ -118,7 +117,7 @@ export function TilerModal({ tiler, onClose }) {
             <AvatarDisplay avatarUrl={tiler.avatar_url} name={tiler.full_name} size={76} />
             <div>
               <div style={{ fontFamily: "'Playfair Display', serif", fontSize: 24, color: 'var(--white)', fontWeight: 700, marginBottom: 4 }}>{tiler.full_name}</div>
-              <div style={{ fontSize: 13, color: 'rgba(245,240,232,0.45)' }}>📍 {tiler.district} දිස්ත්‍රික්කය</div>
+              <div style={{ fontSize: 13, color: 'rgba(245,240,232,0.45)' }}>📍 {tiler.city || tiler.district} · {tiler.district} දිස්ත්‍රික්කය</div>
               <div style={{ marginTop: 10, display: 'flex', gap: 10, alignItems: 'center', flexWrap: 'wrap' }}>
                 <span style={{ fontSize: 11, background: 'rgba(122,154,126,0.15)', border: '1px solid rgba(122,154,126,0.3)', color: 'var(--sage-light)', padding: '3px 12px', borderRadius: 20 }}>{availLabel}</span>
                 {tiler.is_verified && <span style={{ fontSize: 11, background: 'rgba(193,96,58,0.2)', color: 'var(--terracotta-muted)', padding: '3px 12px', borderRadius: 20 }}>✓ TilersHub සහතිකගත</span>}

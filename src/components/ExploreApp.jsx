@@ -97,7 +97,7 @@ export default function ExploreApp() {
   useEffect(() => {
     async function fetchTilers() {
       setLoading(true)
-      const { data, error } = await supabase.from('tiler_profiles').select('*')
+      const { data, error } = await supabase.from('tilers').select('*')
       if (!error) setTilers(data || [])
       setLoading(false)
     }
