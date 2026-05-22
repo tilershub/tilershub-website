@@ -1,0 +1,45 @@
+---
+import '../index.css'
+import NavActions from '../components/NavActions.jsx'
+
+const { title = 'TilersHub · ශ්‍රී ලංකාවේ #1 ටයිල් සේවා වේදිකාව' } = Astro.props
+---
+<!DOCTYPE html>
+<html lang="si">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>{title}</title>
+  <meta name="description" content="ශ්‍රී ලංකාව පුරා දක්ෂ ටයිලර්වරුන් සොයා ගන්න. TilersHub · ශ්‍රී ලංකාවේ #1 ටයිල් සේවා වේදිකාව." />
+  <link rel="icon" type="image/svg+xml" href="/favicon.svg" />
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=Noto+Sans+Sinhala:wght@300;400;500;600;700;800&family=Playfair+Display:wght@400;600;700&display=swap" rel="stylesheet" />
+</head>
+<body>
+  <nav>
+    <a href="/" class="nav-logo">
+      <div class="logo-grid">
+        {[0,1,2,3,4,5,6,7,8].map(i => (
+          <div class={`logo-tile${i === 8 ? ' empty' : ''}`}></div>
+        ))}
+      </div>
+      <span class="logo-wordmark">TILERS<span>HUB</span></span>
+    </a>
+    <NavActions client:only="react" />
+  </nav>
+
+  <slot />
+
+  <footer>
+    <div style="display: flex; justify-content: center; gap: 28px; margin-bottom: 20px; flex-wrap: wrap;">
+      <a href="/explore" style="color: rgba(245,240,232,0.4); font-size: 12px;">ටයිලර් සොයන්න</a>
+      <a href="/register" style="color: rgba(245,240,232,0.4); font-size: 12px;">ලියාපදිංචිය</a>
+      <a href="/login" style="color: rgba(245,240,232,0.4); font-size: 12px;">පිවිසෙන්න</a>
+    </div>
+    <strong>TILERSHUB</strong> · ශ්‍රී ලංකාවේ විශ්වාසනීය ටයිල් සේවා වේදිකාව
+    <br />
+    <span>© 2025 TilersHub · Powered by Supabase · Hosted on Cloudflare</span>
+  </footer>
+</body>
+</html>

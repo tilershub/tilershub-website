@@ -1,8 +1,7 @@
 import { useState, useRef } from 'react'
-import { useNavigate, Link } from 'react-router-dom'
-import { useAuth } from '../lib/AuthContext'
+import { signUp } from '../lib/authStore'
 import { supabase, DISTRICTS, SERVICES, uploadAvatar } from '../lib/supabase'
-import { Footer, ServiceCheckGrid, Spinner } from '../components/UI'
+import { ServiceCheckGrid, Spinner } from './UI'
 
 function StepIndicator({ currentStep }) {
   const steps = ['භූමිකාව', 'ගිණුම', 'ප්‍රොෆයිලය']
@@ -47,9 +46,7 @@ function StepIndicator({ currentStep }) {
   )
 }
 
-export default function Register() {
-  const { signUp } = useAuth()
-  const navigate = useNavigate()
+export default function RegisterForm() {
   const avatarRef = useRef()
 
   const [role, setRole] = useState('')
@@ -123,7 +120,7 @@ export default function Register() {
         } catch (_) {}
       }
 
-      navigate(role === 'tiler' ? '/dashboard' : '/explore')
+      window.location.href = role === 'tiler' ? '/dashboard' : '/explore'
     } catch (err) {
       setError(err.message === 'User already registered'
         ? 'මෙම ඊමේල් ලිපිනය දැනටමත් ලියාපදිංචි වී ඇත'
@@ -156,7 +153,6 @@ export default function Register() {
 
         <StepIndicator currentStep={step} />
 
-        {/* ── Step 1: Role selection ── */}
         {step === 1 && (
           <div style={{ textAlign: 'center' }}>
             <span className="section-tag">ලියාපදිංචිය</span>
@@ -192,12 +188,11 @@ export default function Register() {
             </button>
             <p style={{ marginTop: 20, fontSize: 13, color: 'var(--text-light)' }}>
               දැනටමත් ගිණුමක් ඇතිද?{' '}
-              <Link to="/login" style={{ color: 'var(--terracotta)', fontWeight: 600 }}>පිවිසෙන්න</Link>
+              <a href="/login" style={{ color: 'var(--terracotta)', fontWeight: 600 }}>පිවිසෙන්න</a>
             </p>
           </div>
         )}
 
-        {/* ── Step 2: Account details ── */}
         {step === 2 && (
           <div style={cardStyle}>
             {darkHeader(
@@ -242,7 +237,6 @@ export default function Register() {
           </div>
         )}
 
-        {/* ── Step 3: Profile details ── */}
         {step === 3 && (
           <div style={cardStyle}>
             {darkHeader(
@@ -253,7 +247,6 @@ export default function Register() {
             <div style={{ padding: '32px 36px' }}>
               {error && <div className="alert alert-error">{error}</div>}
 
-              {/* Avatar upload */}
               <div style={{ display: 'flex', alignItems: 'center', gap: 20, marginBottom: 24, padding: '16px', background: 'var(--cream)', borderRadius: 12 }}>
                 <div
                   onClick={() => avatarRef.current?.click()}
@@ -308,7 +301,6 @@ export default function Register() {
                     <ServiceCheckGrid services={SERVICES} selected={form.services} onChange={v => set('services', v)} />
                   </div>
 
-                  {/* Complete later nudge */}
                   <div style={{ background: 'rgba(122,154,126,0.07)', border: '1px solid rgba(122,154,126,0.2)', borderRadius: 10, padding: '12px 16px', marginTop: 4, marginBottom: 4 }}>
                     <div style={{ fontSize: 11, color: 'var(--sage)', fontWeight: 700, marginBottom: 3 }}>
                       ✓ ඉතිරිය dashboard හරහා සම්පූර්ණ කළ හැකිය
@@ -342,7 +334,6 @@ export default function Register() {
         )}
 
       </div>
-      <Footer />
     </div>
   )
 }

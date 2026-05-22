@@ -1,7 +1,7 @@
 import { useEffect, useState, useMemo } from 'react'
 import { supabase, DISTRICTS, SERVICES } from '../lib/supabase'
-import { TilerCard, TilerModal } from '../components/TilerCard'
-import { Footer, Spinner } from '../components/UI'
+import { TilerCard, TilerModal } from './TilerCard'
+import { Spinner } from './UI'
 
 const SORT_OPTIONS = [
   { value: 'rating',     label: '⭐ ශ්‍රේණිය' },
@@ -83,7 +83,7 @@ function BlogTipCard({ tip }) {
   )
 }
 
-export default function Explore() {
+export default function ExploreApp() {
   const [tilers, setTilers] = useState([])
   const [loading, setLoading] = useState(true)
   const [selected, setSelected] = useState(null)
@@ -152,7 +152,6 @@ export default function Explore() {
     color: 'var(--text-dark)', outline: 'none', cursor: 'pointer',
   }
 
-  // Intersperse blog cards after every 3 tilers
   const gridItems = filtered.flatMap((t, i) => {
     const items = [{ type: 'tiler', tiler: t }]
     if ((i + 1) % 3 === 0) {
@@ -163,22 +162,10 @@ export default function Explore() {
 
   return (
     <div>
-      {/* Page header */}
-      <div style={{ background: 'var(--charcoal)', padding: '40px 24px', textAlign: 'center' }}>
-        <span className="section-tag">ටයිලර් සොයන්න</span>
-        <h1 className="section-title" style={{ color: 'var(--white)', marginBottom: 8 }}>
-          දක්ෂ <span style={{ color: 'var(--terracotta)' }}>ටයිලර්වරුන්</span> සොයා ගන්න
-        </h1>
-        <p style={{ fontSize: 14, color: 'rgba(245,240,232,0.45)', maxWidth: 440, margin: '0 auto' }}>
-          ශ්‍රී ලංකාව පුරා ටයිල් ප්‍රවීණයන් WhatsApp හරහා කෙලින්ම සම්බන්ධ වෙන්න
-        </p>
-      </div>
-
       {/* Sticky compact filter bar */}
       <div style={{ background: 'var(--white)', borderBottom: '1px solid var(--cream-dark)', position: 'sticky', top: 64, zIndex: 50 }}>
         <div style={{ maxWidth: 1100, margin: '0 auto', padding: '10px 16px' }}>
 
-          {/* Single row: search + filter toggle + sort + count */}
           <div style={{ display: 'flex', gap: 8, alignItems: 'center' }}>
             <input
               style={{ ...sel, flex: 1, minWidth: 0 }}
@@ -220,7 +207,6 @@ export default function Explore() {
             )}
           </div>
 
-          {/* Expandable filter panel */}
           {showFilters && (
             <div style={{ paddingTop: 10, marginTop: 10, borderTop: '1px solid var(--cream-dark)' }}>
               <div style={{ display: 'flex', gap: 8, flexWrap: 'wrap', alignItems: 'center' }}>
@@ -294,7 +280,6 @@ export default function Explore() {
       </div>
 
       {selected && <TilerModal tiler={selected} onClose={() => setSelected(null)} />}
-      <Footer />
     </div>
   )
 }

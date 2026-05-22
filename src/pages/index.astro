@@ -1,0 +1,106 @@
+---
+import Layout from '../layouts/Layout.astro'
+import AdSlider from '../components/AdSlider.jsx'
+
+const HOW_STEPS = [
+  { icon: '🔍', num: '01', title: 'ටයිලර් සොයන්න', desc: 'දිස්ත්‍රික්කය, සේවාව හා ශ්‍රේණිගත කිරීම් අනුව ගළපෙන ටයිලර් සොයා ගන්න' },
+  { icon: '💬', num: '02', title: 'WhatsApp සම්බන්ධය', desc: 'TilersHub ස්වයංක්‍රීය පණිවිඩයකින් ටයිලර් සමඟ කෙලින්ම සාකච්ඡා කරන්න' },
+  { icon: '🏠', num: '03', title: 'ව්‍යාපෘතිය ආරම්භ කරන්න', desc: 'ගාස්තු, කාලසටහන සාකච්ඡා කර ඔබේ නිවස ලස්සන කරගන්න' },
+]
+---
+
+<Layout title="TilersHub · ශ්‍රී ලංකාවේ #1 ටයිල් සේවා වේදිකාව">
+
+  <!-- Hero -->
+  <section style="background: var(--charcoal); position: relative; overflow: hidden; padding: 90px 24px 100px; text-align: center;">
+    <!-- Grid pattern -->
+    <div style="position: absolute; inset: 0; opacity: 0.04; background-image: repeating-linear-gradient(0deg, transparent, transparent 39px, rgba(193,96,58,0.6) 39px, rgba(193,96,58,0.6) 40px), repeating-linear-gradient(90deg, transparent, transparent 39px, rgba(193,96,58,0.6) 39px, rgba(193,96,58,0.6) 40px);"></div>
+    <div style="position: absolute; bottom: -80px; left: -80px; width: 350px; height: 350px; background: radial-gradient(circle, var(--terracotta) 0%, transparent 70%); opacity: 0.13;"></div>
+    <div style="position: absolute; top: -100px; right: -100px; width: 450px; height: 450px; background: radial-gradient(circle, var(--sage) 0%, transparent 70%); opacity: 0.07;"></div>
+
+    <div style="position: relative;">
+      <span style="display: inline-block; background: rgba(193,96,58,0.15); border: 1px solid rgba(193,96,58,0.3); color: var(--terracotta-muted); font-size: 10px; padding: 5px 16px; border-radius: 20px; letter-spacing: 2px; text-transform: uppercase; font-weight: 600; margin-bottom: 28px;">
+        🇱🇰 ශ්‍රී ලංකාවේ #1 ටයිල් වේදිකාව
+      </span>
+
+      <h1 style="font-family: 'Playfair Display', serif; font-size: clamp(34px, 7vw, 68px); font-weight: 700; color: var(--white); line-height: 1.12; margin-bottom: 8px;">
+        ඔබේ නිවස<br />
+        <span style="color: var(--terracotta);">ලස්සන කරමු</span>
+      </h1>
+
+      <p style="font-size: 15px; color: rgba(245,240,232,0.55); max-width: 460px; margin: 20px auto 44px; line-height: 1.9;">
+        ශ්‍රී ලංකාව පුරා දක්ෂ ටයිලර්වරුන් සෙවිය හැකි, WhatsApp හරහා කෙලින්ම සාකච්ඡා කළ හැකි නොමිලේ සේවාවකි
+      </p>
+
+      <!-- CTA buttons -->
+      <div style="display: flex; gap: 14px; justify-content: center; flex-wrap: wrap; margin-bottom: 44px;">
+        <a href="/explore" class="btn btn-primary btn-lg">🔍 ටයිලර් සොයන්න</a>
+        <a href="/register" class="btn btn-lg" style="background: rgba(245,240,232,0.07); color: var(--cream); border: 1.5px solid rgba(245,240,232,0.2);">✦ ටයිලර් ලෙස එකතු වන්න</a>
+      </div>
+
+      <!-- Ad slider (React island) -->
+      <AdSlider client:load />
+
+      <!-- Stats bar -->
+      <div style="margin-top: 48px; display: flex; justify-content: center; align-items: stretch; flex-wrap: wrap; border-top: 1px solid rgba(245,240,232,0.07);">
+        {[
+          { num: '500+', label: 'ලියාපදිංචි ටයිලර්' },
+          { num: '25', label: 'දිස්ත්‍රික්ක' },
+          { num: '2,000+', label: 'සාර්ථක ව්‍යාපෘති' },
+          { num: 'නොමිලේ', label: 'සේවාව' },
+        ].map((s, i, arr) => (
+          <div style={`text-align: center; padding: 28px clamp(16px, 4vw, 48px); border-right: ${i < arr.length - 1 ? '1px solid rgba(245,240,232,0.07)' : 'none'};`}>
+            <div style="font-family: 'Playfair Display', serif; font-size: clamp(26px,4vw,40px); color: var(--terracotta); font-weight: 700;">{s.num}</div>
+            <div style="font-size: 11px; color: rgba(245,240,232,0.38); margin-top: 4px; letter-spacing: 0.3px;">{s.label}</div>
+          </div>
+        ))}
+      </div>
+    </div>
+  </section>
+
+  <!-- How it works -->
+  <section style="padding: 80px 24px; max-width: 1100px; margin: 0 auto;">
+    <div style="text-align: center; margin-bottom: 56px;">
+      <span class="section-tag">ක්‍රියාවලිය</span>
+      <h2 class="section-title">කෙසේ ක්‍රියා කරයිද?</h2>
+      <p class="section-sub" style="margin: 0 auto;">සරල පියවර 3කින් ඔබේ ව්‍යාපෘතිය ආරම්භ කරන්න</p>
+    </div>
+    <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(240px,1fr)); gap: 24px;">
+      {HOW_STEPS.map(s => (
+        <div class="card" style="padding: 36px 28px; position: relative;">
+          <div style={`position: absolute; top: 20px; right: 24px; font-family: 'Playfair Display', serif; font-size: 72px; color: var(--cream-dark); font-weight: 700; line-height: 1; user-select: none;`}>{s.num}</div>
+          <div style="width: 52px; height: 52px; background: linear-gradient(135deg, var(--terracotta) 0%, var(--terracotta-light) 100%); border-radius: 14px; display: flex; align-items: center; justify-content: center; font-size: 24px; margin-bottom: 22px; box-shadow: 0 4px 16px rgba(193,96,58,0.25);">{s.icon}</div>
+          <h3 style="font-size: 16px; font-weight: 700; margin-bottom: 10px; color: var(--charcoal);">{s.title}</h3>
+          <p style="font-size: 13px; color: var(--text-mid); line-height: 1.85;">{s.desc}</p>
+        </div>
+      ))}
+    </div>
+  </section>
+
+  <!-- Tiler CTA -->
+  <section style="background: var(--charcoal); padding: 80px 24px; text-align: center; position: relative; overflow: hidden;">
+    <div style="position: absolute; inset: 0; opacity: 0.04; background-image: repeating-linear-gradient(45deg, transparent, transparent 20px, rgba(193,96,58,0.6) 20px, rgba(193,96,58,0.6) 21px);"></div>
+    <div style="position: relative;">
+      <span class="section-tag">ටයිලර්වරුනි</span>
+      <h2 style="font-family: 'Playfair Display', serif; font-size: clamp(24px,4vw,40px); color: var(--white); margin: 12px 0; font-weight: 700;">
+        ව්‍යාපාරය <span style="color: var(--terracotta);">ව්‍යාප්ත</span> කරගන්න
+      </h2>
+      <p style="color: rgba(245,240,232,0.45); font-size: 14px; max-width: 420px; margin: 0 auto 28px; line-height: 1.9;">
+        TilersHub හරහා නව ගනුදෙනුකරුවන් ලබා ගෙන ශ්‍රී ලංකාව පුරා ඔබේ ව්‍යාපාරය ප්‍රවර්ධනය කරගන්න — නොමිලේ
+      </p>
+      <div style="display: flex; flex-direction: column; gap: 10px; max-width: 340px; margin: 0 auto 36px; text-align: left;">
+        {['නොමිලේ ලියාපදිංචිය — ගෙවීමක් නැත', 'ශ්‍රී ලංකාව පුරා ගෘහ හිමිකරුවන්ට ළඟා වන්න', 'WhatsApp හරහා කෙලින්ම ව්‍යාපෘති ලබා ගන්න'].map(b => (
+          <div style="display: flex; align-items: center; gap: 12px; color: rgba(245,240,232,0.65); font-size: 13px;">
+            <span style="flex-shrink: 0; background: rgba(193,96,58,0.2); color: var(--terracotta); width: 22px; height: 22px; border-radius: 50%; display: inline-flex; align-items: center; justify-content: center; font-size: 11px; font-weight: 700;">✓</span>
+            {b}
+          </div>
+        ))}
+      </div>
+      <div style="display: flex; gap: 12px; justify-content: center; flex-wrap: wrap;">
+        <a href="/register" class="btn btn-primary btn-lg">✦ දැන්ම ලියාපදිංචි වන්න</a>
+        <a href="/explore" class="btn btn-lg" style="background: rgba(255,255,255,0.07); color: var(--cream); border: 1.5px solid rgba(255,255,255,0.15);">ටයිලර් බලන්න</a>
+      </div>
+    </div>
+  </section>
+
+</Layout>
