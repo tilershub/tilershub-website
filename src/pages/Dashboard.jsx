@@ -172,7 +172,7 @@ export default function Dashboard() {
                 <input className="form-input" type="number" value={form.experience_years} onChange={e => set('experience_years', e.target.value)} />
               </div>
               <div className="form-group">
-                <label className="form-label">ගාස්තු (Rs. / දිනකට)</label>
+                <label className="form-label">ගාස්තු (Rs. / sqft)</label>
                 <div style={{ display: 'flex', gap: 8, alignItems: 'center' }}>
                   <input className="form-input" type="number" placeholder="අවම" value={form.daily_rate_min} onChange={e => set('daily_rate_min', e.target.value)} />
                   <span style={{ color: 'var(--text-light)', flexShrink: 0 }}>–</span>

@@ -246,8 +246,8 @@ export default function Register() {
         {step === 3 && (
           <div style={cardStyle}>
             {darkHeader(
-              role === 'tiler' ? 'ටයිලර් ප්‍රොෆයිලය' : 'ඔබ ගැන',
-              'ඔබ ගැන ගෘහ හිමිකරුවන්ට දන්වන්න',
+              role === 'tiler' ? 'ළඟ ළඟ ඉවරයි!' : 'ඔබ ගැන',
+              role === 'tiler' ? 'ඔබේ සේවා තෝරන්න — ඉතිරිය පසුව' : 'ඔබේ නම සහ ස්ථානය',
               () => setStep(2)
             )}
             <div style={{ padding: '32px 36px' }}>
@@ -298,46 +298,24 @@ export default function Register() {
 
               {role === 'tiler' && (
                 <>
-                  <div className="form-row">
-                    <div className="form-group">
-                      <label className="form-label">අත්දැකීම (වසර) <span className="req">*</span></label>
-                      <input className="form-input" type="number" min="0" max="60" placeholder="5" value={form.experience_years} onChange={e => set('experience_years', e.target.value)} />
-                    </div>
-                    <div className="form-group">
-                      <label className="form-label">ලබාගත හැකි බව <span className="req">*</span></label>
-                      <select className="form-select" value={form.availability} onChange={e => set('availability', e.target.value)}>
-                        <option value="available">✓ දැනට ලබාගත හැකිය</option>
-                        <option value="busy">⏳ දැනට කාර්යබහුලයි</option>
-                        <option value="unavailable">✗ දැනට නොමැත</option>
-                      </select>
-                    </div>
+                  <div className="form-group">
+                    <label className="form-label">අත්දැකීම (වසර) <span className="req">*</span></label>
+                    <input className="form-input" type="number" min="0" max="60" placeholder="5" value={form.experience_years} onChange={e => set('experience_years', e.target.value)} />
                   </div>
 
                   <div className="form-group">
-                    <label className="form-label">දෛනික ගාස්තු (Rs.)</label>
-                    <div style={{ display: 'flex', gap: 8, alignItems: 'center' }}>
-                      <input className="form-input" type="number" placeholder="අවම (උදා: 3000)" value={form.daily_rate_min} onChange={e => set('daily_rate_min', e.target.value)} />
-                      <span style={{ color: 'var(--text-light)', flexShrink: 0 }}>–</span>
-                      <input className="form-input" type="number" placeholder="උපරිම (උදා: 6000)" value={form.daily_rate_max} onChange={e => set('daily_rate_max', e.target.value)} />
-                    </div>
-                    <div className="form-hint">හිස්ව තැබුවහොත් "සාකච්ඡා කළ හැකිය" ලෙස දිස් වේ</div>
-                  </div>
-
-                  <div className="form-group">
-                    <label className="form-label">ඔබ ගැන</label>
-                    <textarea
-                      className="form-textarea"
-                      placeholder="ඔබේ විශේෂඥ ක්ෂේත්‍ර, ව්‍යාපෘති, ශෛලිය... (උදා: වසර 8ක් තිස්සේ නාන කාමර සහ මහල් ටයිල් කිරීමේ අත්දැකීම ඇත)"
-                      value={form.bio}
-                      onChange={e => set('bio', e.target.value)}
-                      style={{ minHeight: 90 }}
-                    />
-                  </div>
-
-                  <div className="form-group">
-                    <label className="form-label">සේවා <span className="req">*</span></label>
-                    <div className="form-hint" style={{ marginBottom: 10 }}>ඔබ ලබා දෙන සේවා තෝරන්න</div>
+                    <label className="form-label">ඔබ ලබා දෙන සේවා <span className="req">*</span></label>
                     <ServiceCheckGrid services={SERVICES} selected={form.services} onChange={v => set('services', v)} />
+                  </div>
+
+                  {/* Complete later nudge */}
+                  <div style={{ background: 'rgba(122,154,126,0.07)', border: '1px solid rgba(122,154,126,0.2)', borderRadius: 10, padding: '12px 16px', marginTop: 4, marginBottom: 4 }}>
+                    <div style={{ fontSize: 11, color: 'var(--sage)', fontWeight: 700, marginBottom: 3 }}>
+                      ✓ ඉතිරිය dashboard හරහා සම්පූර්ණ කළ හැකිය
+                    </div>
+                    <div style={{ fontSize: 11, color: 'var(--text-mid)', lineHeight: 1.75 }}>
+                      sqft ගාස්තු, ඔබ ගැන, ෆොෙටෝ — ලියාපදිංචියෙන් පසු dashboard හිදී සැකසිය හැකිය.
+                    </div>
                   </div>
                 </>
               )}

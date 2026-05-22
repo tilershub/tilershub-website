@@ -14,7 +14,7 @@ function AvatarDisplay({ avatarUrl, name, size = 56 }) {
 
 export function TilerCard({ tiler, onClick }) {
   const rateLabel = tiler.daily_rate_min && tiler.daily_rate_max
-    ? `Rs. ${tiler.daily_rate_min.toLocaleString()} – ${tiler.daily_rate_max.toLocaleString()}`
+    ? `Rs. ${tiler.daily_rate_min.toLocaleString()} – ${tiler.daily_rate_max.toLocaleString()} / sqft`
     : 'සාකච්ඡා කළ හැකිය'
 
   const availColor = {
@@ -69,7 +69,7 @@ export function TilerCard({ tiler, onClick }) {
         </div>
         <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', borderTop: '1px solid var(--cream-dark)', paddingTop: 14 }}>
           <div>
-            <div style={{ fontSize: 10, color: 'var(--text-light)', textTransform: 'uppercase', letterSpacing: 0.5, marginBottom: 2 }}>දෛනික ගාස්තුව</div>
+            <div style={{ fontSize: 10, color: 'var(--text-light)', textTransform: 'uppercase', letterSpacing: 0.5, marginBottom: 2 }}>ගාස්තු / sqft</div>
             <div style={{ fontSize: 13, fontWeight: 700, color: 'var(--charcoal)' }}>{rateLabel}</div>
           </div>
           <a
@@ -93,7 +93,7 @@ export function TilerCard({ tiler, onClick }) {
 
 export function TilerModal({ tiler, onClose }) {
   const rateLabel = tiler.daily_rate_min && tiler.daily_rate_max
-    ? `Rs. ${tiler.daily_rate_min.toLocaleString()} – ${tiler.daily_rate_max.toLocaleString()} / දිනකට`
+    ? `Rs. ${tiler.daily_rate_min.toLocaleString()} – ${tiler.daily_rate_max.toLocaleString()} / sqft`
     : 'සාකච්ඡා කළ හැකිය'
   const availLabel = { available: '✓ දැන් ලබාගත හැකිය', busy: '⏳ දැනට කාර්යබහුලයි', unavailable: '✗ දැනට නොමැත' }[tiler.availability]
 
@@ -151,7 +151,7 @@ export function TilerModal({ tiler, onClose }) {
               {[
                 { label: 'අත්දැකීම', val: `⏱ ${tiler.experience_years} වසර` },
                 { label: 'ශ්‍රේණිගත කිරීම', val: `★ ${Number(tiler.avg_rating).toFixed(1)} (${tiler.review_count} සමාලෝචන)` },
-                { label: 'ගාස්තුව', val: rateLabel },
+                { label: 'ගාස්තු / sqft', val: rateLabel },
                 { label: 'සම්පූර්ණ කළ', val: `${tiler.total_jobs || 0}+ ව්‍යාපෘති` },
               ].map(item => (
                 <div key={item.label} style={{ background: 'var(--cream)', borderRadius: 10, padding: '14px 16px' }}>
