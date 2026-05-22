@@ -4,11 +4,9 @@ import { TilerCard, TilerModal } from './TilerCard'
 import { Spinner } from './UI'
 
 const SORT_OPTIONS = [
-  { value: 'rating',     label: '⭐ ශ්‍රේණිය' },
   { value: 'experience', label: '⏱ අත්දැකීම' },
   { value: 'price_asc',  label: '💰 ගාස්තු ↑' },
   { value: 'price_desc', label: '💰 ගාස්තු ↓' },
-  { value: 'reviews',    label: '📝 සමාලෝචන' },
 ]
 
 const BLOG_TIPS = [
@@ -91,7 +89,7 @@ export default function ExploreApp() {
   const [service, setService] = useState('')
   const [avail, setAvail] = useState('')
   const [search, setSearch] = useState('')
-  const [sort, setSort] = useState('rating')
+  const [sort, setSort] = useState('experience')
   const [showFilters, setShowFilters] = useState(false)
 
   useEffect(() => {
@@ -127,13 +125,18 @@ export default function ExploreApp() {
       )
     }
     result = [...result]
-    if      (sort === 'rating')     result.sort((a, b) => (b.avg_rating || 0) - (a.avg_rating || 0))
-    else if (sort === 'experience') result.sort((a, b) => (b.experience_years || 0) - (a.experience_years || 0))
-    else if (sort === 'price_asc')  result.sort((a, b) => (a.daily_rate_min || 99999) - (b.daily_rate_min || 99999))
-    else if (sort === 'price_desc') result.sort((a, b) => (b.daily_rate_max || 0) - (a.daily_rate_max || 0))
-    else if (sort === 'reviews')    result.sort((a, b) => (b.review_count || 0) - (a.review_count || 0))
+    if (sort === 'experience') {
+      result.sort((a, b) => {
+        if (a.featured !== b.featured) return b.featured ? 1 : -1
+        return (b.experience_years || 0) - (a.experience_years || 0)
+      })
+    } else if (sort === 'price_asc') {
+      result.sort((a, b) => (a.daily_rate_min || 99999) - (b.daily_rate_min || 99999))
+    } else if (sort === 'price_desc') {
+      result.sort((a, b) => (b.daily_rate_max || 0) - (a.daily_rate_max || 0))
+    }
     return result
-  }, [tilers, district, service, avail, search, sort])
+  }, [tilers, district, service, avail, search, sort]) // eslint-disable-line
 
   const hasFilters = district || service || avail || search
   const activeFilterCount = [district, service, avail].filter(Boolean).length

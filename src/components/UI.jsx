@@ -1,13 +1,3 @@
-export function StarRating({ rating, size = 14 }) {
-  return (
-    <span style={{ display: 'inline-flex', gap: 2 }}>
-      {[1,2,3,4,5].map(i => (
-        <span key={i} style={{ fontSize: size, color: i <= Math.round(rating) ? '#c9a84c' : '#d9c8a8' }}>★</span>
-      ))}
-    </span>
-  )
-}
-
 export function Spinner() {
   return <span className="spinner" />
 }
