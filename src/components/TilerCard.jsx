@@ -1,5 +1,3 @@
-import { useState } from 'react'
-import { StarRating } from '../components/UI'
 import { buildWhatsAppLink } from '../lib/supabase'
 import { supabase } from '../lib/supabase'
 
@@ -18,9 +16,9 @@ export function TilerCard({ tiler, onClick }) {
     : 'සාකච්ඡා කළ හැකිය'
 
   const availColor = {
-    available: { bg: 'rgba(122,154,126,0.15)', border: 'rgba(122,154,126,0.3)', text: 'var(--sage)' },
-    busy: { bg: 'rgba(201,168,76,0.15)', border: 'rgba(201,168,76,0.3)', text: 'var(--gold)' },
-    unavailable: { bg: 'rgba(160,130,109,0.15)', border: 'rgba(160,130,109,0.3)', text: 'var(--clay)' },
+    available:   { bg: 'rgba(122,154,126,0.15)', border: 'rgba(122,154,126,0.3)',   text: 'var(--sage)' },
+    busy:        { bg: 'rgba(201,168,76,0.15)',  border: 'rgba(201,168,76,0.3)',    text: 'var(--gold)' },
+    unavailable: { bg: 'rgba(160,130,109,0.15)', border: 'rgba(160,130,109,0.3)',  text: 'var(--clay)' },
   }[tiler.availability] || {}
   const availLabel = { available: '✓ ලබාගත හැකිය', busy: '⏳ කාර්යබහුලයි', unavailable: '✗ නොමැත' }[tiler.availability]
 
@@ -39,17 +37,15 @@ export function TilerCard({ tiler, onClick }) {
           <AvatarDisplay avatarUrl={tiler.avatar_url} name={tiler.full_name} size={54} />
           <div>
             <div style={{ fontSize: 16, fontWeight: 700, color: 'var(--white)', marginBottom: 3 }}>{tiler.full_name}</div>
-            <div style={{ fontSize: 12, color: 'rgba(245,240,232,0.45)', display: 'flex', gap: 8, flexWrap: 'wrap' }}>
-              <span>📍 {tiler.district}</span>
-              <span>·</span>
-              <span>⏱ {tiler.experience_years} වසර</span>
+            <div style={{ fontSize: 12, color: 'rgba(245,240,232,0.45)', display: 'flex', gap: 8, flexWrap: 'wrap', marginBottom: 6 }}>
+              <span>📍 {tiler.city || tiler.district}</span>
+              {tiler.experience_years > 1 && <><span>·</span><span>⏱ {tiler.experience_years} වසර</span></>}
             </div>
-            <div style={{ marginTop: 6, display: 'flex', alignItems: 'center', gap: 6 }}>
-              <StarRating rating={Number(tiler.avg_rating)} size={12} />
-              <span style={{ fontSize: 12, color: 'rgba(245,240,232,0.55)', fontWeight: 600 }}>{Number(tiler.avg_rating).toFixed(1)}</span>
-              <span style={{ fontSize: 11, color: 'rgba(245,240,232,0.3)' }}>({tiler.review_count})</span>
-              {tiler.is_verified && <span style={{ fontSize: 10, background: 'rgba(193,96,58,0.2)', color: 'var(--terracotta-muted)', padding: '2px 8px', borderRadius: 10, fontWeight: 600 }}>✓ සහතිකගත</span>}
-            </div>
+            {tiler.is_verified && (
+              <span style={{ fontSize: 10, background: 'rgba(193,96,58,0.2)', color: 'var(--terracotta-muted)', padding: '2px 8px', borderRadius: 10, fontWeight: 600 }}>
+                ✓ TilersHub සහතිකගත
+              </span>
+            )}
           </div>
         </div>
       </div>
@@ -59,14 +55,16 @@ export function TilerCard({ tiler, onClick }) {
         <p style={{ fontSize: 12, color: 'var(--text-mid)', lineHeight: 1.8, marginBottom: 14, display: '-webkit-box', WebkitLineClamp: 2, WebkitBoxOrient: 'vertical', overflow: 'hidden' }}>
           {tiler.bio || 'ව්‍යාපෘතිය ගැන සාකච්ඡා කිරීමට සූදානම්.'}
         </p>
-        <div style={{ display: 'flex', flexWrap: 'wrap', gap: 6, marginBottom: 16 }}>
-          {(tiler.services || []).slice(0, 3).map((s, i) => (
-            <span key={s} className={`chip ${i === 0 ? 'chip-terra' : 'chip-cream'}`}>{s}</span>
-          ))}
-          {(tiler.services || []).length > 3 && (
-            <span className="chip chip-cream">+{tiler.services.length - 3}</span>
-          )}
-        </div>
+        {(tiler.services || []).length > 0 && (
+          <div style={{ display: 'flex', flexWrap: 'wrap', gap: 6, marginBottom: 16 }}>
+            {(tiler.services || []).slice(0, 3).map((s, i) => (
+              <span key={s} className={`chip ${i === 0 ? 'chip-terra' : 'chip-cream'}`}>{s}</span>
+            ))}
+            {(tiler.services || []).length > 3 && (
+              <span className="chip chip-cream">+{tiler.services.length - 3}</span>
+            )}
+          </div>
+        )}
         <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', borderTop: '1px solid var(--cream-dark)', paddingTop: 14 }}>
           <div>
             <div style={{ fontSize: 10, color: 'var(--text-light)', textTransform: 'uppercase', letterSpacing: 0.5, marginBottom: 2 }}>ගාස්තු / sqft</div>
@@ -92,9 +90,6 @@ export function TilerCard({ tiler, onClick }) {
 }
 
 export function TilerModal({ tiler, onClose }) {
-  const rateLabel = tiler.daily_rate_min && tiler.daily_rate_max
-    ? `Rs. ${tiler.daily_rate_min.toLocaleString()} – ${tiler.daily_rate_max.toLocaleString()} / sqft`
-    : 'සාකච්ඡා කළ හැකිය'
   const availLabel = { available: '✓ දැන් ලබාගත හැකිය', busy: '⏳ දැනට කාර්යබහුලයි', unavailable: '✗ දැනට නොමැත' }[tiler.availability]
 
   function AvatarDisplay({ avatarUrl, name, size }) {
@@ -105,6 +100,12 @@ export function TilerModal({ tiler, onClose }) {
       </div>
     )
   }
+
+  const infoItems = [
+    tiler.experience_years > 1 && { label: 'අත්දැකීම', val: `⏱ ${tiler.experience_years} වසර` },
+    (tiler.daily_rate_min && tiler.daily_rate_max) && { label: 'ගාස්තු / sqft', val: `Rs. ${tiler.daily_rate_min.toLocaleString()} – ${tiler.daily_rate_max.toLocaleString()}` },
+    tiler.total_jobs > 0 && { label: 'සම්පූර්ණ කළ', val: `${tiler.total_jobs}+ ව්‍යාපෘති` },
+  ].filter(Boolean)
 
   return (
     <div className="modal-overlay" onClick={onClose}>
@@ -118,10 +119,16 @@ export function TilerModal({ tiler, onClose }) {
             <AvatarDisplay avatarUrl={tiler.avatar_url} name={tiler.full_name} size={76} />
             <div>
               <div style={{ fontFamily: "'Playfair Display', serif", fontSize: 24, color: 'var(--white)', fontWeight: 700, marginBottom: 4 }}>{tiler.full_name}</div>
-              <div style={{ fontSize: 13, color: 'rgba(245,240,232,0.45)' }}>📍 {tiler.district} දිස්ත්‍රික්කය</div>
-              <div style={{ marginTop: 10, display: 'flex', gap: 10, alignItems: 'center', flexWrap: 'wrap' }}>
-                <span style={{ fontSize: 11, background: 'rgba(122,154,126,0.15)', border: '1px solid rgba(122,154,126,0.3)', color: 'var(--sage-light)', padding: '3px 12px', borderRadius: 20 }}>{availLabel}</span>
-                {tiler.is_verified && <span style={{ fontSize: 11, background: 'rgba(193,96,58,0.2)', color: 'var(--terracotta-muted)', padding: '3px 12px', borderRadius: 20 }}>✓ TilersHub සහතිකගත</span>}
+              <div style={{ fontSize: 13, color: 'rgba(245,240,232,0.45)', marginBottom: 10 }}>📍 {tiler.city || tiler.district} · {tiler.district} දිස්ත්‍රික්කය</div>
+              <div style={{ display: 'flex', gap: 8, flexWrap: 'wrap' }}>
+                <span style={{ fontSize: 11, background: 'rgba(122,154,126,0.15)', border: '1px solid rgba(122,154,126,0.3)', color: 'var(--sage-light)', padding: '3px 12px', borderRadius: 20 }}>
+                  {availLabel}
+                </span>
+                {tiler.is_verified && (
+                  <span style={{ fontSize: 11, background: 'rgba(193,96,58,0.2)', color: 'var(--terracotta-muted)', padding: '3px 12px', borderRadius: 20 }}>
+                    ✓ TilersHub සහතිකගත
+                  </span>
+                )}
               </div>
             </div>
           </div>
@@ -136,31 +143,29 @@ export function TilerModal({ tiler, onClose }) {
             </div>
           )}
 
-          <div style={{ marginBottom: 22 }}>
-            <div style={{ fontSize: 10, fontWeight: 700, color: 'var(--terracotta)', textTransform: 'uppercase', letterSpacing: 1.5, marginBottom: 10 }}>සේවා</div>
-            <div style={{ display: 'flex', flexWrap: 'wrap', gap: 8 }}>
-              {(tiler.services || []).map(s => (
-                <span key={s} className="chip chip-terra" style={{ fontSize: 12, padding: '5px 14px' }}>{s}</span>
-              ))}
+          {(tiler.services || []).length > 0 && (
+            <div style={{ marginBottom: 22 }}>
+              <div style={{ fontSize: 10, fontWeight: 700, color: 'var(--terracotta)', textTransform: 'uppercase', letterSpacing: 1.5, marginBottom: 10 }}>සේවා</div>
+              <div style={{ display: 'flex', flexWrap: 'wrap', gap: 8 }}>
+                {(tiler.services || []).map(s => (
+                  <span key={s} className="chip chip-terra" style={{ fontSize: 12, padding: '5px 14px' }}>{s}</span>
+                ))}
+              </div>
             </div>
-          </div>
+          )}
 
-          <div style={{ marginBottom: 24 }}>
-            <div style={{ fontSize: 10, fontWeight: 700, color: 'var(--terracotta)', textTransform: 'uppercase', letterSpacing: 1.5, marginBottom: 10 }}>තොරතුරු</div>
-            <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: 10 }}>
-              {[
-                { label: 'අත්දැකීම', val: `⏱ ${tiler.experience_years} වසර` },
-                { label: 'ශ්‍රේණිගත කිරීම', val: `★ ${Number(tiler.avg_rating).toFixed(1)} (${tiler.review_count} සමාලෝචන)` },
-                { label: 'ගාස්තු / sqft', val: rateLabel },
-                { label: 'සම්පූර්ණ කළ', val: `${tiler.total_jobs || 0}+ ව්‍යාපෘති` },
-              ].map(item => (
-                <div key={item.label} style={{ background: 'var(--cream)', borderRadius: 10, padding: '14px 16px' }}>
-                  <div style={{ fontSize: 10, color: 'var(--text-light)', textTransform: 'uppercase', letterSpacing: 0.5, marginBottom: 4 }}>{item.label}</div>
-                  <div style={{ fontSize: 13, fontWeight: 600, color: 'var(--charcoal)' }}>{item.val}</div>
-                </div>
-              ))}
+          {infoItems.length > 0 && (
+            <div style={{ marginBottom: 24 }}>
+              <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fill, minmax(140px,1fr))', gap: 10 }}>
+                {infoItems.map(item => (
+                  <div key={item.label} style={{ background: 'var(--cream)', borderRadius: 10, padding: '14px 16px' }}>
+                    <div style={{ fontSize: 10, color: 'var(--text-light)', textTransform: 'uppercase', letterSpacing: 0.5, marginBottom: 4 }}>{item.label}</div>
+                    <div style={{ fontSize: 13, fontWeight: 600, color: 'var(--charcoal)' }}>{item.val}</div>
+                  </div>
+                ))}
+              </div>
             </div>
-          </div>
+          )}
 
           <a
             href={buildWhatsAppLink(tiler.phone, tiler.full_name)}

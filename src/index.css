@@ -320,6 +320,8 @@ footer a { color: var(--sage-light); }
 ::-webkit-scrollbar-thumb { background: var(--cream-dark); border-radius: 3px; }
 ::-webkit-scrollbar-thumb:hover { background: var(--terracotta-muted); }
 
+.luxe-track::-webkit-scrollbar { display: none; }
+
 /* ─── ANIMATION UTILITIES ─── */
 @keyframes fadeUp {
   from { opacity: 0; transform: translateY(18px); }
