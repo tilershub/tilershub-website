@@ -1,6 +1,7 @@
 ---
 import Layout from '../layouts/Layout.astro'
 import AdSlider from '../components/AdSlider.jsx'
+import LUXEhomeSlider from '../components/LUXEhomeSlider.jsx'
 
 const HOW_STEPS = [
   { icon: '🔍', num: '01', title: 'ටයිලර් සොයන්න', desc: 'දිස්ත්‍රික්කය, සේවාව හා ශ්‍රේණිගත කිරීම් අනුව ගළපෙන ටයිලර් සොයා ගන්න' },
@@ -74,6 +75,9 @@ const HOW_STEPS = [
       ))}
     </div>
   </section>
+
+  <!-- LUXEhome Promotional Slider -->
+  <LUXEhomeSlider client:load />
 
   <!-- Explore CTA -->
   <section style="background: var(--charcoal); padding: 80px 24px; text-align: center; position: relative; overflow: hidden;">
