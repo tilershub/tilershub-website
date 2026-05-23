@@ -1,271 +1,285 @@
-import { useState, useEffect, useRef } from 'react'
+import { useState, useEffect, useCallback } from 'react'
 
 const CARDS = [
   {
-    tag: 'Signature Collection',
-    title: 'LUXEhome',
-    subtitle: 'Premium Tiles · Sri Lanka',
-    desc: '500+ luxury designs for floors, walls & bathrooms. Free islandwide delivery on orders above Rs. 50,000.',
+    eyebrow: 'Signature Collection',
+    title: 'Premium Tiles',
+    titleBold: 'For Every Space',
+    desc: '500+ luxury designs for floors, walls & bathrooms. Free islandwide delivery above Rs. 50,000.',
+    features: [
+      { icon: '🎨', label: '500+ Designs' },
+      { icon: '🚚', label: 'Free Delivery' },
+      { icon: '🛡️', label: '5-Year Warranty' },
+      { icon: '📐', label: 'Expert Sizing' },
+    ],
     cta: 'Explore Collection →',
-    bg: 'linear-gradient(135deg, #1a1209 0%, #2d1e08 60%, #1a1209 100%)',
-    accent: '#D4AF37',
-    glow: 'rgba(212,175,55,0.18)',
+    bg: 'linear-gradient(135deg, #fef9f0 0%, #f8eccf 100%)',
+    accent: '#C9952A',
+    accentLight: '#F5E6C0',
+    textDark: '#1a0c00',
+    tiles: ['#D4AF37','#C9952A','#F0D878','#A07010','#E8C84A','#B8870A','#EBCA6A','#906008','#F8E090'],
   },
   {
-    tag: 'Marble Series',
+    eyebrow: 'Marble Series',
     title: 'Italian Marble',
-    subtitle: 'Carrara · Calacatta · Statuario',
+    titleBold: 'Carrara · Calacatta',
     desc: 'Authentic Italian marble finishes at local prices. Transform living rooms and entrances into art.',
+    features: [
+      { icon: '✨', label: 'Polished Finish' },
+      { icon: '📏', label: 'Large Format' },
+      { icon: '💎', label: 'Premium Grade' },
+      { icon: '🏠', label: 'Indoor & Out' },
+    ],
     cta: 'View Marble →',
-    bg: 'linear-gradient(135deg, #181818 0%, #282828 60%, #181818 100%)',
-    accent: '#C8C0B0',
-    glow: 'rgba(200,192,176,0.14)',
+    bg: 'linear-gradient(135deg, #f8f7f5 0%, #eeeae4 100%)',
+    accent: '#7A7068',
+    accentLight: '#E0DDD6',
+    textDark: '#1a1814',
+    tiles: ['#F5F3F0','#E0DDD8','#CCCAC4','#D8D5CE','#F0EDE8','#B8B5AE','#E8E5E0','#D0CCC6','#C8C4BC'],
   },
   {
-    tag: 'Bathroom Collection',
+    eyebrow: 'Bathroom Collection',
     title: 'Bath Luxury',
-    subtitle: 'Wall + Floor Complete Sets',
-    desc: 'Anti-slip certified. Waterproof grout included. Full bathroom tile packages from Rs. 45,000.',
+    titleBold: 'Wall + Floor Sets',
+    desc: 'Anti-slip certified. Waterproof grout included. Complete bathroom packages from Rs. 45,000.',
+    features: [
+      { icon: '💧', label: 'Anti-Slip' },
+      { icon: '🔒', label: 'Waterproof' },
+      { icon: '📦', label: 'Complete Sets' },
+      { icon: '🔧', label: 'Install Guide' },
+    ],
     cta: 'See Packages →',
-    bg: 'linear-gradient(135deg, #08171d 0%, #0f2630 60%, #08171d 100%)',
-    accent: '#5BC4D8',
-    glow: 'rgba(91,196,216,0.16)',
+    bg: 'linear-gradient(135deg, #e8f6fa 0%, #c8eaf4 100%)',
+    accent: '#1A7A96',
+    accentLight: '#A8E0F0',
+    textDark: '#081820',
+    tiles: ['#5BC4D8','#3AAAC0','#7AD8E8','#2090A8','#90D0E0','#1878A0','#60C0D0','#A8E4F0','#48B8CC'],
   },
   {
-    tag: 'Floor Collection',
+    eyebrow: 'Floor Collection',
     title: 'Large Format',
-    subtitle: '60×60 · 80×80 · 120×60 cm',
-    desc: 'Seamless modern interiors with premium large-format floor tiles. Rectified edges for zero-grout look.',
+    titleBold: '60×60 · 80×80 · 120×60 cm',
+    desc: 'Seamless modern interiors. Rectified edges for the perfect zero-grout minimalist look.',
+    features: [
+      { icon: '📐', label: 'Rectified Edges' },
+      { icon: '✦', label: 'Zero Grout' },
+      { icon: '🏗️', label: '3 Format Sizes' },
+      { icon: '🎯', label: 'Precision Cut' },
+    ],
     cta: 'Order Now →',
-    bg: 'linear-gradient(135deg, #1c1009 0%, #2c1a0e 60%, #1c1009 100%)',
+    bg: 'linear-gradient(135deg, #fdf0e8 0%, #f8d8c0 100%)',
     accent: '#C1603A',
-    glow: 'rgba(193,96,58,0.18)',
+    accentLight: '#F0C0A0',
+    textDark: '#1c0800',
+    tiles: ['#C1603A','#D4784A','#A84828','#E0906A','#B85030','#F0A880','#903820','#D87050','#E89878'],
   },
   {
-    tag: 'Free Offer',
-    title: 'Design Session',
-    subtitle: '3D Layout Planning — Complimentary',
-    desc: 'Book a free in-home tile consultation with our design team. Bring your vision, we handle the rest.',
-    cta: 'Book Free →',
-    bg: 'linear-gradient(135deg, #0c170c 0%, #152515 60%, #0c170c 100%)',
-    accent: '#7EAE82',
-    glow: 'rgba(126,174,130,0.16)',
+    eyebrow: 'Free Offer',
+    title: '3D Design Session',
+    titleBold: 'Complimentary',
+    desc: 'Book a free in-home tile consultation with our design team. 3D layout planning included.',
+    features: [
+      { icon: '🏠', label: '3D Layout' },
+      { icon: '📅', label: 'Flexible Date' },
+      { icon: '👨‍🎨', label: 'Expert Team' },
+      { icon: '✓', label: '100% Free' },
+    ],
+    cta: 'Book Free Session →',
+    bg: 'linear-gradient(135deg, #eef6ee 0%, #d0ecd0 100%)',
+    accent: '#2E7D3A',
+    accentLight: '#A8D8A8',
+    textDark: '#081408',
+    tiles: ['#7EAE82','#5A9460','#9EC8A0','#4A8450','#B8D8B8','#3A7448','#68A06C','#A0C8A4','#58A060'],
   },
 ]
 
-const CARD_W = 380
-const GAP    = 20
-const STEP   = CARD_W + GAP
+function TileMosaic({ tiles, accent }) {
+  const layout = [
+    { col: '1 / 3', row: '1 / 2' },
+    { col: '3 / 4', row: '1 / 2' },
+    { col: '4 / 5', row: '1 / 3' },
+    { col: '1 / 2', row: '2 / 4' },
+    { col: '2 / 4', row: '2 / 3' },
+    { col: '2 / 3', row: '3 / 4' },
+    { col: '3 / 5', row: '3 / 4' },
+  ]
+  return (
+    <div style={{
+      display: 'grid',
+      gridTemplateColumns: 'repeat(4, 1fr)',
+      gridTemplateRows: 'repeat(3, 1fr)',
+      gap: 8, width: '100%', height: '100%',
+    }}>
+      {layout.map((pos, i) => (
+        <div key={i} style={{
+          gridColumn: pos.col, gridRow: pos.row,
+          background: `linear-gradient(135deg, ${tiles[i]}, ${tiles[(i + 3) % tiles.length]})`,
+          borderRadius: 10,
+          boxShadow: '0 4px 16px rgba(0,0,0,0.12), inset 0 1px 0 rgba(255,255,255,0.4)',
+          border: '1px solid rgba(255,255,255,0.5)',
+          position: 'relative',
+          overflow: 'hidden',
+        }}>
+          <div style={{
+            position: 'absolute', inset: 0,
+            background: 'linear-gradient(135deg, rgba(255,255,255,0.15) 0%, transparent 60%)',
+          }} />
+        </div>
+      ))}
+    </div>
+  )
+}
 
 export default function LUXEhomeSlider() {
-  const trackRef = useRef(null)
+  const [current, setCurrent] = useState(0)
   const [paused, setPaused] = useState(false)
+
+  const next = useCallback(() => setCurrent(c => (c + 1) % CARDS.length), [])
+  const prev = useCallback(() => setCurrent(c => (c - 1 + CARDS.length) % CARDS.length), [])
 
   useEffect(() => {
     if (paused) return
-    const id = setInterval(() => {
-      const el = trackRef.current
-      if (!el) return
-      const maxScroll = el.scrollWidth - el.clientWidth
-      if (el.scrollLeft >= maxScroll - 8) {
-        el.scrollTo({ left: 0, behavior: 'smooth' })
-      } else {
-        el.scrollBy({ left: STEP, behavior: 'smooth' })
-      }
-    }, 3800)
+    const id = setInterval(next, 4200)
     return () => clearInterval(id)
-  }, [paused])
+  }, [paused, next])
 
-  const scroll = (dir) => {
-    trackRef.current?.scrollBy({ left: dir * STEP, behavior: 'smooth' })
-  }
+  const card = CARDS[current]
 
   return (
-    <section style={{ background: '#0c0804', padding: '72px 0 80px', position: 'relative', overflow: 'hidden' }}>
-      {/* Gold grid texture */}
-      <div style={{
-        position: 'absolute', inset: 0, opacity: 0.03,
-        backgroundImage: 'repeating-linear-gradient(0deg, transparent, transparent 39px, rgba(212,175,55,0.8) 39px, rgba(212,175,55,0.8) 40px), repeating-linear-gradient(90deg, transparent, transparent 39px, rgba(212,175,55,0.8) 39px, rgba(212,175,55,0.8) 40px)',
-        pointerEvents: 'none',
-      }} />
+    <section style={{ background: 'var(--cream)', padding: '48px 24px 56px', position: 'relative' }}>
+      {/* Sponsor label */}
+      <div style={{ maxWidth: 1100, margin: '0 auto 18px', display: 'flex', alignItems: 'center', justifyContent: 'space-between' }}>
+        <div style={{ display: 'flex', alignItems: 'baseline', gap: 3 }}>
+          <span style={{ fontFamily: "'Playfair Display', serif", fontSize: 26, fontWeight: 700, color: '#C9952A' }}>LUXE</span>
+          <span style={{ fontFamily: "'Playfair Display', serif", fontSize: 26, fontWeight: 400, color: 'var(--charcoal)' }}>home</span>
+          <span style={{ fontSize: 10, color: 'var(--text-light)', marginLeft: 10, letterSpacing: 1.5, textTransform: 'uppercase', fontWeight: 600 }}>· Sponsored</span>
+        </div>
+        <div style={{ display: 'flex', gap: 8 }}>
+          <button onClick={prev} style={{ width: 36, height: 36, borderRadius: '50%', background: 'var(--white)', border: '1.5px solid var(--cream-dark)', color: 'var(--text-dark)', fontSize: 18, cursor: 'pointer', display: 'flex', alignItems: 'center', justifyContent: 'center' }}>‹</button>
+          <button onClick={next} style={{ width: 36, height: 36, borderRadius: '50%', background: 'var(--white)', border: '1.5px solid var(--cream-dark)', color: 'var(--text-dark)', fontSize: 18, cursor: 'pointer', display: 'flex', alignItems: 'center', justifyContent: 'center' }}>›</button>
+        </div>
+      </div>
 
-      {/* Section header */}
-      <div style={{ padding: '0 32px', marginBottom: 40 }}>
-        <div style={{ maxWidth: 1200, margin: '0 auto', display: 'flex', alignItems: 'flex-end', justifyContent: 'space-between', flexWrap: 'wrap', gap: 16 }}>
-          <div>
-            <div style={{ fontSize: 10, fontWeight: 700, color: 'rgba(212,175,55,0.65)', letterSpacing: 3, textTransform: 'uppercase', marginBottom: 12 }}>
-              ◆ Sponsored Partner
+      {/* Main card */}
+      <div
+        style={{ maxWidth: 1100, margin: '0 auto', borderRadius: 24, overflow: 'hidden', background: card.bg, boxShadow: '0 8px 40px rgba(0,0,0,0.10)', transition: 'background 0.5s ease' }}
+        onMouseEnter={() => setPaused(true)}
+        onMouseLeave={() => setPaused(false)}
+      >
+        <div style={{ display: 'flex', minHeight: 380, position: 'relative' }}>
+
+          {/* Left: text content */}
+          <div style={{ flex: '0 0 58%', padding: '52px 48px', display: 'flex', flexDirection: 'column', justifyContent: 'center', position: 'relative', zIndex: 1 }}>
+
+            <div style={{ fontSize: 11, fontWeight: 700, color: card.accent, letterSpacing: 2, textTransform: 'uppercase', marginBottom: 14 }}>
+              Introducing
             </div>
-            <div style={{ display: 'flex', alignItems: 'baseline', gap: 3, marginBottom: 8 }}>
-              <span style={{ fontFamily: "'Playfair Display', serif", fontSize: 44, fontWeight: 700, color: '#D4AF37', letterSpacing: -0.5 }}>LUXE</span>
-              <span style={{ fontFamily: "'Playfair Display', serif", fontSize: 44, fontWeight: 400, color: 'rgba(255,255,255,0.9)', letterSpacing: -0.5 }}>home</span>
+
+            <div style={{ marginBottom: 6 }}>
+              <div style={{ fontFamily: "'Playfair Display', serif", fontSize: 'clamp(22px,3.5vw,40px)', fontWeight: 400, color: card.textDark, lineHeight: 1.2 }}>
+                {card.title}
+              </div>
+              <div style={{ fontFamily: "'Playfair Display', serif", fontSize: 'clamp(26px,4vw,48px)', fontWeight: 700, color: card.accent, lineHeight: 1.1 }}>
+                {card.titleBold}
+              </div>
             </div>
-            <div style={{ fontSize: 13, color: 'rgba(255,255,255,0.35)', letterSpacing: 0.5 }}>
-              Sri Lanka's Premium Tile Experience
+
+            <p style={{ fontSize: 13, color: card.textDark, opacity: 0.6, lineHeight: 1.8, maxWidth: 420, marginBottom: 32, marginTop: 10 }}>
+              {card.desc}
+            </p>
+
+            {/* Feature icons */}
+            <div style={{ display: 'flex', gap: 20, marginBottom: 36, flexWrap: 'wrap' }}>
+              {card.features.map((f, i) => (
+                <div key={i} style={{ display: 'flex', flexDirection: 'column', alignItems: 'center', gap: 6, minWidth: 64 }}>
+                  <div style={{
+                    width: 48, height: 48, borderRadius: 14,
+                    background: `${card.accent}18`,
+                    border: `1.5px solid ${card.accent}30`,
+                    display: 'flex', alignItems: 'center', justifyContent: 'center',
+                    fontSize: 22,
+                  }}>
+                    {f.icon}
+                  </div>
+                  <div style={{ fontSize: 9, fontWeight: 700, color: card.textDark, textTransform: 'uppercase', letterSpacing: 0.8, textAlign: 'center', lineHeight: 1.3, opacity: 0.75 }}>
+                    {f.label}
+                  </div>
+                </div>
+              ))}
+            </div>
+
+            <div>
+              <button style={{
+                background: card.accent, color: '#fff',
+                border: 'none', borderRadius: 12,
+                padding: '13px 28px',
+                fontSize: 13, fontWeight: 700,
+                cursor: 'pointer',
+                boxShadow: `0 4px 20px ${card.accent}50`,
+                letterSpacing: 0.3,
+              }}>
+                {card.cta}
+              </button>
             </div>
           </div>
 
-          {/* Nav arrows */}
-          <div style={{ display: 'flex', gap: 12, alignItems: 'center' }}>
-            <button
-              onClick={() => scroll(-1)}
-              style={{
-                width: 46, height: 46, borderRadius: '50%',
-                background: 'rgba(212,175,55,0.12)', border: '1px solid rgba(212,175,55,0.3)',
-                color: '#D4AF37', fontSize: 20, cursor: 'pointer',
-                display: 'flex', alignItems: 'center', justifyContent: 'center',
-                transition: 'all 0.2s',
-              }}
-              aria-label="Previous"
-            >‹</button>
-            <button
-              onClick={() => scroll(1)}
-              style={{
-                width: 46, height: 46, borderRadius: '50%',
-                background: 'rgba(212,175,55,0.12)', border: '1px solid rgba(212,175,55,0.3)',
-                color: '#D4AF37', fontSize: 20, cursor: 'pointer',
-                display: 'flex', alignItems: 'center', justifyContent: 'center',
-                transition: 'all 0.2s',
-              }}
-              aria-label="Next"
-            >›</button>
+          {/* Diagonal clip separator */}
+          <div style={{
+            position: 'absolute', top: 0, bottom: 0,
+            left: '54%', width: 80,
+            background: card.bg,
+            clipPath: 'polygon(0 0, 0% 100%, 100% 100%)',
+            zIndex: 2,
+          }} />
+
+          {/* Right: tile mosaic */}
+          <div style={{
+            flex: '0 0 42%',
+            background: `linear-gradient(135deg, ${card.accentLight}50, ${card.accentLight}90)`,
+            padding: 32,
+            display: 'flex',
+            alignItems: 'center',
+            justifyContent: 'center',
+            position: 'relative',
+            overflow: 'hidden',
+          }}>
+            {/* Decorative circles */}
+            <div style={{ position: 'absolute', top: -60, right: -60, width: 220, height: 220, borderRadius: '50%', background: `${card.accent}15`, pointerEvents: 'none' }} />
+            <div style={{ position: 'absolute', bottom: -40, left: -40, width: 160, height: 160, borderRadius: '50%', background: `${card.accent}10`, pointerEvents: 'none' }} />
+
+            <div style={{ width: '100%', maxWidth: 280, height: 240, position: 'relative', zIndex: 1 }}>
+              <TileMosaic tiles={card.tiles} accent={card.accent} />
+            </div>
+
+            {/* LUXEhome brand watermark */}
+            <div style={{
+              position: 'absolute', bottom: 20, right: 24,
+              display: 'flex', alignItems: 'baseline', gap: 2,
+              opacity: 0.35,
+            }}>
+              <span style={{ fontFamily: "'Playfair Display', serif", fontSize: 14, fontWeight: 700, color: card.accent }}>LUXE</span>
+              <span style={{ fontFamily: "'Playfair Display', serif", fontSize: 14, color: card.textDark }}>home</span>
+            </div>
           </div>
         </div>
       </div>
 
-      {/* Cards track */}
-      <div
-        ref={trackRef}
-        onMouseEnter={() => setPaused(true)}
-        onMouseLeave={() => setPaused(false)}
-        style={{
-          display: 'flex',
-          gap: GAP,
-          overflowX: 'auto',
-          scrollSnapType: 'x mandatory',
-          scrollBehavior: 'smooth',
-          scrollbarWidth: 'none',
-          msOverflowStyle: 'none',
-          paddingLeft: 32,
-          paddingRight: 32,
-          paddingBottom: 8,
-        }}
-        className="luxe-track"
-      >
-        {CARDS.map((card, i) => (
-          <div
+      {/* Dot indicators */}
+      <div style={{ display: 'flex', gap: 8, justifyContent: 'center', marginTop: 20 }}>
+        {CARDS.map((_, i) => (
+          <button
             key={i}
+            onClick={() => setCurrent(i)}
             style={{
-              minWidth: CARD_W, maxWidth: CARD_W,
-              flexShrink: 0,
-              scrollSnapAlign: 'start',
-              background: card.bg,
-              borderRadius: 22,
-              padding: '36px 32px 32px',
-              border: `1px solid ${card.accent}28`,
-              position: 'relative',
-              overflow: 'hidden',
-              cursor: 'pointer',
+              width: i === current ? 28 : 8,
+              height: 8, borderRadius: 4,
+              background: i === current ? card.accent : 'var(--cream-dark)',
+              border: 'none', cursor: 'pointer', padding: 0,
+              transition: 'all 0.3s ease',
             }}
-          >
-            {/* Glow orb top-right */}
-            <div style={{
-              position: 'absolute', top: -40, right: -40,
-              width: 200, height: 200, borderRadius: '50%',
-              background: card.glow,
-              filter: 'blur(32px)',
-              pointerEvents: 'none',
-            }} />
-
-            {/* Secondary glow bottom-left */}
-            <div style={{
-              position: 'absolute', bottom: -60, left: -40,
-              width: 160, height: 160, borderRadius: '50%',
-              background: card.glow,
-              filter: 'blur(40px)',
-              opacity: 0.5,
-              pointerEvents: 'none',
-            }} />
-
-            {/* Bottom accent line */}
-            <div style={{
-              position: 'absolute', bottom: 0, left: 0, right: 0,
-              height: 3,
-              background: `linear-gradient(90deg, ${card.accent}00, ${card.accent}80, ${card.accent}00)`,
-            }} />
-
-            {/* Tag */}
-            <div style={{
-              display: 'inline-block',
-              fontSize: 10, fontWeight: 700, color: card.accent,
-              textTransform: 'uppercase', letterSpacing: 1.5,
-              background: `${card.accent}18`,
-              border: `1px solid ${card.accent}35`,
-              padding: '4px 12px', borderRadius: 20,
-              marginBottom: 22,
-            }}>
-              {card.tag}
-            </div>
-
-            {/* Title */}
-            <div style={{
-              fontFamily: "'Playfair Display', serif",
-              fontSize: 32, fontWeight: 700,
-              color: 'rgba(255,255,255,0.96)',
-              lineHeight: 1.15, marginBottom: 8,
-              position: 'relative',
-            }}>
-              {i === 0
-                ? <><span style={{ color: '#D4AF37' }}>LUXE</span>home</>
-                : card.title
-              }
-            </div>
-
-            {/* Subtitle */}
-            <div style={{
-              fontSize: 13, fontWeight: 600,
-              color: card.accent, letterSpacing: 0.4,
-              marginBottom: 18,
-              opacity: 0.9,
-            }}>
-              {card.subtitle}
-            </div>
-
-            {/* Divider */}
-            <div style={{
-              height: 1,
-              background: `linear-gradient(90deg, ${card.accent}30, transparent)`,
-              marginBottom: 18,
-            }} />
-
-            {/* Description */}
-            <p style={{
-              fontSize: 13, color: 'rgba(255,255,255,0.5)',
-              lineHeight: 1.8, margin: '0 0 28px',
-            }}>
-              {card.desc}
-            </p>
-
-            {/* CTA */}
-            <button style={{
-              background: card.accent,
-              color: '#0c0804',
-              border: 'none', borderRadius: 10,
-              padding: '12px 22px',
-              fontSize: 12, fontWeight: 800,
-              cursor: 'pointer',
-              fontFamily: "'Noto Sans Sinhala', sans-serif",
-              letterSpacing: 0.5,
-              transition: 'opacity 0.2s',
-              boxShadow: `0 4px 20px ${card.glow}`,
-            }}>
-              {card.cta}
-            </button>
-          </div>
+            aria-label={`Slide ${i + 1}`}
+          />
         ))}
-
-        {/* Trailing spacer */}
-        <div style={{ minWidth: 12, flexShrink: 0 }} />
       </div>
     </section>
   )
