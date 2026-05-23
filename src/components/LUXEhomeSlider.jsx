@@ -9,7 +9,7 @@ const CARDS = [
     cta: 'Explore Collection →',
     bg: 'linear-gradient(135deg, #1a1209 0%, #2d1e08 60%, #1a1209 100%)',
     accent: '#D4AF37',
-    glow: 'rgba(212,175,55,0.12)',
+    glow: 'rgba(212,175,55,0.18)',
   },
   {
     tag: 'Marble Series',
@@ -17,9 +17,9 @@ const CARDS = [
     subtitle: 'Carrara · Calacatta · Statuario',
     desc: 'Authentic Italian marble finishes at local prices. Transform living rooms and entrances into art.',
     cta: 'View Marble →',
-    bg: 'linear-gradient(135deg, #181818 0%, #242424 60%, #181818 100%)',
+    bg: 'linear-gradient(135deg, #181818 0%, #282828 60%, #181818 100%)',
     accent: '#C8C0B0',
-    glow: 'rgba(200,192,176,0.08)',
+    glow: 'rgba(200,192,176,0.14)',
   },
   {
     tag: 'Bathroom Collection',
@@ -29,7 +29,7 @@ const CARDS = [
     cta: 'See Packages →',
     bg: 'linear-gradient(135deg, #08171d 0%, #0f2630 60%, #08171d 100%)',
     accent: '#5BC4D8',
-    glow: 'rgba(91,196,216,0.10)',
+    glow: 'rgba(91,196,216,0.16)',
   },
   {
     tag: 'Floor Collection',
@@ -39,7 +39,7 @@ const CARDS = [
     cta: 'Order Now →',
     bg: 'linear-gradient(135deg, #1c1009 0%, #2c1a0e 60%, #1c1009 100%)',
     accent: '#C1603A',
-    glow: 'rgba(193,96,58,0.12)',
+    glow: 'rgba(193,96,58,0.18)',
   },
   {
     tag: 'Free Offer',
@@ -49,12 +49,12 @@ const CARDS = [
     cta: 'Book Free →',
     bg: 'linear-gradient(135deg, #0c170c 0%, #152515 60%, #0c170c 100%)',
     accent: '#7EAE82',
-    glow: 'rgba(126,174,130,0.10)',
+    glow: 'rgba(126,174,130,0.16)',
   },
 ]
 
-const CARD_W = 288
-const GAP    = 16
+const CARD_W = 380
+const GAP    = 20
 const STEP   = CARD_W + GAP
 
 export default function LUXEhomeSlider() {
@@ -81,38 +81,38 @@ export default function LUXEhomeSlider() {
   }
 
   return (
-    <section style={{ background: '#0c0804', padding: '60px 0', position: 'relative', overflow: 'hidden' }}>
-      {/* Subtle gold grid texture */}
+    <section style={{ background: '#0c0804', padding: '72px 0 80px', position: 'relative', overflow: 'hidden' }}>
+      {/* Gold grid texture */}
       <div style={{
-        position: 'absolute', inset: 0, opacity: 0.025,
+        position: 'absolute', inset: 0, opacity: 0.03,
         backgroundImage: 'repeating-linear-gradient(0deg, transparent, transparent 39px, rgba(212,175,55,0.8) 39px, rgba(212,175,55,0.8) 40px), repeating-linear-gradient(90deg, transparent, transparent 39px, rgba(212,175,55,0.8) 39px, rgba(212,175,55,0.8) 40px)',
         pointerEvents: 'none',
       }} />
 
       {/* Section header */}
-      <div style={{ padding: '0 24px', marginBottom: 32 }}>
-        <div style={{ maxWidth: 1100, margin: '0 auto', display: 'flex', alignItems: 'flex-end', justifyContent: 'space-between', flexWrap: 'wrap', gap: 16 }}>
+      <div style={{ padding: '0 32px', marginBottom: 40 }}>
+        <div style={{ maxWidth: 1200, margin: '0 auto', display: 'flex', alignItems: 'flex-end', justifyContent: 'space-between', flexWrap: 'wrap', gap: 16 }}>
           <div>
-            <div style={{ fontSize: 9, fontWeight: 700, color: 'rgba(212,175,55,0.6)', letterSpacing: 3, textTransform: 'uppercase', marginBottom: 10 }}>
+            <div style={{ fontSize: 10, fontWeight: 700, color: 'rgba(212,175,55,0.65)', letterSpacing: 3, textTransform: 'uppercase', marginBottom: 12 }}>
               ◆ Sponsored Partner
             </div>
-            <div style={{ display: 'flex', alignItems: 'baseline', gap: 2, marginBottom: 6 }}>
-              <span style={{ fontFamily: "'Playfair Display', serif", fontSize: 36, fontWeight: 700, color: '#D4AF37', letterSpacing: -0.5 }}>LUXE</span>
-              <span style={{ fontFamily: "'Playfair Display', serif", fontSize: 36, fontWeight: 400, color: 'rgba(255,255,255,0.85)', letterSpacing: -0.5 }}>home</span>
+            <div style={{ display: 'flex', alignItems: 'baseline', gap: 3, marginBottom: 8 }}>
+              <span style={{ fontFamily: "'Playfair Display', serif", fontSize: 44, fontWeight: 700, color: '#D4AF37', letterSpacing: -0.5 }}>LUXE</span>
+              <span style={{ fontFamily: "'Playfair Display', serif", fontSize: 44, fontWeight: 400, color: 'rgba(255,255,255,0.9)', letterSpacing: -0.5 }}>home</span>
             </div>
-            <div style={{ fontSize: 12, color: 'rgba(255,255,255,0.3)', letterSpacing: 0.5 }}>
+            <div style={{ fontSize: 13, color: 'rgba(255,255,255,0.35)', letterSpacing: 0.5 }}>
               Sri Lanka's Premium Tile Experience
             </div>
           </div>
 
           {/* Nav arrows */}
-          <div style={{ display: 'flex', gap: 10, alignItems: 'center' }}>
+          <div style={{ display: 'flex', gap: 12, alignItems: 'center' }}>
             <button
               onClick={() => scroll(-1)}
               style={{
-                width: 38, height: 38, borderRadius: '50%',
-                background: 'rgba(212,175,55,0.1)', border: '1px solid rgba(212,175,55,0.25)',
-                color: '#D4AF37', fontSize: 16, cursor: 'pointer',
+                width: 46, height: 46, borderRadius: '50%',
+                background: 'rgba(212,175,55,0.12)', border: '1px solid rgba(212,175,55,0.3)',
+                color: '#D4AF37', fontSize: 20, cursor: 'pointer',
                 display: 'flex', alignItems: 'center', justifyContent: 'center',
                 transition: 'all 0.2s',
               }}
@@ -121,9 +121,9 @@ export default function LUXEhomeSlider() {
             <button
               onClick={() => scroll(1)}
               style={{
-                width: 38, height: 38, borderRadius: '50%',
-                background: 'rgba(212,175,55,0.1)', border: '1px solid rgba(212,175,55,0.25)',
-                color: '#D4AF37', fontSize: 16, cursor: 'pointer',
+                width: 46, height: 46, borderRadius: '50%',
+                background: 'rgba(212,175,55,0.12)', border: '1px solid rgba(212,175,55,0.3)',
+                color: '#D4AF37', fontSize: 20, cursor: 'pointer',
                 display: 'flex', alignItems: 'center', justifyContent: 'center',
                 transition: 'all 0.2s',
               }}
@@ -146,9 +146,9 @@ export default function LUXEhomeSlider() {
           scrollBehavior: 'smooth',
           scrollbarWidth: 'none',
           msOverflowStyle: 'none',
-          paddingLeft: 24,
-          paddingRight: 24,
-          paddingBottom: 4,
+          paddingLeft: 32,
+          paddingRight: 32,
+          paddingBottom: 8,
         }}
         className="luxe-track"
       >
@@ -160,39 +160,49 @@ export default function LUXEhomeSlider() {
               flexShrink: 0,
               scrollSnapAlign: 'start',
               background: card.bg,
-              borderRadius: 18,
-              padding: '28px 24px 24px',
-              border: `1px solid ${card.accent}20`,
+              borderRadius: 22,
+              padding: '36px 32px 32px',
+              border: `1px solid ${card.accent}28`,
               position: 'relative',
               overflow: 'hidden',
               cursor: 'pointer',
             }}
           >
-            {/* Glow orb */}
+            {/* Glow orb top-right */}
             <div style={{
-              position: 'absolute', top: -30, right: -30,
-              width: 140, height: 140, borderRadius: '50%',
+              position: 'absolute', top: -40, right: -40,
+              width: 200, height: 200, borderRadius: '50%',
               background: card.glow,
-              filter: 'blur(20px)',
+              filter: 'blur(32px)',
               pointerEvents: 'none',
             }} />
 
-            {/* Bottom corner accent line */}
+            {/* Secondary glow bottom-left */}
+            <div style={{
+              position: 'absolute', bottom: -60, left: -40,
+              width: 160, height: 160, borderRadius: '50%',
+              background: card.glow,
+              filter: 'blur(40px)',
+              opacity: 0.5,
+              pointerEvents: 'none',
+            }} />
+
+            {/* Bottom accent line */}
             <div style={{
               position: 'absolute', bottom: 0, left: 0, right: 0,
-              height: 2,
-              background: `linear-gradient(90deg, ${card.accent}00, ${card.accent}60, ${card.accent}00)`,
+              height: 3,
+              background: `linear-gradient(90deg, ${card.accent}00, ${card.accent}80, ${card.accent}00)`,
             }} />
 
             {/* Tag */}
             <div style={{
               display: 'inline-block',
-              fontSize: 9, fontWeight: 700, color: card.accent,
+              fontSize: 10, fontWeight: 700, color: card.accent,
               textTransform: 'uppercase', letterSpacing: 1.5,
-              background: `${card.accent}15`,
-              border: `1px solid ${card.accent}30`,
-              padding: '3px 10px', borderRadius: 20,
-              marginBottom: 18,
+              background: `${card.accent}18`,
+              border: `1px solid ${card.accent}35`,
+              padding: '4px 12px', borderRadius: 20,
+              marginBottom: 22,
             }}>
               {card.tag}
             </div>
@@ -200,9 +210,9 @@ export default function LUXEhomeSlider() {
             {/* Title */}
             <div style={{
               fontFamily: "'Playfair Display', serif",
-              fontSize: 24, fontWeight: 700,
-              color: 'rgba(255,255,255,0.95)',
-              lineHeight: 1.15, marginBottom: 6,
+              fontSize: 32, fontWeight: 700,
+              color: 'rgba(255,255,255,0.96)',
+              lineHeight: 1.15, marginBottom: 8,
               position: 'relative',
             }}>
               {i === 0
@@ -213,17 +223,25 @@ export default function LUXEhomeSlider() {
 
             {/* Subtitle */}
             <div style={{
-              fontSize: 11, fontWeight: 600,
-              color: card.accent, letterSpacing: 0.3,
-              marginBottom: 14,
+              fontSize: 13, fontWeight: 600,
+              color: card.accent, letterSpacing: 0.4,
+              marginBottom: 18,
+              opacity: 0.9,
             }}>
               {card.subtitle}
             </div>
 
+            {/* Divider */}
+            <div style={{
+              height: 1,
+              background: `linear-gradient(90deg, ${card.accent}30, transparent)`,
+              marginBottom: 18,
+            }} />
+
             {/* Description */}
             <p style={{
-              fontSize: 12, color: 'rgba(255,255,255,0.38)',
-              lineHeight: 1.75, margin: '0 0 22px',
+              fontSize: 13, color: 'rgba(255,255,255,0.5)',
+              lineHeight: 1.8, margin: '0 0 28px',
             }}>
               {card.desc}
             </p>
@@ -231,22 +249,23 @@ export default function LUXEhomeSlider() {
             {/* CTA */}
             <button style={{
               background: card.accent,
-              color: i === 1 ? '#1a1a1a' : 'rgba(0,0,0,0.85)',
-              border: 'none', borderRadius: 9,
-              padding: '10px 18px',
-              fontSize: 11, fontWeight: 700,
+              color: '#0c0804',
+              border: 'none', borderRadius: 10,
+              padding: '12px 22px',
+              fontSize: 12, fontWeight: 800,
               cursor: 'pointer',
               fontFamily: "'Noto Sans Sinhala', sans-serif",
-              letterSpacing: 0.3,
+              letterSpacing: 0.5,
               transition: 'opacity 0.2s',
+              boxShadow: `0 4px 20px ${card.glow}`,
             }}>
               {card.cta}
             </button>
           </div>
         ))}
 
-        {/* Trailing spacer so last card scrolls fully into view */}
-        <div style={{ minWidth: 8, flexShrink: 0 }} />
+        {/* Trailing spacer */}
+        <div style={{ minWidth: 12, flexShrink: 0 }} />
       </div>
     </section>
   )
