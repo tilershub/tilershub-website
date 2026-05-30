@@ -387,6 +387,11 @@ footer {
 }
 footer strong { color: var(--terracotta); }
 
+/* ─── AD SLIDER ─── */
+@media (max-width: 640px) {
+  .ad-mosaic { display: none !important; }
+}
+
 /* ─── SCROLLBAR ─── */
 ::-webkit-scrollbar { width: 6px; }
 ::-webkit-scrollbar-track { background: transparent; }
