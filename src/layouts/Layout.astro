@@ -1,12 +1,16 @@
 ---
 import '../index.css'
-const { title = 'TilersHub · Sri Lanka\'s Tiling Platform', description = 'Find verified tilers, workshops, suppliers and tile brands across Sri Lanka. Post your tiling project free.', ogImage = '/og-default.jpg' } = Astro.props
+const {
+  title = "TilersHub · Sri Lanka's Tiling Marketplace",
+  description = "Find verified tilers, workshops, suppliers and tile brands across Sri Lanka. Post your tiling project free on TilersHub.",
+} = Astro.props
+const path = Astro.url.pathname
 ---
 <!DOCTYPE html>
 <html lang="en">
 <head>
   <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover" />
   <title>{title}</title>
   <meta name="description" content={description} />
   <meta property="og:title" content={title} />
@@ -17,84 +21,71 @@ const { title = 'TilersHub · Sri Lanka\'s Tiling Platform', description = 'Find
   <link rel="icon" type="image/svg+xml" href="/favicon.svg" />
   <link rel="preconnect" href="https://fonts.googleapis.com" />
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
-  <link href="https://fonts.googleapis.com/css2?family=Noto+Sans+Sinhala:wght@300;400;500;600;700;800&family=Playfair+Display:ital,wght@0,400;0,600;0,700;1,400;1,700&display=swap" rel="stylesheet" />
+  <link href="https://fonts.googleapis.com/css2?family=Noto+Sans+Sinhala:wght@300;400;500;600;700;800&family=Playfair+Display:ital,wght@0,400;0,600;0,700;1,400&display=swap" rel="stylesheet" />
 </head>
 <body>
 
-  <!-- Sticky header -->
-  <header class="site-nav" id="site-header">
-    <a href="/" class="site-nav-logo">
+  <!-- ═══ WHITE MARKETPLACE HEADER ═══ -->
+  <header class="site-header">
+    <a href="/" class="site-logo">
       <div class="site-logo-grid">
-        {[0,1,2,3,4,5,6,7,8].map(i => (
-          <div class={`site-logo-tile${i === 8 ? ' e' : ''}`}></div>
-        ))}
+        {[0,1,2,3,4,5,6,7,8].map(i => <div class={`site-logo-tile${i===8?' e':''}`}></div>)}
       </div>
-      <span class="site-logo-text">TILERS<span>HUB</span></span>
+      <span class="site-logo-mark">TILERS<span>HUB</span></span>
     </a>
 
-    <div class="site-nav-search">
-      <span class="search-icon">🔍</span>
-      <input
-        type="search"
-        placeholder="Search tilers, workshops, brands..."
-        id="global-search"
-        autocomplete="off"
-      />
+    <div class="header-actions">
+      <a href="/providers" class="header-icon-btn" title="Search" aria-label="Search providers">🔍</a>
+      <a href="/post-project" class="header-cta">Post Project</a>
+      <button class="header-icon-btn" id="hamburger" aria-label="Menu">☰</button>
     </div>
-
-    <nav class="site-nav-actions">
-      <a href="/post-project" class="nav-pill nav-pill-ghost">Post Project</a>
-      <a href="/providers" class="nav-pill nav-pill-fill">Find Tilers</a>
-      <button class="nav-hamburger" id="hamburger-btn" aria-label="Menu">☰</button>
-    </nav>
   </header>
 
-  <!-- Mobile nav overlay + drawer -->
-  <div class="mobile-nav-overlay" id="mobile-overlay"></div>
-  <div class="mobile-nav-drawer" id="mobile-drawer">
-    <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:20px;padding-bottom:16px;border-bottom:1px solid rgba(255,255,255,0.1);">
+  <!-- Mobile drawer overlay -->
+  <div class="mobile-drawer-overlay" id="drawer-overlay"></div>
+  <div class="mobile-drawer" id="mobile-drawer">
+    <div class="drawer-header">
       <span style="font-family:'Playfair Display',serif;font-size:16px;font-weight:700;color:#fff;">TILERS<span style="color:#E05A2B;">HUB</span></span>
-      <button id="close-drawer" style="background:transparent;border:none;color:rgba(255,255,255,0.6);font-size:20px;cursor:pointer;">✕</button>
+      <button id="close-drawer" style="background:transparent;border:none;color:rgba(255,255,255,0.5);font-size:22px;cursor:pointer;padding:4px;">✕</button>
     </div>
-    <a href="/" class="mobile-nav-link">🏠 Home</a>
-    <a href="/providers" class="mobile-nav-link">👷 Find Providers</a>
-    <a href="/brands" class="mobile-nav-link">🏷️ Tile Brands</a>
-    <a href="/estimator" class="mobile-nav-link">📐 Cost Estimator</a>
-    <a href="/post-project" class="mobile-nav-link" style="background:rgba(224,90,43,0.15);color:#E05A2B;margin-top:8px;">📋 Post a Project</a>
-    <a href="/join-tilershub" class="mobile-nav-link" style="background:rgba(27,58,107,0.3);color:#93b8f0;margin-top:4px;">✅ Join as Provider</a>
+    <a href="/" class={`drawer-link${path==='/'?' active':''}`}>🏠 Home</a>
+    <a href="/providers" class={`drawer-link${path.startsWith('/providers')?' active':''}`}>👷 Find Providers</a>
+    <a href="/brands" class={`drawer-link${path.startsWith('/brands')?' active':''}`}>🏷️ Tile Brands</a>
+    <a href="/estimator" class={`drawer-link${path==='/estimator'?' active':''}`}>📐 Cost Estimator</a>
+    <div class="drawer-divider"></div>
+    <a href="/providers?type=workshop" class="drawer-link">🏭 Workshops</a>
+    <a href="/providers?type=supplier" class="drawer-link">📦 Suppliers</a>
+    <a href="/providers?type=tile_shop" class="drawer-link">🏪 Tile Shops</a>
+    <div class="drawer-divider"></div>
+    <a href="/post-project" class="drawer-link highlight">📋 Post a Project</a>
+    <a href="/join-tilershub" class="drawer-link" style="color:rgba(255,255,255,0.6);">✅ Join as Provider</a>
   </div>
 
   <main class="page-wrap">
     <slot />
   </main>
 
-  <!-- Footer -->
+  <!-- ═══ FOOTER ═══ -->
   <footer class="site-footer">
     <div class="footer-inner">
       <div>
         <div style="display:flex;align-items:center;gap:8px;margin-bottom:4px;">
-          <div class="site-logo-grid">
-            {[0,1,2,3,4,5,6,7,8].map(i => (
-              <div class={`site-logo-tile${i === 8 ? ' e' : ''}`}></div>
-            ))}
-          </div>
-          <span style="font-family:'Playfair Display',serif;font-size:17px;font-weight:700;color:rgba(255,255,255,0.88);">TILERS<strong>HUB</strong></span>
+          <div class="site-logo-grid">{[0,1,2,3,4,5,6,7,8].map(i=><div class={`site-logo-tile${i===8?' e':''}`}></div>)}</div>
+          <span style="font-family:'Playfair Display',serif;font-size:16px;font-weight:700;color:rgba(255,255,255,0.88);">TILERS<strong>HUB</strong></span>
         </div>
-        <p class="footer-brand-text">
-          Sri Lanka's trusted platform for tilers, workshops, suppliers, and tile brands. Connect with verified professionals islandwide.
-        </p>
-        <div style="display:flex;gap:8px;margin-top:18px;flex-wrap:wrap;">
-          <span style="font-size:11px;color:rgba(255,255,255,0.3);background:rgba(255,255,255,0.05);border:1px solid rgba(255,255,255,0.08);padding:4px 10px;border-radius:8px;">🇱🇰 Sri Lanka</span>
-          <span style="font-size:11px;color:rgba(255,255,255,0.3);background:rgba(255,255,255,0.05);border:1px solid rgba(255,255,255,0.08);padding:4px 10px;border-radius:8px;">✓ Free Service</span>
+        <p class="footer-brand-text">Sri Lanka's trusted platform for tilers, workshops, suppliers and tile brands. Connect with verified professionals islandwide.</p>
+        <div style="display:flex;gap:6px;margin-top:16px;flex-wrap:wrap;">
+          <span style="font-size:11px;color:rgba(255,255,255,0.28);background:rgba(255,255,255,0.04);border:1px solid rgba(255,255,255,0.07);padding:3px 10px;border-radius:8px;">🇱🇰 Sri Lanka</span>
+          <span style="font-size:11px;color:rgba(255,255,255,0.28);background:rgba(255,255,255,0.04);border:1px solid rgba(255,255,255,0.07);padding:3px 10px;border-radius:8px;">✓ Free Service</span>
         </div>
       </div>
       <div>
         <div class="footer-col-head">Discover</div>
         <nav class="footer-links">
-          <a href="/">🏠 Home</a>
           <a href="/providers">👷 Find Providers</a>
           <a href="/brands">🏷️ Tile Brands</a>
           <a href="/estimator">📐 Cost Estimator</a>
+          <a href="/providers?type=workshop">🏭 Workshops</a>
         </nav>
       </div>
       <div>
@@ -102,46 +93,65 @@ const { title = 'TilersHub · Sri Lanka\'s Tiling Platform', description = 'Find
         <nav class="footer-links">
           <a href="/post-project">📋 Post a Project</a>
           <a href="/join-tilershub">✅ Join as Provider</a>
-          <a href="/providers?type=workshop">🏭 Workshops</a>
           <a href="/providers?type=tile_shop">🏪 Tile Shops</a>
+          <a href="/sponsor/luxehome">🚿 Bathroom Ideas</a>
         </nav>
       </div>
     </div>
     <div class="footer-bottom">
-      <span>© 2025 <strong>TilersHub</strong> · tilershub.lk · Sri Lanka's Trusted Tiling Platform</span>
-      <span style="color:rgba(224,90,43,0.5);font-weight:600;">Made with ♥ in Sri Lanka</span>
+      <span>© 2025 <strong>TilersHub</strong> · tilershub.lk</span>
+      <span style="color:rgba(245,158,11,0.5);font-weight:600;">Made with ♥ in Sri Lanka</span>
     </div>
   </footer>
 
+  <!-- ═══ BOTTOM NAVIGATION (mobile only) ═══ -->
+  <nav class="bottom-nav" aria-label="Main navigation">
+    <div class="bottom-nav-inner">
+      <a href="/" class={`bottom-nav-item${path==='/'?' active':''}`}>
+        <span class="bottom-nav-icon">🏠</span>
+        Home
+      </a>
+      <a href="/providers" class={`bottom-nav-item${path.startsWith('/providers')?' active':''}`}>
+        <span class="bottom-nav-icon">👷</span>
+        Tilers
+      </a>
+      <a href="/post-project" class="bottom-nav-post" title="Post Project">
+        <span class="bottom-nav-post-icon">＋</span>
+        Post
+      </a>
+      <a href="/estimator" class={`bottom-nav-item${path==='/estimator'?' active':''}`}>
+        <span class="bottom-nav-icon">📐</span>
+        Estimate
+      </a>
+      <button class="bottom-nav-item" id="bottom-menu-btn">
+        <span class="bottom-nav-icon">☰</span>
+        More
+      </button>
+    </div>
+  </nav>
+
   <script>
-    // Mobile nav
-    const hamburger = document.getElementById('hamburger-btn')
-    const overlay = document.getElementById('mobile-overlay')
+    const hamburger = document.getElementById('hamburger')
+    const bottomMenu = document.getElementById('bottom-menu-btn')
+    const overlay = document.getElementById('drawer-overlay')
     const drawer = document.getElementById('mobile-drawer')
     const closeBtn = document.getElementById('close-drawer')
 
     function openDrawer() {
-      drawer.classList.add('open')
-      overlay.classList.add('open')
+      drawer?.classList.add('open')
+      overlay?.classList.add('open')
       document.body.style.overflow = 'hidden'
     }
     function closeDrawer() {
-      drawer.classList.remove('open')
-      overlay.classList.remove('open')
+      drawer?.classList.remove('open')
+      overlay?.classList.remove('open')
       document.body.style.overflow = ''
     }
 
     hamburger?.addEventListener('click', openDrawer)
+    bottomMenu?.addEventListener('click', openDrawer)
     overlay?.addEventListener('click', closeDrawer)
     closeBtn?.addEventListener('click', closeDrawer)
-
-    // Global search redirect
-    const searchInput = document.getElementById('global-search')
-    searchInput?.addEventListener('keydown', e => {
-      if (e.key === 'Enter' && e.target.value.trim()) {
-        window.location.href = `/providers?q=${encodeURIComponent(e.target.value.trim())}`
-      }
-    })
   </script>
 </body>
 </html>
