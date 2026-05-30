@@ -1,0 +1,74 @@
+---
+import Layout from '../../layouts/Layout.astro'
+import ProviderDirectory from '../../components/ProviderDirectory.jsx'
+
+const type = Astro.url.searchParams.get('type') || ''
+const q = Astro.url.searchParams.get('q') || ''
+
+const TYPE_LABELS = {
+  tiler: 'Tilers', workshop: 'Workshops', supplier: 'Suppliers',
+  contractor: 'Contractors', tile_shop: 'Tile Shops', brand_dealer: 'Brand Dealers'
+}
+const pageTitle = type ? `${TYPE_LABELS[type] || 'Providers'} in Sri Lanka` : 'Find Tiling Providers in Sri Lanka'
+---
+
+<Layout
+  title={`${pageTitle} · TilersHub`}
+  description="Find verified tilers, workshops, suppliers, contractors and tile shops across Sri Lanka. Contact directly via WhatsApp."
+>
+
+  <!-- Page Header -->
+  <div style="background:var(--navy);padding:40px 20px 36px;position:relative;overflow:hidden;">
+    <div style="position:absolute;inset:0;opacity:0.04;background-image:repeating-linear-gradient(0deg,transparent,transparent 39px,rgba(255,255,255,0.8) 39px,rgba(255,255,255,0.8) 40px),repeating-linear-gradient(90deg,transparent,transparent 39px,rgba(255,255,255,0.8) 39px,rgba(255,255,255,0.8) 40px);pointer-events:none;"></div>
+    <div style="max-width:1100px;margin:0 auto;position:relative;text-align:center;">
+      <span style="font-size:9px;font-weight:700;color:rgba(224,90,43,0.7);letter-spacing:3px;text-transform:uppercase;display:block;margin-bottom:12px;">Provider Directory</span>
+      <h1 style="font-family:'Playfair Display',serif;font-size:clamp(24px,4vw,40px);font-weight:700;color:#fff;margin-bottom:10px;line-height:1.2;">
+        {type ? TYPE_LABELS[type] || 'Providers' : 'Tiling'} <span style="color:var(--terra);">Professionals</span>
+      </h1>
+      <p style="font-size:14px;color:rgba(255,255,255,0.5);max-width:440px;margin:0 auto;">
+        Connect directly via WhatsApp — no middlemen, no fees
+      </p>
+    </div>
+  </div>
+
+  <!-- LUXEhome Premium Provider -->
+  <div style="background:linear-gradient(180deg,#0e0b06 0%,#120e08 100%);padding:20px 20px 0;border-bottom:1px solid rgba(212,175,55,0.12);">
+    <div style="max-width:1100px;margin:0 auto;">
+      <div style="display:flex;align-items:center;gap:10px;margin-bottom:14px;">
+        <div style="height:1px;flex:1;background:rgba(212,175,55,0.15);"></div>
+        <span style="font-size:9px;font-weight:700;color:rgba(212,175,55,0.55);letter-spacing:3px;text-transform:uppercase;white-space:nowrap;">◆ Premium Provider</span>
+        <div style="height:1px;flex:1;background:rgba(212,175,55,0.15);"></div>
+      </div>
+      <div style="background:linear-gradient(135deg,#1a1408 0%,#261c0c 50%,#1a1408 100%);border-radius:16px;border:1px solid rgba(212,175,55,0.18);overflow:hidden;margin-bottom:20px;box-shadow:0 8px 40px rgba(0,0,0,0.4);">
+        <div style="display:flex;align-items:center;justify-content:space-between;flex-wrap:wrap;gap:14px;padding:20px 24px 16px;">
+          <div style="display:flex;align-items:center;gap:16px;">
+            <div style="display:flex;align-items:baseline;gap:2px;flex-shrink:0;">
+              <span style="font-family:'Playfair Display',serif;font-size:24px;font-weight:700;color:#D4AF37;">LUXE</span>
+              <span style="font-family:'Playfair Display',serif;font-size:24px;font-weight:400;color:rgba(255,255,255,0.88);">home</span>
+            </div>
+            <div style="width:1px;height:28px;background:rgba(212,175,55,0.2);flex-shrink:0;"></div>
+            <div>
+              <div style="font-size:13px;font-weight:700;color:rgba(255,255,255,0.85);margin-bottom:2px;">Sri Lanka's Premium Tile Supplier</div>
+              <div style="font-size:11px;color:rgba(255,255,255,0.35);">Bathroom · Floor · Staircase · Free islandwide delivery</div>
+            </div>
+          </div>
+          <a href="https://luxehome.lk" target="_blank" rel="noopener noreferrer" style="display:inline-flex;align-items:center;gap:7px;background:#D4AF37;color:#0c0804;border-radius:10px;padding:9px 18px;font-size:12px;font-weight:800;text-decoration:none;white-space:nowrap;flex-shrink:0;">
+            🌐 Visit luxehome.lk
+          </a>
+        </div>
+        <div style="height:1px;background:rgba(212,175,55,0.1);margin:0 24px;"></div>
+        <a href="/sponsor/luxehome" style="display:block;text-decoration:none;padding:18px 24px;transition:background 0.2s;" onmouseover="this.style.background='rgba(212,175,55,0.04)'" onmouseout="this.style.background='transparent'">
+          <div style="display:flex;align-items:center;gap:12px;margin-bottom:8px;">
+            <div style="width:34px;height:34px;border-radius:9px;background:linear-gradient(135deg,#261c0c,#3a2a10);border:1px solid rgba(212,175,55,0.2);display:flex;align-items:center;justify-content:center;font-size:17px;flex-shrink:0;">🚿</div>
+            <div style="font-size:13px;font-weight:700;color:#D4AF37;">Bathroom Renovation — Wall & floor tile packages</div>
+          </div>
+          <div style="font-size:11px;color:rgba(255,255,255,0.35);line-height:1.7;margin-bottom:8px;">Premium anti-slip certified tiles. Complete renovation packages with free islandwide delivery above Rs. 50,000.</div>
+          <span style="font-size:11px;font-weight:700;color:rgba(212,175,55,0.7);">View Collections →</span>
+        </a>
+      </div>
+    </div>
+  </div>
+
+  <ProviderDirectory client:only="react" initialType={type} initialSearch={q} />
+
+</Layout>

@@ -1,0 +1,69 @@
+---
+import Layout from '../layouts/Layout.astro'
+import JoinForm from '../components/JoinForm.jsx'
+---
+
+<Layout
+  title="Join TilersHub as a Provider · Free Listing"
+  description="Join TilersHub and get discovered by homeowners across Sri Lanka. Free listing for tilers, workshops, suppliers and contractors."
+>
+
+  <!-- Header -->
+  <div style="background:var(--navy);padding:48px 20px 44px;text-align:center;position:relative;overflow:hidden;">
+    <div style="position:absolute;inset:0;opacity:0.04;background-image:repeating-linear-gradient(0deg,transparent,transparent 39px,rgba(255,255,255,0.8) 39px,rgba(255,255,255,0.8) 40px),repeating-linear-gradient(90deg,transparent,transparent 39px,rgba(255,255,255,0.8) 39px,rgba(255,255,255,0.8) 40px);pointer-events:none;"></div>
+    <div style="position:relative;max-width:600px;margin:0 auto;">
+      <a href="/" style="display:inline-flex;align-items:center;gap:5px;font-size:11px;color:rgba(255,255,255,0.4);letter-spacing:1px;text-transform:uppercase;font-weight:600;margin-bottom:24px;text-decoration:none;">← TilersHub</a>
+      <div style="font-size:9px;font-weight:700;color:rgba(37,211,102,0.7);letter-spacing:3px;text-transform:uppercase;margin-bottom:14px;">Free · No Commission</div>
+      <h1 style="font-family:'Playfair Display',serif;font-size:clamp(26px,4vw,42px);font-weight:700;color:#fff;margin-bottom:12px;line-height:1.2;">
+        Join <span style="color:var(--terra);">TilersHub</span>
+      </h1>
+      <p style="font-size:14px;color:rgba(255,255,255,0.5);max-width:440px;margin:0 auto;line-height:1.9;">
+        List your business free and get discovered by homeowners across Sri Lanka. Direct WhatsApp leads, no middlemen.
+      </p>
+    </div>
+  </div>
+
+  <!-- Benefits -->
+  <div style="background:var(--surface-2);border-bottom:1px solid var(--border);padding:24px 20px;">
+    <div style="max-width:780px;margin:0 auto;display:grid;grid-template-columns:repeat(auto-fit,minmax(170px,1fr));gap:16px;text-align:center;">
+      {[
+        { icon: '✓', title: 'Free Listing', text: 'Always free to join and list' },
+        { icon: '💬', title: 'Direct Leads', text: 'Customers contact you on WhatsApp' },
+        { icon: '🚫', title: 'No Commission', text: 'Keep 100% of your earnings' },
+        { icon: '🏷️', title: 'Get Verified', text: 'Earn TH Verified badge' },
+      ].map(b => (
+        <div style="padding:14px 10px;">
+          <div style="font-size:20px;margin-bottom:6px;">{b.icon}</div>
+          <div style="font-size:13px;font-weight:700;color:var(--text);margin-bottom:3px;">{b.title}</div>
+          <div style="font-size:11px;color:var(--text-3);">{b.text}</div>
+        </div>
+      ))}
+    </div>
+  </div>
+
+  <!-- Form -->
+  <section style="background:var(--surface);padding:48px 20px 64px;">
+    <JoinForm client:load />
+  </section>
+
+  <!-- Verification info -->
+  <section style="background:var(--surface-2);padding:40px 20px;border-top:1px solid var(--border);">
+    <div style="max-width:700px;margin:0 auto;">
+      <h3 style="font-family:'Playfair Display',serif;font-size:20px;font-weight:700;color:var(--text);text-align:center;margin-bottom:24px;">Verification Levels</h3>
+      <div style="display:grid;grid-template-columns:repeat(auto-fit,minmax(160px,1fr));gap:12px;">
+        {[
+          { badge: '· Listed', color: '#64748b', bg: '#f1f5f9', desc: 'Basic listing — applied and pending review' },
+          { badge: '✓ TH Verified', color: '#0f766e', bg: '#f0fdfa', desc: 'Identity verified by TilersHub team' },
+          { badge: '✦ Certified Pro', color: '#1d4ed8', bg: '#eff6ff', desc: 'Skills + work quality verified' },
+          { badge: '★ TH Master', color: '#7c3aed', bg: '#f5f3ff', desc: 'Top-tier professionals, premium badge' },
+        ].map(v => (
+          <div style="padding:14px;background:var(--surface);border-radius:12px;border:1px solid var(--border);">
+            <span style={`display:inline-flex;align-items:center;font-size:11px;font-weight:700;padding:3px 10px;border-radius:20px;background:${v.bg};color:${v.color};margin-bottom:8px;`}>{v.badge}</span>
+            <p style="font-size:11px;color:var(--text-3);line-height:1.6;margin:0;">{v.desc}</p>
+          </div>
+        ))}
+      </div>
+    </div>
+  </section>
+
+</Layout>

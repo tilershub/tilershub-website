@@ -13,6 +13,14 @@ export const DISTRICTS = [
   'පොළොන්නරුව','බදුල්ල','මොණරාගල','රත්නපුර'
 ]
 
+export const DISTRICTS_EN = [
+  'Colombo','Gampaha','Kalutara','Matale','Kegalle','Kandy',
+  'Nuwara Eliya','Galle','Matara','Hambantota','Jaffna',
+  'Mannar','Vavuniya','Mullaitivu','Kilinochchi','Batticaloa',
+  'Ampara','Trincomalee','Kurunegala','Puttalam','Anuradhapura',
+  'Polonnaruwa','Badulla','Monaragala','Ratnapura'
+]
+
 export const SERVICES = [
   'මහල් ටයිල් කිරීම',
   'නාන කාමර ප්‍රතිසංස්කරණය',
@@ -24,7 +32,53 @@ export const SERVICES = [
   'ග්‍රොට්ටිං සහ නිම කිරීම'
 ]
 
-export function buildWhatsAppLink(phone, tilerName) {
+export const SERVICES_EN = [
+  'Floor Tiling',
+  'Bathroom Renovation',
+  'Kitchen Tiling',
+  'Staircase Tiling',
+  'Wall Tiling',
+  'Outdoor Tiling',
+  'Waterproofing',
+  'Grouting & Finishing'
+]
+
+export const PROJECT_TYPES = [
+  'Floor Tiling',
+  'Bathroom Tiling',
+  'Bathroom Renovation',
+  'Granite Works',
+  'Tile Cutting',
+  'Routering',
+  'Waterproofing',
+  'Tile Shop Inquiry'
+]
+
+export const PROVIDER_TYPES = [
+  { value: 'tiler', label: 'Tiler', icon: '🪚' },
+  { value: 'workshop', label: 'Workshop', icon: '🏭' },
+  { value: 'supplier', label: 'Supplier', icon: '📦' },
+  { value: 'contractor', label: 'Contractor', icon: '👷' },
+  { value: 'tile_shop', label: 'Tile Shop', icon: '🏪' },
+  { value: 'brand_dealer', label: 'Brand Dealer', icon: '🏷️' },
+]
+
+export const VERIFICATION_BADGES = {
+  listed: { label: 'Listed', color: '#64748b', bg: '#f1f5f9' },
+  th_verified: { label: 'TH Verified', color: '#0f766e', bg: '#f0fdfa' },
+  th_certified_pro: { label: 'Certified Pro', color: '#1d4ed8', bg: '#eff6ff' },
+  th_master: { label: 'TH Master', color: '#7c3aed', bg: '#f5f3ff' },
+}
+
+export const BUDGET_RANGES = [
+  'Under Rs. 50,000',
+  'Rs. 50,000 – 150,000',
+  'Rs. 150,000 – 300,000',
+  'Rs. 300,000 – 500,000',
+  'Over Rs. 500,000'
+]
+
+export function buildWhatsAppLink(phone, name) {
   const msg = encodeURIComponent(
     `ආයුබෝවන්! 🙏\n\nමම *TilersHub* (www.tilershub.lk) හරහා ඔබව සොයාගතිමි.\n\nඔබගේ ටයිල් සේවාව ගැන දැනගැනීමට කැමැත්තෙමි.\n\n📌 *TilersHub.lk* විසින් සහතිකගත ලීඩ් එකක්\n\nස්තූතියි! 🏠`
   )
@@ -38,4 +92,55 @@ export async function uploadAvatar(userId, file) {
   if (error) throw error
   const { data } = supabase.storage.from('avatars').getPublicUrl(path)
   return data.publicUrl
+}
+
+export async function uploadProviderPhoto(submissionId, file, index) {
+  const ext = file.name.split('.').pop()
+  const path = `submissions/${submissionId}/${index}.${ext}`
+  const { error } = await supabase.storage.from('provider-photos').upload(path, file, { upsert: true })
+  if (error) throw error
+  const { data } = supabase.storage.from('provider-photos').getPublicUrl(path)
+  return data.publicUrl
+}
+
+export async function fetchProviders({ type, district, search } = {}) {
+  let q = supabase.from('providers').select('*').eq('status', 'active')
+  if (type) q = q.eq('provider_type', type)
+  if (district) q = q.contains('service_areas', [district])
+  if (search) q = q.ilike('name', `%${search}%`)
+  q = q.order('is_featured', { ascending: false }).order('created_at', { ascending: false })
+  const { data, error } = await q
+  if (error) throw error
+  return data || []
+}
+
+export async function fetchProviderBySlug(slug) {
+  const { data, error } = await supabase.from('providers').select('*').eq('slug', slug).eq('status', 'active').single()
+  if (error) return null
+  return data
+}
+
+export async function fetchBrands() {
+  const { data } = await supabase.from('brands').select('*').eq('status', 'active').order('is_featured', { ascending: false })
+  return data || []
+}
+
+export async function fetchBrandBySlug(slug) {
+  const { data } = await supabase.from('brands').select('*').eq('slug', slug).eq('status', 'active').single()
+  return data || null
+}
+
+export async function fetchHeroBanners() {
+  const { data } = await supabase.from('hero_banners').select('*').eq('is_active', true).order('sort_order')
+  return data || []
+}
+
+export async function submitProject(fields) {
+  const { error } = await supabase.from('projects').insert(fields)
+  if (error) throw error
+}
+
+export async function submitProviderApplication(fields) {
+  const { error } = await supabase.from('provider_submissions').insert(fields)
+  if (error) throw error
 }

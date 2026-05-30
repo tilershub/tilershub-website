@@ -1,0 +1,81 @@
+---
+import Layout from '../../layouts/Layout.astro'
+import { supabase } from '../../lib/supabase.js'
+
+export async function getStaticPaths() {
+  const { data } = await supabase.from('brands').select('slug').eq('status', 'active')
+  return (data || []).map(b => ({ params: { slug: b.slug } }))
+}
+
+const { slug } = Astro.params
+const { data: brand } = await supabase.from('brands').select('*').eq('slug', slug).single()
+
+if (!brand) return Astro.redirect('/brands')
+---
+
+<Layout
+  title={`${brand.name} Tiles · TilersHub`}
+  description={brand.description || `Explore ${brand.name} tile collections and find local dealers in Sri Lanka on TilersHub.`}
+>
+
+  <!-- Hero -->
+  <div style="background:linear-gradient(135deg,#0F2444,#1B3A6B);padding:56px 20px 48px;position:relative;overflow:hidden;text-align:center;">
+    <div style="position:absolute;inset:0;opacity:0.04;background-image:repeating-linear-gradient(45deg,transparent,transparent 20px,rgba(255,255,255,0.8) 20px,rgba(255,255,255,0.8) 21px);pointer-events:none;"></div>
+    <div style="position:relative;max-width:680px;margin:0 auto;">
+      <a href="/brands" style="display:inline-flex;align-items:center;gap:5px;font-size:11px;color:rgba(255,255,255,0.4);letter-spacing:1px;font-weight:600;margin-bottom:24px;text-decoration:none;">← All Brands</a>
+      <div style="font-size:9px;font-weight:700;color:rgba(224,90,43,0.7);letter-spacing:3px;text-transform:uppercase;margin-bottom:16px;">Brand Profile</div>
+      <div style="width:72px;height:72px;border-radius:18px;background:rgba(255,255,255,0.1);border:1px solid rgba(255,255,255,0.15);display:flex;align-items:center;justify-content:center;font-size:36px;margin:0 auto 20px;">🏷️</div>
+      <h1 style="font-family:'Playfair Display',serif;font-size:clamp(28px,5vw,48px);font-weight:700;color:#fff;margin-bottom:12px;">{brand.name}</h1>
+      {brand.description && <p style="font-size:15px;color:rgba(255,255,255,0.6);max-width:520px;margin:0 auto 28px;line-height:1.8;">{brand.description}</p>}
+      <div style="display:flex;flex-wrap:wrap;gap:8px;justify-content:center;margin-bottom:28px;">
+        {(brand.categories || []).map(c => (
+          <span style="font-size:11px;padding:4px 12px;border-radius:20px;background:rgba(255,255,255,0.1);color:rgba(255,255,255,0.7);border:1px solid rgba(255,255,255,0.15);">{c}</span>
+        ))}
+      </div>
+      <div style="display:flex;gap:12px;justify-content:center;flex-wrap:wrap;">
+        {brand.website_url && (
+          <a href={brand.website_url} target="_blank" rel="noopener noreferrer" style="display:inline-flex;align-items:center;gap:8px;background:var(--terra);color:#fff;border-radius:12px;padding:12px 24px;font-size:13px;font-weight:700;text-decoration:none;box-shadow:0 4px 16px rgba(224,90,43,0.4);">
+            🌐 Visit Official Website
+          </a>
+        )}
+        <a href="/providers?type=brand_dealer" style="display:inline-flex;align-items:center;gap:8px;background:rgba(255,255,255,0.1);color:#fff;border:1px solid rgba(255,255,255,0.2);border-radius:12px;padding:12px 24px;font-size:13px;font-weight:700;text-decoration:none;">
+          🏪 Find Local Dealers
+        </a>
+      </div>
+    </div>
+  </div>
+
+  <!-- Categories -->
+  {(brand.categories || []).length > 0 && (
+    <section style="background:var(--surface);padding:56px 20px;">
+      <div style="max-width:1000px;margin:0 auto;">
+        <div style="text-align:center;margin-bottom:40px;">
+          <span class="section-label">Collections</span>
+          <h2 class="section-title">Product <em>Categories</em></h2>
+        </div>
+        <div style="display:grid;grid-template-columns:repeat(auto-fill,minmax(200px,1fr));gap:14px;">
+          {brand.categories.map((cat, i) => (
+            <div style="padding:24px 20px;background:var(--surface-2);border-radius:14px;border:1px solid var(--border);text-align:center;">
+              <div style="font-size:28px;margin-bottom:10px;">{['🪨','🏠','🚿','✨','🔲','🏗️'][i % 6]}</div>
+              <div style="font-size:14px;font-weight:600;color:var(--text);">{cat}</div>
+            </div>
+          ))}
+        </div>
+      </div>
+    </section>
+  )}
+
+  <!-- Why choose -->
+  <section style="background:var(--surface-2);padding:56px 20px;border-top:1px solid var(--border);">
+    <div style="max-width:900px;margin:0 auto;text-align:center;">
+      <span class="section-label">Discovery Platform</span>
+      <h2 class="section-title" style="margin-top:8px;">Find <em>{brand.name}</em> Near You</h2>
+      <p class="section-sub" style="margin:0 auto 36px;">TilersHub connects you with authorised dealers and certified installers for {brand.name} products across Sri Lanka.</p>
+      <div style="display:flex;gap:12px;justify-content:center;flex-wrap:wrap;">
+        <a href="/providers?type=brand_dealer" class="btn btn-navy btn-lg">🏪 Find Dealers</a>
+        <a href="/post-project" class="btn btn-terra btn-lg">📋 Post a Project</a>
+      </div>
+    </div>
+  </section>
+
+</Layout>
