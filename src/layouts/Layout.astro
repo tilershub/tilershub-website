@@ -13,7 +13,7 @@ const { title = 'TilersHub · ශ්‍රී ලංකාවේ #1 ටයිල
   <link rel="icon" type="image/svg+xml" href="/favicon.svg" />
   <link rel="preconnect" href="https://fonts.googleapis.com" />
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
-  <link href="https://fonts.googleapis.com/css2?family=Noto+Sans+Sinhala:wght@300;400;500;600;700;800&family=Playfair+Display:wght@400;600;700&display=swap" rel="stylesheet" />
+  <link href="https://fonts.googleapis.com/css2?family=Noto+Sans+Sinhala:wght@300;400;500;600;700;800&family=Playfair+Display:ital,wght@0,400;0,600;0,700;1,400;1,700&display=swap" rel="stylesheet" />
 </head>
 <body>
   <nav>
@@ -26,20 +26,57 @@ const { title = 'TilersHub · ශ්‍රී ලංකාවේ #1 ටයිල
       <span class="logo-wordmark">TILERS<span>HUB</span></span>
     </a>
     <div class="nav-actions">
-      <a href="/explore" class="nav-btn">ටයිලර් සොයන්න</a>
+      <a href="/explore" class="nav-btn fill">🔍 ටයිලර් සොයන්න</a>
     </div>
   </nav>
 
   <slot />
 
   <footer>
-    <div style="display: flex; justify-content: center; gap: 28px; margin-bottom: 20px; flex-wrap: wrap;">
-      <a href="/" style="color: rgba(245,240,232,0.4); font-size: 12px;">මුල් පිටුව</a>
-      <a href="/explore" style="color: rgba(245,240,232,0.4); font-size: 12px;">ටයිලර් සොයන්න</a>
+    <div class="footer-grid">
+      <!-- Brand -->
+      <div>
+        <div style="display: flex; align-items: center; gap: 10px; margin-bottom: 16px;">
+          <div class="logo-grid">
+            {[0,1,2,3,4,5,6,7,8].map(i => (
+              <div class={`logo-tile${i === 8 ? ' empty' : ''}`}></div>
+            ))}
+          </div>
+          <span style="font-family: 'Playfair Display', serif; font-size: 17px; font-weight: 700; color: rgba(245,240,232,0.85);">TILERS<strong>HUB</strong></span>
+        </div>
+        <p style="font-size: 13px; color: rgba(245,240,232,0.38); line-height: 1.9; max-width: 280px;">
+          ශ්‍රී ලංකාව පුරා දක්ෂ ටයිලර්වරුන් WhatsApp හරහා සොයා ගැනීම සඳහා #1 නොමිලේ සේවාව.
+        </p>
+        <div style="display: flex; gap: 8px; margin-top: 20px; flex-wrap: wrap;">
+          <span style="display: inline-flex; align-items: center; gap: 5px; font-size: 11px; color: rgba(245,240,232,0.3); background: rgba(255,255,255,0.04); border: 1px solid rgba(255,255,255,0.08); padding: 4px 10px; border-radius: 8px;">🇱🇰 Sri Lanka</span>
+          <span style="display: inline-flex; align-items: center; gap: 5px; font-size: 11px; color: rgba(245,240,232,0.3); background: rgba(255,255,255,0.04); border: 1px solid rgba(255,255,255,0.08); padding: 4px 10px; border-radius: 8px;">✓ නොමිලේ</span>
+        </div>
+      </div>
+
+      <!-- Quick links -->
+      <div>
+        <div class="footer-col-label">පිටු</div>
+        <nav class="footer-links">
+          <a href="/">🏠 මුල් පිටුව</a>
+          <a href="/explore">🔍 ටයිලර් සොයන්න</a>
+        </nav>
+      </div>
+
+      <!-- Built with -->
+      <div>
+        <div class="footer-col-label">Built with</div>
+        <div style="display: flex; flex-direction: column; gap: 12px;">
+          <span style="font-size: 13px; color: rgba(245,240,232,0.4);">⚡ Supabase</span>
+          <span style="font-size: 13px; color: rgba(245,240,232,0.4);">☁️ Cloudflare</span>
+          <span style="font-size: 13px; color: rgba(245,240,232,0.4);">🚀 Astro</span>
+        </div>
+      </div>
     </div>
-    <strong>TILERSHUB</strong> · ශ්‍රී ලංකාවේ විශ්වාසනීය ටයිල් සේවා වේදිකාව
-    <br />
-    <span>© 2025 TilersHub · Powered by Supabase · Hosted on Cloudflare</span>
+
+    <div class="footer-bottom">
+      <span>© 2025 TilersHub · ශ්‍රී ලංකාවේ විශ්වාසනීය ටයිල් සේවා වේදිකාව</span>
+      <span style="color: rgba(193,96,58,0.5); font-weight: 600;">Made with ♥ in Sri Lanka</span>
+    </div>
   </footer>
 </body>
 </html>
