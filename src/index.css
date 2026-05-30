@@ -349,7 +349,7 @@ footer {
   margin: 0 auto;
   padding: 60px 28px 48px;
   display: grid;
-  grid-template-columns: 2fr 1fr 1fr;
+  grid-template-columns: 2fr 1fr;
   gap: 48px;
   text-align: left;
   border-bottom: 1px solid rgba(245,240,232,0.07);
