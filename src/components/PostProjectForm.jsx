@@ -1,6 +1,29 @@
 import { useState } from 'react'
 import { supabase, PROJECT_TYPES, DISTRICTS_EN, BUDGET_RANGES } from '../lib/supabase.js'
 
+/* Field wrapper defined outside component so React never remounts inputs on re-render */
+function Field({ label, id, req, error, hint, children }) {
+  return (
+    <div style={{ marginBottom: 18 }}>
+      <label htmlFor={id} style={{ display: 'block', fontSize: 12, fontWeight: 700, color: '#334155', textTransform: 'uppercase', letterSpacing: '0.5px', marginBottom: 6 }}>
+        {label} {req && <span style={{ color: '#E05A2B' }}>*</span>}
+      </label>
+      {children}
+      {hint && !error && <p style={{ fontSize: 11, color: '#94a3b8', marginTop: 4 }}>{hint}</p>}
+      {error && <p style={{ fontSize: 11, color: '#dc2626', marginTop: 4 }}>⚠ {error}</p>}
+    </div>
+  )
+}
+
+function inputStyle(hasError) {
+  return {
+    width: '100%', padding: '11px 14px',
+    border: `1.5px solid ${hasError ? '#fca5a5' : '#e2e8f0'}`,
+    borderRadius: 10, fontSize: 13, outline: 'none', fontFamily: 'inherit',
+    background: hasError ? '#fef2f2' : '#fff', transition: 'border-color 0.2s'
+  }
+}
+
 export default function PostProjectForm() {
   const [form, setForm] = useState({
     project_type: '', city: '', district: '', description: '',
@@ -28,7 +51,6 @@ export default function PostProjectForm() {
     e.preventDefault()
     const errs = validate()
     if (Object.keys(errs).length) { setErrors(errs); return }
-
     setSubmitting(true)
     setErrors({})
     try {
@@ -71,23 +93,6 @@ export default function PostProjectForm() {
     )
   }
 
-  const F = ({ label, id, req, error, hint, children }) => (
-    <div style={{ marginBottom: 18 }}>
-      <label htmlFor={id} style={{ display: 'block', fontSize: 12, fontWeight: 700, color: '#334155', textTransform: 'uppercase', letterSpacing: '0.5px', marginBottom: 6 }}>
-        {label} {req && <span style={{ color: '#E05A2B' }}>*</span>}
-      </label>
-      {children}
-      {hint && !error && <p style={{ fontSize: 11, color: '#94a3b8', marginTop: 4 }}>{hint}</p>}
-      {error && <p style={{ fontSize: 11, color: '#dc2626', marginTop: 4 }}>⚠ {error}</p>}
-    </div>
-  )
-
-  const inputStyle = (field) => ({
-    width: '100%', padding: '11px 14px', border: `1.5px solid ${errors[field] ? '#fca5a5' : '#e2e8f0'}`,
-    borderRadius: 10, fontSize: 13, outline: 'none', fontFamily: 'inherit',
-    background: errors[field] ? '#fef2f2' : '#fff', transition: 'border-color 0.2s'
-  })
-
   return (
     <form onSubmit={handleSubmit} noValidate style={{ maxWidth: 560, margin: '0 auto' }}>
       {errors.submit && (
@@ -96,63 +101,63 @@ export default function PostProjectForm() {
         </div>
       )}
 
-      <F label="Project Type" id="project_type" req error={errors.project_type}>
+      <Field label="Project Type" id="project_type" req error={errors.project_type}>
         <select
           id="project_type"
           value={form.project_type}
           onChange={e => set('project_type', e.target.value)}
-          style={{ ...inputStyle('project_type'), WebkitAppearance: 'none', appearance: 'none', cursor: 'pointer' }}
+          style={{ ...inputStyle(!!errors.project_type), WebkitAppearance: 'none', appearance: 'none', cursor: 'pointer' }}
         >
           <option value="">Select project type...</option>
           {PROJECT_TYPES.map(t => <option key={t} value={t}>{t}</option>)}
         </select>
-      </F>
+      </Field>
 
       <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: 14 }}>
-        <F label="City / Town" id="city" req error={errors.city}>
+        <Field label="City / Town" id="city" req error={errors.city}>
           <input
             id="city"
             value={form.city}
             onChange={e => set('city', e.target.value)}
             placeholder="e.g. Colombo 03"
-            style={inputStyle('city')}
+            style={inputStyle(!!errors.city)}
           />
-        </F>
-        <F label="District" id="district">
+        </Field>
+        <Field label="District" id="district">
           <select
             id="district"
             value={form.district}
             onChange={e => set('district', e.target.value)}
-            style={{ ...inputStyle('district'), WebkitAppearance: 'none', appearance: 'none', cursor: 'pointer' }}
+            style={{ ...inputStyle(false), WebkitAppearance: 'none', appearance: 'none', cursor: 'pointer' }}
           >
             <option value="">Select district...</option>
             {DISTRICTS_EN.map(d => <option key={d} value={d}>{d}</option>)}
           </select>
-        </F>
+        </Field>
       </div>
 
-      <F label="Project Description" id="description" req error={errors.description} hint="Describe your project: area size, tile type preferences, timeline, any special requirements.">
+      <Field label="Project Description" id="description" req error={errors.description} hint="Describe your project: area size, tile type preferences, timeline, any special requirements.">
         <textarea
           id="description"
           value={form.description}
           onChange={e => set('description', e.target.value)}
           placeholder="e.g. Bathroom renovation — approximately 80 sq.ft floor and wall tiling. Looking for anti-slip floor tiles and white subway wall tiles. Need to start within 2 weeks..."
           rows={4}
-          style={{ ...inputStyle('description'), resize: 'vertical', minHeight: 100 }}
+          style={{ ...inputStyle(!!errors.description), resize: 'vertical', minHeight: 100 }}
         />
-      </F>
+      </Field>
 
-      <F label="Budget Range" id="budget_range" hint="Optional — helps match you with providers in your range">
+      <Field label="Budget Range" id="budget_range" hint="Optional — helps match you with providers in your range">
         <select
           id="budget_range"
           value={form.budget_range}
           onChange={e => set('budget_range', e.target.value)}
-          style={{ ...inputStyle('budget_range'), WebkitAppearance: 'none', appearance: 'none', cursor: 'pointer' }}
+          style={{ ...inputStyle(false), WebkitAppearance: 'none', appearance: 'none', cursor: 'pointer' }}
         >
           <option value="">Select budget range (optional)</option>
           {BUDGET_RANGES.map(b => <option key={b} value={b}>{b}</option>)}
         </select>
-      </F>
+      </Field>
 
       <div style={{ height: 1, background: '#f1f5f9', margin: '8px 0 20px' }} />
       <p style={{ fontSize: 12, color: '#64748b', marginBottom: 18, display: 'flex', alignItems: 'center', gap: 6 }}>
@@ -160,25 +165,25 @@ export default function PostProjectForm() {
       </p>
 
       <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: 14 }}>
-        <F label="Your Name" id="customer_name" req error={errors.customer_name}>
+        <Field label="Your Name" id="customer_name" req error={errors.customer_name}>
           <input
             id="customer_name"
             value={form.customer_name}
             onChange={e => set('customer_name', e.target.value)}
             placeholder="e.g. Nuwan Perera"
-            style={inputStyle('customer_name')}
+            style={inputStyle(!!errors.customer_name)}
           />
-        </F>
-        <F label="WhatsApp Number" id="whatsapp" req error={errors.whatsapp} hint="e.g. +94771234567">
+        </Field>
+        <Field label="WhatsApp Number" id="whatsapp" req error={errors.whatsapp} hint="e.g. +94771234567">
           <input
             id="whatsapp"
             value={form.whatsapp}
             onChange={e => set('whatsapp', e.target.value)}
             placeholder="+94771234567"
             type="tel"
-            style={inputStyle('whatsapp')}
+            style={inputStyle(!!errors.whatsapp)}
           />
-        </F>
+        </Field>
       </div>
 
       <button

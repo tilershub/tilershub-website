@@ -1,6 +1,29 @@
 import { useState } from 'react'
 import { supabase, PROVIDER_TYPES, DISTRICTS_EN, SERVICES_EN } from '../lib/supabase.js'
 
+/* Field wrapper defined outside component so React never remounts inputs on re-render */
+function Field({ label, id, req, error, hint, children }) {
+  return (
+    <div style={{ marginBottom: 18 }}>
+      <label htmlFor={id} style={{ display: 'block', fontSize: 12, fontWeight: 700, color: '#334155', textTransform: 'uppercase', letterSpacing: '0.5px', marginBottom: 6 }}>
+        {label} {req && <span style={{ color: '#E05A2B' }}>*</span>}
+      </label>
+      {children}
+      {hint && !error && <p style={{ fontSize: 11, color: '#94a3b8', marginTop: 4 }}>{hint}</p>}
+      {error && <p style={{ fontSize: 11, color: '#dc2626', marginTop: 4 }}>⚠ {error}</p>}
+    </div>
+  )
+}
+
+function inputStyle(hasError) {
+  return {
+    width: '100%', padding: '11px 14px',
+    border: `1.5px solid ${hasError ? '#fca5a5' : '#e2e8f0'}`,
+    borderRadius: 10, fontSize: 13, outline: 'none', fontFamily: 'inherit',
+    background: hasError ? '#fef2f2' : '#fff', transition: 'border-color 0.2s'
+  }
+}
+
 export default function JoinForm() {
   const [form, setForm] = useState({
     name: '', provider_type: '', city: '', district: '',
@@ -28,7 +51,6 @@ export default function JoinForm() {
     e.preventDefault()
     const errs = validate()
     if (Object.keys(errs).length) { setErrors(errs); return }
-
     setSubmitting(true)
     setErrors({})
     try {
@@ -68,23 +90,6 @@ export default function JoinForm() {
     )
   }
 
-  const F = ({ label, id, req, error, hint, children }) => (
-    <div style={{ marginBottom: 18 }}>
-      <label htmlFor={id} style={{ display: 'block', fontSize: 12, fontWeight: 700, color: '#334155', textTransform: 'uppercase', letterSpacing: '0.5px', marginBottom: 6 }}>
-        {label} {req && <span style={{ color: '#E05A2B' }}>*</span>}
-      </label>
-      {children}
-      {hint && !error && <p style={{ fontSize: 11, color: '#94a3b8', marginTop: 4 }}>{hint}</p>}
-      {error && <p style={{ fontSize: 11, color: '#dc2626', marginTop: 4 }}>⚠ {error}</p>}
-    </div>
-  )
-
-  const inputStyle = (field) => ({
-    width: '100%', padding: '11px 14px', border: `1.5px solid ${errors[field] ? '#fca5a5' : '#e2e8f0'}`,
-    borderRadius: 10, fontSize: 13, outline: 'none', fontFamily: 'inherit',
-    background: errors[field] ? '#fef2f2' : '#fff', transition: 'border-color 0.2s'
-  })
-
   return (
     <form onSubmit={handleSubmit} noValidate style={{ maxWidth: 580, margin: '0 auto' }}>
       {errors.submit && (
@@ -94,34 +99,63 @@ export default function JoinForm() {
       )}
 
       <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: 14 }}>
-        <F label="Name / Business Name" id="name" req error={errors.name}>
-          <input id="name" value={form.name} onChange={e => set('name', e.target.value)} placeholder="Your full name or business" style={inputStyle('name')} />
-        </F>
-        <F label="Provider Type" id="provider_type" req error={errors.provider_type}>
-          <select id="provider_type" value={form.provider_type} onChange={e => set('provider_type', e.target.value)} style={{ ...inputStyle('provider_type'), WebkitAppearance: 'none', cursor: 'pointer' }}>
+        <Field label="Name / Business Name" id="name" req error={errors.name}>
+          <input
+            id="name"
+            value={form.name}
+            onChange={e => set('name', e.target.value)}
+            placeholder="Your full name or business"
+            style={inputStyle(!!errors.name)}
+          />
+        </Field>
+        <Field label="Provider Type" id="provider_type" req error={errors.provider_type}>
+          <select
+            id="provider_type"
+            value={form.provider_type}
+            onChange={e => set('provider_type', e.target.value)}
+            style={{ ...inputStyle(!!errors.provider_type), WebkitAppearance: 'none', cursor: 'pointer' }}
+          >
             <option value="">Select type...</option>
             {PROVIDER_TYPES.map(t => <option key={t.value} value={t.value}>{t.icon} {t.label}</option>)}
           </select>
-        </F>
+        </Field>
       </div>
 
       <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: 14 }}>
-        <F label="City / Town" id="city" req error={errors.city}>
-          <input id="city" value={form.city} onChange={e => set('city', e.target.value)} placeholder="e.g. Nugegoda" style={inputStyle('city')} />
-        </F>
-        <F label="District" id="district">
-          <select id="district" value={form.district} onChange={e => set('district', e.target.value)} style={{ ...inputStyle('district'), WebkitAppearance: 'none', cursor: 'pointer' }}>
+        <Field label="City / Town" id="city" req error={errors.city}>
+          <input
+            id="city"
+            value={form.city}
+            onChange={e => set('city', e.target.value)}
+            placeholder="e.g. Nugegoda"
+            style={inputStyle(!!errors.city)}
+          />
+        </Field>
+        <Field label="District" id="district">
+          <select
+            id="district"
+            value={form.district}
+            onChange={e => set('district', e.target.value)}
+            style={{ ...inputStyle(false), WebkitAppearance: 'none', cursor: 'pointer' }}
+          >
             <option value="">Select district...</option>
             {DISTRICTS_EN.map(d => <option key={d} value={d}>{d}</option>)}
           </select>
-        </F>
+        </Field>
       </div>
 
-      <F label="WhatsApp Number" id="whatsapp" req error={errors.whatsapp} hint="This is the number customers will contact you on.">
-        <input id="whatsapp" value={form.whatsapp} onChange={e => set('whatsapp', e.target.value)} placeholder="+94771234567" type="tel" style={inputStyle('whatsapp')} />
-      </F>
+      <Field label="WhatsApp Number" id="whatsapp" req error={errors.whatsapp} hint="This is the number customers will contact you on.">
+        <input
+          id="whatsapp"
+          value={form.whatsapp}
+          onChange={e => set('whatsapp', e.target.value)}
+          placeholder="+94771234567"
+          type="tel"
+          style={inputStyle(!!errors.whatsapp)}
+        />
+      </Field>
 
-      <F label="Services Offered" id="services" req error={errors.services} hint="Select all services you provide">
+      <Field label="Services Offered" id="services" req error={errors.services} hint="Select all services you provide">
         <div style={{ display: 'flex', flexWrap: 'wrap', gap: 8 }}>
           {SERVICES_EN.map(s => {
             const checked = form.services.includes(s)
@@ -143,18 +177,18 @@ export default function JoinForm() {
             )
           })}
         </div>
-      </F>
+      </Field>
 
-      <F label="Short Description" id="description" hint="Optional — describe your experience and what makes you stand out">
+      <Field label="Short Description" id="description" hint="Optional — describe your experience and what makes you stand out">
         <textarea
           id="description"
           value={form.description}
           onChange={e => set('description', e.target.value)}
           placeholder="e.g. 8 years experience in floor and bathroom tiling across Colombo and Western Province. Specialise in large format tiles and herringbone patterns..."
           rows={3}
-          style={{ ...inputStyle('description'), resize: 'vertical' }}
+          style={{ ...inputStyle(false), resize: 'vertical' }}
         />
-      </F>
+      </Field>
 
       <div style={{ padding: '14px 16px', background: '#f0fdf4', borderRadius: 12, border: '1px solid #bbf7d0', marginBottom: 20 }}>
         <p style={{ fontSize: 12, color: '#15803d', margin: 0, lineHeight: 1.6 }}>
