@@ -1,176 +1,254 @@
 ---
 import Layout from '../layouts/Layout.astro'
+import HeroBanner from '../components/HeroBanner.jsx'
 import AdSlider from '../components/AdSlider.jsx'
+import { supabase } from '../lib/supabase.js'
 
-const HOW_STEPS = [
-  { icon: '🔍', num: '01', title: 'ටයිලර් සොයන්න', desc: 'දිස්ත්‍රික්කය, සේවාව හා ශ්‍රේණිගත කිරීම් අනුව ගළපෙන ටයිලර් සොයා ගන්න' },
-  { icon: '💬', num: '02', title: 'WhatsApp සම්බන්ධය', desc: 'TilersHub ස්වයංක්‍රීය පණිවිඩයකින් ටයිලර් සමඟ කෙලින්ම සාකච්ඡා කරන්න' },
-  { icon: '🏠', num: '03', title: 'ව්‍යාපෘතිය ආරම්භ කරන්න', desc: 'ගාස්තු, කාලසටහන සාකච්ඡා කර ඔබේ නිවස ලස්සන කරගන්න' },
+const { data: featuredTilers } = await supabase
+  .from('tilers')
+  .select('id,full_name,district,city,services,is_verified,avatar_url,experience_years,avg_rating,phone')
+  .eq('featured', true)
+  .order('experience_years', { ascending: false })
+  .limit(6)
+
+const { data: brands } = await supabase
+  .from('brands')
+  .select('*')
+  .eq('status', 'active')
+  .eq('is_featured', true)
+  .limit(4)
+
+const tilers = featuredTilers || []
+
+function initials(name) {
+  return name?.split(' ').map(w => w[0]).join('').slice(0, 2).toUpperCase() || 'TH'
+}
+
+const QUICK_ACTIONS = [
+  { icon: '👷', label: 'Find Tilers', href: '/providers' },
+  { icon: '📋', label: 'Post Project', href: '/post-project' },
+  { icon: '📐', label: 'Estimator', href: '/estimator' },
+  { icon: '🏭', label: 'Workshops', href: '/providers?type=workshop' },
+  { icon: '📦', label: 'Suppliers', href: '/providers?type=supplier' },
+  { icon: '🏷️', label: 'Brands', href: '/brands' },
+  { icon: '🚿', label: 'Bathroom Ideas', href: '/sponsor/luxehome' },
+  { icon: '🏪', label: 'Tile Shops', href: '/providers?type=tile_shop' },
+]
+
+const TIPS = [
+  { icon: '✅', title: 'Always verify credentials', text: 'Look for TH Verified or Certified Pro badges before hiring.' },
+  { icon: '📸', title: 'Ask for past work photos', text: 'A good tiler will have a portfolio of completed projects.' },
+  { icon: '📏', title: 'Calculate tiles correctly', text: 'Add 10–15% extra for cuts, breakage and future repairs.' },
+  { icon: '💬', title: 'Get quotes via WhatsApp', text: 'Contact multiple tilers and compare quotes before deciding.' },
 ]
 ---
 
-<Layout title="TilersHub · ශ්‍රී ලංකාවේ #1 ටයිල් සේවා වේදිකාව">
+<Layout
+  title="TilersHub · Sri Lanka's Trusted Tiling Platform"
+  description="Find verified tilers, workshops, suppliers and tile brands across Sri Lanka. Post your tiling project free on TilersHub."
+>
 
-  <!-- ═══ HERO ═══ -->
-  <section style="background: var(--charcoal); position: relative; overflow: hidden; padding: 88px 28px 0;">
-    <!-- Background grid texture -->
-    <div style="position: absolute; inset: 0; opacity: 0.03; background-image: repeating-linear-gradient(0deg, transparent, transparent 39px, rgba(193,96,58,0.7) 39px, rgba(193,96,58,0.7) 40px), repeating-linear-gradient(90deg, transparent, transparent 39px, rgba(193,96,58,0.7) 39px, rgba(193,96,58,0.7) 40px); pointer-events: none;"></div>
-    <!-- Glow orbs -->
-    <div style="position: absolute; bottom: -60px; left: -60px; width: 360px; height: 360px; background: radial-gradient(circle, var(--terracotta) 0%, transparent 70%); opacity: 0.12; pointer-events: none;"></div>
-    <div style="position: absolute; top: -80px; right: -80px; width: 420px; height: 420px; background: radial-gradient(circle, var(--sage) 0%, transparent 70%); opacity: 0.06; pointer-events: none;"></div>
+  <!-- Hero Banner Slider -->
+  <HeroBanner client:load />
 
-    <!-- Two-column hero inner -->
-    <div class="hero-inner">
-      <!-- Left: text content -->
-      <div>
-        <span style="display: inline-flex; align-items: center; gap: 7px; background: rgba(193,96,58,0.14); border: 1px solid rgba(193,96,58,0.28); color: var(--terracotta-muted); font-size: 11px; padding: 5px 16px; border-radius: 20px; letter-spacing: 1.5px; text-transform: uppercase; font-weight: 600; margin-bottom: 28px;">
-          🇱🇰 ශ්‍රී ලංකාවේ #1 ටයිල් වේදිකාව
-        </span>
-
-        <h1 style="font-family: 'Playfair Display', serif; font-size: clamp(36px, 5.5vw, 64px); font-weight: 700; color: var(--white); line-height: 1.1; margin-bottom: 20px;">
-          ඔබේ නිවස<br />
-          <span style="color: var(--terracotta);">ලස්සන කරමු</span>
-        </h1>
-
-        <p style="font-size: 15px; color: rgba(245,240,232,0.52); max-width: 420px; line-height: 1.9; margin-bottom: 40px;">
-          ශ්‍රී ලංකාව පුරා දක්ෂ ටයිලර්වරුන් සෙවිය හැකි, WhatsApp හරහා කෙලින්ම සාකච්ඡා කළ හැකි නොමිලේ සේවාවකි
-        </p>
-
-        <a href="/explore" class="btn btn-primary btn-lg">🔍 ටයිලර් සොයන්න</a>
-
-        <!-- Trust row -->
-        <div style="display: flex; gap: 20px; margin-top: 36px; flex-wrap: wrap;">
-          {[
-            { icon: '✓', text: 'නොමිලේ' },
-            { icon: '💬', text: 'WhatsApp Direct' },
-            { icon: '🛡️', text: 'සහතිකගත ටයිලර්' },
-          ].map(t => (
-            <div style="display: flex; align-items: center; gap: 7px; font-size: 12px; color: rgba(245,240,232,0.45);">
-              <span style="color: var(--terracotta); font-weight: 700;">{t.icon}</span> {t.text}
-            </div>
-          ))}
-        </div>
-      </div>
-
-      <!-- Right: profile card preview -->
-      <div class="hero-visual">
-        <!-- Subtle glow behind card -->
-        <div style="position: absolute; inset: -20px; background: radial-gradient(circle at 60% 40%, rgba(193,96,58,0.15) 0%, transparent 70%); pointer-events: none;"></div>
-
-        <div class="hero-preview-card">
-          <!-- Card header (dark) -->
-          <div style="background: linear-gradient(135deg, #2a2118 0%, #1e1e1e 100%); padding: 22px 22px 18px; position: relative;">
-            <div style="display: flex; gap: 13px; align-items: center;">
-              <div class="avatar" style="width: 52px; height: 52px; font-size: 19px; flex-shrink: 0;">SK</div>
-              <div style="min-width: 0;">
-                <div style="font-size: 15px; font-weight: 700; color: var(--white); margin-bottom: 4px;">Saman Kumara</div>
-                <div style="font-size: 11px; color: rgba(245,240,232,0.4);">📍 Colombo · ⏱ 12 years</div>
-              </div>
-              <span style="margin-left: auto; flex-shrink: 0; background: rgba(122,154,126,0.18); border: 1px solid rgba(122,154,126,0.35); color: #9ab89e; padding: 3px 9px; border-radius: 20px; font-size: 9px; font-weight: 700; white-space: nowrap;">✓ ලබාගත හැකිය</span>
-            </div>
-          </div>
-          <!-- Card body (light) -->
-          <div style="padding: 18px 22px; background: var(--white);">
-            <div style="display: flex; gap: 6px; margin-bottom: 16px; flex-wrap: wrap;">
-              <span class="chip chip-terra">Floor Tiling</span>
-              <span class="chip chip-terra">Wall Tiling</span>
-              <span class="chip chip-cream">Bathroom</span>
-            </div>
-            <div style="display: flex; justify-content: space-between; align-items: center; border-top: 1px solid var(--cream-dark); padding-top: 14px;">
-              <div>
-                <div style="font-size: 10px; color: var(--text-light); text-transform: uppercase; letter-spacing: 0.5px; margin-bottom: 3px;">ගාස්තු / sqft</div>
-                <div style="font-size: 14px; font-weight: 700; color: var(--charcoal);">Rs. 45 – 75</div>
-              </div>
-              <div style="background: linear-gradient(135deg, #25D366, #20ba5a); color: white; border-radius: 9px; padding: 9px 14px; font-size: 12px; font-weight: 700; display: flex; align-items: center; gap: 5px; box-shadow: 0 3px 10px rgba(37,211,102,0.3);">💬 සම්බන්ධ</div>
-            </div>
-          </div>
-        </div>
-
-        <!-- Floating: verified badge -->
-        <div style="position: absolute; top: -14px; right: 4px; background: var(--white); border-radius: 12px; padding: 9px 14px; box-shadow: 0 8px 32px rgba(0,0,0,0.22); display: flex; align-items: center; gap: 7px; font-size: 12px; font-weight: 700; color: var(--charcoal); white-space: nowrap; z-index: 2;">
-          <span style="color: var(--terracotta);">✓</span> TilersHub සහතිකගත
-        </div>
-
-        <!-- Floating: count badge -->
-        <div style="position: absolute; bottom: 24px; left: -20px; background: var(--white); border-radius: 14px; padding: 12px 18px; box-shadow: 0 8px 32px rgba(0,0,0,0.2); z-index: 2;">
-          <div style="font-family: 'Playfair Display', serif; font-size: 26px; font-weight: 700; color: var(--terracotta); line-height: 1;">500+</div>
-          <div style="font-size: 10px; color: var(--text-light); letter-spacing: 0.3px; margin-top: 4px;">ලියාපදිංචි ටයිලර්</div>
-        </div>
+  <!-- Quick Actions -->
+  <section style="background:var(--surface);padding:28px 0 20px;border-bottom:1px solid var(--border);">
+    <div class="container">
+      <div class="quick-actions-grid">
+        {QUICK_ACTIONS.map(a => (
+          <a href={a.href} class="quick-action">
+            <div class="qa-icon">{a.icon}</div>
+            <span class="qa-label">{a.label}</span>
+          </a>
+        ))}
       </div>
     </div>
+  </section>
 
-    <!-- Stats bar -->
-    <div style="max-width: 1100px; margin: 64px auto 0; display: flex; justify-content: center; align-items: stretch; flex-wrap: wrap; border-top: 1px solid rgba(245,240,232,0.07);">
+  <!-- Stats bar -->
+  <section style="background:var(--navy);padding:18px 0;">
+    <div class="container" style="display:flex;justify-content:center;flex-wrap:wrap;">
       {[
-        { num: '500+', label: 'ලියාපදිංචි ටයිලර්' },
-        { num: '25', label: 'දිස්ත්‍රික්ක' },
-        { num: '2,000+', label: 'සාර්ථක ව්‍යාපෘති' },
-        { num: 'නොමිලේ', label: 'සේවාව' },
+        { n: '500+', l: 'Tiling Professionals' },
+        { n: '25', l: 'Districts Covered' },
+        { n: 'Free', l: 'Service Always' },
+        { n: '100%', l: 'WhatsApp Direct' },
       ].map((s, i, arr) => (
-        <div style={`text-align: center; padding: 28px clamp(16px, 4vw, 52px); border-right: ${i < arr.length - 1 ? '1px solid rgba(245,240,232,0.07)' : 'none'};`}>
-          <div style="font-family: 'Playfair Display', serif; font-size: clamp(24px,3.5vw,38px); color: var(--terracotta); font-weight: 700;">{s.num}</div>
-          <div style="font-size: 11px; color: rgba(245,240,232,0.35); margin-top: 5px; letter-spacing: 0.3px;">{s.label}</div>
+        <div style={`text-align:center;padding:10px 24px;border-right:${i < arr.length-1 ? '1px solid rgba(255,255,255,0.1)' : 'none'};`}>
+          <div style="font-family:'Playfair Display',serif;font-size:20px;font-weight:700;color:var(--terra);">{s.n}</div>
+          <div style="font-size:10px;color:rgba(255,255,255,0.4);margin-top:2px;">{s.l}</div>
         </div>
       ))}
     </div>
   </section>
 
-  <!-- ═══ AD STRIP ═══ -->
-  <div style="background: var(--charcoal); padding: 0 28px 56px;">
-    <div style="max-width: 1100px; margin: 0 auto; border-top: 1px solid rgba(245,240,232,0.06); padding-top: 32px;">
-      <div style="font-size: 9px; font-weight: 700; color: rgba(245,240,232,0.2); letter-spacing: 2.5px; text-transform: uppercase; text-align: center; margin-bottom: 16px;">ස්පොන්සර්</div>
-      <AdSlider client:load />
-    </div>
-  </div>
-
-  <!-- ═══ HOW IT WORKS ═══ -->
-  <section style="padding: 88px 28px; background: var(--cream);">
-    <div style="max-width: 1100px; margin: 0 auto;">
-      <div style="text-align: center; margin-bottom: 60px;">
-        <span class="section-tag">ක්‍රියාවලිය</span>
-        <h2 class="section-title">කෙසේ ක්‍රියා කරයිද?</h2>
-        <p class="section-sub" style="margin: 0 auto;">සරල පියවර 3කින් ඔබේ ව්‍යාපෘතිය ආරම්භ කරන්න</p>
+  <!-- Featured Tilers -->
+  <section class="section" style="background:var(--surface);">
+    <div class="container">
+      <div style="display:flex;align-items:flex-end;justify-content:space-between;margin-bottom:32px;flex-wrap:wrap;gap:12px;">
+        <div>
+          <span class="section-label">⭐ Featured</span>
+          <h2 class="section-title">Verified Tiling <em>Professionals</em></h2>
+          <p class="section-sub">Skilled tilers verified by TilersHub — contact directly via WhatsApp</p>
+        </div>
+        <a href="/providers" class="btn btn-outline">View All Providers →</a>
       </div>
 
-      <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(260px,1fr)); gap: 28px;">
-        {HOW_STEPS.map((s, idx) => (
-          <div class="card" style="padding: 40px 32px 36px; position: relative; border-top: 3px solid var(--terracotta);">
-            <!-- Step number watermark -->
-            <div style={`position: absolute; bottom: 16px; right: 22px; font-family: 'Playfair Display', serif; font-size: 80px; color: var(--cream-dark); font-weight: 700; line-height: 1; user-select: none; pointer-events: none;`}>{s.num}</div>
-            <!-- Icon -->
-            <div style="width: 56px; height: 56px; background: linear-gradient(135deg, var(--terracotta) 0%, var(--terracotta-light) 100%); border-radius: 16px; display: flex; align-items: center; justify-content: center; font-size: 26px; margin-bottom: 24px; box-shadow: 0 6px 20px rgba(193,96,58,0.28);">{s.icon}</div>
-            <h3 style="font-size: 17px; font-weight: 700; margin-bottom: 12px; color: var(--charcoal);">{s.title}</h3>
-            <p style="font-size: 13px; color: var(--text-mid); line-height: 1.85;">{s.desc}</p>
+      {tilers.length > 0 ? (
+        <div style="display:grid;grid-template-columns:repeat(auto-fill,minmax(300px,1fr));gap:16px;">
+          {tilers.map(t => (
+            <a href={`/providers/${t.id}`} class="provider-card" style="padding:20px;display:block;text-decoration:none;color:inherit;">
+              <div style="display:flex;align-items:center;gap:14px;margin-bottom:14px;">
+                <div class="provider-avatar">
+                  {t.avatar_url
+                    ? <img src={t.avatar_url} alt={t.full_name} />
+                    : initials(t.full_name)
+                  }
+                </div>
+                <div style="min-width:0;flex:1;">
+                  <div style="font-size:15px;font-weight:700;color:var(--text);margin-bottom:3px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;">{t.full_name}</div>
+                  <div style="font-size:12px;color:var(--text-3);">📍 {t.city || t.district}</div>
+                </div>
+                {t.is_verified && <span class="badge badge-verified">✓ Verified</span>}
+              </div>
+              <div style="display:flex;flex-wrap:wrap;gap:6px;margin-bottom:14px;">
+                {(t.services || []).slice(0,3).map(s => (
+                  <span class="chip chip-navy" style="font-size:10px;">{s}</span>
+                ))}
+              </div>
+              <div style="display:flex;align-items:center;justify-content:space-between;">
+                <span style="font-size:12px;color:var(--text-3);">{t.experience_years}+ yrs experience</span>
+                <span style="font-size:11px;font-weight:700;color:var(--navy);">Contact →</span>
+              </div>
+            </a>
+          ))}
+        </div>
+      ) : (
+        <div style="text-align:center;padding:48px 20px;background:var(--surface-2);border-radius:16px;border:1px solid var(--border);">
+          <div style="font-size:36px;margin-bottom:12px;">👷</div>
+          <p style="color:var(--text-3);font-size:14px;">Browse our full directory of tiling professionals.</p>
+          <a href="/providers" class="btn btn-navy" style="margin-top:16px;display:inline-flex;">Browse All Providers</a>
+        </div>
+      )}
+
+      <div style="text-align:center;margin-top:32px;">
+        <a href="/providers" class="btn btn-navy btn-lg">Browse All Tiling Professionals</a>
+      </div>
+    </div>
+  </section>
+
+  <!-- Sponsor Slider -->
+  <section style="background:var(--surface-2);padding:48px 0;border-top:1px solid var(--border);border-bottom:1px solid var(--border);">
+    <div class="container" style="max-width:900px;">
+      <div style="text-align:center;margin-bottom:16px;">
+        <span style="font-size:10px;font-weight:700;color:var(--text-4);letter-spacing:2px;text-transform:uppercase;">Sponsored Partner</span>
+      </div>
+      <AdSlider client:visible />
+    </div>
+  </section>
+
+  <!-- Post Project CTA -->
+  <section style="background:var(--navy);padding:56px 0;position:relative;overflow:hidden;">
+    <div style="position:absolute;inset:0;opacity:0.04;background-image:repeating-linear-gradient(45deg,transparent,transparent 20px,rgba(255,255,255,0.8) 20px,rgba(255,255,255,0.8) 21px);pointer-events:none;"></div>
+    <div class="container" style="text-align:center;position:relative;">
+      <div style="font-size:10px;font-weight:700;color:rgba(224,90,43,0.7);letter-spacing:3px;text-transform:uppercase;margin-bottom:14px;">Free — No Login Required</div>
+      <h2 style="font-family:'Playfair Display',serif;font-size:clamp(24px,4vw,38px);font-weight:700;color:#fff;margin-bottom:14px;line-height:1.2;">
+        Have a tiling project? <span style="color:var(--terra);">Post it free.</span>
+      </h2>
+      <p style="font-size:15px;color:rgba(255,255,255,0.55);max-width:480px;margin:0 auto 32px;line-height:1.9;">
+        Describe your project, set a budget, and let verified professionals reach out directly on WhatsApp.
+      </p>
+      <div style="display:flex;gap:12px;justify-content:center;flex-wrap:wrap;">
+        <a href="/post-project" class="btn btn-terra btn-lg">📋 Post Your Project</a>
+        <a href="/providers" style="background:rgba(255,255,255,0.1);color:#fff;border:1px solid rgba(255,255,255,0.2);padding:14px 24px;font-size:14px;border-radius:12px;font-weight:600;display:inline-flex;align-items:center;gap:6px;text-decoration:none;">Browse Providers →</a>
+      </div>
+    </div>
+  </section>
+
+  <!-- Featured Brands -->
+  {(brands?.length ?? 0) > 0 && (
+    <section class="section" style="background:var(--surface-2);">
+      <div class="container">
+        <div style="display:flex;align-items:flex-end;justify-content:space-between;margin-bottom:32px;flex-wrap:wrap;gap:12px;">
+          <div>
+            <span class="section-label">🏷️ Brands</span>
+            <h2 class="section-title">Featured Tile <em>Brands</em></h2>
+            <p class="section-sub">Discover premium tile brands available in Sri Lanka</p>
+          </div>
+          <a href="/brands" class="btn btn-outline">All Brands →</a>
+        </div>
+        <div style="display:grid;grid-template-columns:repeat(auto-fill,minmax(240px,1fr));gap:16px;">
+          {brands.map(brand => (
+            <a href={`/brands/${brand.slug}`} class="card" style="padding:24px;display:block;text-decoration:none;color:inherit;">
+              <div style="font-size:32px;margin-bottom:12px;">🏷️</div>
+              <div style="font-size:16px;font-weight:700;color:var(--text);margin-bottom:6px;">{brand.name}</div>
+              <p style="font-size:12px;color:var(--text-3);line-height:1.6;margin-bottom:14px;">{(brand.description || '').slice(0,80)}...</p>
+              <div style="display:flex;flex-wrap:wrap;gap:4px;">
+                {(brand.categories || []).slice(0,2).map(c => (
+                  <span class="chip chip-navy" style="font-size:10px;">{c}</span>
+                ))}
+              </div>
+            </a>
+          ))}
+        </div>
+      </div>
+    </section>
+  )}
+
+  <!-- How It Works -->
+  <section class="section" style="background:var(--surface);">
+    <div class="container">
+      <div style="text-align:center;margin-bottom:48px;">
+        <span class="section-label">Simple Process</span>
+        <h2 class="section-title">How <em>TilersHub</em> Works</h2>
+        <p class="section-sub" style="margin:0 auto;">Connect with tiling professionals in three easy steps</p>
+      </div>
+      <div style="display:grid;grid-template-columns:repeat(auto-fit,minmax(220px,1fr));gap:20px;">
+        {[
+          { step: '01', icon: '🔍', title: 'Search Providers', desc: 'Browse verified tilers, workshops, and suppliers by district and service type.' },
+          { step: '02', icon: '💬', title: 'Contact via WhatsApp', desc: 'Connect directly on WhatsApp — no middlemen, no commission, no delays.' },
+          { step: '03', icon: '🏠', title: 'Get Work Done', desc: 'Discuss your project, agree on a quote, and get quality tiling done.' },
+        ].map(s => (
+          <div style="padding:28px;background:var(--surface-2);border-radius:16px;border:1px solid var(--border);">
+            <div style="font-size:11px;font-weight:800;color:var(--terra);letter-spacing:2px;margin-bottom:12px;">{s.step}</div>
+            <div style="font-size:32px;margin-bottom:14px;">{s.icon}</div>
+            <h3 style="font-size:15px;font-weight:700;color:var(--text);margin-bottom:8px;">{s.title}</h3>
+            <p style="font-size:13px;color:var(--text-3);line-height:1.7;">{s.desc}</p>
           </div>
         ))}
       </div>
     </div>
   </section>
 
-  <!-- ═══ EXPLORE CTA ═══ -->
-  <section style="background: var(--charcoal); padding: 96px 28px; text-align: center; position: relative; overflow: hidden;">
-    <div style="position: absolute; inset: 0; opacity: 0.035; background-image: repeating-linear-gradient(45deg, transparent, transparent 20px, rgba(193,96,58,0.6) 20px, rgba(193,96,58,0.6) 21px); pointer-events: none;"></div>
-    <div style="position: absolute; bottom: -100px; right: -100px; width: 500px; height: 500px; background: radial-gradient(circle, var(--terracotta) 0%, transparent 70%); opacity: 0.08; pointer-events: none;"></div>
-
-    <div style="position: relative; max-width: 640px; margin: 0 auto;">
-      <span class="section-tag" style="border-color: rgba(193,96,58,0.3); color: var(--terracotta-muted);">ශ්‍රී ලංකාව පුරා</span>
-      <h2 style="font-family: 'Playfair Display', serif; font-size: clamp(26px,4.5vw,44px); color: var(--white); margin: 14px 0 16px; font-weight: 700; line-height: 1.15;">
-        ඔබේ ටයිලර් <span style="color: var(--terracotta);">හමු කරගන්න</span>
-      </h2>
-      <p style="color: rgba(245,240,232,0.45); font-size: 14px; max-width: 440px; margin: 0 auto 36px; line-height: 1.9;">
-        දිස්ත්‍රික්කය, සේවා වර්ගය අනුව ශ්‍රී ලංකාවේ සහතිකගත ටයිලර්වරුන් WhatsApp හරහා සොයා ගන්න
-      </p>
-
-      <div style="display: flex; justify-content: center; gap: 24px; margin-bottom: 40px; flex-wrap: wrap;">
-        {['25+ දිස්ත්‍රික්ක', 'sqft ගාස්තු සැසඳීම', 'WhatsApp Direct'].map(b => (
-          <div style="display: flex; align-items: center; gap: 9px; color: rgba(245,240,232,0.6); font-size: 13px;">
-            <span style="width: 20px; height: 20px; background: rgba(193,96,58,0.2); color: var(--terracotta); border-radius: 50%; display: inline-flex; align-items: center; justify-content: center; font-size: 10px; font-weight: 700; flex-shrink: 0;">✓</span>
-            {b}
+  <!-- Tips -->
+  <section class="section" style="background:var(--surface-2);border-top:1px solid var(--border);">
+    <div class="container">
+      <div style="text-align:center;margin-bottom:36px;">
+        <span class="section-label">💡 Tips</span>
+        <h2 class="section-title">Tiling <em>Tips & Advice</em></h2>
+      </div>
+      <div style="display:grid;grid-template-columns:repeat(auto-fit,minmax(230px,1fr));gap:16px;">
+        {TIPS.map(t => (
+          <div style="padding:22px;background:var(--surface);border-radius:14px;border:1px solid var(--border);">
+            <div style="font-size:24px;margin-bottom:10px;">{t.icon}</div>
+            <h4 style="font-size:14px;font-weight:700;color:var(--text);margin-bottom:6px;">{t.title}</h4>
+            <p style="font-size:12px;color:var(--text-3);line-height:1.7;">{t.text}</p>
           </div>
         ))}
       </div>
+    </div>
+  </section>
 
-      <a href="/explore" class="btn btn-primary btn-lg">🔍 දැන්ම ටයිලර් සොයන්න</a>
+  <!-- Join CTA -->
+  <section style="background:var(--surface);padding:56px 0;border-top:1px solid var(--border);">
+    <div class="container" style="max-width:680px;text-align:center;">
+      <span class="section-label">🛠️ For Professionals</span>
+      <h2 class="section-title" style="margin-top:8px;">Are you a tiler or workshop?</h2>
+      <p class="section-sub" style="margin:0 auto 32px;">Join TilersHub to get discovered by homeowners across Sri Lanka. Free listing, direct WhatsApp leads, no commission.</p>
+      <div style="display:flex;gap:12px;justify-content:center;flex-wrap:wrap;">
+        <a href="/join-tilershub" class="btn btn-navy btn-lg">✅ Join as Provider</a>
+        <a href="/providers" class="btn btn-ghost btn-lg">Browse Directory</a>
+      </div>
     </div>
   </section>
 
