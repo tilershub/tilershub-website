@@ -1,0 +1,140 @@
+---
+import Layout from '../layouts/Layout.astro'
+---
+
+<Layout
+  title="About TilersHub · Sri Lanka's Tiling Marketplace"
+  description="TilersHub is Sri Lanka's trusted marketplace connecting homeowners with verified tilers, workshops, suppliers and tile brands islandwide."
+>
+
+  <!-- Hero -->
+  <div style="background:var(--navy);padding:60px 20px 52px;text-align:center;position:relative;overflow:hidden;">
+    <div style="position:absolute;inset:0;opacity:0.04;background-image:repeating-linear-gradient(45deg,transparent,transparent 20px,rgba(255,255,255,0.8) 20px,rgba(255,255,255,0.8) 21px);pointer-events:none;"></div>
+    <div style="position:absolute;top:-80px;right:-80px;width:300px;height:300px;border-radius:50%;background:radial-gradient(circle,rgba(245,158,11,0.1) 0%,transparent 70%);pointer-events:none;"></div>
+    <div style="position:relative;max-width:640px;margin:0 auto;">
+      <div style="font-size:9px;font-weight:700;color:rgba(245,158,11,0.65);letter-spacing:3px;text-transform:uppercase;margin-bottom:14px;">About TilersHub</div>
+      <h1 style="font-family:'Playfair Display',serif;font-size:clamp(28px,5vw,48px);font-weight:700;color:#fff;margin-bottom:16px;line-height:1.15;">
+        Sri Lanka's Trusted<br/><span style="color:var(--gold);">Tiling Marketplace</span>
+      </h1>
+      <p style="font-size:15px;color:rgba(255,255,255,0.55);line-height:1.9;max-width:480px;margin:0 auto;">
+        Connecting homeowners with verified tilers, workshops, suppliers and tile brands — free, direct and islandwide.
+      </p>
+    </div>
+  </div>
+
+  <!-- Mission -->
+  <section style="background:var(--surface);padding:60px 20px;">
+    <div style="max-width:720px;margin:0 auto;text-align:center;">
+      <span class="section-label">Our Mission</span>
+      <h2 class="section-title" style="margin-top:10px;">Built for Sri Lanka's <em>Tiling Industry</em></h2>
+      <p style="font-size:15px;color:var(--text-3);line-height:1.9;max-width:600px;margin:0 auto 36px;">
+        TilersHub was built to solve a real problem — homeowners struggled to find reliable tiling professionals, and skilled tilers had no easy way to get discovered. We created a free, open marketplace to connect both sides directly.
+      </p>
+      <div style="display:grid;grid-template-columns:repeat(auto-fit,minmax(200px,1fr));gap:16px;text-align:center;">
+        {[
+          { n: '500+', l: 'Tiling Professionals', icon: '👷' },
+          { n: '25', l: 'Districts Covered', icon: '🗺️' },
+          { n: '100%', l: 'Free Service', icon: '✅' },
+          { n: '0%', l: 'Commission Charged', icon: '💸' },
+        ].map(s => (
+          <div style="padding:24px;background:var(--surface-2);border:1px solid var(--border);border-radius:16px;">
+            <div style="font-size:28px;margin-bottom:8px;">{s.icon}</div>
+            <div style="font-family:'Playfair Display',serif;font-size:28px;font-weight:700;color:var(--navy);margin-bottom:4px;">{s.n}</div>
+            <div style="font-size:12px;color:var(--text-3);">{s.l}</div>
+          </div>
+        ))}
+      </div>
+    </div>
+  </section>
+
+  <!-- How it works -->
+  <section style="background:var(--surface-2);padding:60px 20px;border-top:1px solid var(--border);">
+    <div style="max-width:900px;margin:0 auto;">
+      <div style="text-align:center;margin-bottom:44px;">
+        <span class="section-label">How It Works</span>
+        <h2 class="section-title" style="margin-top:10px;">Simple. <em>Direct. Free.</em></h2>
+      </div>
+      <div style="display:grid;grid-template-columns:repeat(auto-fit,minmax(220px,1fr));gap:20px;">
+        {[
+          { step: '01', icon: '🔍', title: 'Search & Discover', desc: 'Browse verified tilers, workshops, suppliers and tile brands. Filter by district, service type or provider name.' },
+          { step: '02', icon: '💬', title: 'Contact Directly', desc: 'Tap WhatsApp to message any provider directly — no middlemen, no booking fees, no commissions.' },
+          { step: '03', icon: '📋', title: 'Post Your Project', desc: 'Describe your tiling project and let verified professionals reach out with competitive quotes.' },
+          { step: '04', icon: '🏠', title: 'Get It Done', desc: 'Agree on a quote, schedule the work, and get quality tiling done by a trusted professional.' },
+        ].map(s => (
+          <div style="padding:28px 24px;background:#fff;border-radius:16px;border:1px solid var(--border);">
+            <div style="font-size:11px;font-weight:800;color:var(--terra);letter-spacing:2px;margin-bottom:12px;">{s.step}</div>
+            <div style="font-size:32px;margin-bottom:14px;">{s.icon}</div>
+            <h3 style="font-size:15px;font-weight:700;color:var(--text);margin-bottom:8px;">{s.title}</h3>
+            <p style="font-size:13px;color:var(--text-3);line-height:1.7;">{s.desc}</p>
+          </div>
+        ))}
+      </div>
+    </div>
+  </section>
+
+  <!-- Who's on TilersHub -->
+  <section style="background:var(--surface);padding:60px 20px;border-top:1px solid var(--border);">
+    <div style="max-width:900px;margin:0 auto;">
+      <div style="text-align:center;margin-bottom:44px;">
+        <span class="section-label">Who's Listed</span>
+        <h2 class="section-title" style="margin-top:10px;">Every Part of the <em>Tiling Industry</em></h2>
+      </div>
+      <div style="display:grid;grid-template-columns:repeat(auto-fill,minmax(240px,1fr));gap:16px;">
+        {[
+          { icon: '👷', type: 'Tilers', desc: 'Floor, wall, bathroom and specialist tiling professionals. TH Verified and Certified Pro tiers available.', href: '/providers' },
+          { icon: '🏭', type: 'Workshops', desc: 'Granite cutting, tile cutting and routering workshops with precision equipment.', href: '/providers?type=workshop' },
+          { icon: '📦', type: 'Suppliers', desc: 'Tile grout, adhesive, tools and material suppliers serving trade and retail customers.', href: '/providers?type=supplier' },
+          { icon: '🏪', type: 'Tile Shops', desc: 'Retail tile showrooms stocking local and imported tile brands for all budgets.', href: '/providers?type=tile_shop' },
+          { icon: '🏷️', type: 'Tile Brands', desc: 'Sri Lanka\'s top tile brands — browse collections and find authorised dealers near you.', href: '/brands' },
+          { icon: '🚿', type: 'Renovation', desc: 'Full bathroom and floor renovation companies offering design, supply and installation.', href: '/providers' },
+        ].map(p => (
+          <a href={p.href} style="display:block;padding:22px;background:var(--surface-2);border:1px solid var(--border);border-radius:16px;text-decoration:none;color:inherit;transition:all 0.2s;"
+            onmouseover="this.style.borderColor='var(--navy)';this.style.transform='translateY(-2px)'"
+            onmouseout="this.style.borderColor='var(--border)';this.style.transform='none'">
+            <div style="font-size:32px;margin-bottom:12px;">{p.icon}</div>
+            <div style="font-size:15px;font-weight:700;color:var(--text);margin-bottom:6px;">{p.type}</div>
+            <p style="font-size:12px;color:var(--text-3);line-height:1.7;margin:0;">{p.desc}</p>
+          </a>
+        ))}
+      </div>
+    </div>
+  </section>
+
+  <!-- Values -->
+  <section style="background:var(--navy);padding:60px 20px;position:relative;overflow:hidden;">
+    <div style="position:absolute;inset:0;opacity:0.03;background-image:radial-gradient(circle,rgba(255,255,255,0.8) 1px,transparent 1px);background-size:24px 24px;pointer-events:none;"></div>
+    <div style="max-width:800px;margin:0 auto;text-align:center;position:relative;">
+      <div style="font-size:9px;font-weight:700;color:rgba(245,158,11,0.65);letter-spacing:3px;text-transform:uppercase;margin-bottom:14px;">Our Values</div>
+      <h2 style="font-family:'Playfair Display',serif;font-size:clamp(24px,4vw,36px);font-weight:700;color:#fff;margin-bottom:40px;">What We Stand For</h2>
+      <div style="display:grid;grid-template-columns:repeat(auto-fit,minmax(180px,1fr));gap:20px;">
+        {[
+          { icon: '🆓', v: 'Always Free', d: 'No subscription, no commission — TilersHub is free for homeowners and providers.' },
+          { icon: '✅', v: 'Verified First', d: 'We manually review and verify providers before awarding TH Verified badges.' },
+          { icon: '📞', v: 'Direct Contact', d: 'WhatsApp directly — no call centres, no ticketing systems, no delays.' },
+          { icon: '🇱🇰', v: 'Built for Lanka', d: 'Designed specifically for the Sri Lankan tiling market, with Sinhala support.' },
+        ].map(item => (
+          <div style="padding:24px 20px;background:rgba(255,255,255,0.04);border:1px solid rgba(255,255,255,0.07);border-radius:16px;text-align:center;">
+            <div style="font-size:32px;margin-bottom:12px;">{item.icon}</div>
+            <div style="font-size:14px;font-weight:700;color:#fff;margin-bottom:8px;">{item.v}</div>
+            <p style="font-size:12px;color:rgba(255,255,255,0.4);line-height:1.7;margin:0;">{item.d}</p>
+          </div>
+        ))}
+      </div>
+    </div>
+  </section>
+
+  <!-- CTA -->
+  <section style="background:var(--surface);padding:52px 20px;border-top:1px solid var(--border);">
+    <div style="max-width:540px;margin:0 auto;text-align:center;">
+      <span class="section-label">Get Started</span>
+      <h2 class="section-title" style="margin-top:10px;">Ready to find the <em>right tiler?</em></h2>
+      <p class="section-sub" style="margin:0 auto 28px;">Browse Sri Lanka's largest tiling professional directory or post your project free today.</p>
+      <div style="display:flex;gap:10px;justify-content:center;flex-wrap:wrap;">
+        <a href="/providers" class="btn btn-navy btn-lg">👷 Find Providers</a>
+        <a href="/post-project" class="btn btn-terra btn-lg">📋 Post a Project</a>
+        <a href="/contact" class="btn btn-ghost btn-lg">📬 Contact Us</a>
+      </div>
+    </div>
+  </section>
+
+</Layout>
