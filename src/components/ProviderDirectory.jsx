@@ -1,4 +1,4 @@
-import { useState, useEffect } from 'react'
+import { useState, useEffect, useRef } from 'react'
 import { supabase, buildWhatsAppLink, DISTRICTS_EN, SERVICES_EN, PROVIDER_TYPES, VERIFICATION_BADGES } from '../lib/supabase.js'
 
 function initials(name) {
@@ -229,11 +229,13 @@ export default function ProviderDirectory({ initialType, initialSearch }) {
   const [tilers, setTilers] = useState([])
   const [providers, setProviders] = useState([])
   const [loading, setLoading] = useState(true)
+  const [inputValue, setInputValue] = useState(initialSearch || '')
   const [search, setSearch] = useState(initialSearch || '')
   const [district, setDistrict] = useState('')
   const [type, setType] = useState(initialType || '')
   const [selected, setSelected] = useState(null)
   const [isTilerSelected, setIsTilerSelected] = useState(false)
+  const debounceRef = useRef(null)
 
   useEffect(() => {
     async function load() {
@@ -282,8 +284,13 @@ export default function ProviderDirectory({ initialType, initialSearch }) {
           <div style={{ position: 'relative', flex: '1 1 200px', minWidth: 160 }}>
             <span style={{ position: 'absolute', left: 10, top: '50%', transform: 'translateY(-50%)', fontSize: 14, pointerEvents: 'none' }}>🔍</span>
             <input
-              value={search}
-              onChange={e => setSearch(e.target.value)}
+              value={inputValue}
+              onChange={e => {
+                const val = e.target.value
+                setInputValue(val)
+                clearTimeout(debounceRef.current)
+                debounceRef.current = setTimeout(() => setSearch(val), 280)
+              }}
               placeholder="Search by name, service..."
               style={{ width: '100%', padding: '9px 12px 9px 32px', border: '1.5px solid #e2e8f0', borderRadius: 10, fontSize: 13, outline: 'none', fontFamily: 'inherit' }}
               onFocus={e => e.target.style.borderColor = '#1B3A6B'}
@@ -298,8 +305,8 @@ export default function ProviderDirectory({ initialType, initialSearch }) {
             <option value="">All Districts</option>
             {DISTRICTS_EN.map(d => <option key={d} value={d}>{d}</option>)}
           </select>
-          {(search || type || district) && (
-            <button onClick={() => { setSearch(''); setType(''); setDistrict('') }} style={{ padding: '9px 14px', background: '#fee2e2', color: '#dc2626', border: 'none', borderRadius: 10, fontSize: 12, fontWeight: 600, cursor: 'pointer' }}>
+          {(inputValue || type || district) && (
+            <button onClick={() => { setInputValue(''); setSearch(''); setType(''); setDistrict('') }} style={{ padding: '9px 14px', background: '#fee2e2', color: '#dc2626', border: 'none', borderRadius: 10, fontSize: 12, fontWeight: 600, cursor: 'pointer' }}>
               ✕ Clear
             </button>
           )}
