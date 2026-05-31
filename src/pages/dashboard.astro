@@ -1,0 +1,23 @@
+---
+import Layout from '../layouts/Layout.astro'
+import Dashboard from '../components/Dashboard.jsx'
+---
+
+<Layout
+  title="My Dashboard · TilersHub"
+  description="Manage your TilersHub account — track posted projects and your provider listing."
+>
+
+  <div style="background:var(--surface-2);padding:28px 20px 0;border-bottom:1px solid var(--border);">
+    <div style="max-width:800px;margin:0 auto;">
+      <span class="section-label">👤 Account</span>
+      <h1 style="font-family:'Playfair Display',serif;font-size:clamp(22px,3.5vw,32px);font-weight:700;color:var(--text);margin:8px 0 4px;">
+        My <em style="color:var(--terra);font-style:normal;">Dashboard</em>
+      </h1>
+      <p style="font-size:13px;color:var(--text-3);padding-bottom:20px;">Track your projects and provider listing status.</p>
+    </div>
+  </div>
+
+  <Dashboard client:load />
+
+</Layout>

@@ -1,5 +1,6 @@
 ---
 import '../index.css'
+import AuthButton from '../components/AuthButton.jsx'
 const {
   title = "TilersHub · Sri Lanka's Tiling Marketplace",
   description = "Find verified tilers, workshops, suppliers and tile brands across Sri Lanka. Post your tiling project free on TilersHub.",
@@ -36,6 +37,7 @@ const path = Astro.url.pathname
 
     <div class="header-actions">
       <a href="/providers" class="header-icon-btn" title="Search" aria-label="Search providers">🔍</a>
+      <AuthButton client:load />
       <a href="/post-project" class="header-cta">Post Project</a>
       <button class="header-icon-btn" id="hamburger" aria-label="Menu">☰</button>
     </div>
@@ -60,6 +62,7 @@ const path = Astro.url.pathname
     <a href="/post-project" class="drawer-link highlight">📋 Post a Project</a>
     <a href="/join-tilershub" class="drawer-link" style="color:rgba(255,255,255,0.6);">✅ Join as Provider</a>
     <div class="drawer-divider"></div>
+    <a href="/dashboard" class={`drawer-link${path==='/dashboard'?' active':''}`} style="color:rgba(255,255,255,0.5);font-size:13px;">👤 My Dashboard</a>
     <a href="/about" class={`drawer-link${path==='/about'?' active':''}`} style="color:rgba(255,255,255,0.5);font-size:13px;">ℹ️ About TilersHub</a>
     <a href="/contact" class={`drawer-link${path==='/contact'?' active':''}`} style="color:rgba(255,255,255,0.5);font-size:13px;">📬 Contact Us</a>
   </div>

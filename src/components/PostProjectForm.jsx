@@ -1,4 +1,4 @@
-import { useState } from 'react'
+import { useState, useEffect } from 'react'
 import { supabase, PROJECT_TYPES, DISTRICTS_EN, BUDGET_RANGES } from '../lib/supabase.js'
 
 /* Field wrapper defined outside component so React never remounts inputs on re-render */
@@ -32,6 +32,11 @@ export default function PostProjectForm() {
   const [errors, setErrors] = useState({})
   const [submitting, setSubmitting] = useState(false)
   const [success, setSuccess] = useState(false)
+  const [userId, setUserId] = useState(null)
+
+  useEffect(() => {
+    supabase.auth.getUser().then(({ data: { user } }) => setUserId(user?.id ?? null))
+  }, [])
 
   const set = (k, v) => setForm(f => ({ ...f, [k]: v }))
 
@@ -62,7 +67,8 @@ export default function PostProjectForm() {
         budget_range: form.budget_range || null,
         customer_name: form.customer_name.trim(),
         whatsapp: form.whatsapp.replace(/\s/g, ''),
-        status: 'pending_review'
+        status: 'pending_review',
+        ...(userId ? { user_id: userId } : {}),
       })
       setSuccess(true)
     } catch {

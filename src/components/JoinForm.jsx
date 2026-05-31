@@ -1,4 +1,4 @@
-import { useState } from 'react'
+import { useState, useEffect } from 'react'
 import { supabase, PROVIDER_TYPES, DISTRICTS_EN, SERVICES_EN } from '../lib/supabase.js'
 
 /* Field wrapper defined outside component so React never remounts inputs on re-render */
@@ -32,6 +32,11 @@ export default function JoinForm() {
   const [errors, setErrors] = useState({})
   const [submitting, setSubmitting] = useState(false)
   const [success, setSuccess] = useState(false)
+  const [userId, setUserId] = useState(null)
+
+  useEffect(() => {
+    supabase.auth.getUser().then(({ data: { user } }) => setUserId(user?.id ?? null))
+  }, [])
 
   const set = (k, v) => setForm(f => ({ ...f, [k]: v }))
   const toggleService = (s) => set('services', form.services.includes(s) ? form.services.filter(x => x !== s) : [...form.services, s])
@@ -62,7 +67,8 @@ export default function JoinForm() {
         whatsapp: form.whatsapp.replace(/\s/g, ''),
         description: form.description.trim() || null,
         services: form.services,
-        status: 'pending_review'
+        status: 'pending_review',
+        ...(userId ? { user_id: userId } : {}),
       })
       setSuccess(true)
     } catch {
