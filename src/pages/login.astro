@@ -1,0 +1,38 @@
+---
+import Layout from '../layouts/Layout.astro'
+import AuthButton from '../components/AuthButton.jsx'
+---
+
+<Layout
+  title="Sign In · TilersHub"
+  description="Sign in to TilersHub to track your projects and manage your provider listing."
+>
+  <div style="background:var(--surface);min-height:80vh;display:flex;align-items:center;justify-content:center;padding:40px 20px;">
+    <div style="width:100%;max-width:420px;text-align:center;">
+
+      <div style="margin-bottom:28px;">
+        <div style="font-family:'Playfair Display',serif;font-size:26px;font-weight:700;color:var(--text);margin-bottom:8px;">
+          Welcome to <span style="color:var(--terra);">TilersHub</span>
+        </div>
+        <p style="font-size:14px;color:var(--text-3);line-height:1.7;">
+          Sign in to track your projects and manage your provider listing.
+        </p>
+      </div>
+
+      <!-- AuthButton handles the full login modal flow -->
+      <div style="display:flex;justify-content:center;">
+        <AuthButton client:load />
+      </div>
+
+      <p style="font-size:12px;color:var(--text-4);margin-top:24px;line-height:1.7;">
+        No account needed to post a project or contact providers.<br/>
+        Accounts let you track your submissions.
+      </p>
+
+      <div style="margin-top:28px;display:flex;gap:12px;justify-content:center;flex-wrap:wrap;">
+        <a href="/post-project" class="btn btn-terra">📋 Post a Project</a>
+        <a href="/providers" class="btn btn-outline">👷 Find Tilers</a>
+      </div>
+    </div>
+  </div>
+</Layout>

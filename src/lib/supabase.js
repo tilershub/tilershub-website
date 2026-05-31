@@ -144,3 +144,25 @@ export async function submitProviderApplication(fields) {
   const { error } = await supabase.from('provider_submissions').insert(fields)
   if (error) throw error
 }
+
+// ── Auth helpers ──────────────────────────────────────────────────────────────
+
+export async function signInWithOtp(email) {
+  const redirectTo = typeof window !== 'undefined'
+    ? `${window.location.origin}/dashboard`
+    : '/dashboard'
+  return supabase.auth.signInWithOtp({ email, options: { emailRedirectTo: redirectTo } })
+}
+
+export async function getUser() {
+  const { data: { user } } = await supabase.auth.getUser()
+  return user
+}
+
+export async function signOut() {
+  return supabase.auth.signOut()
+}
+
+export function onAuthStateChange(callback) {
+  return supabase.auth.onAuthStateChange((_event, session) => callback(session?.user ?? null))
+}
