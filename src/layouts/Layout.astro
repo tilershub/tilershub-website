@@ -52,6 +52,7 @@ const path = Astro.url.pathname
     </div>
     <a href="/" class={`drawer-link${path==='/'?' active':''}`}>🏠 Home</a>
     <a href="/providers" class={`drawer-link${path.startsWith('/providers')?' active':''}`}>👷 Find Providers</a>
+    <a href="/jobs" class={`drawer-link${path==='/jobs'?' active':''}`}>💼 Browse Jobs</a>
     <a href="/brands" class={`drawer-link${path.startsWith('/brands')?' active':''}`}>🏷️ Tile Brands</a>
     <a href="/estimator" class={`drawer-link${path==='/estimator'?' active':''}`}>📐 Cost Estimator</a>
     <div class="drawer-divider"></div>
@@ -89,6 +90,7 @@ const path = Astro.url.pathname
         <div class="footer-col-head">Discover</div>
         <nav class="footer-links">
           <a href="/providers">👷 Find Providers</a>
+          <a href="/jobs">💼 Browse Jobs</a>
           <a href="/brands">🏷️ Tile Brands</a>
           <a href="/estimator">📐 Cost Estimator</a>
           <a href="/providers?type=workshop">🏭 Workshops</a>

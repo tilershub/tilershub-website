@@ -11,6 +11,7 @@ const { slug } = Astro.params
 const { data: brand } = await supabase.from('brands').select('*').eq('slug', slug).single()
 
 if (!brand) return Astro.redirect('/brands')
+if (brand.dedicated_page_url) return Astro.redirect(brand.dedicated_page_url, 301)
 ---
 
 <Layout
