@@ -79,6 +79,85 @@ function ProviderCard({ provider, onClick }) {
   )
 }
 
+function ShopCard({ provider, onClick }) {
+  const pts = PROVIDER_TYPES.find(p => p.value === provider.provider_type)
+  const brands = (provider.services || []).filter(s =>
+    !['Floor Tiles', 'Wall Tiles', 'Bathroom Tiles', 'Outdoor Tiles', 'Commercial'].includes(s)
+  )
+  const categories = (provider.services || []).filter(s =>
+    ['Floor Tiles', 'Wall Tiles', 'Bathroom Tiles', 'Outdoor Tiles', 'Commercial'].includes(s)
+  )
+
+  return (
+    <div
+      onClick={() => onClick(provider)}
+      style={{ background: '#fff', border: '1px solid #e2e8f0', borderRadius: 16, overflow: 'hidden', cursor: 'pointer', transition: 'all 0.2s' }}
+      onMouseOver={e => { e.currentTarget.style.transform = 'translateY(-4px)'; e.currentTarget.style.boxShadow = '0 16px 40px rgba(27,58,107,0.1)' }}
+      onMouseOut={e => { e.currentTarget.style.transform = ''; e.currentTarget.style.boxShadow = '' }}
+    >
+      {/* Shop colour-block header */}
+      <div style={{ background: 'linear-gradient(135deg, #0f2444, #1B3A6B)', padding: '18px 18px 14px', display: 'flex', alignItems: 'center', gap: 12 }}>
+        <div style={{ width: 44, height: 44, borderRadius: 12, background: 'rgba(255,255,255,0.12)', display: 'flex', alignItems: 'center', justifyContent: 'center', fontSize: 22, flexShrink: 0 }}>🏪</div>
+        <div style={{ flex: 1, minWidth: 0 }}>
+          <div style={{ fontWeight: 700, fontSize: 15, color: '#fff', overflow: 'hidden', textOverflow: 'ellipsis', whiteSpace: 'nowrap' }}>{provider.name}</div>
+          <div style={{ fontSize: 11, color: 'rgba(255,255,255,0.55)', marginTop: 2 }}>📍 {provider.city}{provider.district ? `, ${provider.district}` : ''}</div>
+        </div>
+        {pts && <span style={{ fontSize: 10, fontWeight: 700, padding: '2px 8px', borderRadius: 20, background: 'rgba(255,255,255,0.15)', color: 'rgba(255,255,255,0.8)', whiteSpace: 'nowrap' }}>{pts.icon} {pts.label}</span>}
+      </div>
+
+      <div style={{ padding: '14px 18px 16px' }}>
+        {provider.description && (
+          <p style={{ fontSize: 12, color: '#64748b', lineHeight: 1.6, marginBottom: 12, display: '-webkit-box', WebkitLineClamp: 2, WebkitBoxOrient: 'vertical', overflow: 'hidden' }}>
+            {provider.description}
+          </p>
+        )}
+
+        {brands.length > 0 && (
+          <div style={{ marginBottom: 10 }}>
+            <div style={{ fontSize: 10, fontWeight: 700, color: '#94a3b8', textTransform: 'uppercase', letterSpacing: '0.5px', marginBottom: 5 }}>Brands Carried</div>
+            <div style={{ display: 'flex', flexWrap: 'wrap', gap: 5 }}>
+              {brands.map(b => (
+                <span key={b} style={{ fontSize: 10, padding: '2px 8px', borderRadius: 20, background: '#eef3fb', color: '#1B3A6B', border: '1px solid #d5e2f5', fontWeight: 600 }}>{b}</span>
+              ))}
+            </div>
+          </div>
+        )}
+
+        {categories.length > 0 && (
+          <div style={{ display: 'flex', flexWrap: 'wrap', gap: 5, marginBottom: 12 }}>
+            {categories.map(c => (
+              <span key={c} style={{ fontSize: 10, padding: '2px 8px', borderRadius: 20, background: '#f8fafc', color: '#475569', border: '1px solid #e2e8f0' }}>{c}</span>
+            ))}
+          </div>
+        )}
+
+        <div style={{ display: 'flex', gap: 8 }}>
+          {provider.whatsapp && (
+            <a
+              href={buildWhatsAppLink(provider.whatsapp, provider.name)}
+              target="_blank"
+              rel="noopener noreferrer"
+              onClick={e => e.stopPropagation()}
+              style={{ flex: 1, display: 'flex', alignItems: 'center', justifyContent: 'center', gap: 6, background: '#25D366', color: '#fff', borderRadius: 10, padding: '8px 12px', fontSize: 12, fontWeight: 700, textDecoration: 'none' }}
+            >
+              <span>💬</span> WhatsApp
+            </a>
+          )}
+          {provider.phone && (
+            <a
+              href={`tel:${provider.phone}`}
+              onClick={e => e.stopPropagation()}
+              style={{ display: 'flex', alignItems: 'center', justifyContent: 'center', gap: 5, background: '#eef3fb', color: '#1B3A6B', borderRadius: 10, padding: '8px 12px', fontSize: 12, fontWeight: 700, textDecoration: 'none', border: '1px solid #d5e2f5' }}
+            >
+              📞 Call
+            </a>
+          )}
+        </div>
+      </div>
+    </div>
+  )
+}
+
 // Also show tilers from the original tilers table
 function TilerCard({ tiler, onClick }) {
   return (
@@ -333,7 +412,9 @@ export default function ProviderDirectory({ initialType, initialSearch }) {
         ) : (
           <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fill, minmax(290px, 1fr))', gap: 16 }}>
             {filteredProviders.map(p => (
-              <ProviderCard key={p.id} provider={p} onClick={item => { setSelected(item); setIsTilerSelected(false) }} />
+              (p.provider_type === 'tile_shop' || p.provider_type === 'brand_dealer')
+                ? <ShopCard key={p.id} provider={p} onClick={item => { setSelected(item); setIsTilerSelected(false) }} />
+                : <ProviderCard key={p.id} provider={p} onClick={item => { setSelected(item); setIsTilerSelected(false) }} />
             ))}
             {filteredTilers.map(t => (
               <TilerCard key={t.id} tiler={t} onClick={item => { setSelected(item); setIsTilerSelected(true) }} />

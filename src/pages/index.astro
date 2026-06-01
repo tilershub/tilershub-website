@@ -40,9 +40,9 @@ function waLink(phone) {
 const QUICK_ACTIONS = [
   { icon: '👷', label: 'Find Tilers', href: '/providers', bg: '#EEF2FB' },
   { icon: '📋', label: 'Post Project', href: '/post-project', bg: '#fff1eb' },
-  { icon: '📐', label: 'Estimator', href: '/estimator', bg: '#F0FDF4' },
-  { icon: '🏭', label: 'Workshops', href: '/providers?type=workshop', bg: '#F5F3FF' },
-  { icon: '📦', label: 'Suppliers', href: '/providers?type=supplier', bg: '#FFF7ED' },
+  { icon: '💼', label: 'Browse Jobs', href: '/jobs', bg: '#F0FDF4' },
+  { icon: '📐', label: 'Estimator', href: '/estimator', bg: '#F5F3FF' },
+  { icon: '🏭', label: 'Workshops', href: '/providers?type=workshop', bg: '#FFF7ED' },
   { icon: '🏷️', label: 'Brands', href: '/brands', bg: '#FFFBEB' },
   { icon: '🚿', label: 'Bathroom', href: '/sponsor/luxehome', bg: '#EFF6FF' },
   { icon: '🏪', label: 'Tile Shops', href: '/providers?type=tile_shop', bg: '#F0FDF4' },
@@ -92,12 +92,12 @@ const BRAND_COLORS = ['#1A2B4A','#C1603A','#D4AF37','#1e3a5f','#7c3aed','#166534
     </div>
     <div class="search-pills">
       <a href="/providers" class="search-pill">👷 Tilers</a>
+      <a href="/jobs" class="search-pill">💼 Browse Jobs</a>
       <a href="/providers?type=workshop" class="search-pill">🏭 Workshops</a>
       <a href="/providers?type=supplier" class="search-pill">📦 Suppliers</a>
       <a href="/brands" class="search-pill">🏷️ Tile Brands</a>
       <a href="/providers?type=tile_shop" class="search-pill">🏪 Tile Shops</a>
       <a href="/estimator" class="search-pill">📐 Estimator</a>
-      <a href="/sponsor/luxehome" class="search-pill">🚿 Bathroom</a>
     </div>
   </div>
 
@@ -246,6 +246,27 @@ const BRAND_COLORS = ['#1A2B4A','#C1603A','#D4AF37','#1e3a5f','#7c3aed','#166534
           <a href="/estimator" class="btn btn-gold">📐 Open Estimator</a>
           <a href="/post-project" style="background:rgba(255,255,255,0.08);color:rgba(255,255,255,0.8);border:1px solid rgba(255,255,255,0.15);padding:11px 20px;font-size:13px;border-radius:12px;font-weight:600;display:inline-flex;align-items:center;gap:6px;text-decoration:none;">Post a Project →</a>
         </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- ⑦ Open Jobs CTA -->
+  <section style="background:var(--surface-2);padding:36px 20px;border-top:1px solid var(--border);">
+    <div style="max-width:900px;margin:0 auto;display:flex;align-items:center;justify-content:space-between;flex-wrap:wrap;gap:20px;">
+      <div style="display:flex;align-items:center;gap:18px;">
+        <div style="width:56px;height:56px;background:linear-gradient(135deg,#16a34a,#166534);border-radius:16px;display:flex;align-items:center;justify-content:center;font-size:26px;flex-shrink:0;">💼</div>
+        <div>
+          <div style="font-size:17px;font-weight:700;color:var(--text);margin-bottom:4px;">Open Tiling Projects</div>
+          <div style="font-size:13px;color:var(--text-3);line-height:1.5;">Homeowners are posting jobs right now. Find work near you.</div>
+        </div>
+      </div>
+      <div style="display:flex;gap:10px;flex-wrap:wrap;">
+        <a href="/jobs" style="display:inline-flex;align-items:center;gap:7px;background:#16a34a;color:#fff;border-radius:12px;padding:12px 22px;font-size:14px;font-weight:700;text-decoration:none;white-space:nowrap;">
+          💼 Browse Jobs →
+        </a>
+        <a href="/post-project" style="display:inline-flex;align-items:center;gap:7px;background:var(--surface);color:var(--text-2);border:1.5px solid var(--border);border-radius:12px;padding:12px 20px;font-size:13px;font-weight:600;text-decoration:none;white-space:nowrap;">
+          📋 Post a Project
+        </a>
       </div>
     </div>
   </section>
