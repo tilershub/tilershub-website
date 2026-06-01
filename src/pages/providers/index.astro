@@ -2,7 +2,8 @@
 import Layout from '../../layouts/Layout.astro'
 import ProviderDirectory from '../../components/ProviderDirectory.jsx'
 
-const type = Astro.url.searchParams.get('type') || ''
+const rawType = Astro.url.searchParams.get('type') || ''
+const type = rawType  // keep empty for "all" but default label is Tilers
 const q = Astro.url.searchParams.get('q') || ''
 
 const TYPE_LABELS = {
