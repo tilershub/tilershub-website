@@ -158,50 +158,72 @@ function ShopCard({ provider, onClick }) {
   )
 }
 
-// Also show tilers from the original tilers table
+const TILER_COVER_COLORS = ['#0F2444','#1B3A6B','#1e3a5f','#7c3aed','#C1603A','#166534','#92400e','#374151']
+
 function TilerCard({ tiler, onClick }) {
+  const colorIdx = (tiler.full_name || '').charCodeAt(0) % TILER_COVER_COLORS.length
+  const coverBg = TILER_COVER_COLORS[colorIdx]
+  const phone = tiler.whatsapp || tiler.phone
+
   return (
     <div
       onClick={() => onClick(tiler)}
-      style={{ background: '#fff', border: '1px solid #e2e8f0', borderRadius: 16, overflow: 'hidden', cursor: 'pointer', transition: 'all 0.2s' }}
-      onMouseOver={e => { e.currentTarget.style.transform = 'translateY(-4px)'; e.currentTarget.style.boxShadow = '0 16px 40px rgba(27,58,107,0.1)' }}
+      style={{ background: '#fff', border: '1px solid #e2e8f0', borderRadius: 16, overflow: 'hidden', cursor: 'pointer', transition: 'all 0.2s', display: 'flex', flexDirection: 'column' }}
+      onMouseOver={e => { e.currentTarget.style.transform = 'translateY(-4px)'; e.currentTarget.style.boxShadow = '0 16px 40px rgba(27,58,107,0.12)' }}
       onMouseOut={e => { e.currentTarget.style.transform = ''; e.currentTarget.style.boxShadow = '' }}
     >
-      <div style={{ padding: '18px 18px 14px' }}>
-        <div style={{ display: 'flex', alignItems: 'flex-start', gap: 12, marginBottom: 12 }}>
-          <div style={{ width: 48, height: 48, borderRadius: 12, background: 'linear-gradient(135deg, #1B3A6B, #2B5299)', display: 'flex', alignItems: 'center', justifyContent: 'center', fontSize: 17, fontWeight: 700, color: '#fff', flexShrink: 0, overflow: 'hidden' }}>
+      {/* Coloured header */}
+      <div style={{ background: `linear-gradient(135deg, ${coverBg}, ${coverBg}cc)`, padding: '18px 18px 14px', position: 'relative', overflow: 'hidden' }}>
+        <div style={{ position: 'absolute', inset: 0, opacity: 0.04, backgroundImage: 'repeating-linear-gradient(0deg,transparent,transparent 19px,rgba(255,255,255,0.8) 19px,rgba(255,255,255,0.8) 20px),repeating-linear-gradient(90deg,transparent,transparent 19px,rgba(255,255,255,0.8) 19px,rgba(255,255,255,0.8) 20px)', pointerEvents: 'none' }}></div>
+        <div style={{ position: 'relative', display: 'flex', alignItems: 'flex-start', justifyContent: 'space-between', gap: 10 }}>
+          <div style={{ width: 52, height: 52, borderRadius: 14, background: 'rgba(255,255,255,0.15)', border: '1.5px solid rgba(255,255,255,0.25)', display: 'flex', alignItems: 'center', justifyContent: 'center', fontSize: 19, fontWeight: 700, color: '#fff', flexShrink: 0, overflow: 'hidden' }}>
             {tiler.avatar_url ? <img src={tiler.avatar_url} alt={tiler.full_name} style={{ width: '100%', height: '100%', objectFit: 'cover' }} /> : initials(tiler.full_name)}
           </div>
           <div style={{ flex: 1, minWidth: 0 }}>
-            <div style={{ fontWeight: 700, fontSize: 15, color: '#0f172a', marginBottom: 3, overflow: 'hidden', textOverflow: 'ellipsis', whiteSpace: 'nowrap' }}>{tiler.full_name}</div>
-            <div style={{ fontSize: 12, color: '#64748b' }}>📍 {tiler.city || tiler.district}</div>
+            <div style={{ fontWeight: 700, fontSize: 15, color: '#fff', overflow: 'hidden', textOverflow: 'ellipsis', whiteSpace: 'nowrap' }}>{tiler.full_name}</div>
+            <div style={{ fontSize: 11, color: 'rgba(255,255,255,0.65)', marginTop: 2 }}>📍 {tiler.city || tiler.district}</div>
           </div>
           {tiler.is_verified && (
-            <span style={{ fontSize: 10, fontWeight: 700, padding: '2px 8px', borderRadius: 20, background: '#f0fdf4', color: '#16a34a', border: '1px solid #bbf7d0' }}>✓ Verified</span>
+            <span style={{ fontSize: 10, fontWeight: 700, padding: '3px 8px', borderRadius: 20, background: 'rgba(255,255,255,0.15)', color: '#fff', border: '1px solid rgba(255,255,255,0.25)', whiteSpace: 'nowrap', flexShrink: 0 }}>✓ Verified</span>
           )}
         </div>
+        {/* Stats row */}
+        <div style={{ position: 'relative', display: 'flex', gap: 8, marginTop: 12, flexWrap: 'wrap' }}>
+          <span style={{ fontSize: 10, padding: '2px 8px', borderRadius: 20, background: 'rgba(255,255,255,0.12)', color: 'rgba(255,255,255,0.85)', border: '1px solid rgba(255,255,255,0.15)' }}>🪚 Tiler</span>
+          {tiler.experience_years > 0 && (
+            <span style={{ fontSize: 10, padding: '2px 8px', borderRadius: 20, background: 'rgba(255,255,255,0.12)', color: 'rgba(255,255,255,0.85)', border: '1px solid rgba(255,255,255,0.15)' }}>🛠️ {tiler.experience_years}+ yrs</span>
+          )}
+          {tiler.avg_rating > 0 && (
+            <span style={{ fontSize: 10, padding: '2px 8px', borderRadius: 20, background: 'rgba(255,255,255,0.12)', color: 'rgba(255,255,255,0.85)', border: '1px solid rgba(255,255,255,0.15)' }}>⭐ {tiler.avg_rating.toFixed(1)}</span>
+          )}
+          {tiler.daily_rate_min && (
+            <span style={{ fontSize: 10, padding: '2px 8px', borderRadius: 20, background: 'rgba(255,255,255,0.12)', color: 'rgba(255,255,255,0.85)', border: '1px solid rgba(255,255,255,0.15)' }}>Rs.{tiler.daily_rate_min}/sq.ft</span>
+          )}
+        </div>
+      </div>
 
+      {/* Body */}
+      <div style={{ padding: '14px 18px 16px', flex: 1, display: 'flex', flexDirection: 'column' }}>
         {tiler.bio && (
-          <p style={{ fontSize: 12, color: '#64748b', lineHeight: 1.6, marginBottom: 12, display: '-webkit-box', WebkitLineClamp: 2, WebkitBoxOrient: 'vertical', overflow: 'hidden' }}>
+          <p style={{ fontSize: 12, color: '#64748b', lineHeight: 1.65, marginBottom: 12, display: '-webkit-box', WebkitLineClamp: 2, WebkitBoxOrient: 'vertical', overflow: 'hidden' }}>
             {tiler.bio}
           </p>
         )}
-
-        <div style={{ display: 'flex', flexWrap: 'wrap', gap: 5, marginBottom: 14 }}>
-          <span style={{ fontSize: 10, fontWeight: 700, padding: '2px 8px', borderRadius: 20, background: '#eef3fb', color: '#1B3A6B', border: '1px solid #d5e2f5' }}>👷 Tiler</span>
-          {(tiler.services || []).slice(0, 2).map(s => (
-            <span key={s} style={{ fontSize: 10, padding: '2px 8px', borderRadius: 20, background: '#f8fafc', color: '#475569', border: '1px solid #e2e8f0' }}>{s}</span>
-          ))}
-        </div>
-
-        <div style={{ display: 'flex', gap: 8 }}>
-          {tiler.phone && (
+        {(tiler.services || []).length > 0 && (
+          <div style={{ display: 'flex', flexWrap: 'wrap', gap: 5, marginBottom: 14 }}>
+            {(tiler.services || []).slice(0, 4).map(s => (
+              <span key={s} style={{ fontSize: 10, padding: '2px 8px', borderRadius: 20, background: '#f1f5f9', color: '#475569', border: '1px solid #e2e8f0' }}>{s}</span>
+            ))}
+          </div>
+        )}
+        <div style={{ marginTop: 'auto', display: 'flex', gap: 8 }}>
+          {phone && (
             <a
-              href={buildWhatsAppLink(tiler.phone, tiler.full_name)}
+              href={buildWhatsAppLink(phone, tiler.full_name)}
               target="_blank"
               rel="noopener noreferrer"
               onClick={e => e.stopPropagation()}
-              style={{ flex: 1, display: 'flex', alignItems: 'center', justifyContent: 'center', gap: 6, background: '#25D366', color: '#fff', borderRadius: 10, padding: '8px 12px', fontSize: 12, fontWeight: 700, textDecoration: 'none' }}
+              style={{ flex: 1, display: 'flex', alignItems: 'center', justifyContent: 'center', gap: 6, background: '#25D366', color: '#fff', borderRadius: 10, padding: '9px 12px', fontSize: 12, fontWeight: 700, textDecoration: 'none' }}
             >
               <span>💬</span> WhatsApp
             </a>
@@ -210,7 +232,7 @@ function TilerCard({ tiler, onClick }) {
             <a
               href={`tel:${tiler.phone}`}
               onClick={e => e.stopPropagation()}
-              style={{ display: 'flex', alignItems: 'center', justifyContent: 'center', gap: 5, background: '#eef3fb', color: '#1B3A6B', borderRadius: 10, padding: '8px 12px', fontSize: 12, fontWeight: 700, textDecoration: 'none', border: '1px solid #d5e2f5' }}
+              style={{ display: 'flex', alignItems: 'center', justifyContent: 'center', gap: 5, background: '#eef3fb', color: '#1B3A6B', borderRadius: 10, padding: '9px 12px', fontSize: 12, fontWeight: 700, textDecoration: 'none', border: '1px solid #d5e2f5' }}
             >
               📞 Call
             </a>
@@ -330,9 +352,9 @@ export default function ProviderDirectory({ initialType, initialSearch }) {
     load()
   }, [])
 
-  // Combined + filtered results
+  // Strict separation: tilers only when type=tiler or no filter, providers only when non-tiler type
   const showTilers = !type || type === 'tiler'
-  const showProviders = !type || type !== 'tiler'
+  const showProviders = type !== 'tiler'
 
   const filteredTilers = showTilers ? tilers.filter(t => {
     if (district && t.district !== district) return false
