@@ -61,6 +61,7 @@ export const PROVIDER_TYPES = [
   { value: 'contractor', label: 'Contractor', icon: '👷' },
   { value: 'tile_shop', label: 'Tile Shop', icon: '🏪' },
   { value: 'brand_dealer', label: 'Brand Dealer', icon: '🏷️' },
+  { value: 'tool_supplier', label: 'Tool Supplier', icon: '🔧' },
 ]
 
 export const VERIFICATION_BADGES = {
