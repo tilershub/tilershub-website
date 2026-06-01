@@ -1,0 +1,26 @@
+---
+import Layout from '../layouts/Layout.astro'
+import JobsBoard from '../components/JobsBoard.jsx'
+---
+
+<Layout
+  title="Browse Tiling Jobs · TilersHub"
+  description="Find tiling and renovation projects near you. Browse open jobs posted by homeowners across Sri Lanka on TilersHub."
+>
+
+  <div style="background:var(--navy);padding:44px 20px 40px;text-align:center;position:relative;overflow:hidden;">
+    <div style="position:absolute;inset:0;opacity:0.04;background-image:repeating-linear-gradient(0deg,transparent,transparent 39px,rgba(255,255,255,0.8) 39px,rgba(255,255,255,0.8) 40px),repeating-linear-gradient(90deg,transparent,transparent 39px,rgba(255,255,255,0.8) 39px,rgba(255,255,255,0.8) 40px);pointer-events:none;"></div>
+    <div style="position:relative;max-width:600px;margin:0 auto;">
+      <span class="section-label" style="border-color:rgba(255,255,255,0.15);color:rgba(255,255,255,0.5);background:rgba(255,255,255,0.06);">💼 Open Jobs</span>
+      <h1 style="font-family:'Playfair Display',serif;font-size:clamp(26px,4vw,42px);font-weight:700;color:#fff;margin:12px 0 10px;line-height:1.2;">
+        Browse <span style="color:var(--terra);">Tiling Projects</span>
+      </h1>
+      <p style="font-size:14px;color:rgba(255,255,255,0.5);max-width:480px;margin:0 auto;">
+        Open projects posted by homeowners across Sri Lanka. Sign in to view contact details and reach out directly.
+      </p>
+    </div>
+  </div>
+
+  <JobsBoard client:load />
+
+</Layout>
