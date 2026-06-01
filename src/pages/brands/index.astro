@@ -2,12 +2,40 @@
 import Layout from '../../layouts/Layout.astro'
 import { supabase } from '../../lib/supabase.js'
 
-const { data: brands } = await supabase.from('brands').select('*').eq('status', 'active').order('is_featured', { ascending: false }).order('name')
+const { data: allBrands } = await supabase.from('brands').select('*').eq('status', 'active').order('is_featured', { ascending: false }).order('name')
+const brands = allBrands || []
+
+const CHEMICAL_CATS = ['Tile Adhesive', 'Waterproofing', 'Construction Chemicals', 'Grout', 'Sealants']
+const isChemical = (b) => (b.categories || []).some(c => CHEMICAL_CATS.includes(c))
+
+const tileBrands = brands.filter(b => !isChemical(b))
+const chemBrands = brands.filter(b => isChemical(b))
+
+const BRAND_META = {
+  'rocell':      { color: '#FFFFFF', bg: '#002B5B' },
+  'lanka-tile':  { color: '#FFFFFF', bg: '#CC2229' },
+  'macktiles':   { color: '#FFFFFF', bg: '#2E7D32' },
+  'megatile':    { color: '#FFFFFF', bg: '#5D4037' },
+  'luxehome':    { color: '#0c0804', bg: '#D4AF37' },
+  'swisstek':    { color: '#FFFFFF', bg: '#1565C0' },
+  'tokyo-super': { color: '#FFFFFF', bg: '#C62828' },
+  'dr-fixit':    { color: '#FFFFFF', bg: '#E65100' },
+  'sika':        { color: '#FFFFFF', bg: '#B71C1C' },
+  'finex':       { color: '#FFFFFF', bg: '#1A237E' },
+}
+
+function meta(brand) {
+  return BRAND_META[brand.slug] || { color: '#fff', bg: '#1B3A6B' }
+}
+
+function logoText(name) {
+  return name.split(' ').map(w => w[0]).join('').slice(0, 2).toUpperCase()
+}
 ---
 
 <Layout
-  title="Tile Brands in Sri Lanka · TilersHub"
-  description="Discover premium tile brands available in Sri Lanka — Lanka Tile, Rocell, LUXEhome and more. Browse collections and find local dealers."
+  title="Tile Brands & Construction Chemical Brands in Sri Lanka · TilersHub"
+  description="Discover tile brands, adhesive brands and waterproofing brands in Sri Lanka — Rocell, Lanka Tile, Megatile, Swisstek, Sika and more."
 >
 
   <div style="background:var(--navy);padding:44px 20px 40px;text-align:center;position:relative;overflow:hidden;">
@@ -15,53 +43,97 @@ const { data: brands } = await supabase.from('brands').select('*').eq('status', 
     <div style="position:relative;max-width:600px;margin:0 auto;">
       <span class="section-label" style="border-color:rgba(255,255,255,0.15);color:rgba(255,255,255,0.5);background:rgba(255,255,255,0.06);">🏷️ Brands</span>
       <h1 style="font-family:'Playfair Display',serif;font-size:clamp(26px,4vw,42px);font-weight:700;color:#fff;margin:12px 0 10px;line-height:1.2;">
-        Tile Brands in <span style="color:var(--terra);">Sri Lanka</span>
+        Brands in <span style="color:var(--terra);">Sri Lanka</span>
       </h1>
-      <p style="font-size:14px;color:rgba(255,255,255,0.5);">Explore premium tile brands, collections and find local dealers</p>
+      <p style="font-size:14px;color:rgba(255,255,255,0.5);">Tile brands, adhesives, grouts and waterproofing products</p>
     </div>
   </div>
 
-  <section style="background:var(--surface);padding:48px 20px 64px;">
+  <section style="background:var(--surface);padding:52px 20px 64px;">
     <div style="max-width:1100px;margin:0 auto;">
-      {brands && brands.length > 0 ? (
-        <div style="display:grid;grid-template-columns:repeat(auto-fill,minmax(280px,1fr));gap:20px;">
-          {brands.map(brand => {
-            const href = brand.dedicated_page_url || `/brands/${brand.slug}`
-            const isFeaturedPage = !!brand.dedicated_page_url
-            return (
-            <a href={href} class="card" style={`padding:28px;display:block;text-decoration:none;color:inherit;${isFeaturedPage ? 'border:2px solid var(--gold);position:relative;overflow:hidden;' : ''}`}>
-              {isFeaturedPage && <div style="position:absolute;top:0;right:0;background:var(--gold);color:#0d0b08;font-size:9px;font-weight:800;letter-spacing:1.5px;text-transform:uppercase;padding:4px 12px;border-bottom-left-radius:10px;">Featured</div>}
-              <div style="display:flex;align-items:center;gap:14px;margin-bottom:16px;">
-                <div style={`width:52px;height:52px;border-radius:12px;background:${isFeaturedPage ? 'linear-gradient(135deg,#1c1810,#2e2418)' : 'linear-gradient(135deg,var(--navy),var(--navy-light))'};display:flex;align-items:center;justify-content:center;font-size:24px;flex-shrink:0;border:${isFeaturedPage ? '1px solid rgba(192,168,120,0.3)' : 'none'};`}>{isFeaturedPage ? '🪨' : '🏷️'}</div>
-                <div>
-                  <div style="font-size:17px;font-weight:700;color:var(--text);">{brand.name}</div>
-                  {isFeaturedPage
-                    ? <span style="font-size:10px;color:#92762a;font-weight:700;margin-top:3px;display:inline-block;">⭐ Dedicated Page</span>
-                    : brand.is_featured && <span class="chip chip-navy" style="font-size:10px;margin-top:3px;">⭐ Featured</span>
-                  }
-                </div>
-              </div>
-              <p style="font-size:13px;color:var(--text-3);line-height:1.6;margin-bottom:16px;">{brand.description}</p>
-              <div style="display:flex;flex-wrap:wrap;gap:5px;margin-bottom:16px;">
-                {(brand.categories || []).slice(0,3).map(c => (
-                  <span class="chip chip-navy" style="font-size:10px;">{c}</span>
-                ))}
-              </div>
-              <div style="display:flex;align-items:center;justify-content:space-between;">
-                <span style="font-size:11px;color:var(--text-4);">{isFeaturedPage ? 'Sponsored brand' : 'View collections'}</span>
-                <span style={`font-size:12px;font-weight:700;color:${isFeaturedPage ? '#92762a' : 'var(--navy)'};`}>{isFeaturedPage ? 'View Brand →' : 'Explore →'}</span>
-              </div>
-            </a>
-          )})}
-        </div>
-      ) : (
-        <div style="text-align:center;padding:64px 20px;background:var(--surface-2);border-radius:16px;border:1px solid var(--border);">
-          <div style="font-size:48px;margin-bottom:16px;">🏷️</div>
-          <h3 style="font-size:18px;font-weight:700;color:var(--text);margin-bottom:8px;">Brand pages coming soon</h3>
-          <p style="color:var(--text-3);margin-bottom:24px;">We're adding tile brand profiles. Check back soon.</p>
-          <a href="/" class="btn btn-navy">Back to Home</a>
+
+      <!-- ── Tile Brands ── -->
+      {tileBrands.length > 0 && (
+        <div style="margin-bottom:56px;">
+          <div style="display:flex;align-items:center;gap:12px;margin-bottom:24px;">
+            <div style="width:36px;height:36px;background:linear-gradient(135deg,var(--navy),#2B5299);border-radius:10px;display:flex;align-items:center;justify-content:center;font-size:18px;">🪨</div>
+            <div>
+              <div style="font-size:18px;font-weight:700;color:var(--text);">Tile Brands</div>
+              <div style="font-size:12px;color:var(--text-4);">Floor tiles, wall tiles, porcelain &amp; ceramic collections</div>
+            </div>
+          </div>
+          <div style="display:grid;grid-template-columns:repeat(auto-fill,minmax(280px,1fr));gap:16px;">
+            {tileBrands.map(brand => {
+              const m = meta(brand)
+              const href = brand.dedicated_page_url || `/brands/${brand.slug}`
+              const isFeaturedPage = !!brand.dedicated_page_url
+              return (
+                <a href={href} style={`background:#fff;border-radius:16px;border:${isFeaturedPage ? '2px solid var(--gold)' : '1px solid #e2e8f0'};padding:22px;display:block;text-decoration:none;color:inherit;position:relative;overflow:hidden;transition:box-shadow 0.2s,transform 0.2s;`}
+                  onmouseover="this.style.boxShadow='0 8px 28px rgba(27,58,107,0.12)';this.style.transform='translateY(-3px)'"
+                  onmouseout="this.style.boxShadow='';this.style.transform=''">
+                  {isFeaturedPage && <div style="position:absolute;top:0;right:0;background:var(--gold);color:#0d0b08;font-size:9px;font-weight:800;letter-spacing:1.5px;text-transform:uppercase;padding:4px 12px;border-bottom-left-radius:10px;">Sponsored</div>}
+                  <div style="display:flex;align-items:center;gap:14px;margin-bottom:14px;">
+                    <div style={`width:56px;height:56px;border-radius:14px;background:${m.bg};display:flex;align-items:center;justify-content:center;font-size:18px;font-weight:800;color:${m.color};letter-spacing:-0.5px;flex-shrink:0;font-family:'Playfair Display',serif;`}>{logoText(brand.name)}</div>
+                    <div>
+                      <div style="font-size:16px;font-weight:700;color:var(--text);">{brand.name}</div>
+                      {isFeaturedPage
+                        ? <span style="font-size:10px;color:#92762a;font-weight:700;">⭐ Featured Brand</span>
+                        : brand.is_featured && <span style="font-size:10px;color:var(--navy);font-weight:700;">✓ Verified Brand</span>
+                      }
+                    </div>
+                  </div>
+                  <p style="font-size:12px;color:var(--text-3);line-height:1.65;margin-bottom:14px;">{brand.description}</p>
+                  <div style="display:flex;flex-wrap:wrap;gap:5px;margin-bottom:14px;">
+                    {(brand.categories || []).slice(0,3).map(c => (
+                      <span style={`font-size:10px;padding:2px 9px;border-radius:20px;background:${m.bg}18;color:${m.bg === '#FFFFFF' ? '#1B3A6B' : m.bg};border:1px solid ${m.bg}30;font-weight:600;`}>{c}</span>
+                    ))}
+                  </div>
+                  <div style="font-size:12px;font-weight:700;color:var(--navy);">{isFeaturedPage ? 'View Sponsor Page →' : 'View Brand →'}</div>
+                </a>
+              )
+            })}
+          </div>
         </div>
       )}
+
+      <!-- ── Adhesives & Waterproofing ── -->
+      {chemBrands.length > 0 && (
+        <div>
+          <div style="display:flex;align-items:center;gap:12px;margin-bottom:24px;">
+            <div style="width:36px;height:36px;background:linear-gradient(135deg,#0369a1,#075985);border-radius:10px;display:flex;align-items:center;justify-content:center;font-size:18px;">💧</div>
+            <div>
+              <div style="font-size:18px;font-weight:700;color:var(--text);">Adhesives &amp; Waterproofing</div>
+              <div style="font-size:12px;color:var(--text-4);">Tile adhesives, grouts, waterproofing &amp; construction chemicals</div>
+            </div>
+          </div>
+          <div style="display:grid;grid-template-columns:repeat(auto-fill,minmax(280px,1fr));gap:16px;">
+            {chemBrands.map(brand => {
+              const m = meta(brand)
+              return (
+                <a href={`/brands/${brand.slug}`} style="background:#fff;border-radius:16px;border:1px solid #e2e8f0;padding:22px;display:block;text-decoration:none;color:inherit;transition:box-shadow 0.2s,transform 0.2s;"
+                  onmouseover="this.style.boxShadow='0 8px 28px rgba(27,58,107,0.10)';this.style.transform='translateY(-3px)'"
+                  onmouseout="this.style.boxShadow='';this.style.transform=''">
+                  <div style="display:flex;align-items:center;gap:14px;margin-bottom:14px;">
+                    <div style={`width:56px;height:56px;border-radius:14px;background:${m.bg};display:flex;align-items:center;justify-content:center;font-size:18px;font-weight:800;color:${m.color};letter-spacing:-0.5px;flex-shrink:0;font-family:'Playfair Display',serif;`}>{logoText(brand.name)}</div>
+                    <div>
+                      <div style="font-size:16px;font-weight:700;color:var(--text);">{brand.name}</div>
+                      <span style="font-size:10px;color:#0369a1;font-weight:700;">💧 Construction Chemicals</span>
+                    </div>
+                  </div>
+                  <p style="font-size:12px;color:var(--text-3);line-height:1.65;margin-bottom:14px;">{brand.description}</p>
+                  <div style="display:flex;flex-wrap:wrap;gap:5px;margin-bottom:14px;">
+                    {(brand.categories || []).slice(0,3).map(c => (
+                      <span style={`font-size:10px;padding:2px 9px;border-radius:20px;background:${m.bg}18;color:${m.bg};border:1px solid ${m.bg}28;font-weight:600;`}>{c}</span>
+                    ))}
+                  </div>
+                  <div style="font-size:12px;font-weight:700;color:var(--navy);">View Brand →</div>
+                </a>
+              )
+            })}
+          </div>
+        </div>
+      )}
+
     </div>
   </section>
 
