@@ -84,7 +84,18 @@ const path = Astro.url.pathname
     <div style="position:absolute;inset:0;opacity:0.025;background-image:repeating-linear-gradient(45deg,transparent,transparent 20px,rgba(212,175,55,0.8) 20px,rgba(212,175,55,0.8) 21px);pointer-events:none;"></div>
     <div style="max-width:960px;margin:0 auto;display:flex;align-items:center;justify-content:space-between;flex-wrap:wrap;gap:16px;position:relative;">
       <div style="display:flex;align-items:center;gap:16px;">
-        <div style="width:52px;height:52px;border-radius:14px;background:linear-gradient(135deg,#1a1209,#2d1e08);border:1px solid rgba(212,175,55,0.25);display:flex;align-items:center;justify-content:center;font-size:24px;flex-shrink:0;">🛁</div>
+        <!-- Minimalist bathroom tile mosaic -->
+        <div style="width:72px;height:72px;border-radius:14px;overflow:hidden;flex-shrink:0;border:1px solid rgba(212,175,55,0.2);display:grid;grid-template-columns:repeat(3,1fr);grid-template-rows:repeat(3,1fr);gap:2px;background:#0c0804;padding:3px;">
+          {[
+            ['#F5F3F0','#EDE9E3','#F8F6F2'],
+            ['#E8E4DC','#F2EEE8','#D8D2C8'],
+            ['#FEFCF8','#E4DED4','#F0EBE3'],
+          ].flat().map((c,i) => (
+            <div style={`background:${c};border-radius:2px;position:relative;`}>
+              <div style="position:absolute;inset:0;background:linear-gradient(135deg,rgba(255,255,255,0.4) 0%,transparent 60%);border-radius:2px;"></div>
+            </div>
+          ))}
+        </div>
         <div>
           <div style="font-size:9px;font-weight:700;color:rgba(212,175,55,0.55);letter-spacing:3px;text-transform:uppercase;margin-bottom:4px;">◆ Premium Sponsor</div>
           <div style="font-family:'Playfair Display',serif;font-size:20px;font-weight:700;line-height:1;margin-bottom:4px;">
