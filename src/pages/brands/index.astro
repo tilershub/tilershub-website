@@ -6,10 +6,14 @@ const { data: allBrands } = await supabase.from('brands').select('*').eq('status
 const brands = allBrands || []
 
 const CHEMICAL_CATS = ['Tile Adhesive', 'Waterproofing', 'Construction Chemicals', 'Grout', 'Sealants']
-const isChemical = (b) => (b.categories || []).some(c => CHEMICAL_CATS.includes(c))
+const RENO_CATS = ['Bathroom Renovation', 'Interior Design', 'Construction', 'Premium Partner']
 
-const tileBrands = brands.filter(b => !isChemical(b))
+const isChemical = (b) => (b.categories || []).some(c => CHEMICAL_CATS.includes(c))
+const isReno = (b) => (b.categories || []).some(c => RENO_CATS.includes(c))
+
+const tileBrands = brands.filter(b => !isChemical(b) && !isReno(b))
 const chemBrands = brands.filter(b => isChemical(b))
+const renoBrands = brands.filter(b => isReno(b) && !isChemical(b))
 
 const BRAND_META = {
   'rocell':      { color: '#FFFFFF', bg: '#002B5B' },
@@ -89,6 +93,46 @@ function logoText(name) {
                     ))}
                   </div>
                   <div style="font-size:12px;font-weight:700;color:var(--navy);">{isFeaturedPage ? 'View Sponsor Page →' : 'View Brand →'}</div>
+                </a>
+              )
+            })}
+          </div>
+        </div>
+      )}
+
+      <!-- ── Renovation & Design ── -->
+      {renoBrands.length > 0 && (
+        <div style="margin-bottom:56px;">
+          <div style="display:flex;align-items:center;gap:12px;margin-bottom:24px;">
+            <div style="width:36px;height:36px;background:linear-gradient(135deg,#92400e,#78350f);border-radius:10px;display:flex;align-items:center;justify-content:center;font-size:18px;">🛁</div>
+            <div>
+              <div style="font-size:18px;font-weight:700;color:var(--text);">Renovation &amp; Interior Design</div>
+              <div style="font-size:12px;color:var(--text-4);">Bathroom construction, renovation packages &amp; interior design services</div>
+            </div>
+          </div>
+          <div style="display:grid;grid-template-columns:repeat(auto-fill,minmax(280px,1fr));gap:16px;">
+            {renoBrands.map(brand => {
+              const m = meta(brand)
+              const href = brand.dedicated_page_url || `/brands/${brand.slug}`
+              return (
+                <a href={href} style={`background:#fff;border-radius:16px;border:2px solid var(--gold);padding:22px;display:block;text-decoration:none;color:inherit;position:relative;overflow:hidden;transition:box-shadow 0.2s,transform 0.2s;`}
+                  onmouseover="this.style.boxShadow='0 8px 28px rgba(212,175,55,0.2)';this.style.transform='translateY(-3px)'"
+                  onmouseout="this.style.boxShadow='';this.style.transform=''">
+                  <div style="position:absolute;top:0;right:0;background:var(--gold);color:#0d0b08;font-size:9px;font-weight:800;letter-spacing:1.5px;text-transform:uppercase;padding:4px 12px;border-bottom-left-radius:10px;">Sponsored</div>
+                  <div style="display:flex;align-items:center;gap:14px;margin-bottom:14px;">
+                    <div style={`width:56px;height:56px;border-radius:14px;background:${m.bg};display:flex;align-items:center;justify-content:center;font-size:18px;font-weight:800;color:${m.color};letter-spacing:-0.5px;flex-shrink:0;font-family:'Playfair Display',serif;`}>{logoText(brand.name)}</div>
+                    <div>
+                      <div style="font-size:16px;font-weight:700;color:var(--text);">{brand.name}</div>
+                      <span style="font-size:10px;color:#92762a;font-weight:700;">⭐ Premium Partner</span>
+                    </div>
+                  </div>
+                  <p style="font-size:12px;color:var(--text-3);line-height:1.65;margin-bottom:14px;">{brand.description}</p>
+                  <div style="display:flex;flex-wrap:wrap;gap:5px;margin-bottom:14px;">
+                    {(brand.categories || []).filter(c => c !== 'Premium Partner').slice(0,3).map(c => (
+                      <span style="font-size:10px;padding:2px 9px;border-radius:20px;background:#FFF8E1;color:#92762a;border:1px solid #F5D97A;font-weight:600;">{c}</span>
+                    ))}
+                  </div>
+                  <div style="font-size:12px;font-weight:700;color:#92762a;">View Sponsor Page →</div>
                 </a>
               )
             })}
