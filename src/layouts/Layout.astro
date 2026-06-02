@@ -177,10 +177,12 @@ const path = Astro.url.pathname
         <span class="bottom-nav-icon">👷</span>
         Tilers
       </a>
-      <a href="/post-project" class="bottom-nav-post" title="Post Project">
-        <span class="bottom-nav-post-icon">＋</span>
-        Post
-      </a>
+      <div style="flex:1;display:flex;align-items:center;justify-content:center;">
+        <a href="/post-project" class="bottom-nav-post" title="Post Project">
+          <span class="bottom-nav-post-icon">＋</span>
+          Post
+        </a>
+      </div>
       <a href="/estimator" class={`bottom-nav-item${path==='/estimator'?' active':''}`}>
         <span class="bottom-nav-icon">📐</span>
         Estimate
