@@ -67,7 +67,7 @@ export default function PostProjectForm() {
         budget_range: form.budget_range || null,
         customer_name: form.customer_name.trim(),
         whatsapp: form.whatsapp.replace(/\s/g, ''),
-        status: 'pending_review',
+        status: 'active',
         ...(userId ? { user_id: userId } : {}),
       })
       setSuccess(true)
