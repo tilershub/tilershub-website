@@ -478,7 +478,7 @@ export default function ProviderDirectory({ initialType, initialSearch }) {
   }, [])
 
   const showTilers = !type || type === 'tiler'
-  const showProviders = type !== 'tiler'
+  const showProviders = !!type && type !== 'tiler'
 
   const filteredTilers = showTilers ? tilers.filter(t => {
     if (district && t.district !== district) return false
