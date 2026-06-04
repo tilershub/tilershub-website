@@ -51,60 +51,23 @@ const ADS = [
   },
 ]
 
-/* ── Premium Bathroom Hero scene (bathtub + shower + luxury tiles) ── */
-function BathroomHeroScene({ tiles, accent }) {
+/* ── Premium Bathroom Hero scene — real photo with gold overlay ── */
+function BathroomHeroScene({ accent }) {
   return (
     <div style={{ position: 'relative', width: '100%', height: '100%', borderRadius: 12, overflow: 'hidden', background: '#0a0a0f' }}>
-
-      {/* Back wall — luxury tile grid */}
-      <div style={{ position: 'absolute', inset: 0, display: 'grid', gridTemplateColumns: 'repeat(4, 1fr)', gridTemplateRows: 'repeat(3, 1fr)', gap: 3 }}>
-        {Array.from({ length: 12 }).map((_, i) => (
-          <div key={i} style={{
-            background: `linear-gradient(135deg, ${tiles[i % tiles.length]}, ${tiles[(i + 2) % tiles.length]})`,
-            borderRadius: 3,
-            position: 'relative',
-            overflow: 'hidden',
-            opacity: 0.85,
-          }}>
-            <div style={{ position: 'absolute', inset: 0, background: 'linear-gradient(135deg, rgba(255,255,255,0.18) 0%, transparent 50%)' }} />
-          </div>
-        ))}
-      </div>
-
-      {/* Dark overlay for depth */}
-      <div style={{ position: 'absolute', inset: 0, background: 'linear-gradient(180deg, rgba(0,0,0,0.1) 0%, rgba(0,0,0,0.55) 100%)' }} />
-
-      {/* Bathtub silhouette */}
-      <div style={{
-        position: 'absolute',
-        bottom: '8%', left: '10%', right: '8%',
-        height: '38%',
-        background: 'linear-gradient(180deg, rgba(255,255,255,0.06) 0%, rgba(255,255,255,0.03) 100%)',
-        borderRadius: '50% 50% 12px 12px / 30% 30% 12px 12px',
-        border: `1px solid rgba(255,255,255,0.18)`,
-        boxShadow: `0 0 20px rgba(0,0,0,0.4), inset 0 1px 0 rgba(255,255,255,0.15)`,
-      }}>
-        {/* Water shimmer */}
-        <div style={{ position: 'absolute', top: '20%', left: '15%', right: '15%', height: '30%', background: `linear-gradient(90deg, transparent, ${accent}18, transparent)`, borderRadius: 8 }} />
-        {/* Tap */}
-        <div style={{ position: 'absolute', top: -12, left: '50%', transform: 'translateX(-50%)', width: 16, height: 14, background: `${accent}`, borderRadius: '4px 4px 0 0', opacity: 0.85 }} />
-      </div>
-
-      {/* Shower head (top right) */}
-      <div style={{ position: 'absolute', top: '8%', right: '12%', display: 'flex', flexDirection: 'column', alignItems: 'center', gap: 3 }}>
-        <div style={{ width: 2, height: 18, background: `${accent}60` }} />
-        <div style={{ width: 22, height: 6, borderRadius: 3, background: `${accent}80`, boxShadow: `0 0 8px ${accent}40` }} />
-        {/* Water drops */}
-        {[0, 1, 2, 3].map(j => (
-          <div key={j} style={{ width: 1.5, height: 6, background: `${accent}50`, marginLeft: j * 5 - 8, marginTop: -3, borderRadius: 1, position: 'absolute', top: 28, left: `${20 + j * 16}%` }} />
-        ))}
-      </div>
-
-      {/* Gold accent line at bottom */}
-      <div style={{ position: 'absolute', bottom: 0, left: 0, right: 0, height: 3, background: `linear-gradient(90deg, transparent, ${accent}, transparent)`, opacity: 0.7 }} />
-
-      {/* LUXURY text watermark */}
-      <div style={{ position: 'absolute', top: '50%', left: '50%', transform: 'translate(-50%,-50%)', fontSize: 9, fontWeight: 800, color: `${accent}22`, letterSpacing: 8, whiteSpace: 'nowrap', userSelect: 'none' }}>PREMIUM</div>
+      {/* Real bathroom photo */}
+      <img
+        src="https://images.unsplash.com/photo-1552321554-5fefe8c9ef14?auto=format&fit=crop&w=600&q=80"
+        alt="Luxury bathroom renovation by LUXEhome"
+        style={{ position: 'absolute', inset: 0, width: '100%', height: '100%', objectFit: 'cover', objectPosition: 'center' }}
+        loading="lazy"
+      />
+      {/* Dark + gold tint overlay */}
+      <div style={{ position: 'absolute', inset: 0, background: 'linear-gradient(180deg, rgba(10,8,4,0.28) 0%, rgba(10,8,4,0.55) 100%)' }} />
+      {/* Gold shimmer line at bottom */}
+      <div style={{ position: 'absolute', bottom: 0, left: 0, right: 0, height: 3, background: `linear-gradient(90deg, transparent, ${accent}, transparent)`, opacity: 0.8 }} />
+      {/* LUXEhome watermark */}
+      <div style={{ position: 'absolute', bottom: 10, right: 10, fontSize: 8, fontWeight: 800, color: `${accent}80`, letterSpacing: 3, userSelect: 'none' }}>LUXEHOME</div>
     </div>
   )
 }
@@ -162,7 +125,7 @@ function FittingScene({ tiles, accent }) {
 }
 
 function AdVisual({ ad }) {
-  if (ad.type === 'bathroom-hero') return <BathroomHeroScene tiles={ad.tiles} accent={ad.accent} />
+  if (ad.type === 'bathroom-hero') return <BathroomHeroScene accent={ad.accent} />
   if (ad.type === 'tiles') return <TileScene tiles={ad.tiles} accent={ad.accent} />
   if (ad.type === 'fitting') return <FittingScene tiles={ad.tiles} accent={ad.accent} />
   return null
