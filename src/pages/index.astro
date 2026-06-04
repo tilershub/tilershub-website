@@ -53,12 +53,12 @@ const QUICK_ACTIONS = [
 ]
 
 const INSPO = [
-  { title: 'Minimalist White Bathroom', tag: 'Bathroom', bg: 'linear-gradient(160deg,#f5f0eb,#d6c9bb)', emoji: '🚿' },
-  { title: 'Herringbone Floor Pattern', tag: 'Flooring', bg: 'linear-gradient(160deg,#1A2B4A,#2B4275)', emoji: '🏠' },
-  { title: 'Dark Luxury Wall Tiles', tag: 'Wall Tiles', bg: 'linear-gradient(160deg,#1a1a2e,#16213e)', emoji: '✨' },
-  { title: 'Terracotta Kitchen Backsplash', tag: 'Kitchen', bg: 'linear-gradient(160deg,#c1603a,#8b4513)', emoji: '🍳' },
-  { title: 'Marble Effect Living Room', tag: 'Living Room', bg: 'linear-gradient(160deg,#e8e0d5,#c8bdb0)', emoji: '🏛️' },
-  { title: 'Blue Mosaic Feature Wall', tag: 'Feature Wall', bg: 'linear-gradient(160deg,#1e3a5f,#0f2444)', emoji: '💎' },
+  { title: 'Minimalist White Bathroom', tag: 'Bathroom', img: 'https://images.unsplash.com/photo-1552321554-5fefe8c9ef14?auto=format&fit=crop&w=400&q=75', overlay: 'rgba(10,18,32,0.38)' },
+  { title: 'Herringbone Floor Pattern', tag: 'Flooring', img: 'https://images.unsplash.com/photo-1584622650111-993a426fbf0a?auto=format&fit=crop&w=400&q=75', overlay: 'rgba(15,20,40,0.42)' },
+  { title: 'Dark Luxury Wall Tiles', tag: 'Wall Tiles', img: 'https://images.unsplash.com/photo-1615873968403-89e068629265?auto=format&fit=crop&w=400&q=75', overlay: 'rgba(10,10,20,0.48)' },
+  { title: 'Terracotta Kitchen Backsplash', tag: 'Kitchen', img: 'https://images.unsplash.com/photo-1556909114-f6e7ad7d3136?auto=format&fit=crop&w=400&q=75', overlay: 'rgba(30,12,4,0.40)' },
+  { title: 'Marble Effect Living Room', tag: 'Living Room', img: 'https://images.unsplash.com/photo-1600585154340-be6161a56a0c?auto=format&fit=crop&w=400&q=75', overlay: 'rgba(20,18,14,0.35)' },
+  { title: 'Blue Mosaic Feature Wall', tag: 'Feature Wall', img: 'https://images.unsplash.com/photo-1558618666-fcd25c85cd64?auto=format&fit=crop&w=400&q=75', overlay: 'rgba(10,20,40,0.44)' },
 ]
 
 const BLOG_POSTS = [
@@ -335,8 +335,9 @@ const BRAND_COLORS = ['#1A2B4A','#C1603A','#D4AF37','#1e3a5f','#7c3aed','#166534
     </div>
     <div style="padding:0 16px;display:grid;grid-template-columns:repeat(3,1fr);gap:10px;">
       {INSPO.map(card => (
-        <a href="/sponsor/luxehome" class="inspo-card" style={`background:${card.bg};`}>
-          <div style="position:absolute;inset:0;display:flex;align-items:center;justify-content:center;font-size:44px;opacity:0.25;">{card.emoji}</div>
+        <a href="/sponsor/luxehome" class="inspo-card" style="background:#0a0a12;">
+          <img src={card.img} alt={card.title} style="position:absolute;inset:0;width:100%;height:100%;object-fit:cover;object-position:center;" loading="lazy" />
+          <div style={`position:absolute;inset:0;background:${card.overlay};`}></div>
           <div class="inspo-overlay">
             <div class="inspo-title">{card.title}</div>
             <div class="inspo-tag">{card.tag}</div>
