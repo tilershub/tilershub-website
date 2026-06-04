@@ -174,7 +174,7 @@ function TilerBanner({ tiler, onClick }) {
 
       {/* Verified badge top-right */}
       {tiler.is_verified && (
-        <span style={{ position: 'absolute', top: 10, right: 10, fontSize: 9, fontWeight: 700, padding: '2px 7px', borderRadius: 20, background: 'rgba(255,255,255,0.18)', color: '#fff', border: '1px solid rgba(255,255,255,0.3)', backdropFilter: 'blur(4px)' }}>✓ Verified</span>
+        <span style={{ position: 'absolute', top: 10, right: 10, fontSize: 9, fontWeight: 700, padding: '2px 7px', borderRadius: 20, background: 'rgba(255,255,255,0.18)', color: '#fff', border: '1px solid rgba(255,255,255,0.3)', backdropFilter: 'blur(4px)' }}>✓ Skilled</span>
       )}
 
       {/* Bottom info */}
@@ -235,7 +235,7 @@ function TilerCard({ tiler, onClick }) {
 
         {/* Verified badge */}
         {tiler.is_verified && (
-          <span style={{ position: 'absolute', top: 10, right: 10, fontSize: 10, fontWeight: 700, padding: '3px 9px', borderRadius: 20, background: 'rgba(255,255,255,0.18)', color: '#fff', border: '1px solid rgba(255,255,255,0.35)', backdropFilter: 'blur(4px)' }}>✓ Verified</span>
+          <span style={{ position: 'absolute', top: 10, right: 10, fontSize: 10, fontWeight: 700, padding: '3px 9px', borderRadius: 20, background: 'rgba(255,255,255,0.18)', color: '#fff', border: '1px solid rgba(255,255,255,0.35)', backdropFilter: 'blur(4px)' }}>✓ Skilled</span>
         )}
         {/* Availability */}
         {tiler.availability === 'available' && (
@@ -371,7 +371,7 @@ function ProviderModal({ item, isTiler, onClose }) {
           {/* Badges */}
           <div style={{ display: 'flex', flexWrap: 'wrap', gap: 6, marginBottom: 16 }}>
             {!isTiler && pts && <span style={{ fontSize: 11, fontWeight: 700, padding: '3px 10px', borderRadius: 20, background: '#eef3fb', color: '#1B3A6B' }}>{pts.icon} {pts.label}</span>}
-            {isTiler && item.is_verified && <span style={{ fontSize: 11, fontWeight: 700, padding: '3px 10px', borderRadius: 20, background: '#f0fdf4', color: '#16a34a', border: '1px solid #bbf7d0' }}>✓ Verified Tiler</span>}
+            {isTiler && item.is_verified && <span style={{ fontSize: 11, fontWeight: 700, padding: '3px 10px', borderRadius: 20, background: '#f0fdf4', color: '#16a34a', border: '1px solid #bbf7d0' }}>✓ Skilled</span>}
             {!isTiler && <VerificationBadge status={item.verification_status} />}
           </div>
 
@@ -453,6 +453,121 @@ function ProviderModal({ item, isTiler, onClose }) {
           </div>
         </div>
       </div>
+    </div>
+  )
+}
+
+const TYPE_INFO_CARDS = {
+  workshop: [
+    { icon: '🔪', title: 'Tile Cutting', body: 'Straight cuts, bevel edges and L-shapes for perfect fits on any site.' },
+    { icon: '🌀', title: 'Routing & Profiling', body: 'Rounded edges, grooves and custom profiles for a premium finish.' },
+    { icon: '💧', title: 'Waterjet Cutting', body: 'Precision curves, mosaic shapes and outlet holes without chipping.' },
+  ],
+  supplier: [
+    { icon: '📦', title: 'Bulk Supply', body: 'Floor, wall and outdoor tiles supplied wholesale to contractors and homeowners.' },
+    { icon: '🏷️', title: 'Competitive Pricing', body: 'Direct-from-importer pricing on porcelain, ceramic and natural stone.' },
+    { icon: '🚚', title: 'Island-wide Delivery', body: 'Most suppliers deliver island-wide. Ask for minimum order quantities.' },
+  ],
+  contractor: [
+    { icon: '🏗️', title: 'Full Renovation', body: 'End-to-end bathroom and kitchen renovation — design to handover.' },
+    { icon: '💧', title: 'Waterproofing', body: 'Certified membrane waterproofing for wet areas and flat roofs.' },
+    { icon: '📋', title: 'Project Management', body: 'Single point of contact managing tilers, plumbers and finishers.' },
+  ],
+  tile_shop: [
+    { icon: '🏪', title: 'Showroom Experience', body: 'See tiles at full scale before buying — patterns, textures and grout combos.' },
+    { icon: '🪨', title: 'Wide Range', body: 'Budget to premium ranges in porcelain, ceramic, marble and mosaic.' },
+    { icon: '💡', title: 'Design Advice', body: 'In-store consultants help you match tiles, grout and fittings.' },
+  ],
+  brand_dealer: [
+    { icon: '🏷️', title: 'Authorised Brands', body: 'Genuine Rocell, Lanka Tile, Megatile and imported brand products.' },
+    { icon: '✅', title: 'Warranty Backed', body: 'Authorised dealers provide manufacturer warranty on every product.' },
+    { icon: '🎨', title: 'Full Collections', body: 'Access the complete range of each brand including limited editions.' },
+  ],
+  tool_supplier: [
+    { icon: '🔧', title: 'Tile Cutters & Saws', body: 'Manual cutters, wet saws and rail cutters for clean straight cuts.' },
+    { icon: '⚙️', title: 'Leveling Systems', body: 'Clips, wedges and pliers for perfectly flat, lippage-free installations.' },
+    { icon: '🦺', title: 'Safety Equipment', body: 'Knee pads, gloves, safety glasses and dust masks for site use.' },
+  ],
+  bathroom_shop: [
+    { icon: '🚿', title: 'Sanitary Ware', body: 'Toilets, basins, showers and bathtubs from leading brands.' },
+    { icon: '🔩', title: 'Faucets & Mixers', body: 'Basin mixers, bath mixers and kitchen taps in all finishes.' },
+    { icon: '🪞', title: 'Vanities & Mirrors', body: 'Bathroom vanity units, storage cabinets and LED mirrors.' },
+  ],
+}
+
+function SuggestedContent({ type, tilers, providers, onSelectTiler, onSelectProvider }) {
+  const infoCards = TYPE_INFO_CARDS[type] || []
+  const suggestedTilers = tilers.slice(0, 4)
+  const otherProviders = providers.filter(p => p.provider_type !== type).slice(0, 3)
+  const typeLabel = TYPE_LABELS[type] || 'Providers'
+
+  return (
+    <div>
+      {/* Empty notice */}
+      <div style={{ background: '#fff', borderRadius: 16, border: '2px dashed #e2e8f0', padding: '36px 24px', textAlign: 'center', marginBottom: 36 }}>
+        <div style={{ fontSize: 44, marginBottom: 12 }}>🏗️</div>
+        <h3 style={{ fontSize: 18, fontWeight: 700, color: '#0f172a', marginBottom: 8 }}>
+          No {typeLabel} listed yet
+        </h3>
+        <p style={{ fontSize: 13, color: '#64748b', marginBottom: 20, maxWidth: 360, margin: '0 auto 20px' }}>
+          We're onboarding {typeLabel.toLowerCase()} now. Be the first to list yours — free, direct WhatsApp leads.
+        </p>
+        <a href="/join-tilershub" style={{ display: 'inline-flex', alignItems: 'center', gap: 7, background: '#E05A2B', color: '#fff', borderRadius: 10, padding: '10px 22px', fontSize: 13, fontWeight: 700, textDecoration: 'none' }}>
+          ✅ Join as {typeLabel.replace(/s$/, '')}
+        </a>
+      </div>
+
+      {/* Info cards about what this type does */}
+      {infoCards.length > 0 && (
+        <div style={{ marginBottom: 36 }}>
+          <div style={{ fontSize: 12, fontWeight: 700, color: '#94a3b8', textTransform: 'uppercase', letterSpacing: 1, marginBottom: 14 }}>
+            What {typeLabel} Do
+          </div>
+          <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fill, minmax(220px, 1fr))', gap: 12 }}>
+            {infoCards.map(c => (
+              <div key={c.title} style={{ background: '#fff', borderRadius: 14, border: '1px solid #e2e8f0', padding: '18px 18px' }}>
+                <div style={{ width: 40, height: 40, borderRadius: 11, background: '#eef3fb', display: 'flex', alignItems: 'center', justifyContent: 'center', fontSize: 18, marginBottom: 10 }}>{c.icon}</div>
+                <div style={{ fontWeight: 700, fontSize: 13, color: '#0f172a', marginBottom: 4 }}>{c.title}</div>
+                <div style={{ fontSize: 11, color: '#64748b', lineHeight: 1.65 }}>{c.body}</div>
+              </div>
+            ))}
+          </div>
+        </div>
+      )}
+
+      {/* Suggested tilers */}
+      {suggestedTilers.length > 0 && (
+        <div style={{ marginBottom: 36 }}>
+          <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', marginBottom: 14 }}>
+            <div style={{ fontSize: 12, fontWeight: 700, color: '#94a3b8', textTransform: 'uppercase', letterSpacing: 1 }}>
+              👷 Featured Tilers
+            </div>
+            <a href="/providers?type=tiler" style={{ fontSize: 12, color: '#1B3A6B', fontWeight: 600, textDecoration: 'none' }}>See all →</a>
+          </div>
+          <div style={{ display: 'flex', gap: 12, overflowX: 'auto', paddingBottom: 8, scrollbarWidth: 'none' }}>
+            {suggestedTilers.map(t => (
+              <TilerBanner key={t.id} tiler={t} onClick={onSelectTiler} />
+            ))}
+          </div>
+        </div>
+      )}
+
+      {/* Other providers */}
+      {otherProviders.length > 0 && (
+        <div>
+          <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', marginBottom: 14 }}>
+            <div style={{ fontSize: 12, fontWeight: 700, color: '#94a3b8', textTransform: 'uppercase', letterSpacing: 1 }}>
+              🏪 Other Providers
+            </div>
+            <a href="/providers" style={{ fontSize: 12, color: '#1B3A6B', fontWeight: 600, textDecoration: 'none' }}>See all →</a>
+          </div>
+          <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fill, minmax(280px, 1fr))', gap: 16 }}>
+            {otherProviders.map(p => (
+              <ProviderCard key={p.id} provider={p} onClick={onSelectProvider} />
+            ))}
+          </div>
+        </div>
+      )}
     </div>
   )
 }
@@ -557,29 +672,31 @@ export default function ProviderDirectory({ initialType, initialSearch }) {
             <p>Loading providers...</p>
           </div>
         ) : total === 0 ? (
+          type && type !== 'tiler' && !search && !district ? (
+            <SuggestedContent
+              type={type}
+              tilers={tilers}
+              providers={providers}
+              onSelectTiler={item => { setSelected(item); setIsTilerSelected(true) }}
+              onSelectProvider={item => { setSelected(item); setIsTilerSelected(false) }}
+            />
+          ) : (
           <div style={{ textAlign: 'center', padding: '80px 20px', background: '#fff', borderRadius: 16, border: '1px solid #e2e8f0' }}>
-            <div style={{ fontSize: 48, marginBottom: 16 }}>{type && type !== 'tiler' ? '🏗️' : '🔍'}</div>
-            <h3 style={{ fontSize: 18, fontWeight: 700, color: '#0f172a', marginBottom: 8 }}>
-              {type && type !== 'tiler' && !search && !district
-                ? `No ${TYPE_LABELS[type] || 'providers'} listed yet`
-                : 'No results found'}
-            </h3>
-            <p style={{ color: '#64748b', marginBottom: 24 }}>
-              {type && type !== 'tiler' && !search && !district
-                ? `We're onboarding ${TYPE_LABELS[type]?.toLowerCase() || 'providers'} now. Check back soon or join as one.`
-                : 'Try adjusting your filters or search term'}
-            </p>
+            <div style={{ fontSize: 48, marginBottom: 16 }}>🔍</div>
+            <h3 style={{ fontSize: 18, fontWeight: 700, color: '#0f172a', marginBottom: 8 }}>No results found</h3>
+            <p style={{ color: '#64748b', marginBottom: 24 }}>Try adjusting your filters or search term</p>
             <div style={{ display: 'flex', gap: 10, justifyContent: 'center', flexWrap: 'wrap' }}>
               {(search || district) && (
                 <button onClick={() => { setSearch(''); setInputValue(''); setDistrict('') }} style={{ padding: '10px 20px', background: '#1B3A6B', color: '#fff', border: 'none', borderRadius: 10, fontSize: 14, fontWeight: 600, cursor: 'pointer' }}>
                   Clear Search
                 </button>
               )}
-              <a href="/join-tilershub" style={{ padding: '10px 20px', background: type && type !== 'tiler' ? '#E05A2B' : '#f1f5f9', color: type && type !== 'tiler' ? '#fff' : '#334155', borderRadius: 10, fontSize: 14, fontWeight: 600, textDecoration: 'none', display: 'inline-block' }}>
-                {type && type !== 'tiler' ? '✅ Join as ' + (TYPE_LABELS[type] || 'Provider') : 'Browse Tilers'}
+              <a href="/providers" style={{ padding: '10px 20px', background: '#f1f5f9', color: '#334155', borderRadius: 10, fontSize: 14, fontWeight: 600, textDecoration: 'none', display: 'inline-block' }}>
+                Browse All
               </a>
             </div>
           </div>
+          )
         ) : (
           <>
             {/* ── Promotional Spotlight (tilers only) ── */}
