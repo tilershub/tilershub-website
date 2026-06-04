@@ -174,7 +174,7 @@ function TilerBanner({ tiler, onClick }) {
 
       {/* Verified badge top-right */}
       {tiler.is_verified && (
-        <span style={{ position: 'absolute', top: 10, right: 10, fontSize: 9, fontWeight: 700, padding: '2px 7px', borderRadius: 20, background: 'rgba(255,255,255,0.18)', color: '#fff', border: '1px solid rgba(255,255,255,0.3)', backdropFilter: 'blur(4px)' }}>✓ Verified</span>
+        <span style={{ position: 'absolute', top: 10, right: 10, fontSize: 9, fontWeight: 700, padding: '2px 7px', borderRadius: 20, background: 'rgba(255,255,255,0.18)', color: '#fff', border: '1px solid rgba(255,255,255,0.3)', backdropFilter: 'blur(4px)' }}>✓ Skilled</span>
       )}
 
       {/* Bottom info */}
@@ -235,7 +235,7 @@ function TilerCard({ tiler, onClick }) {
 
         {/* Verified badge */}
         {tiler.is_verified && (
-          <span style={{ position: 'absolute', top: 10, right: 10, fontSize: 10, fontWeight: 700, padding: '3px 9px', borderRadius: 20, background: 'rgba(255,255,255,0.18)', color: '#fff', border: '1px solid rgba(255,255,255,0.35)', backdropFilter: 'blur(4px)' }}>✓ Verified</span>
+          <span style={{ position: 'absolute', top: 10, right: 10, fontSize: 10, fontWeight: 700, padding: '3px 9px', borderRadius: 20, background: 'rgba(255,255,255,0.18)', color: '#fff', border: '1px solid rgba(255,255,255,0.35)', backdropFilter: 'blur(4px)' }}>✓ Skilled</span>
         )}
         {/* Availability */}
         {tiler.availability === 'available' && (
@@ -371,7 +371,7 @@ function ProviderModal({ item, isTiler, onClose }) {
           {/* Badges */}
           <div style={{ display: 'flex', flexWrap: 'wrap', gap: 6, marginBottom: 16 }}>
             {!isTiler && pts && <span style={{ fontSize: 11, fontWeight: 700, padding: '3px 10px', borderRadius: 20, background: '#eef3fb', color: '#1B3A6B' }}>{pts.icon} {pts.label}</span>}
-            {isTiler && item.is_verified && <span style={{ fontSize: 11, fontWeight: 700, padding: '3px 10px', borderRadius: 20, background: '#f0fdf4', color: '#16a34a', border: '1px solid #bbf7d0' }}>✓ Verified Tiler</span>}
+            {isTiler && item.is_verified && <span style={{ fontSize: 11, fontWeight: 700, padding: '3px 10px', borderRadius: 20, background: '#f0fdf4', color: '#16a34a', border: '1px solid #bbf7d0' }}>✓ Skilled</span>}
             {!isTiler && <VerificationBadge status={item.verification_status} />}
           </div>
 

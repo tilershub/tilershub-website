@@ -43,7 +43,7 @@ export function TilerCard({ tiler, onClick }) {
             </div>
             {tiler.is_verified && (
               <span style={{ fontSize: 10, background: 'rgba(193,96,58,0.2)', color: 'var(--terracotta-muted)', padding: '2px 8px', borderRadius: 10, fontWeight: 600 }}>
-                ✓ TilersHub සහතිකගත
+                ✓ Skilled
               </span>
             )}
           </div>
@@ -126,7 +126,7 @@ export function TilerModal({ tiler, onClose }) {
                 </span>
                 {tiler.is_verified && (
                   <span style={{ fontSize: 11, background: 'rgba(193,96,58,0.2)', color: 'var(--terracotta-muted)', padding: '3px 12px', borderRadius: 20 }}>
-                    ✓ TilersHub සහතිකගත
+                    ✓ Skilled
                   </span>
                 )}
               </div>
