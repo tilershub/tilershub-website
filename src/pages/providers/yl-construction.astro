@@ -1,0 +1,227 @@
+---
+import Layout from '../../layouts/Layout.astro'
+
+const CUBICLES = [
+  {
+    id: 'l-shape-swing',
+    name: 'L-Shape Cubicle',
+    variant: 'Swing Door',
+    icon: '🚿',
+    desc: 'Corner-fitting L-shaped glass enclosure with a swing-open door. Ideal for bathrooms with ample clearance space. Clean lines, full seal.',
+    features: ['Corner installation', 'Outward swing door', 'Full waterproof seal', 'Custom sizing'],
+    color: '#1B3A6B',
+  },
+  {
+    id: 'l-shape-sliding',
+    name: 'L-Shape Cubicle',
+    variant: 'Sliding Door',
+    icon: '🚿',
+    desc: 'Corner-fitting L-shaped glass enclosure with a space-saving sliding door. Perfect for smaller bathrooms where swing clearance is limited.',
+    features: ['Corner installation', 'Space-saving slider', 'Smooth glide system', 'Custom sizing'],
+    color: '#0f766e',
+  },
+  {
+    id: 'panel-swing',
+    name: 'Panel Cubicle',
+    variant: 'Swing Door',
+    icon: '🪟',
+    desc: 'Straight glass panel enclosure with a hinged swing door. A versatile solution for alcove or inline shower spaces.',
+    features: ['Alcove / inline fit', 'Hinged swing door', 'Minimal frame design', 'Custom sizing'],
+    color: '#6d28d9',
+  },
+  {
+    id: 'panel-sliding',
+    name: 'Panel Cubicle',
+    variant: 'Sliding Door',
+    icon: '🪟',
+    desc: 'Straight glass panel enclosure with a sliding door — smooth, quiet and space-efficient for everyday use.',
+    features: ['Alcove / inline fit', 'Sliding bypass door', 'Anti-splash seal', 'Custom sizing'],
+    color: '#b45309',
+  },
+  {
+    id: 'panel-only',
+    name: 'Panel Only',
+    variant: 'Fixed Glass Screen',
+    icon: '🔲',
+    desc: 'A fixed tempered glass panel — no door, no frame clutter. Creates a contemporary open-feel shower space while containing water splash effectively.',
+    features: ['No door required', 'Open walk-in feel', 'Easy to clean', 'Custom sizing'],
+    color: '#0369a1',
+  },
+]
+
+const WA_NUMBER = '94710111506'
+const waMsg = (product) => encodeURIComponent(`Hi YL Construction, I'm interested in your ${product} from TilersHub. Can you send me a quote?`)
+---
+
+<Layout
+  title="YL Construction — Glass Shower Cubicles & Hand Railings · TilersHub"
+  description="YL Construction specialises in custom glass shower cubicles (L-shape and panel, swing and sliding door) and glass hand railings across Sri Lanka."
+>
+
+  <!-- ═══ HERO ═══ -->
+  <div style="background:linear-gradient(135deg,#0a1628 0%,#0f2444 50%,#0a1628 100%);padding:60px 20px 52px;text-align:center;position:relative;overflow:hidden;">
+    <!-- Glass shimmer background -->
+    <div style="position:absolute;inset:0;pointer-events:none;overflow:hidden;">
+      <div style="position:absolute;top:-60px;left:10%;width:280px;height:280px;border-radius:50%;background:radial-gradient(circle,rgba(148,210,255,0.06) 0%,transparent 70%);"></div>
+      <div style="position:absolute;bottom:-40px;right:8%;width:220px;height:220px;border-radius:50%;background:radial-gradient(circle,rgba(148,210,255,0.05) 0%,transparent 70%);"></div>
+      <div style="position:absolute;inset:0;background:repeating-linear-gradient(90deg,transparent,transparent 79px,rgba(148,210,255,0.015) 79px,rgba(148,210,255,0.015) 80px);"></div>
+    </div>
+
+    <div style="position:relative;max-width:640px;margin:0 auto;">
+      <div style="display:inline-flex;align-items:center;gap:8px;background:rgba(148,210,255,0.08);border:1px solid rgba(148,210,255,0.15);border-radius:30px;padding:5px 16px;margin-bottom:20px;">
+        <span style="font-size:10px;font-weight:700;color:rgba(148,210,255,0.7);letter-spacing:2px;text-transform:uppercase;">🔷 Glass Works Specialist</span>
+      </div>
+      <h1 style="font-family:'Playfair Display',serif;font-size:clamp(28px,5vw,46px);font-weight:700;color:#fff;margin:0 0 14px;line-height:1.15;">
+        YL <span style="color:#94d2ff;">Construction</span>
+      </h1>
+      <p style="font-size:15px;color:rgba(255,255,255,0.55);max-width:480px;margin:0 auto 32px;line-height:1.8;">
+        Custom glass shower cubicles &amp; hand railings crafted for homes, hotels and commercial spaces across Sri Lanka.
+      </p>
+
+      <!-- Service chips -->
+      <div style="display:flex;gap:8px;justify-content:center;flex-wrap:wrap;margin-bottom:32px;">
+        {['🚿 Shower Cubicles','🔲 Glass Panels','🪟 Sliding Doors','🚪 Swing Doors','🔩 Hand Railings'].map(s => (
+          <span style="font-size:11px;font-weight:600;padding:5px 14px;border-radius:20px;background:rgba(148,210,255,0.08);color:rgba(148,210,255,0.8);border:1px solid rgba(148,210,255,0.15);">{s}</span>
+        ))}
+      </div>
+
+      <a
+        href={`https://wa.me/${WA_NUMBER}?text=${encodeURIComponent('Hi YL Construction, I found you on TilersHub. I\'d like a quote for a glass shower cubicle.')}`}
+        target="_blank" rel="noopener noreferrer"
+        style="display:inline-flex;align-items:center;gap:10px;background:#25D366;color:#fff;border-radius:14px;padding:14px 32px;font-size:15px;font-weight:800;text-decoration:none;box-shadow:0 6px 24px rgba(37,211,102,0.25);"
+      >
+        💬 WhatsApp for a Quote
+      </a>
+      <div style="margin-top:14px;font-size:12px;color:rgba(255,255,255,0.3);">+94 71 011 1506 · Free site visits available</div>
+    </div>
+  </div>
+
+  <!-- ═══ CUBICLE PRODUCTS ═══ -->
+  <section style="background:#f8fafc;padding:56px 20px;">
+    <div style="max-width:1060px;margin:0 auto;">
+      <div style="text-align:center;margin-bottom:40px;">
+        <div style="font-size:10px;font-weight:700;color:#E05A2B;letter-spacing:3px;text-transform:uppercase;margin-bottom:10px;">Our Products</div>
+        <h2 style="font-family:'Playfair Display',serif;font-size:clamp(22px,3vw,34px);font-weight:700;color:#0f172a;margin:0 0 10px;">Shower Cubicle <span style="color:#1B3A6B;">Options</span></h2>
+        <p style="font-size:14px;color:#64748b;max-width:480px;margin:0 auto;">All cubicles use toughened tempered glass. Custom dimensions available — we measure and install at your site.</p>
+      </div>
+
+      <div style="display:grid;grid-template-columns:repeat(auto-fill,minmax(300px,1fr));gap:22px;">
+        {CUBICLES.map(c => (
+          <div style={`background:#fff;border-radius:18px;border:1px solid #e2e8f0;overflow:hidden;display:flex;flex-direction:column;box-shadow:0 2px 8px rgba(0,0,0,0.04);`}>
+            <!-- Card top accent -->
+            <div style={`height:6px;background:${c.color};`}></div>
+
+            <div style="padding:24px 24px 20px;flex:1;display:flex;flex-direction:column;gap:14px;">
+              <!-- Header -->
+              <div style="display:flex;align-items:flex-start;gap:14px;">
+                <div style={`width:52px;height:52px;border-radius:14px;background:${c.color}12;border:1.5px solid ${c.color}22;display:flex;align-items:center;justify-content:center;font-size:24px;flex-shrink:0;`}>{c.icon}</div>
+                <div>
+                  <div style="font-size:16px;font-weight:800;color:#0f172a;line-height:1.2;">{c.name}</div>
+                  <div style={`font-size:11px;font-weight:700;color:${c.color};text-transform:uppercase;letter-spacing:0.5px;margin-top:3px;`}>{c.variant}</div>
+                </div>
+              </div>
+
+              <!-- Description -->
+              <p style="font-size:13px;color:#475569;line-height:1.7;margin:0;">{c.desc}</p>
+
+              <!-- Feature list -->
+              <ul style="margin:0;padding:0;list-style:none;display:flex;flex-direction:column;gap:6px;">
+                {c.features.map(f => (
+                  <li style="font-size:12px;color:#334155;display:flex;align-items:center;gap:8px;">
+                    <span style={`color:${c.color};font-size:14px;`}>✓</span> {f}
+                  </li>
+                ))}
+              </ul>
+            </div>
+
+            <!-- CTA -->
+            <div style="padding:16px 24px;border-top:1px solid #f1f5f9;">
+              <a
+                href={`https://wa.me/${WA_NUMBER}?text=${waMsg(`${c.name} — ${c.variant}`)}`}
+                target="_blank" rel="noopener noreferrer"
+                style={`display:flex;align-items:center;justify-content:center;gap:8px;background:${c.color};color:#fff;border-radius:10px;padding:10px 16px;font-size:13px;font-weight:700;text-decoration:none;`}
+              >
+                💬 Ask about this
+              </a>
+            </div>
+          </div>
+        ))}
+      </div>
+    </div>
+  </section>
+
+  <!-- ═══ HAND RAILINGS SECTION ═══ -->
+  <section style="background:#fff;padding:52px 20px;border-top:1px solid #e2e8f0;">
+    <div style="max-width:900px;margin:0 auto;display:flex;align-items:center;gap:40px;flex-wrap:wrap;">
+      <div style="flex:1;min-width:260px;">
+        <div style="font-size:10px;font-weight:700;color:#E05A2B;letter-spacing:3px;text-transform:uppercase;margin-bottom:10px;">Also Available</div>
+        <h2 style="font-family:'Playfair Display',serif;font-size:clamp(22px,3vw,32px);font-weight:700;color:#0f172a;margin:0 0 14px;line-height:1.2;">Glass Hand <span style="color:#1B3A6B;">Railings</span></h2>
+        <p style="font-size:14px;color:#64748b;line-height:1.8;margin:0 0 20px;">Tempered glass panel railings for staircases, balconies, mezzanines and terraces. Frameless and semi-framed designs for a clean, modern look.</p>
+        <ul style="margin:0 0 28px;padding:0;list-style:none;display:flex;flex-direction:column;gap:8px;">
+          {['Staircase balustrades','Balcony & terrace railings','Indoor mezzanine guards','Frameless & semi-framed','Custom height & length'].map(f => (
+            <li style="font-size:13px;color:#334155;display:flex;align-items:center;gap:10px;">
+              <span style="color:#1B3A6B;font-size:15px;font-weight:700;">✓</span> {f}
+            </li>
+          ))}
+        </ul>
+        <a
+          href={`https://wa.me/${WA_NUMBER}?text=${encodeURIComponent('Hi YL Construction, I\'m interested in glass hand railings from TilersHub. Can you advise?')}`}
+          target="_blank" rel="noopener noreferrer"
+          style="display:inline-flex;align-items:center;gap:8px;background:#1B3A6B;color:#fff;border-radius:12px;padding:12px 24px;font-size:14px;font-weight:700;text-decoration:none;"
+        >
+          💬 Get a Railing Quote
+        </a>
+      </div>
+
+      <!-- Visual block -->
+      <div style="flex-shrink:0;width:240px;height:240px;border-radius:20px;background:linear-gradient(135deg,#0f2444,#1B3A6B);display:flex;align-items:center;justify-content:center;position:relative;overflow:hidden;">
+        <div style="position:absolute;inset:0;background:repeating-linear-gradient(0deg,transparent,transparent 29px,rgba(148,210,255,0.06) 29px,rgba(148,210,255,0.06) 30px),repeating-linear-gradient(90deg,transparent,transparent 29px,rgba(148,210,255,0.06) 29px,rgba(148,210,255,0.06) 30px);"></div>
+        <div style="position:relative;text-align:center;">
+          <div style="font-size:72px;line-height:1;">🔩</div>
+          <div style="font-size:12px;font-weight:700;color:rgba(255,255,255,0.6);margin-top:10px;letter-spacing:1px;">GLASS RAILINGS</div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- ═══ WHY YL CONSTRUCTION ═══ -->
+  <section style="background:#f8fafc;padding:52px 20px;border-top:1px solid #e2e8f0;">
+    <div style="max-width:900px;margin:0 auto;">
+      <div style="text-align:center;margin-bottom:36px;">
+        <h2 style="font-family:'Playfair Display',serif;font-size:clamp(20px,3vw,30px);font-weight:700;color:#0f172a;margin:0;">Why Choose <span style="color:#1B3A6B;">YL Construction</span></h2>
+      </div>
+      <div style="display:grid;grid-template-columns:repeat(auto-fill,minmax(200px,1fr));gap:18px;">
+        {[
+          { icon: '📐', title: 'Custom Sizing', desc: 'Every cubicle is measured and built to your exact bathroom dimensions.' },
+          { icon: '🔬', title: 'Tempered Glass', desc: 'Safety-tested toughened glass on all products for long-lasting durability.' },
+          { icon: '🏠', title: 'Site Visit', desc: 'We visit your site to measure, advise and confirm the right solution.' },
+          { icon: '🔧', title: 'Full Installation', desc: 'Supply and install service — no need to find a separate fitter.' },
+        ].map(f => (
+          <div style="background:#fff;border-radius:14px;border:1px solid #e2e8f0;padding:22px 20px;text-align:center;">
+            <div style="font-size:32px;margin-bottom:10px;">{f.icon}</div>
+            <div style="font-size:13px;font-weight:700;color:#0f172a;margin-bottom:6px;">{f.title}</div>
+            <div style="font-size:12px;color:#64748b;line-height:1.6;">{f.desc}</div>
+          </div>
+        ))}
+      </div>
+    </div>
+  </section>
+
+  <!-- ═══ BOTTOM CTA ═══ -->
+  <section style="background:linear-gradient(135deg,#0a1628,#0f2444);padding:48px 20px;text-align:center;">
+    <div style="max-width:520px;margin:0 auto;">
+      <div style="font-size:36px;margin-bottom:16px;">💬</div>
+      <h2 style="font-family:'Playfair Display',serif;font-size:clamp(20px,3vw,28px);font-weight:700;color:#fff;margin:0 0 12px;">Ready to Get Started?</h2>
+      <p style="font-size:14px;color:rgba(255,255,255,0.5);margin:0 0 28px;line-height:1.7;">Contact YL Construction directly on WhatsApp to discuss your project, get a quote, or book a free site visit.</p>
+      <a
+        href={`https://wa.me/${WA_NUMBER}?text=${encodeURIComponent('Hi YL Construction, I found you on TilersHub and would like a quote.')}`}
+        target="_blank" rel="noopener noreferrer"
+        style="display:inline-flex;align-items:center;gap:10px;background:#25D366;color:#fff;border-radius:14px;padding:15px 36px;font-size:15px;font-weight:800;text-decoration:none;box-shadow:0 6px 24px rgba(37,211,102,0.3);"
+      >
+        💬 WhatsApp YL Construction
+      </a>
+      <div style="margin-top:14px;font-size:12px;color:rgba(255,255,255,0.3);">+94 71 011 1506</div>
+    </div>
+  </section>
+
+</Layout>

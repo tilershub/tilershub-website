@@ -1,6 +1,12 @@
 import { useState, useEffect, useRef } from 'react'
 import { supabase, buildWhatsAppLink, DISTRICTS_EN, SERVICES_EN, PROVIDER_TYPES, VERIFICATION_BADGES } from '../lib/supabase.js'
 
+const TYPE_LABELS = {
+  tiler: 'Tilers', workshop: 'Workshops', supplier: 'Suppliers',
+  contractor: 'Contractors', tile_shop: 'Tile Shops', brand_dealer: 'Brand Dealers',
+  tool_supplier: 'Tool Suppliers', bathroom_shop: 'Bathroom Shops',
+}
+
 function initials(name) {
   return (name || '').split(' ').map(w => w[0]).join('').slice(0, 2).toUpperCase() || 'TH'
 }
@@ -537,7 +543,7 @@ export default function ProviderDirectory({ initialType, initialSearch }) {
           </select>
           {(inputValue || type || district) && (
             <button onClick={() => { setInputValue(''); setSearch(''); setType(''); setDistrict('') }} style={{ padding: '9px 14px', background: '#fee2e2', color: '#dc2626', border: 'none', borderRadius: 10, fontSize: 12, fontWeight: 600, cursor: 'pointer' }}>
-              ✕ Clear
+              ✕ {type && !inputValue && !district ? `Clear (${TYPE_LABELS[type] || type})` : 'Clear'}
             </button>
           )}
           <span style={{ fontSize: 12, color: '#94a3b8', marginLeft: 'auto' }}>{total} found</span>
@@ -552,12 +558,27 @@ export default function ProviderDirectory({ initialType, initialSearch }) {
           </div>
         ) : total === 0 ? (
           <div style={{ textAlign: 'center', padding: '80px 20px', background: '#fff', borderRadius: 16, border: '1px solid #e2e8f0' }}>
-            <div style={{ fontSize: 48, marginBottom: 16 }}>🔍</div>
-            <h3 style={{ fontSize: 18, fontWeight: 700, color: '#0f172a', marginBottom: 8 }}>No results found</h3>
-            <p style={{ color: '#64748b', marginBottom: 24 }}>Try adjusting your filters or search term</p>
-            <button onClick={() => { setSearch(''); setType(''); setDistrict('') }} style={{ padding: '10px 20px', background: '#1B3A6B', color: '#fff', border: 'none', borderRadius: 10, fontSize: 14, fontWeight: 600, cursor: 'pointer' }}>
-              Clear Filters
-            </button>
+            <div style={{ fontSize: 48, marginBottom: 16 }}>{type && type !== 'tiler' ? '🏗️' : '🔍'}</div>
+            <h3 style={{ fontSize: 18, fontWeight: 700, color: '#0f172a', marginBottom: 8 }}>
+              {type && type !== 'tiler' && !search && !district
+                ? `No ${TYPE_LABELS[type] || 'providers'} listed yet`
+                : 'No results found'}
+            </h3>
+            <p style={{ color: '#64748b', marginBottom: 24 }}>
+              {type && type !== 'tiler' && !search && !district
+                ? `We're onboarding ${TYPE_LABELS[type]?.toLowerCase() || 'providers'} now. Check back soon or join as one.`
+                : 'Try adjusting your filters or search term'}
+            </p>
+            <div style={{ display: 'flex', gap: 10, justifyContent: 'center', flexWrap: 'wrap' }}>
+              {(search || district) && (
+                <button onClick={() => { setSearch(''); setInputValue(''); setDistrict('') }} style={{ padding: '10px 20px', background: '#1B3A6B', color: '#fff', border: 'none', borderRadius: 10, fontSize: 14, fontWeight: 600, cursor: 'pointer' }}>
+                  Clear Search
+                </button>
+              )}
+              <a href="/join-tilershub" style={{ padding: '10px 20px', background: type && type !== 'tiler' ? '#E05A2B' : '#f1f5f9', color: type && type !== 'tiler' ? '#fff' : '#334155', borderRadius: 10, fontSize: 14, fontWeight: 600, textDecoration: 'none', display: 'inline-block' }}>
+                {type && type !== 'tiler' ? '✅ Join as ' + (TYPE_LABELS[type] || 'Provider') : 'Browse Tilers'}
+              </a>
+            </div>
           </div>
         ) : (
           <>

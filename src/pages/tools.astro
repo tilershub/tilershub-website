@@ -2,6 +2,13 @@
 import Layout from '../layouts/Layout.astro'
 import { supabase } from '../lib/supabase.js'
 
+function waLead(phone, name) {
+  const n = (phone || '').replace(/\D/g, '')
+  const normalized = n.startsWith('94') ? n : '94' + n.replace(/^0/, '')
+  const msg = encodeURIComponent(`ආයුබෝවන්! 🙏\n\nමම *TilersHub* (www.tilershub.lk) හරහා *${name}* සොයාගතිමි.\n\nඔබගේ සේවාව ගැන දැනගැනීමට කැමැත්තෙමි.\n\n📌 *TilersHub.lk* Lead\nස්තූතියි! 🏠`)
+  return `https://wa.me/${normalized}?text=${msg}`
+}
+
 const { data: toolSuppliers } = await supabase
   .from('providers')
   .select('id,name,city,district,services,whatsapp,phone,description,verification_status,is_featured')
@@ -109,7 +116,7 @@ const TOOL_CATEGORIES = [
                 )}
                 <div style="display:flex;gap:8px;">
                   {s.whatsapp && (
-                    <a href={`https://wa.me/${s.whatsapp.replace(/\D/g,'')}`} target="_blank" rel="noopener noreferrer"
+                    <a href={waLead(s.whatsapp, s.name)} target="_blank" rel="noopener noreferrer"
                       style="flex:1;display:flex;align-items:center;justify-content:center;gap:6px;background:#25D366;color:#fff;border-radius:10px;padding:8px;font-size:12px;font-weight:700;text-decoration:none;">
                       💬 WhatsApp
                     </a>
