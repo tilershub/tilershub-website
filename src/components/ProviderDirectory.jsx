@@ -419,17 +419,20 @@ function ProviderModal({ item, isTiler, onClose }) {
             </div>
           )}
 
-          {/* Gallery (providers) */}
-          {!isTiler && (item.gallery || []).length > 0 && (
-            <div style={{ marginBottom: 18 }}>
-              <div style={{ fontSize: 11, fontWeight: 700, color: '#94a3b8', letterSpacing: 1, textTransform: 'uppercase', marginBottom: 8 }}>Gallery</div>
-              <div style={{ display: 'flex', gap: 8, overflowX: 'auto', paddingBottom: 4 }}>
-                {(item.gallery || []).map((img, i) => (
-                  <img key={i} src={img} alt="" style={{ width: 80, height: 80, borderRadius: 10, objectFit: 'cover', flexShrink: 0, border: '1px solid #e2e8f0' }} />
-                ))}
+          {/* Portfolio */}
+          {(item.gallery || item.photo_urls || []).length > 0 && (() => {
+            const imgs = item.gallery || item.photo_urls || []
+            return (
+              <div style={{ marginBottom: 18 }}>
+                <div style={{ fontSize: 11, fontWeight: 700, color: '#94a3b8', letterSpacing: 1, textTransform: 'uppercase', marginBottom: 8 }}>Portfolio</div>
+                <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fill, minmax(90px, 1fr))', gap: 6 }}>
+                  {imgs.map((img, i) => (
+                    <img key={i} src={img} alt="" style={{ width: '100%', aspectRatio: '1', borderRadius: 8, objectFit: 'cover', border: '1px solid #e2e8f0' }} />
+                  ))}
+                </div>
               </div>
-            </div>
-          )}
+            )
+          })()}
 
           {/* Contact buttons */}
           <div style={{ display: 'flex', gap: 10 }}>

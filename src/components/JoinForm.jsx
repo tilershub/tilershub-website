@@ -1,4 +1,4 @@
-import { useState, useEffect } from 'react'
+import { useState, useEffect, useRef } from 'react'
 import { supabase, PROVIDER_TYPES, DISTRICTS_EN } from '../lib/supabase.js'
 
 // ─── All constants & helpers outside component (prevents keyboard-dismiss remount) ───
@@ -76,6 +76,109 @@ function Chip({ label, checked, onClick }) {
   )
 }
 
+function ImageUpload({ label, hint, aspectRatio, value, onChange }) {
+  const inputRef = useRef(null)
+  const [preview, setPreview] = useState(null)
+  const [dragging, setDragging] = useState(false)
+
+  function handleFile(file) {
+    if (!file || !file.type.startsWith('image/')) return
+    onChange(file)
+    setPreview(URL.createObjectURL(file))
+  }
+
+  function onInputChange(e) { handleFile(e.target.files[0]) }
+  function onDrop(e) { e.preventDefault(); setDragging(false); handleFile(e.dataTransfer.files[0]) }
+
+  const height = aspectRatio === 'cover' ? 130 : 100
+
+  return (
+    <div style={{ marginBottom: 20 }}>
+      <div style={{ fontSize: 11, fontWeight: 700, color: '#334155', textTransform: 'uppercase', letterSpacing: '0.6px', marginBottom: 7 }}>{label}</div>
+      <div
+        onClick={() => inputRef.current?.click()}
+        onDragOver={e => { e.preventDefault(); setDragging(true) }}
+        onDragLeave={() => setDragging(false)}
+        onDrop={onDrop}
+        style={{
+          position: 'relative', height, borderRadius: 12, border: `2px dashed ${dragging ? '#1B3A6B' : '#cbd5e1'}`,
+          background: dragging ? '#eef3fb' : preview ? '#000' : '#f8fafc',
+          cursor: 'pointer', overflow: 'hidden', display: 'flex', alignItems: 'center', justifyContent: 'center',
+          transition: 'all 0.2s',
+        }}
+      >
+        {preview ? (
+          <>
+            <img src={preview} alt="preview" style={{ position: 'absolute', inset: 0, width: '100%', height: '100%', objectFit: 'cover', opacity: 0.85 }} />
+            <div style={{ position: 'relative', zIndex: 1, background: 'rgba(0,0,0,0.5)', color: '#fff', borderRadius: 8, padding: '5px 12px', fontSize: 11, fontWeight: 600 }}>
+              Click to change
+            </div>
+          </>
+        ) : (
+          <div style={{ textAlign: 'center', color: '#94a3b8', pointerEvents: 'none' }}>
+            <div style={{ fontSize: 24, marginBottom: 4 }}>{aspectRatio === 'cover' ? '🖼️' : '👤'}</div>
+            <div style={{ fontSize: 12, fontWeight: 600 }}>Click or drag to upload</div>
+            <div style={{ fontSize: 10, marginTop: 2 }}>JPG, PNG, WebP · Max 5 MB</div>
+          </div>
+        )}
+      </div>
+      {hint && <p style={{ fontSize: 11, color: '#94a3b8', marginTop: 5, lineHeight: 1.5 }}>{hint}</p>}
+      <input ref={inputRef} type="file" accept="image/*" onChange={onInputChange} style={{ display: 'none' }} />
+    </div>
+  )
+}
+
+const MAX_PORTFOLIO = 8
+
+function PortfolioUpload({ files, onChange }) {
+  const inputRef = useRef(null)
+
+  function addFiles(newFiles) {
+    const combined = [...files, ...Array.from(newFiles)].slice(0, MAX_PORTFOLIO)
+    onChange(combined)
+  }
+
+  function remove(idx) {
+    onChange(files.filter((_, i) => i !== idx))
+  }
+
+  return (
+    <div style={{ marginBottom: 20 }}>
+      <div style={{ fontSize: 11, fontWeight: 700, color: '#334155', textTransform: 'uppercase', letterSpacing: '0.6px', marginBottom: 7 }}>
+        Portfolio / Highlights <span style={{ fontSize: 11, color: '#94a3b8', textTransform: 'none', fontWeight: 400 }}>(up to {MAX_PORTFOLIO} photos)</span>
+      </div>
+      <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fill, minmax(100px, 1fr))', gap: 8, marginBottom: 8 }}>
+        {files.map((f, i) => (
+          <div key={i} style={{ position: 'relative', aspectRatio: '1', borderRadius: 10, overflow: 'hidden', border: '1px solid #e2e8f0' }}>
+            <img src={URL.createObjectURL(f)} alt="" style={{ width: '100%', height: '100%', objectFit: 'cover' }} />
+            <button type="button" onClick={() => remove(i)} style={{ position: 'absolute', top: 4, right: 4, background: 'rgba(0,0,0,0.6)', color: '#fff', border: 'none', borderRadius: '50%', width: 22, height: 22, cursor: 'pointer', fontSize: 12, lineHeight: 1, display: 'flex', alignItems: 'center', justifyContent: 'center' }}>✕</button>
+          </div>
+        ))}
+        {files.length < MAX_PORTFOLIO && (
+          <div
+            onClick={() => inputRef.current?.click()}
+            style={{ aspectRatio: '1', borderRadius: 10, border: '2px dashed #cbd5e1', display: 'flex', flexDirection: 'column', alignItems: 'center', justifyContent: 'center', cursor: 'pointer', background: '#f8fafc', gap: 4 }}
+          >
+            <span style={{ fontSize: 22, color: '#94a3b8' }}>+</span>
+            <span style={{ fontSize: 10, color: '#94a3b8' }}>Add Photo</span>
+          </div>
+        )}
+      </div>
+      <input ref={inputRef} type="file" accept="image/*" multiple onChange={e => addFiles(e.target.files)} style={{ display: 'none' }} />
+      <p style={{ fontSize: 11, color: '#94a3b8', margin: 0, lineHeight: 1.5 }}>Showcase your best work — tiling jobs, showroom, products. JPG/PNG/WebP.</p>
+    </div>
+  )
+}
+
+async function uploadImage(file, folder) {
+  const ext = file.name.split('.').pop()
+  const path = `${folder}/${Date.now()}-${Math.random().toString(36).slice(2)}.${ext}`
+  const { error } = await supabase.storage.from('provider-assets').upload(path, file, { upsert: false })
+  if (error) throw error
+  const { data } = supabase.storage.from('provider-assets').getPublicUrl(path)
+  return data.publicUrl
+}
+
 export default function JoinForm() {
   const [form, setForm] = useState({
     provider_type: '',
@@ -85,6 +188,9 @@ export default function JoinForm() {
     services: [],
     description: '',
   })
+  const [profileFile, setProfileFile] = useState(null)
+  const [coverFile, setCoverFile] = useState(null)
+  const [portfolioFiles, setPortfolioFiles] = useState([])
   const [errors, setErrors] = useState({})
   const [submitting, setSubmitting] = useState(false)
   const [success, setSuccess] = useState(false)
@@ -127,6 +233,11 @@ export default function JoinForm() {
     setSubmitting(true)
     setErrors({})
     try {
+      const [profileUrl, coverUrl, ...portfolioUrls] = await Promise.all([
+        profileFile ? uploadImage(profileFile, 'profiles') : Promise.resolve(null),
+        coverFile   ? uploadImage(coverFile,   'covers')   : Promise.resolve(null),
+        ...portfolioFiles.map(f => uploadImage(f, 'portfolio')),
+      ])
       await supabase.from('provider_submissions').insert({
         name: form.name.trim(),
         provider_type: form.provider_type,
@@ -137,6 +248,9 @@ export default function JoinForm() {
         service_areas: form.service_areas.length ? form.service_areas : null,
         services: form.services,
         description: form.description.trim() || null,
+        profile_image: profileUrl,
+        cover_image: coverUrl,
+        photo_urls: portfolioUrls.length ? portfolioUrls : null,
         status: 'pending_review',
         ...(userId ? { user_id: userId } : {}),
       })
@@ -300,6 +414,27 @@ export default function JoinForm() {
               ))}
             </div>
           </Field>
+
+          {/* Images */}
+          <div style={{ display: 'grid', gridTemplateColumns: '1fr 2fr', gap: 14 }}>
+            <ImageUpload
+              label="Profile Photo"
+              hint="Your photo or logo"
+              aspectRatio="profile"
+              value={profileFile}
+              onChange={setProfileFile}
+            />
+            <ImageUpload
+              label="Cover Image"
+              hint="Showcase your best work"
+              aspectRatio="cover"
+              value={coverFile}
+              onChange={setCoverFile}
+            />
+          </div>
+
+          {/* Portfolio */}
+          <PortfolioUpload files={portfolioFiles} onChange={setPortfolioFiles} />
 
           {/* Description */}
           <Field label="Short Description" id="description" hint="Optional — describe your experience or what makes you stand out.">
