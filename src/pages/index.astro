@@ -149,10 +149,9 @@ const BRAND_COLORS = ['#1A2B4A','#C1603A','#D4AF37','#1e3a5f','#7c3aed','#166534
     {tilers.length > 0 ? (
       <div class="shelf">
         {tilers.map((t, idx) => {
-          const coverColors = ['#1A2B4A','#C1603A','#1e3a5f','#166534','#7c3aed','#92400e','#0f2444','#374151']
           return (
             <div class="tiler-card">
-              <div class="tiler-cover" style={`background:${coverColors[idx % coverColors.length]};`}>
+              <div class="tiler-cover" style="background:linear-gradient(135deg,#0F2444 0%,#1B3A6B 100%);">
                 <span>{t.avatar_url ? '' : '👷'}</span>
                 {t.is_verified && <span class="verified-badge">✓ Skilled</span>}
               </div>
