@@ -99,7 +99,7 @@ import Layout from '../layouts/Layout.astro'
               <div style="flex:1;">
                 <div style="display:flex;justify-content:space-between;align-items:center;gap:8px;">
                   <span style="font-size:13px;font-weight:600;color:var(--text);">Level Clip System</span>
-                  <span style="font-size:12px;font-weight:700;color:var(--navy);white-space:nowrap;">Rs. 25 / sq.ft</span>
+                  <span style="font-size:12px;font-weight:700;color:var(--navy);white-space:nowrap;">Rs. 20 / sq.ft</span>
                 </div>
                 <div style="font-size:11px;color:var(--text-3);margin-top:2px;">Tile leveling clips &amp; wedges for a lippage-free finish</div>
               </div>
@@ -265,7 +265,7 @@ import Layout from '../layouts/Layout.astro'
       const labourCost    = area * labourRate
       const adhesiveRate  = ADHESIVE[adhesiveTier()].rate
       const adhesiveCost  = incAdhesive ? area * adhesiveRate : 0
-      const clipsCost     = incClips    ? area * 25 : 0
+      const clipsCost     = incClips    ? area * 20 : 0
       const groutCost     = incGrout    ? area * 10 : 0
       const screedCost    = incScreed   ? area * screedRate : 0
 
