@@ -66,6 +66,7 @@
 
 *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
 html { scroll-behavior: smooth; }
+body { padding-top: 60px; }
 
 body {
   font-family: 'Noto Sans Sinhala', 'Inter', sans-serif;
@@ -87,8 +88,10 @@ img { max-width: 100%; display: block; }
   display: flex;
   align-items: center;
   justify-content: space-between;
-  position: sticky;
+  position: fixed;
   top: 0;
+  left: 0;
+  right: 0;
   z-index: 200;
   box-shadow: var(--shadow-sm);
   border-bottom: 1px solid var(--border);
