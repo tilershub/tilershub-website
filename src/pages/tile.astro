@@ -7,22 +7,7 @@ const { data: allBrands } = await supabase
   .order('is_featured', { ascending: false }).order('name')
 const brands = allBrands || []
 
-const CHEMICAL_CATS  = ['Tile Adhesive', 'Waterproofing', 'Construction Chemicals', 'Grout', 'Sealants']
-const RENO_CATS      = ['Bathroom Renovation', 'Interior Design', 'Construction', 'Premium Partner']
-const BATHROOM_CATS  = ['Sanitary Ware', 'Faucets', 'Bathroom Fittings', 'Bathroom Products', 'Showers', 'Bathtubs', 'Bathroom Accessories']
-
-const isChemical = (b) => (b.categories || []).some(c => CHEMICAL_CATS.includes(c))
-const isReno     = (b) => (b.categories || []).some(c => RENO_CATS.includes(c))
-const isBathroom = (b) => (b.categories || []).some(c => BATHROOM_CATS.includes(c))
-
-// Tile brands = everything not chemical/reno/bathroom
-const tileBrands = brands.filter(b => !isChemical(b) && !isReno(b) && !isBathroom(b))
-
-// Adhesives: only Swisstek + Tokyo Super
-const adhesiveBrands = brands.filter(b => ['swisstek', 'tokyo-super'].includes(b.slug))
-
-// Grouts: only Swisstek
-const groutBrands = brands.filter(b => b.slug === 'swisstek')
+// All active brands in one carousel
 
 const { data: shopData } = await supabase
   .from('providers')
@@ -131,25 +116,24 @@ function logoText(name) { return name.split(' ').map(w => w[0]).join('').slice(0
   <section style="background:var(--surface);padding:52px 0 64px;">
     <div style="max-width:1100px;margin:0 auto;padding:0 20px;">
 
-      <!-- ── Tile Brands (horizontal scroll carousel) ── -->
-      {tileBrands.length > 0 && (
+      <!-- ── All Brands — horizontal scroll carousel ── -->
+      {brands.length > 0 && (
         <div style="margin-bottom:56px;">
           <div style="display:flex;align-items:center;justify-content:space-between;gap:12px;margin-bottom:20px;">
             <div style="display:flex;align-items:center;gap:12px;">
               <div style="width:36px;height:36px;background:linear-gradient(135deg,var(--navy),#2B5299);border-radius:10px;display:flex;align-items:center;justify-content:center;font-size:18px;">🪨</div>
               <div>
-                <div style="font-size:18px;font-weight:700;color:var(--text);">Tile Brands</div>
-                <div style="font-size:12px;color:var(--text-4);">Floor tiles, wall tiles, porcelain &amp; ceramic collections</div>
+                <div style="font-size:18px;font-weight:700;color:var(--text);">Brands</div>
+                <div style="font-size:12px;color:var(--text-4);">Tiles, adhesives, grouts, waterproofing &amp; more</div>
               </div>
             </div>
             <span style="font-size:11px;color:var(--text-4);white-space:nowrap;">← swipe →</span>
           </div>
 
-          <!-- Scroll container — breaks out of padding to allow edge-to-edge scroll on mobile -->
           <div style="position:relative;">
             <div style="overflow-x:auto;-webkit-overflow-scrolling:touch;scroll-snap-type:x mandatory;padding:4px 0 14px;margin:0 -20px;padding-left:20px;padding-right:20px;" class="tile-brands-scroll">
               <div style="display:flex;gap:16px;width:max-content;">
-                {tileBrands.map(brand => {
+                {brands.map(brand => {
                   const m = meta(brand)
                   const href = brand.dedicated_page_url || `/brands/${brand.slug}`
                   const isFeaturedPage = !!brand.dedicated_page_url
@@ -162,7 +146,7 @@ function logoText(name) { return name.split(' ').map(w => w[0]).join('').slice(0
                         <div>
                           <div style="font-size:15px;font-weight:700;color:var(--text);line-height:1.2;">{brand.name}</div>
                           {isFeaturedPage
-                            ? <span style="font-size:10px;color:#92762a;font-weight:700;">⭐ Featured Brand</span>
+                            ? <span style="font-size:10px;color:#92762a;font-weight:700;">⭐ Featured</span>
                             : brand.is_featured && <span style="font-size:10px;color:var(--navy);font-weight:700;">✓ Verified</span>
                           }
                         </div>
@@ -181,84 +165,6 @@ function logoText(name) { return name.split(' ').map(w => w[0]).join('').slice(0
             </div>
             <!-- Right fade hint -->
             <div style="position:absolute;top:0;right:0;width:48px;height:calc(100% - 14px);background:linear-gradient(to left,var(--surface),transparent);pointer-events:none;"></div>
-          </div>
-        </div>
-      )}
-
-      <!-- ── Tile Adhesives (Swisstek + Tokyo Super) ── -->
-      {adhesiveBrands.length > 0 && (
-        <div style="margin-bottom:48px;">
-          <div style="display:flex;align-items:center;gap:12px;margin-bottom:20px;">
-            <div style="width:36px;height:36px;background:linear-gradient(135deg,#0369a1,#075985);border-radius:10px;display:flex;align-items:center;justify-content:center;font-size:18px;">🪣</div>
-            <div>
-              <div style="font-size:18px;font-weight:700;color:var(--text);">Tile Adhesives</div>
-              <div style="font-size:12px;color:var(--text-4);">Premium adhesive brands for floor &amp; wall tile installation</div>
-            </div>
-          </div>
-          <div style="display:grid;grid-template-columns:repeat(auto-fill,minmax(280px,1fr));gap:16px;">
-            {adhesiveBrands.map(brand => {
-              const m = meta(brand)
-              return (
-                <a href={`/brands/${brand.slug}`}
-                  style="background:#fff;border-radius:16px;border:1px solid #e2e8f0;padding:22px;display:block;text-decoration:none;color:inherit;transition:box-shadow 0.2s,transform 0.2s;"
-                  onmouseover="this.style.boxShadow='0 8px 28px rgba(3,105,161,0.10)';this.style.transform='translateY(-3px)'"
-                  onmouseout="this.style.boxShadow='';this.style.transform=''">
-                  <div style="display:flex;align-items:center;gap:14px;margin-bottom:14px;">
-                    <div style={`width:56px;height:56px;border-radius:14px;background:${m.bg};display:flex;align-items:center;justify-content:center;font-size:18px;font-weight:800;color:${m.color};letter-spacing:-0.5px;flex-shrink:0;font-family:'Playfair Display',serif;`}>{logoText(brand.name)}</div>
-                    <div>
-                      <div style="font-size:16px;font-weight:700;color:var(--text);">{brand.name}</div>
-                      <span style="font-size:10px;color:#0369a1;font-weight:700;">🪣 Tile Adhesive</span>
-                    </div>
-                  </div>
-                  <p style="font-size:12px;color:var(--text-3);line-height:1.65;margin-bottom:14px;">{brand.description}</p>
-                  <div style="display:flex;flex-wrap:wrap;gap:5px;margin-bottom:14px;">
-                    {(brand.categories || []).filter(c => c !== 'Tile Adhesive').slice(0, 3).map(c => (
-                      <span style={`font-size:10px;padding:2px 9px;border-radius:20px;background:${m.bg}14;color:${m.bg};border:1px solid ${m.bg}28;font-weight:600;`}>{c}</span>
-                    ))}
-                  </div>
-                  <div style="font-size:12px;font-weight:700;color:var(--navy);">View Brand →</div>
-                </a>
-              )
-            })}
-          </div>
-        </div>
-      )}
-
-      <!-- ── Tile Grouts (Swisstek) ── -->
-      {groutBrands.length > 0 && (
-        <div style="margin-bottom:56px;">
-          <div style="display:flex;align-items:center;gap:12px;margin-bottom:20px;">
-            <div style="width:36px;height:36px;background:linear-gradient(135deg,#5D4037,#3E2723);border-radius:10px;display:flex;align-items:center;justify-content:center;font-size:18px;">🟫</div>
-            <div>
-              <div style="font-size:18px;font-weight:700;color:var(--text);">Tile Grouts</div>
-              <div style="font-size:12px;color:var(--text-4);">Joint filling, colour grouts &amp; epoxy grout solutions</div>
-            </div>
-          </div>
-          <div style="display:grid;grid-template-columns:repeat(auto-fill,minmax(280px,1fr));gap:16px;max-width:640px;">
-            {groutBrands.map(brand => {
-              const m = meta(brand)
-              return (
-                <a href={`/brands/${brand.slug}`}
-                  style="background:#fff;border-radius:16px;border:1px solid #e2e8f0;padding:22px;display:block;text-decoration:none;color:inherit;transition:box-shadow 0.2s,transform 0.2s;"
-                  onmouseover="this.style.boxShadow='0 8px 28px rgba(93,64,55,0.10)';this.style.transform='translateY(-3px)'"
-                  onmouseout="this.style.boxShadow='';this.style.transform=''">
-                  <div style="display:flex;align-items:center;gap:14px;margin-bottom:14px;">
-                    <div style={`width:56px;height:56px;border-radius:14px;background:${m.bg};display:flex;align-items:center;justify-content:center;font-size:18px;font-weight:800;color:${m.color};letter-spacing:-0.5px;flex-shrink:0;font-family:'Playfair Display',serif;`}>{logoText(brand.name)}</div>
-                    <div>
-                      <div style="font-size:16px;font-weight:700;color:var(--text);">{brand.name}</div>
-                      <span style="font-size:10px;color:#5D4037;font-weight:700;">🟫 Tile Grout</span>
-                    </div>
-                  </div>
-                  <p style="font-size:12px;color:var(--text-3);line-height:1.65;margin-bottom:14px;">{brand.description}</p>
-                  <div style="display:flex;flex-wrap:wrap;gap:5px;margin-bottom:14px;">
-                    {(brand.categories || []).filter(c => c !== 'Grout').slice(0, 3).map(c => (
-                      <span style={`font-size:10px;padding:2px 9px;border-radius:20px;background:${m.bg}14;color:${m.bg};border:1px solid ${m.bg}28;font-weight:600;`}>{c}</span>
-                    ))}
-                  </div>
-                  <div style="font-size:12px;font-weight:700;color:var(--navy);">View Brand →</div>
-                </a>
-              )
-            })}
           </div>
         </div>
       )}
