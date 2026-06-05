@@ -66,13 +66,13 @@
 
 *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
 html { scroll-behavior: smooth; }
-
 body {
   font-family: 'Noto Sans Sinhala', 'Inter', sans-serif;
   background: var(--surface);
   color: var(--text);
   line-height: 1.5;
   -webkit-font-smoothing: antialiased;
+  padding-top: 60px;
   padding-bottom: env(safe-area-inset-bottom);
 }
 
@@ -87,8 +87,10 @@ img { max-width: 100%; display: block; }
   display: flex;
   align-items: center;
   justify-content: space-between;
-  position: sticky;
+  position: fixed;
   top: 0;
+  left: 0;
+  right: 0;
   z-index: 200;
   box-shadow: var(--shadow-sm);
   border-bottom: 1px solid var(--border);
@@ -683,9 +685,12 @@ img { max-width: 100%; display: block; }
   background: #fff;
   border-top: 1px solid var(--border);
   box-shadow: 0 -2px 12px rgba(0,0,0,0.06);
-  z-index: 150;
+  z-index: 300;
   padding-bottom: env(safe-area-inset-bottom, 0px);
   box-sizing: border-box;
+  -webkit-transform: translateZ(0);
+  transform: translateZ(0);
+  will-change: transform;
 }
 .bottom-nav-inner {
   display: flex;
