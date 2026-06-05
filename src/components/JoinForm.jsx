@@ -128,6 +128,48 @@ function ImageUpload({ label, hint, aspectRatio, value, onChange }) {
   )
 }
 
+const MAX_PORTFOLIO = 8
+
+function PortfolioUpload({ files, onChange }) {
+  const inputRef = useRef(null)
+
+  function addFiles(newFiles) {
+    const combined = [...files, ...Array.from(newFiles)].slice(0, MAX_PORTFOLIO)
+    onChange(combined)
+  }
+
+  function remove(idx) {
+    onChange(files.filter((_, i) => i !== idx))
+  }
+
+  return (
+    <div style={{ marginBottom: 20 }}>
+      <div style={{ fontSize: 11, fontWeight: 700, color: '#334155', textTransform: 'uppercase', letterSpacing: '0.6px', marginBottom: 7 }}>
+        Portfolio / Highlights <span style={{ fontSize: 11, color: '#94a3b8', textTransform: 'none', fontWeight: 400 }}>(up to {MAX_PORTFOLIO} photos)</span>
+      </div>
+      <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fill, minmax(100px, 1fr))', gap: 8, marginBottom: 8 }}>
+        {files.map((f, i) => (
+          <div key={i} style={{ position: 'relative', aspectRatio: '1', borderRadius: 10, overflow: 'hidden', border: '1px solid #e2e8f0' }}>
+            <img src={URL.createObjectURL(f)} alt="" style={{ width: '100%', height: '100%', objectFit: 'cover' }} />
+            <button type="button" onClick={() => remove(i)} style={{ position: 'absolute', top: 4, right: 4, background: 'rgba(0,0,0,0.6)', color: '#fff', border: 'none', borderRadius: '50%', width: 22, height: 22, cursor: 'pointer', fontSize: 12, lineHeight: 1, display: 'flex', alignItems: 'center', justifyContent: 'center' }}>✕</button>
+          </div>
+        ))}
+        {files.length < MAX_PORTFOLIO && (
+          <div
+            onClick={() => inputRef.current?.click()}
+            style={{ aspectRatio: '1', borderRadius: 10, border: '2px dashed #cbd5e1', display: 'flex', flexDirection: 'column', alignItems: 'center', justifyContent: 'center', cursor: 'pointer', background: '#f8fafc', gap: 4 }}
+          >
+            <span style={{ fontSize: 22, color: '#94a3b8' }}>+</span>
+            <span style={{ fontSize: 10, color: '#94a3b8' }}>Add Photo</span>
+          </div>
+        )}
+      </div>
+      <input ref={inputRef} type="file" accept="image/*" multiple onChange={e => addFiles(e.target.files)} style={{ display: 'none' }} />
+      <p style={{ fontSize: 11, color: '#94a3b8', margin: 0, lineHeight: 1.5 }}>Showcase your best work — tiling jobs, showroom, products. JPG/PNG/WebP.</p>
+    </div>
+  )
+}
+
 async function uploadImage(file, folder) {
   const ext = file.name.split('.').pop()
   const path = `${folder}/${Date.now()}-${Math.random().toString(36).slice(2)}.${ext}`
@@ -148,6 +190,7 @@ export default function JoinForm() {
   })
   const [profileFile, setProfileFile] = useState(null)
   const [coverFile, setCoverFile] = useState(null)
+  const [portfolioFiles, setPortfolioFiles] = useState([])
   const [errors, setErrors] = useState({})
   const [submitting, setSubmitting] = useState(false)
   const [success, setSuccess] = useState(false)
@@ -190,9 +233,10 @@ export default function JoinForm() {
     setSubmitting(true)
     setErrors({})
     try {
-      const [profileUrl, coverUrl] = await Promise.all([
+      const [profileUrl, coverUrl, ...portfolioUrls] = await Promise.all([
         profileFile ? uploadImage(profileFile, 'profiles') : Promise.resolve(null),
         coverFile   ? uploadImage(coverFile,   'covers')   : Promise.resolve(null),
+        ...portfolioFiles.map(f => uploadImage(f, 'portfolio')),
       ])
       await supabase.from('provider_submissions').insert({
         name: form.name.trim(),
@@ -206,6 +250,7 @@ export default function JoinForm() {
         description: form.description.trim() || null,
         profile_image: profileUrl,
         cover_image: coverUrl,
+        photo_urls: portfolioUrls.length ? portfolioUrls : null,
         status: 'pending_review',
         ...(userId ? { user_id: userId } : {}),
       })
@@ -387,6 +432,9 @@ export default function JoinForm() {
               onChange={setCoverFile}
             />
           </div>
+
+          {/* Portfolio */}
+          <PortfolioUpload files={portfolioFiles} onChange={setPortfolioFiles} />
 
           {/* Description */}
           <Field label="Short Description" id="description" hint="Optional — describe your experience or what makes you stand out.">
