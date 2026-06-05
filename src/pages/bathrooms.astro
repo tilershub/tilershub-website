@@ -9,17 +9,56 @@ const { data: shopData } = await supabase
   .eq('provider_type', 'bathroom_shop')
   .eq('status', 'active')
   .order('is_featured', { ascending: false })
-
 const shops = shopData || []
 
+const { data: contractorData } = await supabase
+  .from('providers')
+  .select('id,name,slug,city,district,services,whatsapp,phone,description,verification_status,is_featured')
+  .eq('provider_type', 'contractor')
+  .eq('status', 'active')
+  .order('is_featured', { ascending: false })
+const contractors = contractorData || []
+
+const { data: allBrands } = await supabase
+  .from('brands').select('*').eq('status', 'active')
+  .order('is_featured', { ascending: false }).order('name')
+const brands = allBrands || []
+
+const BATHROOM_CATS     = ['Sanitary Ware', 'Faucets', 'Bathroom Fittings', 'Bathroom Products', 'Showers', 'Bathtubs', 'Bathroom Accessories']
+const WATERPROOF_CATS   = ['Waterproofing', 'Sealants', 'Pipe Fittings', 'Plumbing']
+const RENO_CATS         = ['Bathroom Renovation', 'Interior Design', 'Construction', 'Premium Partner']
+
+const isBathroom    = (b) => (b.categories || []).some(c => BATHROOM_CATS.includes(c))
+const isWaterproof  = (b) => (b.categories || []).some(c => WATERPROOF_CATS.includes(c))
+const isReno        = (b) => (b.categories || []).some(c => RENO_CATS.includes(c))
+
+const bathroomBrands     = brands.filter(b => isBathroom(b))
+const waterproofBrands   = brands.filter(b => isWaterproof(b) && !isBathroom(b))
+const renoBrands         = brands.filter(b => isReno(b) && !isBathroom(b) && !isWaterproof(b))
+
+const BRAND_META = {
+  'rocell':      { color: '#FFFFFF', bg: '#002B5B' },
+  'lanka-tile':  { color: '#FFFFFF', bg: '#CC2229' },
+  'macktiles':   { color: '#FFFFFF', bg: '#2E7D32' },
+  'megatile':    { color: '#FFFFFF', bg: '#5D4037' },
+  'luxehome':    { color: '#0c0804', bg: '#D4AF37' },
+  'swisstek':    { color: '#FFFFFF', bg: '#1565C0' },
+  'tokyo-super': { color: '#FFFFFF', bg: '#C62828' },
+  'dr-fixit':    { color: '#FFFFFF', bg: '#E65100' },
+  'sika':        { color: '#FFFFFF', bg: '#B71C1C' },
+  'finex':       { color: '#FFFFFF', bg: '#1A237E' },
+}
+function meta(brand) { return BRAND_META[brand.slug] || { color: '#fff', bg: '#1B3A6B' } }
+function logoText(name) { return name.split(' ').map(w => w[0]).join('').slice(0, 2).toUpperCase() }
+
 const PRODUCT_CATEGORIES = [
-  { icon: '🚽', name: 'Sanitary Ware', desc: 'Toilets, basins, bidets and urinals from leading brands.' },
+  { icon: '🚽', name: 'Sanitary Ware',       desc: 'Toilets, basins, bidets and urinals from leading brands.' },
   { icon: '🚿', name: 'Showers & Enclosures', desc: 'Rain showers, handheld showers, shower screens and enclosures.' },
-  { icon: '🛁', name: 'Bathtubs', desc: 'Freestanding, built-in and corner bathtubs for every bathroom size.' },
-  { icon: '🔩', name: 'Faucets & Mixers', desc: 'Basin mixers, bath mixers, kitchen taps and deck-mounted faucets.' },
-  { icon: '🪞', name: 'Mirrors & Cabinets', desc: 'Bathroom mirrors, vanity units and storage cabinets.' },
-  { icon: '🧻', name: 'Accessories & Rails', desc: 'Towel rails, toilet paper holders, soap dispensers and hooks.' },
-  { icon: '💡', name: 'Bathroom Lighting', desc: 'IP-rated ceiling lights, mirror lights and downlights.' },
+  { icon: '🛁', name: 'Bathtubs',             desc: 'Freestanding, built-in and corner bathtubs for every bathroom size.' },
+  { icon: '🔩', name: 'Faucets & Mixers',     desc: 'Basin mixers, bath mixers, kitchen taps and deck-mounted faucets.' },
+  { icon: '🪞', name: 'Mirrors & Cabinets',   desc: 'Bathroom mirrors, vanity units and storage cabinets.' },
+  { icon: '🧻', name: 'Accessories & Rails',  desc: 'Towel rails, toilet paper holders, soap dispensers and hooks.' },
+  { icon: '💡', name: 'Bathroom Lighting',    desc: 'IP-rated ceiling lights, mirror lights and downlights.' },
   { icon: '🪣', name: 'Waterproofing & Drainage', desc: 'Floor traps, linear drains, waterproof membranes and seals.' },
 ]
 ---
@@ -34,19 +73,19 @@ const PRODUCT_CATEGORIES = [
     <div style="position:absolute;inset:0;opacity:0.04;background-image:repeating-linear-gradient(0deg,transparent,transparent 39px,rgba(255,255,255,0.8) 39px,rgba(255,255,255,0.8) 40px),repeating-linear-gradient(90deg,transparent,transparent 39px,rgba(255,255,255,0.8) 39px,rgba(255,255,255,0.8) 40px);pointer-events:none;"></div>
     <div style="position:absolute;top:-100px;left:50%;transform:translateX(-50%);width:700px;height:400px;background:radial-gradient(ellipse,rgba(255,255,255,0.04) 0%,transparent 70%);pointer-events:none;"></div>
     <div style="position:relative;max-width:600px;margin:0 auto;">
-      <span style="font-size:9px;font-weight:700;color:rgba(224,90,43,0.7);letter-spacing:3px;text-transform:uppercase;display:block;margin-bottom:14px;">🚿 Bathroom Products</span>
+      <span style="font-size:9px;font-weight:700;color:rgba(224,90,43,0.7);letter-spacing:3px;text-transform:uppercase;display:block;margin-bottom:14px;">🚿 Bathrooms</span>
       <h1 style="font-family:'Playfair Display',serif;font-size:clamp(26px,4vw,42px);font-weight:700;color:#fff;margin:0 0 12px;line-height:1.2;">
         Bathroom <span style="color:var(--terra);">Products &amp; Fittings</span>
       </h1>
       <p style="font-size:14px;color:rgba(255,255,255,0.5);max-width:480px;margin:0 auto 28px;line-height:1.8;">
-        Discover bathroom product showrooms, sanitary ware brands, faucets, showers and fittings across Sri Lanka.
+        Discover bathroom showrooms, sanitary ware brands, waterproofing, faucets and renovation contractors across Sri Lanka.
       </p>
       <div style="display:flex;gap:10px;justify-content:center;flex-wrap:wrap;">
         <a href="/join-tilershub" style="display:inline-flex;align-items:center;gap:7px;background:#E05A2B;color:#fff;border-radius:11px;padding:12px 22px;font-size:13px;font-weight:800;text-decoration:none;">
           🚿 List Your Shop
         </a>
-        <a href="/brands" style="display:inline-flex;align-items:center;gap:7px;background:rgba(255,255,255,0.08);color:rgba(255,255,255,0.75);border:1px solid rgba(255,255,255,0.15);border-radius:11px;padding:12px 20px;font-size:13px;font-weight:600;text-decoration:none;">
-          🏷️ Browse Brands →
+        <a href="/post-project" style="display:inline-flex;align-items:center;gap:7px;background:rgba(255,255,255,0.08);color:rgba(255,255,255,0.75);border:1px solid rgba(255,255,255,0.15);border-radius:11px;padding:12px 20px;font-size:13px;font-weight:600;text-decoration:none;">
+          📋 Post a Project →
         </a>
       </div>
     </div>
@@ -73,6 +112,89 @@ const PRODUCT_CATEGORIES = [
       </div>
     </div>
   </section>
+
+  <!-- Bathroom Brands -->
+  {bathroomBrands.length > 0 && (
+    <section style="background:var(--surface-2);padding:52px 20px 56px;border-top:1px solid var(--border);">
+      <div style="max-width:1100px;margin:0 auto;">
+        <div style="display:flex;align-items:center;gap:12px;margin-bottom:24px;">
+          <div style="width:36px;height:36px;background:linear-gradient(135deg,#0f2444,#1B3A6B);border-radius:10px;display:flex;align-items:center;justify-content:center;font-size:18px;">🚿</div>
+          <div>
+            <div style="font-size:18px;font-weight:700;color:var(--text);">Bathroom Brands</div>
+            <div style="font-size:12px;color:var(--text-4);">Sanitary ware, faucets, showers, bathtubs &amp; bathroom accessories</div>
+          </div>
+        </div>
+        <div style="display:grid;grid-template-columns:repeat(auto-fill,minmax(280px,1fr));gap:16px;">
+          {bathroomBrands.map(brand => {
+            const m = meta(brand)
+            const href = brand.dedicated_page_url || `/brands/${brand.slug}`
+            const isFeaturedPage = !!brand.dedicated_page_url
+            return (
+              <a href={href} style={`background:#fff;border-radius:16px;border:${isFeaturedPage ? '2px solid var(--gold)' : '1px solid #e2e8f0'};padding:22px;display:block;text-decoration:none;color:inherit;position:relative;overflow:hidden;transition:box-shadow 0.2s,transform 0.2s;`}
+                onmouseover="this.style.boxShadow='0 8px 28px rgba(27,58,107,0.12)';this.style.transform='translateY(-3px)'"
+                onmouseout="this.style.boxShadow='';this.style.transform=''">
+                {isFeaturedPage && <div style="position:absolute;top:0;right:0;background:var(--gold);color:#0d0b08;font-size:9px;font-weight:800;letter-spacing:1.5px;text-transform:uppercase;padding:4px 12px;border-bottom-left-radius:10px;">Sponsored</div>}
+                <div style="display:flex;align-items:center;gap:14px;margin-bottom:14px;">
+                  <div style={`width:56px;height:56px;border-radius:14px;background:${m.bg};display:flex;align-items:center;justify-content:center;font-size:18px;font-weight:800;color:${m.color};letter-spacing:-0.5px;flex-shrink:0;font-family:'Playfair Display',serif;`}>{logoText(brand.name)}</div>
+                  <div>
+                    <div style="font-size:16px;font-weight:700;color:var(--text);">{brand.name}</div>
+                    <span style="font-size:10px;color:#0f2444;font-weight:700;">🚿 Bathroom Products</span>
+                  </div>
+                </div>
+                <p style="font-size:12px;color:var(--text-3);line-height:1.65;margin-bottom:14px;">{brand.description}</p>
+                <div style="display:flex;flex-wrap:wrap;gap:5px;margin-bottom:14px;">
+                  {(brand.categories || []).slice(0,3).map(c => (
+                    <span style="font-size:10px;padding:2px 9px;border-radius:20px;background:#EFF6FF;color:#1B3A6B;border:1px solid #BFDBFE;font-weight:600;">{c}</span>
+                  ))}
+                </div>
+                <div style="font-size:12px;font-weight:700;color:var(--navy);">{isFeaturedPage ? 'View Sponsor Page →' : 'View Brand →'}</div>
+              </a>
+            )
+          })}
+        </div>
+      </div>
+    </section>
+  )}
+
+  <!-- Waterproofing Brands -->
+  {waterproofBrands.length > 0 && (
+    <section style="background:var(--surface);padding:52px 20px 56px;border-top:1px solid var(--border);">
+      <div style="max-width:1100px;margin:0 auto;">
+        <div style="display:flex;align-items:center;gap:12px;margin-bottom:24px;">
+          <div style="width:36px;height:36px;background:linear-gradient(135deg,#0369a1,#075985);border-radius:10px;display:flex;align-items:center;justify-content:center;font-size:18px;">💧</div>
+          <div>
+            <div style="font-size:18px;font-weight:700;color:var(--text);">Waterproofing &amp; Pipe Fittings</div>
+            <div style="font-size:12px;color:var(--text-4);">Waterproof membranes, sealants, drain systems &amp; pipe fittings</div>
+          </div>
+        </div>
+        <div style="display:grid;grid-template-columns:repeat(auto-fill,minmax(280px,1fr));gap:16px;">
+          {waterproofBrands.map(brand => {
+            const m = meta(brand)
+            return (
+              <a href={`/brands/${brand.slug}`} style="background:#fff;border-radius:16px;border:1px solid #e2e8f0;padding:22px;display:block;text-decoration:none;color:inherit;transition:box-shadow 0.2s,transform 0.2s;"
+                onmouseover="this.style.boxShadow='0 8px 28px rgba(3,105,161,0.10)';this.style.transform='translateY(-3px)'"
+                onmouseout="this.style.boxShadow='';this.style.transform=''">
+                <div style="display:flex;align-items:center;gap:14px;margin-bottom:14px;">
+                  <div style={`width:56px;height:56px;border-radius:14px;background:${m.bg};display:flex;align-items:center;justify-content:center;font-size:18px;font-weight:800;color:${m.color};letter-spacing:-0.5px;flex-shrink:0;font-family:'Playfair Display',serif;`}>{logoText(brand.name)}</div>
+                  <div>
+                    <div style="font-size:16px;font-weight:700;color:var(--text);">{brand.name}</div>
+                    <span style="font-size:10px;color:#0369a1;font-weight:700;">💧 Waterproofing</span>
+                  </div>
+                </div>
+                <p style="font-size:12px;color:var(--text-3);line-height:1.65;margin-bottom:14px;">{brand.description}</p>
+                <div style="display:flex;flex-wrap:wrap;gap:5px;margin-bottom:14px;">
+                  {(brand.categories || []).slice(0,3).map(c => (
+                    <span style={`font-size:10px;padding:2px 9px;border-radius:20px;background:${m.bg}18;color:${m.bg};border:1px solid ${m.bg}28;font-weight:600;`}>{c}</span>
+                  ))}
+                </div>
+                <div style="font-size:12px;font-weight:700;color:var(--navy);">View Brand →</div>
+              </a>
+            )
+          })}
+        </div>
+      </div>
+    </section>
+  )}
 
   <!-- Shops Directory -->
   <section style="background:var(--surface-2);padding:48px 20px 64px;border-top:1px solid var(--border);">
@@ -104,6 +226,74 @@ const PRODUCT_CATEGORIES = [
           <p style="font-size:11px;color:var(--text-4);margin-top:14px;">Free listing · Direct WhatsApp leads · No commission</p>
         </div>
       )}
+    </div>
+  </section>
+
+  <!-- Contractor Profiles -->
+  <section style="background:var(--surface);padding:52px 20px 56px;border-top:1px solid var(--border);">
+    <div style="max-width:1100px;margin:0 auto;">
+      <div style="display:flex;align-items:center;justify-content:space-between;flex-wrap:wrap;gap:12px;margin-bottom:28px;">
+        <div style="display:flex;align-items:center;gap:12px;">
+          <div style="width:36px;height:36px;background:linear-gradient(135deg,#E05A2B,#c44a1f);border-radius:10px;display:flex;align-items:center;justify-content:center;font-size:18px;">🏗️</div>
+          <div>
+            <div style="font-size:18px;font-weight:700;color:var(--text);">Bathroom Contractors</div>
+            <div style="font-size:12px;color:var(--text-4);">Installation, renovation and construction specialists</div>
+          </div>
+        </div>
+        <a href="/join-tilershub" style="display:inline-flex;align-items:center;gap:7px;background:var(--navy);color:#fff;border-radius:11px;padding:10px 20px;font-size:13px;font-weight:700;text-decoration:none;">
+          + List Your Business
+        </a>
+      </div>
+
+      <div style="display:grid;grid-template-columns:repeat(auto-fill,minmax(290px,1fr));gap:18px;">
+        {contractors.map(c => (
+          <div style="background:#fff;border-radius:18px;border:1px solid #e2e8f0;padding:20px;box-shadow:0 2px 12px rgba(0,0,0,0.05);">
+            <div style="display:flex;align-items:flex-start;gap:14px;margin-bottom:12px;">
+              <div style="width:48px;height:48px;border-radius:12px;background:linear-gradient(135deg,#E05A2B,#c44a1f);display:flex;align-items:center;justify-content:center;font-size:20px;flex-shrink:0;">🏗️</div>
+              <div>
+                <div style="font-size:15px;font-weight:800;color:var(--text);line-height:1.2;">{c.name}</div>
+                {(c.city || c.district) && <div style="font-size:12px;color:var(--text-3);margin-top:2px;">📍 {c.city}{c.district ? `, ${c.district}` : ''}</div>}
+                <span style="font-size:10px;padding:2px 8px;border-radius:10px;background:#FEF3C7;color:#92400e;font-weight:700;display:inline-block;margin-top:4px;">🏗️ Contractor</span>
+              </div>
+            </div>
+            {c.description && (
+              <p style="font-size:12px;color:var(--text-3);line-height:1.65;margin:0 0 12px;">{c.description}</p>
+            )}
+            {(c.services || []).length > 0 && (
+              <div style="display:flex;flex-wrap:wrap;gap:5px;margin-bottom:14px;">
+                {(c.services || []).slice(0,4).map(sv => (
+                  <span style="font-size:10px;padding:2px 8px;border-radius:20px;background:#FEF3C7;color:#92400e;border:1px solid #FDE68A;font-weight:600;">{sv}</span>
+                ))}
+              </div>
+            )}
+            <div style="display:flex;gap:8px;">
+              {(c.whatsapp || c.phone) && (
+                <a href={`https://wa.me/${(c.whatsapp || c.phone).replace(/\D/g,'').replace(/^(?!94)0?/,'94')}?text=${encodeURIComponent(`ආයුබෝවන්! 🙏\n\nමම TilersHub හරහා ${c.name} සොයාගතිමි.\nඔබගේ සේවාව ගැන දැනගැනීමට කැමැත්තෙමි.\n\nස්තූතියි!`)}`}
+                  target="_blank" rel="noopener noreferrer"
+                  style="flex:1;display:flex;align-items:center;justify-content:center;gap:6px;background:#25D366;color:#fff;border-radius:10px;padding:9px 12px;font-size:12px;font-weight:700;text-decoration:none;">
+                  💬 WhatsApp
+                </a>
+              )}
+              {c.phone && (
+                <a href={`tel:${c.phone}`}
+                  style="display:flex;align-items:center;justify-content:center;gap:5px;background:#eef3fb;color:var(--navy);border-radius:10px;padding:9px 12px;font-size:12px;font-weight:700;text-decoration:none;border:1px solid #d5e2f5;">
+                  📞 Call
+                </a>
+              )}
+            </div>
+          </div>
+        ))}
+
+        <!-- Always show a "list your business" invite card -->
+        <div style="background:#fff;border-radius:18px;border:2px dashed var(--border);padding:28px 20px;display:flex;flex-direction:column;align-items:center;justify-content:center;text-align:center;min-height:180px;">
+          <div style="font-size:36px;margin-bottom:10px;">🏗️</div>
+          <div style="font-size:14px;font-weight:700;color:var(--text);margin-bottom:6px;">Are you a bathroom contractor?</div>
+          <p style="font-size:12px;color:var(--text-3);line-height:1.6;margin-bottom:14px;">List your business free and get leads from homeowners planning renovations.</p>
+          <a href="/join-tilershub" style="display:inline-flex;align-items:center;gap:6px;background:var(--navy);color:#fff;border-radius:10px;padding:9px 18px;font-size:12px;font-weight:700;text-decoration:none;">
+            + List My Business
+          </a>
+        </div>
+      </div>
     </div>
   </section>
 

@@ -51,18 +51,17 @@ const path = Astro.url.pathname
       <button id="close-drawer" style="background:transparent;border:none;color:rgba(255,255,255,0.5);font-size:22px;cursor:pointer;padding:4px;">✕</button>
     </div>
     <a href="/" class={`drawer-link${path==='/'?' active':''}`}>🏠 Home</a>
-    <a href="/providers" class={`drawer-link${path.startsWith('/providers')?' active':''}`}>👷 Find Providers</a>
-    <a href="/jobs" class={`drawer-link${path==='/jobs'?' active':''}`}>💼 Browse Jobs</a>
-    <a href="/brands" class={`drawer-link${path.startsWith('/brands')?' active':''}`}>🏷️ Tile Brands</a>
-    <a href="/estimator" class={`drawer-link${path==='/estimator'?' active':''}`}>📐 Cost Estimator</a>
+    <a href="/providers" class={`drawer-link${path.startsWith('/providers')?' active':''}`}>👷 Find Tiler</a>
+    <a href="/jobs" class={`drawer-link${path==='/jobs'?' active':''}`}>💼 Browse Jobs - වැඩ හොයන්න</a>
+    <a href="/estimator" class={`drawer-link${path==='/estimator'?' active':''}`}>📐 Estimator</a>
     <div class="drawer-divider"></div>
     <a href="/providers?type=workshop" class="drawer-link">🏭 Workshops</a>
     <a href="/providers?type=supplier" class="drawer-link">📦 Suppliers</a>
-    <a href="/providers?type=tile_shop" class="drawer-link">🏪 Tile Shops</a>
-    <a href="/tools" class={`drawer-link${path==='/tools'?' active':''}`}>🔧 Tools Directory</a>
-    <a href="/bathrooms" class={`drawer-link${path==='/bathrooms'?' active':''}`}>🚿 Bathroom Products</a>
+    <a href="/tile" class={`drawer-link${path==='/tile'?' active':''}`}>🪨 Tile</a>
+    <a href="/tools" class={`drawer-link${path==='/tools'?' active':''}`}>🔧 Tools</a>
+    <a href="/bathrooms" class={`drawer-link${path==='/bathrooms'?' active':''}`}>🚿 Bathrooms</a>
     <div class="drawer-divider"></div>
-    <a href="/post-project" class="drawer-link highlight">📋 Post a Project</a>
+    <a href="/post-project" class="drawer-link highlight">📋 Post Projects</a>
     <a href="/join-tilershub" class="drawer-link" style="color:rgba(255,255,255,0.6);">✅ Join as Provider</a>
     <a href="/sponsor/luxehome" class="drawer-link" style="background:linear-gradient(135deg,rgba(212,175,55,0.12),rgba(212,175,55,0.06));border:1px solid rgba(212,175,55,0.2);border-radius:10px;margin:4px 8px;padding:10px 14px;display:flex;align-items:center;gap:10px;">
       <span style="font-size:16px;">🛁</span>
@@ -138,22 +137,22 @@ const path = Astro.url.pathname
       <div>
         <div class="footer-col-head">Discover</div>
         <nav class="footer-links">
-          <a href="/providers">👷 Find Providers</a>
+          <a href="/providers">👷 Find Tiler</a>
           <a href="/jobs">💼 Browse Jobs</a>
-          <a href="/tools">🔧 Tools Directory</a>
-          <a href="/bathrooms">🚿 Bathroom Products</a>
-          <a href="/brands">🏷️ Tile Brands</a>
-          <a href="/estimator">📐 Cost Estimator</a>
+          <a href="/tools">🔧 Tools</a>
+          <a href="/bathrooms">🚿 Bathrooms</a>
+          <a href="/tile">🪨 Tile</a>
+          <a href="/estimator">📐 Estimator</a>
           <a href="/providers?type=workshop">🏭 Workshops</a>
         </nav>
       </div>
       <div>
         <div class="footer-col-head">Get Started</div>
         <nav class="footer-links">
-          <a href="/post-project">📋 Post a Project</a>
+          <a href="/post-project">📋 Post Projects</a>
           <a href="/join-tilershub">✅ Join as Provider</a>
-          <a href="/providers?type=tile_shop">🏪 Tile Shops</a>
-          <a href="/bathrooms">🚿 Bathroom Products</a>
+          <a href="/tile">🪨 Tile</a>
+          <a href="/bathrooms">🚿 Bathrooms</a>
           <a href="/sponsor/luxehome" style="color:#D4AF37;font-weight:700;">🛁 LUXEhome Bathrooms</a>
           <a href="/about">ℹ️ About Us</a>
           <a href="/contact">📬 Contact</a>
