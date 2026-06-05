@@ -73,11 +73,10 @@ export const VERIFICATION_BADGES = {
 }
 
 export const BUDGET_RANGES = [
-  'Under Rs. 50,000',
-  'Rs. 50,000 – 150,000',
-  'Rs. 150,000 – 300,000',
-  'Rs. 300,000 – 500,000',
-  'Over Rs. 500,000'
+  'Below Rs. 500,000',
+  'Rs. 500,000 – 1,000,000',
+  'Rs. 1,000,000 – 2,000,000',
+  'Above Rs. 2,000,000',
 ]
 
 export function buildWhatsAppLink(phone, name) {

@@ -39,13 +39,20 @@ import Layout from '../layouts/Layout.astro'
           <label class="form-label">Tile Size</label>
           <select id="tile-size" class="form-select">
             <option value="0.969">30×30 cm &nbsp;·&nbsp; 1×1 ft</option>
+            <option value="1.938">60×30 cm &nbsp;·&nbsp; 2×1 ft</option>
             <option value="1.722">40×40 cm &nbsp;·&nbsp; 1.3×1.3 ft</option>
-            <option value="2.691">50×50 cm &nbsp;·&nbsp; 1.6×1.6 ft</option>
             <option value="3.875" selected>60×60 cm &nbsp;·&nbsp; 2×2 ft</option>
+            <option value="4.359">90×45 cm &nbsp;·&nbsp; 3×1.5 ft</option>
             <option value="6.889">80×80 cm &nbsp;·&nbsp; 2.6×2.6 ft</option>
-            <option value="15.50">120×120 cm &nbsp;·&nbsp; 4×4 ft</option>
+            <option value="7.750">120×60 cm &nbsp;·&nbsp; 4×2 ft</option>
+            <option value="10.333">120×80 cm &nbsp;·&nbsp; 4×2.6 ft</option>
+            <option value="10.764">100×100 cm &nbsp;·&nbsp; 3.3×3.3 ft</option>
+            <option value="12.109">150×75 cm &nbsp;·&nbsp; 5×2.5 ft</option>
+            <option value="13.778">160×80 cm &nbsp;·&nbsp; 5.2×2.6 ft</option>
+            <option value="23.250">180×120 cm &nbsp;·&nbsp; 6×4 ft</option>
+            <option value="31.000">240×120 cm &nbsp;·&nbsp; 8×4 ft</option>
           </select>
-          <p class="form-hint" id="adhesive-hint" style="color:var(--navy);font-weight:600;">✓ C1 Adhesive applies — tile is 2×2 ft or smaller</p>
+          <p class="form-hint" id="adhesive-hint" style="color:var(--navy);font-weight:600;">✓ C1 Adhesive applies — up to 60×60 cm</p>
         </div>
 
         <!-- Tile Price per tile -->
@@ -82,7 +89,7 @@ import Layout from '../layouts/Layout.astro'
                   <span style="font-size:13px;font-weight:600;color:var(--text);" id="adhesive-label">Adhesive (C1)</span>
                   <span style="font-size:12px;font-weight:700;color:var(--navy);white-space:nowrap;" id="adhesive-rate-lbl">Rs. 50 / sq.ft</span>
                 </div>
-                <div style="font-size:11px;color:var(--text-3);margin-top:2px;" id="adhesive-sub">C1 adhesive for tiles 2×2 ft and smaller</div>
+                <div style="font-size:11px;color:var(--text-3);margin-top:2px;" id="adhesive-sub">C1 adhesive — tiles up to 60×60 cm</div>
               </div>
             </label>
 
@@ -92,7 +99,7 @@ import Layout from '../layouts/Layout.astro'
               <div style="flex:1;">
                 <div style="display:flex;justify-content:space-between;align-items:center;gap:8px;">
                   <span style="font-size:13px;font-weight:600;color:var(--text);">Level Clip System</span>
-                  <span style="font-size:12px;font-weight:700;color:var(--navy);white-space:nowrap;">Rs. 25 / sq.ft</span>
+                  <span style="font-size:12px;font-weight:700;color:var(--navy);white-space:nowrap;">Rs. 20 / sq.ft</span>
                 </div>
                 <div style="font-size:11px;color:var(--text-3);margin-top:2px;">Tile leveling clips &amp; wedges for a lippage-free finish</div>
               </div>
@@ -210,24 +217,27 @@ import Layout from '../layouts/Layout.astro'
     const screedCb     = document.getElementById('inc-screed')
     const screedRow    = document.getElementById('screed-rate-row')
 
-    function isLargeTile() {
-      return parseFloat(tileSizeEl.value) > 4
+    // Returns 'c1' | 'c2' | 'c2te'
+    function adhesiveTier() {
+      const v = parseFloat(tileSizeEl.value)
+      if (v <= 3.875)  return 'c1'   // up to 60×60 cm
+      if (v <= 10.333) return 'c2'   // up to 120×80 cm
+      return 'c2te'                   // above 120×80 cm
+    }
+
+    const ADHESIVE = {
+      c1:   { label: 'Adhesive (C1)',       rate: 50,  rateLabel: 'Rs. 50 / sq.ft',  sub: 'C1 adhesive — tiles up to 60×60 cm',              hint: '✓ C1 Adhesive applies — up to 60×60 cm' },
+      c2:   { label: 'Adhesive (C2)',       rate: 80,  rateLabel: 'Rs. 80 / sq.ft',  sub: 'C2 adhesive — tiles 90×45 cm up to 120×80 cm',     hint: '✓ C2 Adhesive applies — 90×45 cm to 120×80 cm' },
+      c2te: { label: 'Adhesive (C2TE S1)', rate: 120, rateLabel: 'Rs. 120 / sq.ft', sub: 'C2TE S1 adhesive — large format tiles above 120×80 cm', hint: '✓ C2TE S1 Adhesive applies — large format above 120×80 cm' },
     }
 
     function updateAdhesive() {
-      if (isLargeTile()) {
-        adhLabelEl.textContent  = 'Adhesive (C2)'
-        adhRateLblEl.textContent = 'Rs. 80 / sq.ft'
-        adhSubEl.textContent    = 'C2 adhesive for large format tiles above 2×2 ft'
-        adhHintEl.textContent   = '✓ C2 Adhesive applies — large format tile above 2×2 ft'
-        if (adhResLabel) adhResLabel.textContent = '🧱 Adhesive (C2)'
-      } else {
-        adhLabelEl.textContent  = 'Adhesive (C1)'
-        adhRateLblEl.textContent = 'Rs. 50 / sq.ft'
-        adhSubEl.textContent    = 'C1 adhesive for tiles 2×2 ft and smaller'
-        adhHintEl.textContent   = '✓ C1 Adhesive applies — tile is 2×2 ft or smaller'
-        if (adhResLabel) adhResLabel.textContent = '🧱 Adhesive (C1)'
-      }
+      const tier = ADHESIVE[adhesiveTier()]
+      adhLabelEl.textContent   = tier.label
+      adhRateLblEl.textContent = tier.rateLabel
+      adhSubEl.textContent     = tier.sub
+      adhHintEl.textContent    = tier.hint
+      if (adhResLabel) adhResLabel.textContent = '🧱 ' + tier.label
     }
 
     tileSizeEl.addEventListener('change', updateAdhesive)
@@ -253,9 +263,9 @@ import Layout from '../layouts/Layout.astro'
       const tilesNeeded   = Math.ceil((area / tileSqft) * 1.12)
       const tileCost      = pricePerTile > 0 ? tilesNeeded * pricePerTile : null
       const labourCost    = area * labourRate
-      const adhesiveRate  = isLargeTile() ? 80 : 50
+      const adhesiveRate  = ADHESIVE[adhesiveTier()].rate
       const adhesiveCost  = incAdhesive ? area * adhesiveRate : 0
-      const clipsCost     = incClips    ? area * 25 : 0
+      const clipsCost     = incClips    ? area * 20 : 0
       const groutCost     = incGrout    ? area * 10 : 0
       const screedCost    = incScreed   ? area * screedRate : 0
 
