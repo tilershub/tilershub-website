@@ -7,16 +7,22 @@ const { data: allBrands } = await supabase
   .order('is_featured', { ascending: false }).order('name')
 const brands = allBrands || []
 
-const CHEMICAL_CATS    = ['Tile Adhesive', 'Waterproofing', 'Construction Chemicals', 'Grout', 'Sealants']
-const RENO_CATS        = ['Bathroom Renovation', 'Interior Design', 'Construction', 'Premium Partner']
-const BATHROOM_CATS    = ['Sanitary Ware', 'Faucets', 'Bathroom Fittings', 'Bathroom Products', 'Showers', 'Bathtubs', 'Bathroom Accessories']
+const CHEMICAL_CATS  = ['Tile Adhesive', 'Waterproofing', 'Construction Chemicals', 'Grout', 'Sealants']
+const RENO_CATS      = ['Bathroom Renovation', 'Interior Design', 'Construction', 'Premium Partner']
+const BATHROOM_CATS  = ['Sanitary Ware', 'Faucets', 'Bathroom Fittings', 'Bathroom Products', 'Showers', 'Bathtubs', 'Bathroom Accessories']
 
 const isChemical = (b) => (b.categories || []).some(c => CHEMICAL_CATS.includes(c))
 const isReno     = (b) => (b.categories || []).some(c => RENO_CATS.includes(c))
 const isBathroom = (b) => (b.categories || []).some(c => BATHROOM_CATS.includes(c))
 
-const tileBrands    = brands.filter(b => !isChemical(b) && !isReno(b) && !isBathroom(b))
-const adhesiveBrands = brands.filter(b => isChemical(b))
+// Tile brands = everything not chemical/reno/bathroom
+const tileBrands = brands.filter(b => !isChemical(b) && !isReno(b) && !isBathroom(b))
+
+// Adhesives: only Swisstek + Tokyo Super
+const adhesiveBrands = brands.filter(b => ['swisstek', 'tokyo-super'].includes(b.slug))
+
+// Grouts: only Swisstek
+const groutBrands = brands.filter(b => b.slug === 'swisstek')
 
 const { data: shopData } = await supabase
   .from('providers')
@@ -26,12 +32,58 @@ const { data: shopData } = await supabase
   .order('is_featured', { ascending: false })
 const shops = shopData || []
 
+// Verified tilers for interleaving into shop list
 const { data: tilerData } = await supabase
   .from('tilers')
-  .select('id,full_name,slug,city,district,services,experience_years,avatar_url,phone,whatsapp')
-  .eq('featured', true)
-  .in('slug', ['mathara-tile-malli', 'thushara'])
-const featuredTilers = tilerData || []
+  .select('id,full_name,slug,city,district,services,experience_years,phone,whatsapp')
+  .eq('is_verified', true)
+  .not('slug', 'is', null)
+  .order('experience_years', { ascending: false })
+  .limit(12)
+const verifiedTilers = tilerData || []
+
+function normPhone(phone) {
+  const raw = (phone || '').replace(/\D/g, '')
+  return raw.startsWith('94') ? raw : '94' + raw.replace(/^0/, '')
+}
+function initials(name) {
+  return (name || '').split(' ').map(w => w[0]).join('').slice(0, 2).toUpperCase()
+}
+
+// Build interleaved list: insert a verified tiler card after every 5th shop
+const interleaved = []
+let tilerIdx = 0
+shops.forEach((shop, i) => {
+  interleaved.push({
+    type: 'shop',
+    id: shop.id,
+    name: shop.name,
+    city: shop.city,
+    district: shop.district,
+    description: shop.description,
+    services: shop.services || [],
+    waLink: (shop.whatsapp || shop.phone)
+      ? `https://wa.me/${normPhone(shop.whatsapp || shop.phone)}?text=${encodeURIComponent(`ආයුබෝවන්! 🙏\n\nමම TilersHub හරහා ${shop.name} සොයාගතිමි.\nස්තූතියි!`)}`
+      : null,
+    phone: shop.phone,
+    isFeatured: shop.is_featured,
+  })
+  if ((i + 1) % 5 === 0 && tilerIdx < verifiedTilers.length) {
+    const t = verifiedTilers[tilerIdx++]
+    interleaved.push({
+      type: 'tiler',
+      id: t.id,
+      name: t.full_name,
+      slug: t.slug,
+      city: t.city,
+      district: t.district,
+      services: t.services || [],
+      experience_years: t.experience_years,
+      initials: initials(t.full_name),
+      waLink: `https://wa.me/${normPhone(t.whatsapp || t.phone)}?text=${encodeURIComponent(`ආයුබෝවන්! 🙏\n\nමම TilersHub හරහා ${t.full_name} සොයාගතිමි.\nTiling සේවාව ගැන කතා කිරීමට කැමැත්තෙමි.\nස්තූතියි!`)}`,
+    })
+  }
+})
 
 const BRAND_META = {
   'rocell':      { color: '#FFFFFF', bg: '#002B5B' },
@@ -51,7 +103,7 @@ function logoText(name) { return name.split(' ').map(w => w[0]).join('').slice(0
 
 <Layout
   title="Tile Shops, Tile Brands & Adhesives in Sri Lanka · TilersHub"
-  description="Find tile shops, tile brands (Rocell, Lanka Tile, Megatile) and adhesive brands (Sika, Dr. Fixit, Swisstek) in Sri Lanka — plus featured tile experts."
+  description="Find tile shops, tile brands (Rocell, Lanka Tile, Megatile) and adhesive brands (Swisstek, Tokyo Super) in Sri Lanka — plus verified tile experts."
 >
 
   <!-- Hero -->
@@ -76,81 +128,92 @@ function logoText(name) { return name.split(' ').map(w => w[0]).join('').slice(0
     </div>
   </div>
 
-  <section style="background:var(--surface);padding:52px 20px 64px;">
-    <div style="max-width:1100px;margin:0 auto;">
+  <section style="background:var(--surface);padding:52px 0 64px;">
+    <div style="max-width:1100px;margin:0 auto;padding:0 20px;">
 
-      <!-- ── Tile Brands ── -->
+      <!-- ── Tile Brands (horizontal scroll carousel) ── -->
       {tileBrands.length > 0 && (
         <div style="margin-bottom:56px;">
-          <div style="display:flex;align-items:center;gap:12px;margin-bottom:24px;">
-            <div style="width:36px;height:36px;background:linear-gradient(135deg,var(--navy),#2B5299);border-radius:10px;display:flex;align-items:center;justify-content:center;font-size:18px;">🪨</div>
-            <div>
-              <div style="font-size:18px;font-weight:700;color:var(--text);">Tile Brands</div>
-              <div style="font-size:12px;color:var(--text-4);">Floor tiles, wall tiles, porcelain &amp; ceramic collections</div>
+          <div style="display:flex;align-items:center;justify-content:space-between;gap:12px;margin-bottom:20px;">
+            <div style="display:flex;align-items:center;gap:12px;">
+              <div style="width:36px;height:36px;background:linear-gradient(135deg,var(--navy),#2B5299);border-radius:10px;display:flex;align-items:center;justify-content:center;font-size:18px;">🪨</div>
+              <div>
+                <div style="font-size:18px;font-weight:700;color:var(--text);">Tile Brands</div>
+                <div style="font-size:12px;color:var(--text-4);">Floor tiles, wall tiles, porcelain &amp; ceramic collections</div>
+              </div>
             </div>
+            <span style="font-size:11px;color:var(--text-4);white-space:nowrap;">← swipe →</span>
           </div>
-          <div style="display:grid;grid-template-columns:repeat(auto-fill,minmax(280px,1fr));gap:16px;">
-            {tileBrands.map(brand => {
-              const m = meta(brand)
-              const href = brand.dedicated_page_url || `/brands/${brand.slug}`
-              const isFeaturedPage = !!brand.dedicated_page_url
-              return (
-                <a href={href} style={`background:#fff;border-radius:16px;border:${isFeaturedPage ? '2px solid var(--gold)' : '1px solid #e2e8f0'};padding:22px;display:block;text-decoration:none;color:inherit;position:relative;overflow:hidden;transition:box-shadow 0.2s,transform 0.2s;`}
-                  onmouseover="this.style.boxShadow='0 8px 28px rgba(27,58,107,0.12)';this.style.transform='translateY(-3px)'"
-                  onmouseout="this.style.boxShadow='';this.style.transform=''">
-                  {isFeaturedPage && <div style="position:absolute;top:0;right:0;background:var(--gold);color:#0d0b08;font-size:9px;font-weight:800;letter-spacing:1.5px;text-transform:uppercase;padding:4px 12px;border-bottom-left-radius:10px;">Sponsored</div>}
-                  <div style="display:flex;align-items:center;gap:14px;margin-bottom:14px;">
-                    <div style={`width:56px;height:56px;border-radius:14px;background:${m.bg};display:flex;align-items:center;justify-content:center;font-size:18px;font-weight:800;color:${m.color};letter-spacing:-0.5px;flex-shrink:0;font-family:'Playfair Display',serif;`}>{logoText(brand.name)}</div>
-                    <div>
-                      <div style="font-size:16px;font-weight:700;color:var(--text);">{brand.name}</div>
-                      {isFeaturedPage
-                        ? <span style="font-size:10px;color:#92762a;font-weight:700;">⭐ Featured Brand</span>
-                        : brand.is_featured && <span style="font-size:10px;color:var(--navy);font-weight:700;">✓ Verified Brand</span>
-                      }
-                    </div>
-                  </div>
-                  <p style="font-size:12px;color:var(--text-3);line-height:1.65;margin-bottom:14px;">{brand.description}</p>
-                  <div style="display:flex;flex-wrap:wrap;gap:5px;margin-bottom:14px;">
-                    {(brand.categories || []).slice(0,3).map(c => (
-                      <span style={`font-size:10px;padding:2px 9px;border-radius:20px;background:${m.bg}18;color:${m.bg === '#FFFFFF' ? '#1B3A6B' : m.bg};border:1px solid ${m.bg}30;font-weight:600;`}>{c}</span>
-                    ))}
-                  </div>
-                  <div style="font-size:12px;font-weight:700;color:var(--navy);">{isFeaturedPage ? 'View Sponsor Page →' : 'View Brand →'}</div>
-                </a>
-              )
-            })}
+
+          <!-- Scroll container — breaks out of padding to allow edge-to-edge scroll on mobile -->
+          <div style="position:relative;">
+            <div style="overflow-x:auto;-webkit-overflow-scrolling:touch;scroll-snap-type:x mandatory;padding:4px 0 14px;margin:0 -20px;padding-left:20px;padding-right:20px;" class="tile-brands-scroll">
+              <div style="display:flex;gap:16px;width:max-content;">
+                {tileBrands.map(brand => {
+                  const m = meta(brand)
+                  const href = brand.dedicated_page_url || `/brands/${brand.slug}`
+                  const isFeaturedPage = !!brand.dedicated_page_url
+                  return (
+                    <a href={href}
+                      style={`display:block;width:240px;flex-shrink:0;background:#fff;border-radius:16px;border:${isFeaturedPage ? '2px solid var(--gold)' : '1px solid #e2e8f0'};padding:20px;text-decoration:none;color:inherit;scroll-snap-align:start;position:relative;overflow:hidden;`}>
+                      {isFeaturedPage && <div style="position:absolute;top:0;right:0;background:var(--gold);color:#0d0b08;font-size:9px;font-weight:800;letter-spacing:1.5px;text-transform:uppercase;padding:4px 10px;border-bottom-left-radius:10px;">Sponsored</div>}
+                      <div style="display:flex;align-items:center;gap:12px;margin-bottom:12px;">
+                        <div style={`width:52px;height:52px;border-radius:13px;background:${m.bg};display:flex;align-items:center;justify-content:center;font-size:17px;font-weight:800;color:${m.color};letter-spacing:-0.5px;flex-shrink:0;font-family:'Playfair Display',serif;`}>{logoText(brand.name)}</div>
+                        <div>
+                          <div style="font-size:15px;font-weight:700;color:var(--text);line-height:1.2;">{brand.name}</div>
+                          {isFeaturedPage
+                            ? <span style="font-size:10px;color:#92762a;font-weight:700;">⭐ Featured Brand</span>
+                            : brand.is_featured && <span style="font-size:10px;color:var(--navy);font-weight:700;">✓ Verified</span>
+                          }
+                        </div>
+                      </div>
+                      <p style="font-size:11px;color:var(--text-3);line-height:1.6;margin:0 0 12px;display:-webkit-box;-webkit-line-clamp:2;-webkit-box-orient:vertical;overflow:hidden;">{brand.description}</p>
+                      <div style="display:flex;flex-wrap:wrap;gap:4px;margin-bottom:12px;">
+                        {(brand.categories || []).slice(0, 2).map(c => (
+                          <span style={`font-size:9px;padding:2px 8px;border-radius:20px;background:${m.bg}14;color:${m.bg === '#FFFFFF' ? '#1B3A6B' : m.bg};border:1px solid ${m.bg}28;font-weight:600;`}>{c}</span>
+                        ))}
+                      </div>
+                      <div style="font-size:11px;font-weight:700;color:var(--navy);">{isFeaturedPage ? 'View Sponsor Page →' : 'View Brand →'}</div>
+                    </a>
+                  )
+                })}
+              </div>
+            </div>
+            <!-- Right fade hint -->
+            <div style="position:absolute;top:0;right:0;width:48px;height:calc(100% - 14px);background:linear-gradient(to left,var(--surface),transparent);pointer-events:none;"></div>
           </div>
         </div>
       )}
 
-      <!-- ── Adhesives & Grouts ── -->
+      <!-- ── Tile Adhesives (Swisstek + Tokyo Super) ── -->
       {adhesiveBrands.length > 0 && (
-        <div style="margin-bottom:56px;">
-          <div style="display:flex;align-items:center;gap:12px;margin-bottom:24px;">
-            <div style="width:36px;height:36px;background:linear-gradient(135deg,#0369a1,#075985);border-radius:10px;display:flex;align-items:center;justify-content:center;font-size:18px;">💧</div>
+        <div style="margin-bottom:48px;">
+          <div style="display:flex;align-items:center;gap:12px;margin-bottom:20px;">
+            <div style="width:36px;height:36px;background:linear-gradient(135deg,#0369a1,#075985);border-radius:10px;display:flex;align-items:center;justify-content:center;font-size:18px;">🪣</div>
             <div>
-              <div style="font-size:18px;font-weight:700;color:var(--text);">Adhesives &amp; Grouts</div>
-              <div style="font-size:12px;color:var(--text-4);">Tile adhesives, grouts, waterproofing &amp; construction chemicals</div>
+              <div style="font-size:18px;font-weight:700;color:var(--text);">Tile Adhesives</div>
+              <div style="font-size:12px;color:var(--text-4);">Premium adhesive brands for floor &amp; wall tile installation</div>
             </div>
           </div>
           <div style="display:grid;grid-template-columns:repeat(auto-fill,minmax(280px,1fr));gap:16px;">
             {adhesiveBrands.map(brand => {
               const m = meta(brand)
               return (
-                <a href={`/brands/${brand.slug}`} style="background:#fff;border-radius:16px;border:1px solid #e2e8f0;padding:22px;display:block;text-decoration:none;color:inherit;transition:box-shadow 0.2s,transform 0.2s;"
-                  onmouseover="this.style.boxShadow='0 8px 28px rgba(27,58,107,0.10)';this.style.transform='translateY(-3px)'"
+                <a href={`/brands/${brand.slug}`}
+                  style="background:#fff;border-radius:16px;border:1px solid #e2e8f0;padding:22px;display:block;text-decoration:none;color:inherit;transition:box-shadow 0.2s,transform 0.2s;"
+                  onmouseover="this.style.boxShadow='0 8px 28px rgba(3,105,161,0.10)';this.style.transform='translateY(-3px)'"
                   onmouseout="this.style.boxShadow='';this.style.transform=''">
                   <div style="display:flex;align-items:center;gap:14px;margin-bottom:14px;">
                     <div style={`width:56px;height:56px;border-radius:14px;background:${m.bg};display:flex;align-items:center;justify-content:center;font-size:18px;font-weight:800;color:${m.color};letter-spacing:-0.5px;flex-shrink:0;font-family:'Playfair Display',serif;`}>{logoText(brand.name)}</div>
                     <div>
                       <div style="font-size:16px;font-weight:700;color:var(--text);">{brand.name}</div>
-                      <span style="font-size:10px;color:#0369a1;font-weight:700;">💧 Construction Chemicals</span>
+                      <span style="font-size:10px;color:#0369a1;font-weight:700;">🪣 Tile Adhesive</span>
                     </div>
                   </div>
                   <p style="font-size:12px;color:var(--text-3);line-height:1.65;margin-bottom:14px;">{brand.description}</p>
                   <div style="display:flex;flex-wrap:wrap;gap:5px;margin-bottom:14px;">
-                    {(brand.categories || []).slice(0,3).map(c => (
-                      <span style={`font-size:10px;padding:2px 9px;border-radius:20px;background:${m.bg}18;color:${m.bg};border:1px solid ${m.bg}28;font-weight:600;`}>{c}</span>
+                    {(brand.categories || []).filter(c => c !== 'Tile Adhesive').slice(0, 3).map(c => (
+                      <span style={`font-size:10px;padding:2px 9px;border-radius:20px;background:${m.bg}14;color:${m.bg};border:1px solid ${m.bg}28;font-weight:600;`}>{c}</span>
                     ))}
                   </div>
                   <div style="font-size:12px;font-weight:700;color:var(--navy);">View Brand →</div>
@@ -161,65 +224,46 @@ function logoText(name) { return name.split(' ').map(w => w[0]).join('').slice(0
         </div>
       )}
 
-      <!-- ── Featured Tile Experts ── -->
-      {featuredTilers.length > 0 && (
+      <!-- ── Tile Grouts (Swisstek) ── -->
+      {groutBrands.length > 0 && (
         <div style="margin-bottom:56px;">
-          <div style="display:flex;align-items:center;gap:12px;margin-bottom:24px;">
-            <div style="width:36px;height:36px;background:linear-gradient(135deg,#E05A2B,#c44a1f);border-radius:10px;display:flex;align-items:center;justify-content:center;font-size:18px;">⭐</div>
+          <div style="display:flex;align-items:center;gap:12px;margin-bottom:20px;">
+            <div style="width:36px;height:36px;background:linear-gradient(135deg,#5D4037,#3E2723);border-radius:10px;display:flex;align-items:center;justify-content:center;font-size:18px;">🟫</div>
             <div>
-              <div style="font-size:18px;font-weight:700;color:var(--text);">Featured Tile Experts</div>
-              <div style="font-size:12px;color:var(--text-4);">Verified, experienced tile specialists across Sri Lanka</div>
+              <div style="font-size:18px;font-weight:700;color:var(--text);">Tile Grouts</div>
+              <div style="font-size:12px;color:var(--text-4);">Joint filling, colour grouts &amp; epoxy grout solutions</div>
             </div>
           </div>
-          <div style="display:grid;grid-template-columns:repeat(auto-fill,minmax(280px,1fr));gap:16px;">
-            {featuredTilers.map(tiler => {
-              const rawPhone = (tiler.phone || '').replace(/\D/g, '')
-              const waPhone = rawPhone.startsWith('94') ? rawPhone : '94' + rawPhone.replace(/^0/, '')
-              const waMsg = encodeURIComponent(`ආයුබෝවන්! 🙏\n\nමම *TilersHub* හරහා *${tiler.full_name}* සොයාගතිමි.\nඔබගේ tiling සේවාව ගැන දැනගැනීමට කැමැත්තෙමි.\n\nස්තූතියි! 🏠`)
+          <div style="display:grid;grid-template-columns:repeat(auto-fill,minmax(280px,1fr));gap:16px;max-width:640px;">
+            {groutBrands.map(brand => {
+              const m = meta(brand)
               return (
-                <div style="background:#fff;border-radius:18px;border:2px solid var(--gold);overflow:hidden;box-shadow:0 4px 20px rgba(212,175,55,0.1);position:relative;">
-                  <div style="position:absolute;top:0;right:0;background:var(--gold);color:#0d0b08;font-size:9px;font-weight:800;letter-spacing:1.5px;text-transform:uppercase;padding:4px 12px;border-bottom-left-radius:10px;">⭐ TilersHub Featured</div>
-                  <div style="padding:22px 20px 20px;">
-                    <div style="display:flex;align-items:center;gap:14px;margin-bottom:14px;">
-                      {tiler.avatar_url
-                        ? <img src={tiler.avatar_url} alt={tiler.full_name} loading="lazy" style="width:60px;height:60px;border-radius:50%;object-fit:cover;border:2px solid var(--gold);flex-shrink:0;" />
-                        : <div style="width:60px;height:60px;border-radius:50%;background:var(--navy);display:flex;align-items:center;justify-content:center;font-size:22px;font-weight:800;color:#fff;flex-shrink:0;">{tiler.full_name[0]}</div>
-                      }
-                      <div>
-                        <div style="font-size:16px;font-weight:800;color:var(--text);">{tiler.full_name}</div>
-                        {(tiler.city || tiler.district) && <div style="font-size:12px;color:var(--text-3);">📍 {tiler.city}{tiler.district ? `, ${tiler.district}` : ''}</div>}
-                        <div style="font-size:11px;color:#92762a;font-weight:700;margin-top:2px;">✓ Skilled · {tiler.experience_years}+ yrs</div>
-                      </div>
-                    </div>
-                    {(tiler.services || []).length > 0 && (
-                      <div style="display:flex;flex-wrap:wrap;gap:5px;margin-bottom:14px;">
-                        {(tiler.services || []).slice(0,4).map(sv => (
-                          <span style="font-size:10px;padding:2px 8px;border-radius:20px;background:#EFF6FF;color:#1d4ed8;border:1px solid #BFDBFE;font-weight:600;">{sv}</span>
-                        ))}
-                      </div>
-                    )}
-                    <div style="display:flex;gap:8px;flex-wrap:wrap;">
-                      <a href={`https://wa.me/${waPhone}?text=${waMsg}`} target="_blank" rel="noopener noreferrer"
-                        style="flex:1;display:flex;align-items:center;justify-content:center;gap:6px;background:#25D366;color:#fff;border-radius:10px;padding:9px 12px;font-size:12px;font-weight:700;text-decoration:none;">
-                        💬 WhatsApp
-                      </a>
-                      <a href={`/tilers/${tiler.slug}`}
-                        style="display:flex;align-items:center;justify-content:center;gap:5px;background:#eef3fb;color:var(--navy);border-radius:10px;padding:9px 14px;font-size:12px;font-weight:700;text-decoration:none;border:1px solid #d5e2f5;">
-                        View Profile →
-                      </a>
+                <a href={`/brands/${brand.slug}`}
+                  style="background:#fff;border-radius:16px;border:1px solid #e2e8f0;padding:22px;display:block;text-decoration:none;color:inherit;transition:box-shadow 0.2s,transform 0.2s;"
+                  onmouseover="this.style.boxShadow='0 8px 28px rgba(93,64,55,0.10)';this.style.transform='translateY(-3px)'"
+                  onmouseout="this.style.boxShadow='';this.style.transform=''">
+                  <div style="display:flex;align-items:center;gap:14px;margin-bottom:14px;">
+                    <div style={`width:56px;height:56px;border-radius:14px;background:${m.bg};display:flex;align-items:center;justify-content:center;font-size:18px;font-weight:800;color:${m.color};letter-spacing:-0.5px;flex-shrink:0;font-family:'Playfair Display',serif;`}>{logoText(brand.name)}</div>
+                    <div>
+                      <div style="font-size:16px;font-weight:700;color:var(--text);">{brand.name}</div>
+                      <span style="font-size:10px;color:#5D4037;font-weight:700;">🟫 Tile Grout</span>
                     </div>
                   </div>
-                </div>
+                  <p style="font-size:12px;color:var(--text-3);line-height:1.65;margin-bottom:14px;">{brand.description}</p>
+                  <div style="display:flex;flex-wrap:wrap;gap:5px;margin-bottom:14px;">
+                    {(brand.categories || []).filter(c => c !== 'Grout').slice(0, 3).map(c => (
+                      <span style={`font-size:10px;padding:2px 9px;border-radius:20px;background:${m.bg}14;color:${m.bg};border:1px solid ${m.bg}28;font-weight:600;`}>{c}</span>
+                    ))}
+                  </div>
+                  <div style="font-size:12px;font-weight:700;color:var(--navy);">View Brand →</div>
+                </a>
               )
             })}
-          </div>
-          <div style="text-align:center;margin-top:20px;">
-            <a href="/providers" style="font-size:13px;font-weight:700;color:var(--navy);text-decoration:none;">Browse all tilers →</a>
           </div>
         </div>
       )}
 
-      <!-- ── Tile Shops Directory ── -->
+      <!-- ── Tile Shops + Verified Tiler cards every 5 shops ── -->
       <div>
         <div style="display:flex;align-items:center;justify-content:space-between;flex-wrap:wrap;gap:12px;margin-bottom:24px;">
           <div style="display:flex;align-items:center;gap:12px;">
@@ -227,7 +271,7 @@ function logoText(name) { return name.split(' ').map(w => w[0]).join('').slice(0
             <div>
               <div style="font-size:18px;font-weight:700;color:var(--text);">Tile Shops</div>
               <div style="font-size:12px;color:var(--text-4);">
-                {shops.length > 0 ? `${shops.length} shop${shops.length > 1 ? 's' : ''} listed` : 'Be the first to list your tile shop'}
+                {shops.length > 0 ? `${shops.length} shop${shops.length > 1 ? 's' : ''} listed islandwide` : 'Be the first to list your tile shop'}
               </div>
             </div>
           </div>
@@ -237,44 +281,91 @@ function logoText(name) { return name.split(' ').map(w => w[0]).join('').slice(0
         </div>
 
         {shops.length > 0 ? (
-          <div style="display:grid;grid-template-columns:repeat(auto-fill,minmax(290px,1fr));gap:18px;">
-            {shops.map(shop => (
-              <div style="background:#fff;border-radius:18px;border:1px solid #e2e8f0;padding:20px;box-shadow:0 2px 12px rgba(0,0,0,0.05);">
-                <div style="display:flex;align-items:flex-start;gap:14px;margin-bottom:12px;">
-                  <div style="width:48px;height:48px;border-radius:12px;background:linear-gradient(135deg,#2E7D32,#1B5E20);display:flex;align-items:center;justify-content:center;font-size:20px;flex-shrink:0;">🏪</div>
-                  <div>
-                    <div style="font-size:15px;font-weight:800;color:var(--text);line-height:1.2;">{shop.name}</div>
-                    {(shop.city || shop.district) && <div style="font-size:12px;color:var(--text-3);margin-top:2px;">📍 {shop.city}{shop.district ? `, ${shop.district}` : ''}</div>}
-                    <span style="font-size:10px;padding:2px 8px;border-radius:10px;background:#DCFCE7;color:#166534;font-weight:700;display:inline-block;margin-top:4px;">🪨 Tile Shop</span>
+          <div style="display:flex;flex-direction:column;gap:12px;max-width:740px;">
+            {interleaved.map(item => item.type === 'tiler' ? (
+              /* ── Verified Tiler interleave card ── */
+              <div style="background:linear-gradient(135deg,#EEF2FB,#E8F0FF);border-radius:18px;border:2px solid var(--navy);padding:16px 20px;display:flex;align-items:center;gap:14px;flex-wrap:wrap;position:relative;">
+                <div style="position:absolute;top:0;left:0;background:var(--navy);color:#fff;font-size:9px;font-weight:800;letter-spacing:1.5px;text-transform:uppercase;padding:4px 12px;border-bottom-right-radius:10px;border-top-left-radius:16px;">✓ Skill Verified Tiler</div>
+                <div style="padding-top:18px;display:flex;align-items:center;gap:14px;flex:1;min-width:220px;flex-wrap:wrap;">
+                  <div style="width:52px;height:52px;border-radius:50%;background:var(--navy);display:flex;align-items:center;justify-content:center;font-size:18px;font-weight:800;color:#fff;flex-shrink:0;border:3px solid var(--gold);">
+                    {item.initials}
+                  </div>
+                  <div style="flex:1;min-width:140px;">
+                    <div style="font-size:15px;font-weight:800;color:var(--text);">{item.name}</div>
+                    {(item.city || item.district) && (
+                      <div style="font-size:12px;color:var(--text-3);">📍 {item.city}{item.district ? `, ${item.district}` : ''}</div>
+                    )}
+                    <div style="font-size:11px;color:#1e40af;font-weight:700;margin-top:2px;">
+                      {item.experience_years ? `${item.experience_years}+ yrs experience` : 'Skilled Tiler'}
+                    </div>
+                    {(item.services || []).length > 0 && (
+                      <div style="display:flex;flex-wrap:wrap;gap:4px;margin-top:6px;">
+                        {(item.services || []).slice(0, 3).map(sv => (
+                          <span style="font-size:9px;padding:2px 7px;border-radius:20px;background:#DBEAFE;color:#1e40af;border:1px solid #BFDBFE;font-weight:600;">{sv}</span>
+                        ))}
+                      </div>
+                    )}
                   </div>
                 </div>
-                {shop.description && (
-                  <p style="font-size:12px;color:var(--text-3);line-height:1.65;margin:0 0 12px;">{shop.description}</p>
-                )}
-                {(shop.services || []).length > 0 && (
-                  <div style="display:flex;flex-wrap:wrap;gap:5px;margin-bottom:14px;">
-                    {(shop.services || []).slice(0,4).map(sv => (
-                      <span style="font-size:10px;padding:2px 8px;border-radius:20px;background:#EFF6FF;color:#1d4ed8;border:1px solid #BFDBFE;font-weight:600;">{sv}</span>
-                    ))}
-                  </div>
-                )}
-                <div style="display:flex;gap:8px;">
-                  {(shop.whatsapp || shop.phone) && (
-                    <a href={`https://wa.me/${(shop.whatsapp || shop.phone).replace(/\D/g,'').replace(/^(?!94)0?/,'94')}?text=${encodeURIComponent(`ආයුබෝවන්! 🙏\n\nමම TilersHub හරහා ${shop.name} සොයාගතිමි.\nස්තූතියි!`)}`}
-                      target="_blank" rel="noopener noreferrer"
-                      style="flex:1;display:flex;align-items:center;justify-content:center;gap:6px;background:#25D366;color:#fff;border-radius:10px;padding:9px 12px;font-size:12px;font-weight:700;text-decoration:none;">
+                <div style="display:flex;gap:7px;align-items:center;">
+                  <a href={item.waLink} target="_blank" rel="noopener noreferrer"
+                    style="display:inline-flex;align-items:center;gap:6px;background:#25D366;color:#fff;border-radius:10px;padding:9px 14px;font-size:12px;font-weight:700;text-decoration:none;white-space:nowrap;">
+                    💬 WhatsApp
+                  </a>
+                  <a href={`/tilers/${item.slug}`}
+                    style="display:inline-flex;align-items:center;gap:5px;background:var(--navy);color:#fff;border-radius:10px;padding:9px 14px;font-size:12px;font-weight:700;text-decoration:none;white-space:nowrap;">
+                    View Profile →
+                  </a>
+                </div>
+              </div>
+            ) : (
+              /* ── Tile Shop card ── */
+              <div style={`background:#fff;border-radius:16px;border:${item.isFeatured ? '2px solid var(--gold)' : '1px solid #e2e8f0'};padding:16px 20px;display:flex;align-items:flex-start;gap:14px;box-shadow:0 2px 8px rgba(0,0,0,0.04);`}>
+                <div style="width:44px;height:44px;border-radius:10px;background:linear-gradient(135deg,#2E7D32,#1B5E20);display:flex;align-items:center;justify-content:center;font-size:18px;flex-shrink:0;">🏪</div>
+                <div style="flex:1;min-width:0;">
+                  <div style="font-size:15px;font-weight:800;color:var(--text);line-height:1.2;">{item.name}</div>
+                  {(item.city || item.district) && (
+                    <div style="font-size:12px;color:var(--text-3);margin-top:2px;">📍 {item.city}{item.district ? `, ${item.district}` : ''}</div>
+                  )}
+                  {item.description && (
+                    <p style="font-size:11px;color:var(--text-3);line-height:1.6;margin:6px 0 0;display:-webkit-box;-webkit-line-clamp:2;-webkit-box-orient:vertical;overflow:hidden;">{item.description}</p>
+                  )}
+                  {(item.services || []).length > 0 && (
+                    <div style="display:flex;flex-wrap:wrap;gap:4px;margin-top:8px;">
+                      {(item.services || []).slice(0, 4).map(sv => (
+                        <span style="font-size:9px;padding:2px 7px;border-radius:20px;background:#DCFCE7;color:#166534;border:1px solid #BBF7D0;font-weight:600;">{sv}</span>
+                      ))}
+                    </div>
+                  )}
+                </div>
+                <div style="display:flex;flex-direction:column;gap:6px;flex-shrink:0;">
+                  {item.waLink && (
+                    <a href={item.waLink} target="_blank" rel="noopener noreferrer"
+                      style="display:inline-flex;align-items:center;gap:5px;background:#25D366;color:#fff;border-radius:8px;padding:7px 12px;font-size:11px;font-weight:700;text-decoration:none;white-space:nowrap;">
                       💬 WhatsApp
                     </a>
                   )}
-                  {shop.phone && (
-                    <a href={`tel:${shop.phone}`}
-                      style="display:flex;align-items:center;justify-content:center;gap:5px;background:#eef3fb;color:var(--navy);border-radius:10px;padding:9px 12px;font-size:12px;font-weight:700;text-decoration:none;border:1px solid #d5e2f5;">
+                  {item.phone && (
+                    <a href={`tel:${item.phone}`}
+                      style="display:inline-flex;align-items:center;gap:5px;background:#eef3fb;color:var(--navy);border-radius:8px;padding:7px 12px;font-size:11px;font-weight:700;text-decoration:none;border:1px solid #d5e2f5;white-space:nowrap;">
                       📞 Call
                     </a>
                   )}
                 </div>
               </div>
             ))}
+
+            <!-- Always show a "list your shop" invite card -->
+            <div style="background:#fff;border-radius:16px;border:2px dashed var(--border);padding:24px 20px;display:flex;align-items:center;gap:16px;flex-wrap:wrap;">
+              <div style="font-size:32px;">🏪</div>
+              <div style="flex:1;min-width:180px;">
+                <div style="font-size:14px;font-weight:700;color:var(--text);margin-bottom:4px;">List your tile shop</div>
+                <p style="font-size:12px;color:var(--text-3);line-height:1.6;margin:0;">Reach homeowners &amp; builders planning tile projects — completely free.</p>
+              </div>
+              <a href="/join-tilershub" style="display:inline-flex;align-items:center;gap:6px;background:var(--navy);color:#fff;border-radius:10px;padding:9px 18px;font-size:12px;font-weight:700;text-decoration:none;white-space:nowrap;">
+                + List My Shop Free
+              </a>
+            </div>
           </div>
         ) : (
           <div style="background:#fff;border-radius:20px;border:2px dashed var(--border);padding:56px 24px;text-align:center;max-width:540px;margin:0 auto;">
@@ -306,3 +397,9 @@ function logoText(name) { return name.split(' ').map(w => w[0]).join('').slice(0
   </section>
 
 </Layout>
+
+<style>
+  .tile-brands-scroll::-webkit-scrollbar { height: 4px; }
+  .tile-brands-scroll::-webkit-scrollbar-track { background: transparent; }
+  .tile-brands-scroll::-webkit-scrollbar-thumb { background: #d1d5db; border-radius: 4px; }
+</style>
