@@ -47,6 +47,7 @@ const item = provider || tiler
 const isTiler = !!tiler
 const name = isTiler ? item.full_name : item.name
 const phone = item.whatsapp || item.phone
+const altPhone = (isTiler && item.whatsapp && item.phone && item.whatsapp !== item.phone) ? item.phone : null
 const city = item.city || item.district
 
 function waLink(p, n) {
@@ -203,8 +204,13 @@ const metaDesc = isUnverified
             </a>
           )}
 
+          {altPhone && (
+            <a href={waLink(altPhone, name)} target="_blank" rel="noopener noreferrer" style="display:flex;align-items:center;justify-content:center;gap:8px;width:100%;background:#f0fdf4;color:#16a34a;border:1.5px solid #bbf7d0;border-radius:12px;padding:12px;font-size:13px;font-weight:700;text-decoration:none;margin-bottom:10px;">
+              💬 Alt. Number
+            </a>
+          )}
           {phone && (
-            <a href={`tel:${phone}`} style="display:flex;align-items:center;justify-content:center;gap:8px;width:100%;background:var(--navy-50);color:var(--navy);border:1.5px solid var(--navy-100);border-radius:12px;padding:12px;font-size:13px;font-weight:700;text-decoration:none;margin-bottom:16px;">
+            <a href={`tel:${item.phone}`} style="display:flex;align-items:center;justify-content:center;gap:8px;width:100%;background:var(--navy-50);color:var(--navy);border:1.5px solid var(--navy-100);border-radius:12px;padding:12px;font-size:13px;font-weight:700;text-decoration:none;margin-bottom:16px;">
               📞 Call Direct
             </a>
           )}
