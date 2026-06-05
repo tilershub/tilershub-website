@@ -41,15 +41,15 @@ function waLink(phone, name) {
 }
 
 const QUICK_ACTIONS = [
-  { icon: '👷', label: 'Find Tilers', href: '/providers?type=tiler', bg: '#EEF2FB' },
-  { icon: '📋', label: 'Post Project', href: '/post-project', bg: '#fff1eb' },
-  { icon: '💼', label: 'Browse Jobs', href: '/jobs', bg: '#F0FDF4' },
-  { icon: '🔧', label: 'Tools', href: '/tools', bg: '#FEF3C7' },
-  { icon: '🚿', label: 'Bathrooms', href: '/bathrooms', bg: '#EFF6FF' },
-  { icon: '📐', label: 'Estimator', href: '/estimator', bg: '#F5F3FF' },
-  { icon: '🏭', label: 'Workshops', href: '/providers?type=workshop', bg: '#FFF7ED' },
-  { icon: '🏷️', label: 'Brands', href: '/brands', bg: '#FFFBEB' },
-  { icon: '🏪', label: 'Tile Shops', href: '/providers?type=tile_shop', bg: '#F0FDF4' },
+  { icon: '👷', label: 'Find Tiler',  href: '/providers?type=tiler',    bg: '#EEF2FB' },
+  { icon: '📋', label: 'Post Project', href: '/post-project',            bg: '#fff1eb' },
+  { icon: '💼', label: 'Browse Jobs', href: '/jobs',                     bg: '#F0FDF4' },
+  { icon: '🔧', label: 'Tools',       href: '/tools',                    bg: '#FEF3C7' },
+  { icon: '🚿', label: 'Bathrooms',   href: '/bathrooms',                bg: '#EFF6FF' },
+  { icon: '📐', label: 'Estimator',   href: '/estimator',                bg: '#F5F3FF' },
+  { icon: '🏭', label: 'Workshops',   href: '/providers?type=workshop',  bg: '#FFF7ED' },
+  { icon: '🪨', label: 'Tile',        href: '/tile',                     bg: '#FFFBEB' },
+  { icon: '📦', label: 'Suppliers',   href: '/providers?type=supplier',  bg: '#F0FDF4' },
 ]
 
 const INSPO = [
@@ -95,14 +95,13 @@ const BRAND_COLORS = ['#1A2B4A','#C1603A','#D4AF37','#1e3a5f','#7c3aed','#166534
       <button class="search-btn" onclick="document.location='/providers?q='+encodeURIComponent(document.getElementById('hero-search').value)">Search</button>
     </div>
     <div class="search-pills">
-      <a href="/providers?type=tiler" class="search-pill">👷 Tilers</a>
+      <a href="/providers?type=tiler" class="search-pill">👷 Find Tiler</a>
       <a href="/jobs" class="search-pill">💼 Browse Jobs</a>
-      <a href="/tools" class="search-pill">🔧 Tools</a>
+      <a href="/tile" class="search-pill">🪨 Tile</a>
       <a href="/bathrooms" class="search-pill">🚿 Bathrooms</a>
       <a href="/providers?type=workshop" class="search-pill">🏭 Workshops</a>
       <a href="/providers?type=supplier" class="search-pill">📦 Suppliers</a>
-      <a href="/brands" class="search-pill">🏷️ Tile Brands</a>
-      <a href="/providers?type=tile_shop" class="search-pill">🏪 Tile Shops</a>
+      <a href="/tools" class="search-pill">🔧 Tools</a>
       <a href="/estimator" class="search-pill">📐 Estimator</a>
     </div>
   </div>
@@ -293,7 +292,7 @@ const BRAND_COLORS = ['#1A2B4A','#C1603A','#D4AF37','#1e3a5f','#7c3aed','#166534
         <div class="section-eyebrow">🏷️ Brands</div>
         <div class="section-title-sm">Featured Tile <span>Brands</span></div>
       </div>
-      <a href="/brands" class="see-all">All brands →</a>
+      <a href="/tile" class="see-all">All brands →</a>
     </div>
 
     <div class="shelf">

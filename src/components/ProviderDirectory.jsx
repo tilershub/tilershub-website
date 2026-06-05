@@ -149,6 +149,22 @@ function ShopCard({ provider, onClick }) {
 // ─── Tiler card colour palette ──────────────────────────────────────────────
 const TILER_COVER_BG = 'linear-gradient(135deg, #0F2444 0%, #1B3A6B 100%)'
 
+const TILING_COVER_PHOTOS = [
+  'https://images.unsplash.com/photo-1558618666-fcd25c85cd64?auto=format&fit=crop&w=800&q=75',
+  'https://images.unsplash.com/photo-1484101403633-562f891dc89a?auto=format&fit=crop&w=800&q=75',
+  'https://images.unsplash.com/photo-1552321554-5fefe8c9ef14?auto=format&fit=crop&w=800&q=75',
+  'https://images.unsplash.com/photo-1534237710431-e2fc698436d0?auto=format&fit=crop&w=800&q=75',
+  'https://images.unsplash.com/photo-1620626011761-996317702149?auto=format&fit=crop&w=800&q=75',
+  'https://images.unsplash.com/photo-1552239937-bd2f32de3f6f?auto=format&fit=crop&w=800&q=75',
+  'https://images.unsplash.com/photo-1574739782594-db4ead022697?auto=format&fit=crop&w=800&q=75',
+]
+
+function getCoverPhoto(tiler) {
+  if (tiler.cover_image && !tiler.cover_image.includes('picsum')) return tiler.cover_image
+  const idx = ((tiler.full_name || '').charCodeAt(0) + (tiler.full_name || '').length) % TILING_COVER_PHOTOS.length
+  return TILING_COVER_PHOTOS[idx]
+}
+
 // Promotional banner card (horizontal scroll spotlight)
 function TilerBanner({ tiler, onClick }) {
   const phone = tiler.whatsapp || tiler.phone
@@ -160,11 +176,8 @@ function TilerBanner({ tiler, onClick }) {
       onMouseOver={e => { e.currentTarget.style.transform = 'scale(1.02)' }}
       onMouseOut={e => { e.currentTarget.style.transform = '' }}
     >
-      {/* Background: cover image or colour gradient */}
-      {tiler.cover_image
-        ? <img src={tiler.cover_image} alt={tiler.full_name} style={{ position: 'absolute', inset: 0, width: '100%', height: '100%', objectFit: 'cover' }} />
-        : <div style={{ position: 'absolute', inset: 0, background: TILER_COVER_BG }} />
-      }
+      {/* Background: tiling work photo */}
+      <img src={getCoverPhoto(tiler)} alt="Tiling work" style={{ position: 'absolute', inset: 0, width: '100%', height: '100%', objectFit: 'cover' }} />
       {/* Tile-grid texture */}
       <div style={{ position: 'absolute', inset: 0, opacity: 0.04, backgroundImage: 'repeating-linear-gradient(0deg,transparent,transparent 19px,rgba(255,255,255,0.8) 19px,rgba(255,255,255,0.8) 20px),repeating-linear-gradient(90deg,transparent,transparent 19px,rgba(255,255,255,0.8) 19px,rgba(255,255,255,0.8) 20px)', pointerEvents: 'none' }} />
       {/* Dark scrim at bottom */}
@@ -180,11 +193,8 @@ function TilerBanner({ tiler, onClick }) {
       <div style={{ position: 'absolute', bottom: 0, left: 0, right: 0, padding: '10px 12px' }}>
         <div style={{ display: 'flex', alignItems: 'center', gap: 8, marginBottom: 6 }}>
           {/* Avatar */}
-          <div style={{ width: 34, height: 34, borderRadius: '50%', border: '2px solid rgba(255,255,255,0.75)', background: 'rgba(255,255,255,0.15)', display: 'flex', alignItems: 'center', justifyContent: 'center', fontSize: 12, fontWeight: 700, color: '#fff', flexShrink: 0, overflow: 'hidden' }}>
-            {tiler.avatar_url
-              ? <img src={tiler.avatar_url} alt={tiler.full_name} style={{ width: '100%', height: '100%', objectFit: 'cover' }} />
-              : initials(tiler.full_name)
-            }
+          <div style={{ width: 34, height: 34, borderRadius: '50%', border: '2px solid rgba(255,255,255,0.75)', background: 'rgba(255,255,255,0.18)', display: 'flex', alignItems: 'center', justifyContent: 'center', fontSize: 12, fontWeight: 700, color: '#fff', flexShrink: 0 }}>
+            {initials(tiler.full_name)}
           </div>
           <div style={{ minWidth: 0 }}>
             <div style={{ fontWeight: 700, fontSize: 12, color: '#fff', overflow: 'hidden', textOverflow: 'ellipsis', whiteSpace: 'nowrap' }}>{tiler.full_name}</div>
@@ -207,65 +217,96 @@ function TilerBanner({ tiler, onClick }) {
   )
 }
 
-// Professional tiler grid card with cover + overlapping circular avatar
+// TaskRabbit-style tiler profile card
 function TilerCard({ tiler, onClick }) {
   const phone = tiler.whatsapp || tiler.phone
   const altWaPhone = (tiler.whatsapp && tiler.whatsapp !== tiler.phone) ? tiler.phone : null
+  const isVerified = tiler.is_verified
+  const hasDedicatedPage = isVerified && tiler.slug
 
   return (
     <div
       onClick={() => onClick(tiler)}
-      style={{ background: '#fff', borderRadius: 16, border: '1px solid #e2e8f0', overflow: 'visible', cursor: 'pointer', transition: 'all 0.2s', display: 'flex', flexDirection: 'column', position: 'relative' }}
-      onMouseOver={e => { e.currentTarget.style.transform = 'translateY(-4px)'; e.currentTarget.style.boxShadow = '0 16px 40px rgba(27,58,107,0.12)' }}
-      onMouseOut={e => { e.currentTarget.style.transform = ''; e.currentTarget.style.boxShadow = '' }}
+      style={{
+        background: '#fff',
+        borderRadius: 18,
+        border: isVerified ? '1.5px solid #d5e2f5' : '1px solid #e2e8f0',
+        overflow: 'visible',
+        cursor: 'pointer',
+        transition: 'all 0.2s',
+        display: 'flex',
+        flexDirection: 'column',
+        position: 'relative',
+        boxShadow: isVerified ? '0 2px 12px rgba(27,58,107,0.06)' : 'none',
+      }}
+      onMouseOver={e => { e.currentTarget.style.transform = 'translateY(-5px)'; e.currentTarget.style.boxShadow = '0 20px 48px rgba(27,58,107,0.14)' }}
+      onMouseOut={e => { e.currentTarget.style.transform = ''; e.currentTarget.style.boxShadow = isVerified ? '0 2px 12px rgba(27,58,107,0.06)' : '' }}
     >
-      {/* Cover image / gradient header */}
-      <div style={{ height: 120, borderRadius: '16px 16px 0 0', overflow: 'hidden', position: 'relative', flexShrink: 0 }}>
-        {tiler.cover_image
-          ? <img src={tiler.cover_image} alt={tiler.full_name} style={{ width: '100%', height: '100%', objectFit: 'cover' }} />
-          : <>
-              <div style={{ position: 'absolute', inset: 0, background: TILER_COVER_BG }} />
-              <div style={{ position: 'absolute', inset: 0, opacity: 0.05, backgroundImage: 'repeating-linear-gradient(0deg,transparent,transparent 19px,rgba(255,255,255,0.8) 19px,rgba(255,255,255,0.8) 20px),repeating-linear-gradient(90deg,transparent,transparent 19px,rgba(255,255,255,0.8) 19px,rgba(255,255,255,0.8) 20px)', pointerEvents: 'none' }} />
-            </>
-        }
-        {/* Dark overlay when cover image exists */}
-        {tiler.cover_image && <div style={{ position: 'absolute', inset: 0, background: 'linear-gradient(to top, rgba(0,0,0,0.45) 0%, transparent 60%)' }} />}
+      {/* Cover — always shows tiling work photo */}
+      <div style={{ height: 158, borderRadius: '18px 18px 0 0', overflow: 'hidden', position: 'relative', flexShrink: 0 }}>
+        <img
+          src={getCoverPhoto(tiler)}
+          alt="Tiling work"
+          loading="lazy"
+          style={{ width: '100%', height: '100%', objectFit: 'cover' }}
+        />
+        {/* Gradient scrim */}
+        <div style={{ position: 'absolute', inset: 0, background: 'linear-gradient(to top, rgba(0,0,0,0.55) 0%, rgba(0,0,0,0.1) 55%, transparent 100%)' }} />
 
-        {/* Verified / Unverified badge */}
-        {tiler.is_verified
-          ? <span style={{ position: 'absolute', top: 10, right: 10, fontSize: 10, fontWeight: 700, padding: '3px 9px', borderRadius: 20, background: 'rgba(255,255,255,0.18)', color: '#fff', border: '1px solid rgba(255,255,255,0.35)', backdropFilter: 'blur(4px)' }}>✓ Skilled</span>
-          : <span style={{ position: 'absolute', top: 10, right: 10, fontSize: 10, fontWeight: 700, padding: '3px 9px', borderRadius: 20, background: 'rgba(0,0,0,0.35)', color: 'rgba(255,255,255,0.65)', border: '1px solid rgba(255,255,255,0.2)', backdropFilter: 'blur(4px)' }}>Unverified</span>
+        {/* Verification badge top-right */}
+        {isVerified
+          ? <span style={{ position: 'absolute', top: 10, right: 10, fontSize: 10, fontWeight: 700, padding: '3px 10px', borderRadius: 20, background: 'rgba(22,163,74,0.92)', color: '#fff', backdropFilter: 'blur(4px)' }}>✓ Skill Verified</span>
+          : <span style={{ position: 'absolute', top: 10, right: 10, fontSize: 10, fontWeight: 700, padding: '3px 10px', borderRadius: 20, background: 'rgba(0,0,0,0.50)', color: 'rgba(255,255,255,0.75)', backdropFilter: 'blur(4px)' }}>Community</span>
         }
-        {/* Availability */}
-        {tiler.availability === 'available' && (
+        {/* Featured badge top-left */}
+        {tiler.featured && (
+          <span style={{ position: 'absolute', top: 10, left: 10, fontSize: 10, fontWeight: 700, padding: '3px 9px', borderRadius: 20, background: 'rgba(212,175,55,0.92)', color: '#0d0b08', backdropFilter: 'blur(4px)' }}>⭐ Featured</span>
+        )}
+        {/* Availability dot — only if no featured badge */}
+        {!tiler.featured && tiler.availability === 'available' && (
           <span style={{ position: 'absolute', top: 10, left: 10, fontSize: 9, fontWeight: 700, padding: '3px 8px', borderRadius: 20, background: 'rgba(22,163,74,0.85)', color: '#fff' }}>● Available</span>
         )}
       </div>
 
-      {/* Circular avatar — overlaps cover/body boundary */}
-      <div style={{ position: 'absolute', top: 120 - 28, left: 16, width: 56, height: 56, borderRadius: '50%', border: '3px solid #fff', background: '#1B3A6B', display: 'flex', alignItems: 'center', justifyContent: 'center', fontSize: 18, fontWeight: 700, color: '#fff', overflow: 'hidden', zIndex: 2, boxShadow: '0 2px 8px rgba(0,0,0,0.15)', flexShrink: 0 }}>
-        {tiler.avatar_url
-          ? <img src={tiler.avatar_url} alt={tiler.full_name} style={{ width: '100%', height: '100%', objectFit: 'cover' }} />
-          : initials(tiler.full_name)
-        }
+      {/* Circular avatar overlapping cover — initials only, no stranger portraits */}
+      <div style={{
+        position: 'absolute',
+        top: 158 - 28,
+        left: 16,
+        width: 56,
+        height: 56,
+        borderRadius: '50%',
+        border: `3px solid ${isVerified ? '#D4AF37' : '#fff'}`,
+        background: isVerified ? '#1B3A6B' : '#64748b',
+        display: 'flex',
+        alignItems: 'center',
+        justifyContent: 'center',
+        fontSize: 18,
+        fontWeight: 800,
+        color: '#fff',
+        zIndex: 2,
+        boxShadow: '0 3px 10px rgba(0,0,0,0.2)',
+        flexShrink: 0,
+        letterSpacing: '-0.5px',
+      }}>
+        {initials(tiler.full_name)}
       </div>
 
       {/* Card body */}
-      <div style={{ padding: '32px 16px 16px', flex: 1, display: 'flex', flexDirection: 'column' }}>
-        {/* Name row — offset right to clear the avatar */}
+      <div style={{ padding: '34px 16px 16px', flex: 1, display: 'flex', flexDirection: 'column' }}>
+        {/* Name + location row (offset to clear avatar) */}
         <div style={{ display: 'flex', alignItems: 'flex-start', marginBottom: 10 }}>
-          <div style={{ width: 56 + 10, flexShrink: 0 }} />{/* spacer matching avatar */}
+          <div style={{ width: 66, flexShrink: 0 }} />
           <div style={{ flex: 1, minWidth: 0 }}>
-            <div style={{ fontWeight: 700, fontSize: 15, color: '#0f172a', overflow: 'hidden', textOverflow: 'ellipsis', whiteSpace: 'nowrap' }}>{tiler.full_name}</div>
+            <div style={{ fontWeight: 800, fontSize: 15, color: '#0f172a', overflow: 'hidden', textOverflow: 'ellipsis', whiteSpace: 'nowrap', letterSpacing: '-0.2px' }}>{tiler.full_name}</div>
             <div style={{ fontSize: 11, color: '#64748b', marginTop: 2 }}>📍 {tiler.city || tiler.district}</div>
           </div>
         </div>
 
-        {/* Stats chips */}
+        {/* Stats row */}
         <div style={{ display: 'flex', flexWrap: 'wrap', gap: 5, marginBottom: 10 }}>
-          <span style={{ fontSize: 10, padding: '2px 8px', borderRadius: 20, background: '#eef3fb', color: '#1B3A6B', border: '1px solid #d5e2f5', fontWeight: 600 }}>🪚 Tiler</span>
           {tiler.experience_years > 0 && (
-            <span style={{ fontSize: 10, padding: '2px 8px', borderRadius: 20, background: '#f0fdf4', color: '#166534', border: '1px solid #bbf7d0', fontWeight: 600 }}>🛠️ {tiler.experience_years}+ yrs</span>
+            <span style={{ fontSize: 10, padding: '2px 8px', borderRadius: 20, background: '#f0fdf4', color: '#166534', border: '1px solid #bbf7d0', fontWeight: 700 }}>🛠️ {tiler.experience_years}+ yrs exp</span>
           )}
           {tiler.avg_rating > 0 && (
             <span style={{ fontSize: 10, padding: '2px 8px', borderRadius: 20, background: '#fffbeb', color: '#92400e', border: '1px solid #fde68a', fontWeight: 600 }}>⭐ {tiler.avg_rating.toFixed(1)}</span>
@@ -275,16 +316,22 @@ function TilerCard({ tiler, onClick }) {
           )}
         </div>
 
-        {/* Bio */}
-        {tiler.bio && (
+        {/* Bio — only for verified tilers */}
+        {isVerified && tiler.bio && (
           <p style={{ fontSize: 12, color: '#64748b', lineHeight: 1.65, marginBottom: 10, display: '-webkit-box', WebkitLineClamp: 2, WebkitBoxOrient: 'vertical', overflow: 'hidden' }}>
             {tiler.bio}
+          </p>
+        )}
+        {/* Community notice — for unverified */}
+        {!isVerified && (
+          <p style={{ fontSize: 11, color: '#94a3b8', lineHeight: 1.6, marginBottom: 10, fontStyle: 'italic' }}>
+            Community-submitted profile — not yet verified by TilersHub
           </p>
         )}
 
         {/* Services */}
         {(tiler.services || []).length > 0 && (
-          <div style={{ display: 'flex', flexWrap: 'wrap', gap: 5, marginBottom: 14 }}>
+          <div style={{ display: 'flex', flexWrap: 'wrap', gap: 5, marginBottom: 12 }}>
             {(tiler.services || []).slice(0, 3).map(s => (
               <span key={s} style={{ fontSize: 10, padding: '2px 8px', borderRadius: 20, background: '#f1f5f9', color: '#475569', border: '1px solid #e2e8f0' }}>{s}</span>
             ))}
@@ -294,48 +341,34 @@ function TilerCard({ tiler, onClick }) {
           </div>
         )}
 
-        {/* Contact buttons */}
+        {/* CTA buttons */}
         <div style={{ marginTop: 'auto', display: 'flex', gap: 8 }}>
           {phone && (
-            <a
-              href={buildWhatsAppLink(phone, tiler.full_name)}
-              target="_blank"
-              rel="noopener noreferrer"
-              onClick={e => e.stopPropagation()}
-              style={{ flex: 1, display: 'flex', alignItems: 'center', justifyContent: 'center', gap: 6, background: '#25D366', color: '#fff', borderRadius: 10, padding: '9px 12px', fontSize: 12, fontWeight: 700, textDecoration: 'none' }}
-            >
+            <a href={buildWhatsAppLink(phone, tiler.full_name)} target="_blank" rel="noopener noreferrer" onClick={e => e.stopPropagation()}
+              style={{ flex: 1, display: 'flex', alignItems: 'center', justifyContent: 'center', gap: 6, background: '#25D366', color: '#fff', borderRadius: 10, padding: '9px 12px', fontSize: 12, fontWeight: 700, textDecoration: 'none' }}>
               <span>💬</span> WhatsApp
             </a>
           )}
           {tiler.phone && (
-            <a
-              href={`tel:${tiler.phone}`}
-              onClick={e => e.stopPropagation()}
-              style={{ display: 'flex', alignItems: 'center', justifyContent: 'center', gap: 5, background: '#eef3fb', color: '#1B3A6B', borderRadius: 10, padding: '9px 12px', fontSize: 12, fontWeight: 700, textDecoration: 'none', border: '1px solid #d5e2f5' }}
-            >
+            <a href={`tel:${tiler.phone}`} onClick={e => e.stopPropagation()}
+              style={{ display: 'flex', alignItems: 'center', justifyContent: 'center', gap: 5, background: '#eef3fb', color: '#1B3A6B', borderRadius: 10, padding: '9px 12px', fontSize: 12, fontWeight: 700, textDecoration: 'none', border: '1px solid #d5e2f5' }}>
               📞 Call
             </a>
           )}
         </div>
-        {/* Alt WhatsApp number */}
+
+        {/* Alt WA number */}
         {altWaPhone && (
-          <a
-            href={buildWhatsAppLink(altWaPhone, tiler.full_name)}
-            target="_blank"
-            rel="noopener noreferrer"
-            onClick={e => e.stopPropagation()}
-            style={{ display: 'flex', alignItems: 'center', justifyContent: 'center', gap: 5, marginTop: 6, background: '#f0fdf4', color: '#16a34a', borderRadius: 8, padding: '6px 10px', fontSize: 11, fontWeight: 700, textDecoration: 'none', border: '1px solid #bbf7d0' }}
-          >
+          <a href={buildWhatsAppLink(altWaPhone, tiler.full_name)} target="_blank" rel="noopener noreferrer" onClick={e => e.stopPropagation()}
+            style={{ display: 'flex', alignItems: 'center', justifyContent: 'center', gap: 5, marginTop: 6, background: '#f0fdf4', color: '#16a34a', borderRadius: 8, padding: '6px 10px', fontSize: 11, fontWeight: 700, textDecoration: 'none', border: '1px solid #bbf7d0' }}>
             💬 Alt. Number
           </a>
         )}
-        {/* Featured tiler: View Full Profile link */}
-        {tiler.featured && tiler.slug && (
-          <a
-            href={`/tilers/${tiler.slug}`}
-            onClick={e => e.stopPropagation()}
-            style={{ display: 'block', textAlign: 'center', marginTop: 8, fontSize: 11, fontWeight: 700, color: '#1B3A6B', textDecoration: 'none', padding: '6px', borderRadius: 8, background: '#f8fafc', border: '1px solid #e2e8f0' }}
-          >
+
+        {/* View Full Profile — all skill-verified tilers */}
+        {hasDedicatedPage && (
+          <a href={`/tilers/${tiler.slug}`} onClick={e => e.stopPropagation()}
+            style={{ display: 'flex', alignItems: 'center', justifyContent: 'center', gap: 5, marginTop: 8, background: '#f8fafc', color: '#1B3A6B', borderRadius: 10, padding: '9px', fontSize: 12, fontWeight: 700, textDecoration: 'none', border: '1px solid #d5e2f5' }}>
             View Full Profile →
           </a>
         )}
@@ -665,9 +698,14 @@ export default function ProviderDirectory({ initialType, initialSearch }) {
     ? filteredTilers.filter(t => t.featured)
     : filteredTilers.slice(0, Math.min(6, filteredTilers.length))
 
-  // Grid excludes whatever is already shown in the spotlight
+  // Grid excludes whatever is already shown in the spotlight, verified tilers first
   const spotlightIds = new Set(spotlightTilers.map(t => t.id))
-  const gridTilers = filteredTilers.filter(t => !spotlightIds.has(t.id))
+  const gridTilers = filteredTilers
+    .filter(t => !spotlightIds.has(t.id))
+    .sort((a, b) => {
+      if (a.is_verified !== b.is_verified) return (b.is_verified ? 1 : 0) - (a.is_verified ? 1 : 0)
+      return (b.experience_years || 0) - (a.experience_years || 0)
+    })
 
   return (
     <div style={{ background: '#f8fafc', minHeight: '60vh' }}>

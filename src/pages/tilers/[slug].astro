@@ -6,7 +6,7 @@ export async function getStaticPaths() {
   const { data: tilers } = await supabase
     .from('tilers')
     .select('id,slug')
-    .eq('featured', true)
+    .eq('is_verified', true)
     .not('slug', 'is', null)
   const paths = []
   for (const t of tilers || []) {
@@ -24,7 +24,7 @@ const { data: tiler } = await supabase
   .eq('slug', lookupSlug)
   .single()
 
-if (!tiler || !tiler.featured) return Astro.redirect('/providers')
+if (!tiler || !tiler.is_verified) return Astro.redirect('/providers')
 
 const name    = tiler.full_name
 const phone   = tiler.whatsapp || tiler.phone
@@ -50,8 +50,8 @@ function stars(r) {
 ---
 
 <Layout
-  title={`${name} · Skilled Tiler in ${city} · TilersHub`}
-  description={`${name} is a TilersHub-featured, Skilled-verified tiler based in ${city}, Sri Lanka. ${tiler.experience_years}+ years experience. Contact directly on WhatsApp.`}
+  title={`${name} · Skill Verified Tiler in ${city} · TilersHub`}
+  description={`${name} is a Skill Verified tiler based in ${city}, Sri Lanka${tiler.experience_years > 0 ? ` with ${tiler.experience_years}+ years experience` : ''}. Contact directly on WhatsApp via TilersHub.`}
 >
 
   <!-- Hero -->
@@ -66,19 +66,18 @@ function stars(r) {
       <a href="/providers" style="display:inline-flex;align-items:center;gap:6px;font-size:11px;color:rgba(255,255,255,0.45);letter-spacing:1px;font-weight:600;margin-bottom:32px;text-decoration:none;">← All Tilers</a>
 
       <div style="display:flex;align-items:flex-start;gap:24px;flex-wrap:wrap;">
-        <!-- Avatar -->
-        <div style="width:96px;height:96px;border-radius:50%;border:3px solid rgba(212,175,55,0.5);background:rgba(255,255,255,0.12);display:flex;align-items:center;justify-content:center;font-size:34px;font-weight:700;color:#fff;flex-shrink:0;overflow:hidden;box-shadow:0 4px 20px rgba(0,0,0,0.3);">
-          {tiler.avatar_url
-            ? <img src={tiler.avatar_url} alt={name} style="width:100%;height:100%;object-fit:cover;" />
-            : name.split(' ').map((w: string) => w[0]).join('').slice(0,2).toUpperCase()
-          }
+        <!-- Avatar — always initials (no unrelated portrait photos) -->
+        <div style="width:96px;height:96px;border-radius:50%;border:3px solid rgba(212,175,55,0.5);background:rgba(255,255,255,0.12);display:flex;align-items:center;justify-content:center;font-size:34px;font-weight:800;color:#fff;flex-shrink:0;box-shadow:0 4px 20px rgba(0,0,0,0.3);letter-spacing:-1px;">
+          {name.split(' ').map((w: string) => w[0]).join('').slice(0,2).toUpperCase()}
         </div>
 
         <div style="flex:1;min-width:0;">
           <!-- Badges row -->
           <div style="display:flex;flex-wrap:wrap;gap:8px;margin-bottom:10px;">
-            <span style="display:inline-flex;align-items:center;gap:4px;font-size:10px;font-weight:700;padding:3px 10px;border-radius:20px;background:rgba(22,163,74,0.2);color:#4ade80;border:1px solid rgba(74,222,128,0.3);">✓ Skilled</span>
-            <span style="display:inline-flex;align-items:center;gap:4px;font-size:10px;font-weight:700;padding:3px 10px;border-radius:20px;background:rgba(212,175,55,0.15);color:#D4AF37;border:1px solid rgba(212,175,55,0.35);">⭐ TilersHub Featured</span>
+            <span style="display:inline-flex;align-items:center;gap:4px;font-size:10px;font-weight:700;padding:3px 10px;border-radius:20px;background:rgba(22,163,74,0.2);color:#4ade80;border:1px solid rgba(74,222,128,0.3);">✓ Skill Verified</span>
+            {tiler.featured && (
+              <span style="display:inline-flex;align-items:center;gap:4px;font-size:10px;font-weight:700;padding:3px 10px;border-radius:20px;background:rgba(212,175,55,0.15);color:#D4AF37;border:1px solid rgba(212,175,55,0.35);">⭐ TilersHub Featured</span>
+            )}
           </div>
 
           <h1 style="font-family:'Playfair Display',serif;font-size:clamp(26px,5vw,42px);font-weight:700;color:#fff;margin-bottom:8px;line-height:1.15;">{name}</h1>
@@ -193,7 +192,7 @@ function stars(r) {
 
         <!-- Trust section -->
         <div style="background:linear-gradient(135deg,#0F2444,#1B3A6B);border-radius:16px;padding:28px;color:#fff;">
-          <h2 style="font-size:14px;font-weight:700;color:#D4AF37;margin-bottom:14px;letter-spacing:0.5px;">Why TilersHub Featured?</h2>
+          <h2 style="font-size:14px;font-weight:700;color:#D4AF37;margin-bottom:14px;letter-spacing:0.5px;">Why Choose a Skill Verified Tiler?</h2>
           <div style="display:grid;grid-template-columns:1fr 1fr;gap:12px;">
             <div style="display:flex;align-items:flex-start;gap:10px;">
               <span style="font-size:18px;flex-shrink:0;">✓</span>
@@ -232,11 +231,8 @@ function stars(r) {
       <div style="position:sticky;top:80px;">
         <div style="background:#fff;border:1.5px solid #e2e8f0;border-radius:20px;padding:24px;box-shadow:0 4px 24px rgba(27,58,107,0.08);margin-bottom:12px;">
           <div style="display:flex;align-items:center;gap:10px;margin-bottom:18px;">
-            <div style="width:44px;height:44px;border-radius:50%;border:2px solid #D4AF37;background:#1B3A6B;display:flex;align-items:center;justify-content:center;font-size:15px;font-weight:700;color:#fff;overflow:hidden;flex-shrink:0;">
-              {tiler.avatar_url
-                ? <img src={tiler.avatar_url} alt={name} style="width:100%;height:100%;object-fit:cover;" />
-                : name.split(' ').map((w: string) => w[0]).join('').slice(0,2).toUpperCase()
-              }
+            <div style="width:44px;height:44px;border-radius:50%;border:2px solid #D4AF37;background:#1B3A6B;display:flex;align-items:center;justify-content:center;font-size:15px;font-weight:800;color:#fff;flex-shrink:0;letter-spacing:-0.5px;">
+              {name.split(' ').map((w: string) => w[0]).join('').slice(0,2).toUpperCase()}
             </div>
             <div>
               <div style="font-size:14px;font-weight:700;color:#0f172a;">{name}</div>
@@ -244,9 +240,9 @@ function stars(r) {
             </div>
           </div>
 
-          <div style="display:flex;gap:6px;margin-bottom:16px;">
-            <span style="font-size:10px;font-weight:700;padding:3px 8px;border-radius:20px;background:#f0fdf4;color:#16a34a;border:1px solid #bbf7d0;">✓ Skilled</span>
-            <span style="font-size:10px;font-weight:700;padding:3px 8px;border-radius:20px;background:#fffbeb;color:#a16207;border:1px solid #fde68a;">⭐ Featured</span>
+          <div style="display:flex;gap:6px;margin-bottom:16px;flex-wrap:wrap;">
+            <span style="font-size:10px;font-weight:700;padding:3px 8px;border-radius:20px;background:#f0fdf4;color:#16a34a;border:1px solid #bbf7d0;">✓ Skill Verified</span>
+            {tiler.featured && <span style="font-size:10px;font-weight:700;padding:3px 8px;border-radius:20px;background:#fffbeb;color:#a16207;border:1px solid #fde68a;">⭐ Featured</span>}
           </div>
 
           {phone && (
