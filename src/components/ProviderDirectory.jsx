@@ -645,6 +645,10 @@ export default function ProviderDirectory({ initialType, initialSearch }) {
     ? filteredTilers.filter(t => t.featured)
     : filteredTilers.slice(0, Math.min(6, filteredTilers.length))
 
+  // Grid excludes whatever is already shown in the spotlight
+  const spotlightIds = new Set(spotlightTilers.map(t => t.id))
+  const gridTilers = filteredTilers.filter(t => !spotlightIds.has(t.id))
+
   return (
     <div style={{ background: '#f8fafc', minHeight: '60vh' }}>
       {/* Sticky filter bar */}
@@ -749,7 +753,7 @@ export default function ProviderDirectory({ initialType, initialSearch }) {
             )}
 
             {/* ── All Tilers heading ── */}
-            {showTilers && filteredTilers.length > 0 && (
+            {showTilers && gridTilers.length > 0 && (
               <div style={{ fontSize: 13, fontWeight: 700, color: '#475569', marginBottom: 16, letterSpacing: '0.5px', textTransform: 'uppercase' }}>
                 👷 All Tilers — {filteredTilers.length} listed
               </div>
@@ -762,7 +766,7 @@ export default function ProviderDirectory({ initialType, initialSearch }) {
                   ? <ShopCard key={p.id} provider={p} onClick={item => { setSelected(item); setIsTilerSelected(false) }} />
                   : <ProviderCard key={p.id} provider={p} onClick={item => { setSelected(item); setIsTilerSelected(false) }} />
               ))}
-              {filteredTilers.map(t => (
+              {gridTilers.map(t => (
                 <TilerCard key={t.id} tiler={t} onClick={item => { setSelected(item); setIsTilerSelected(true) }} />
               ))}
             </div>
