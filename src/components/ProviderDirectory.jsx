@@ -210,6 +210,7 @@ function TilerBanner({ tiler, onClick }) {
 // Professional tiler grid card with cover + overlapping circular avatar
 function TilerCard({ tiler, onClick }) {
   const phone = tiler.whatsapp || tiler.phone
+  const altWaPhone = (tiler.whatsapp && tiler.whatsapp !== tiler.phone) ? tiler.phone : null
 
   return (
     <div
@@ -316,6 +317,18 @@ function TilerCard({ tiler, onClick }) {
             </a>
           )}
         </div>
+        {/* Alt WhatsApp number */}
+        {altWaPhone && (
+          <a
+            href={buildWhatsAppLink(altWaPhone, tiler.full_name)}
+            target="_blank"
+            rel="noopener noreferrer"
+            onClick={e => e.stopPropagation()}
+            style={{ display: 'flex', alignItems: 'center', justifyContent: 'center', gap: 5, marginTop: 6, background: '#f0fdf4', color: '#16a34a', borderRadius: 8, padding: '6px 10px', fontSize: 11, fontWeight: 700, textDecoration: 'none', border: '1px solid #bbf7d0' }}
+          >
+            💬 Alt. Number
+          </a>
+        )}
         {/* Featured tiler: View Full Profile link */}
         {tiler.featured && tiler.slug && (
           <a
@@ -335,6 +348,7 @@ function ProviderModal({ item, isTiler, onClose }) {
   if (!item) return null
   const name = isTiler ? item.full_name : item.name
   const phone = isTiler ? (item.whatsapp || item.phone) : (item.whatsapp || item.phone)
+  const altWaPhone = isTiler && item.whatsapp && item.phone && item.whatsapp !== item.phone ? item.phone : null
   const pts = !isTiler && PROVIDER_TYPES.find(p => p.value === item.provider_type)
   const coverBg = isTiler ? '#1B3A6B' : '#0f2444'
 
@@ -469,6 +483,12 @@ function ProviderModal({ item, isTiler, onClose }) {
               </a>
             )}
           </div>
+          {altWaPhone && (
+            <a href={buildWhatsAppLink(altWaPhone, name)} target="_blank" rel="noopener noreferrer"
+              style={{ display: 'flex', alignItems: 'center', justifyContent: 'center', gap: 8, width: '100%', marginTop: 8, background: '#f0fdf4', color: '#16a34a', border: '1px solid #bbf7d0', borderRadius: 12, padding: 11, fontSize: 13, fontWeight: 700, textDecoration: 'none' }}>
+              💬 Alt. Number
+            </a>
+          )}
         </div>
       </div>
     </div>
