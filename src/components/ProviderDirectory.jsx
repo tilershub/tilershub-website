@@ -170,10 +170,11 @@ function TilerBanner({ tiler, onClick }) {
       {/* Dark scrim at bottom */}
       <div style={{ position: 'absolute', inset: 0, background: 'linear-gradient(to top, rgba(0,0,0,0.75) 0%, rgba(0,0,0,0.1) 55%, transparent 100%)' }} />
 
-      {/* Verified badge top-right */}
-      {tiler.is_verified && (
-        <span style={{ position: 'absolute', top: 10, right: 10, fontSize: 9, fontWeight: 700, padding: '2px 7px', borderRadius: 20, background: 'rgba(255,255,255,0.18)', color: '#fff', border: '1px solid rgba(255,255,255,0.3)', backdropFilter: 'blur(4px)' }}>✓ Skilled</span>
-      )}
+      {/* Verified / Unverified badge top-right */}
+      {tiler.is_verified
+        ? <span style={{ position: 'absolute', top: 10, right: 10, fontSize: 9, fontWeight: 700, padding: '2px 7px', borderRadius: 20, background: 'rgba(255,255,255,0.18)', color: '#fff', border: '1px solid rgba(255,255,255,0.3)', backdropFilter: 'blur(4px)' }}>✓ Skilled</span>
+        : <span style={{ position: 'absolute', top: 10, right: 10, fontSize: 9, fontWeight: 700, padding: '2px 7px', borderRadius: 20, background: 'rgba(0,0,0,0.35)', color: 'rgba(255,255,255,0.65)', border: '1px solid rgba(255,255,255,0.2)', backdropFilter: 'blur(4px)' }}>Unverified</span>
+      }
 
       {/* Bottom info */}
       <div style={{ position: 'absolute', bottom: 0, left: 0, right: 0, padding: '10px 12px' }}>
@@ -229,10 +230,11 @@ function TilerCard({ tiler, onClick }) {
         {/* Dark overlay when cover image exists */}
         {tiler.cover_image && <div style={{ position: 'absolute', inset: 0, background: 'linear-gradient(to top, rgba(0,0,0,0.45) 0%, transparent 60%)' }} />}
 
-        {/* Verified badge */}
-        {tiler.is_verified && (
-          <span style={{ position: 'absolute', top: 10, right: 10, fontSize: 10, fontWeight: 700, padding: '3px 9px', borderRadius: 20, background: 'rgba(255,255,255,0.18)', color: '#fff', border: '1px solid rgba(255,255,255,0.35)', backdropFilter: 'blur(4px)' }}>✓ Skilled</span>
-        )}
+        {/* Verified / Unverified badge */}
+        {tiler.is_verified
+          ? <span style={{ position: 'absolute', top: 10, right: 10, fontSize: 10, fontWeight: 700, padding: '3px 9px', borderRadius: 20, background: 'rgba(255,255,255,0.18)', color: '#fff', border: '1px solid rgba(255,255,255,0.35)', backdropFilter: 'blur(4px)' }}>✓ Skilled</span>
+          : <span style={{ position: 'absolute', top: 10, right: 10, fontSize: 10, fontWeight: 700, padding: '3px 9px', borderRadius: 20, background: 'rgba(0,0,0,0.35)', color: 'rgba(255,255,255,0.65)', border: '1px solid rgba(255,255,255,0.2)', backdropFilter: 'blur(4px)' }}>Unverified</span>
+        }
         {/* Availability */}
         {tiler.availability === 'available' && (
           <span style={{ position: 'absolute', top: 10, left: 10, fontSize: 9, fontWeight: 700, padding: '3px 8px', borderRadius: 20, background: 'rgba(22,163,74,0.85)', color: '#fff' }}>● Available</span>
@@ -367,8 +369,16 @@ function ProviderModal({ item, isTiler, onClose }) {
           <div style={{ display: 'flex', flexWrap: 'wrap', gap: 6, marginBottom: 16 }}>
             {!isTiler && pts && <span style={{ fontSize: 11, fontWeight: 700, padding: '3px 10px', borderRadius: 20, background: '#eef3fb', color: '#1B3A6B' }}>{pts.icon} {pts.label}</span>}
             {isTiler && item.is_verified && <span style={{ fontSize: 11, fontWeight: 700, padding: '3px 10px', borderRadius: 20, background: '#f0fdf4', color: '#16a34a', border: '1px solid #bbf7d0' }}>✓ Skilled</span>}
+            {isTiler && !item.is_verified && <span style={{ fontSize: 11, fontWeight: 700, padding: '3px 10px', borderRadius: 20, background: '#f8fafc', color: '#94a3b8', border: '1px solid #e2e8f0' }}>Unverified</span>}
             {!isTiler && <VerificationBadge status={item.verification_status} />}
           </div>
+
+          {/* Unverified notice */}
+          {isTiler && !item.is_verified && (
+            <div style={{ fontSize: 12, color: '#78716c', background: '#fef9f0', border: '1px solid #fde68a', borderRadius: 10, padding: '10px 14px', marginBottom: 16, lineHeight: 1.6 }}>
+              ℹ️ This profile was added from community-submitted information and has not yet been verified by TILERSHUB.
+            </div>
+          )}
 
           {/* Bio / Description */}
           {(isTiler ? item.bio : item.description) && (
