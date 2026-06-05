@@ -147,12 +147,10 @@ function ShopCard({ provider, onClick }) {
 }
 
 // ─── Tiler card colour palette ──────────────────────────────────────────────
-const TILER_COVER_COLORS = ['#0F2444','#1B3A6B','#1e3a5f','#7c3aed','#C1603A','#166534','#92400e','#374151']
+const TILER_COVER_BG = 'linear-gradient(135deg, #0F2444 0%, #1B3A6B 100%)'
 
 // Promotional banner card (horizontal scroll spotlight)
 function TilerBanner({ tiler, onClick }) {
-  const colorIdx = (tiler.full_name || '').charCodeAt(0) % TILER_COVER_COLORS.length
-  const coverBg = TILER_COVER_COLORS[colorIdx]
   const phone = tiler.whatsapp || tiler.phone
 
   return (
@@ -165,7 +163,7 @@ function TilerBanner({ tiler, onClick }) {
       {/* Background: cover image or colour gradient */}
       {tiler.cover_image
         ? <img src={tiler.cover_image} alt={tiler.full_name} style={{ position: 'absolute', inset: 0, width: '100%', height: '100%', objectFit: 'cover' }} />
-        : <div style={{ position: 'absolute', inset: 0, background: `linear-gradient(135deg, ${coverBg} 0%, ${coverBg}bb 100%)` }} />
+        : <div style={{ position: 'absolute', inset: 0, background: TILER_COVER_BG }} />
       }
       {/* Tile-grid texture */}
       <div style={{ position: 'absolute', inset: 0, opacity: 0.04, backgroundImage: 'repeating-linear-gradient(0deg,transparent,transparent 19px,rgba(255,255,255,0.8) 19px,rgba(255,255,255,0.8) 20px),repeating-linear-gradient(90deg,transparent,transparent 19px,rgba(255,255,255,0.8) 19px,rgba(255,255,255,0.8) 20px)', pointerEvents: 'none' }} />
@@ -210,8 +208,6 @@ function TilerBanner({ tiler, onClick }) {
 
 // Professional tiler grid card with cover + overlapping circular avatar
 function TilerCard({ tiler, onClick }) {
-  const colorIdx = (tiler.full_name || '').charCodeAt(0) % TILER_COVER_COLORS.length
-  const coverBg = TILER_COVER_COLORS[colorIdx]
   const phone = tiler.whatsapp || tiler.phone
 
   return (
@@ -226,7 +222,7 @@ function TilerCard({ tiler, onClick }) {
         {tiler.cover_image
           ? <img src={tiler.cover_image} alt={tiler.full_name} style={{ width: '100%', height: '100%', objectFit: 'cover' }} />
           : <>
-              <div style={{ position: 'absolute', inset: 0, background: `linear-gradient(135deg, ${coverBg} 0%, ${coverBg}bb 100%)` }} />
+              <div style={{ position: 'absolute', inset: 0, background: TILER_COVER_BG }} />
               <div style={{ position: 'absolute', inset: 0, opacity: 0.05, backgroundImage: 'repeating-linear-gradient(0deg,transparent,transparent 19px,rgba(255,255,255,0.8) 19px,rgba(255,255,255,0.8) 20px),repeating-linear-gradient(90deg,transparent,transparent 19px,rgba(255,255,255,0.8) 19px,rgba(255,255,255,0.8) 20px)', pointerEvents: 'none' }} />
             </>
         }
@@ -244,7 +240,7 @@ function TilerCard({ tiler, onClick }) {
       </div>
 
       {/* Circular avatar — overlaps cover/body boundary */}
-      <div style={{ position: 'absolute', top: 120 - 28, left: 16, width: 56, height: 56, borderRadius: '50%', border: '3px solid #fff', background: coverBg, display: 'flex', alignItems: 'center', justifyContent: 'center', fontSize: 18, fontWeight: 700, color: '#fff', overflow: 'hidden', zIndex: 2, boxShadow: '0 2px 8px rgba(0,0,0,0.15)', flexShrink: 0 }}>
+      <div style={{ position: 'absolute', top: 120 - 28, left: 16, width: 56, height: 56, borderRadius: '50%', border: '3px solid #fff', background: '#1B3A6B', display: 'flex', alignItems: 'center', justifyContent: 'center', fontSize: 18, fontWeight: 700, color: '#fff', overflow: 'hidden', zIndex: 2, boxShadow: '0 2px 8px rgba(0,0,0,0.15)', flexShrink: 0 }}>
         {tiler.avatar_url
           ? <img src={tiler.avatar_url} alt={tiler.full_name} style={{ width: '100%', height: '100%', objectFit: 'cover' }} />
           : initials(tiler.full_name)
@@ -328,8 +324,7 @@ function ProviderModal({ item, isTiler, onClose }) {
   const name = isTiler ? item.full_name : item.name
   const phone = isTiler ? (item.whatsapp || item.phone) : (item.whatsapp || item.phone)
   const pts = !isTiler && PROVIDER_TYPES.find(p => p.value === item.provider_type)
-  const colorIdx = isTiler ? ((item.full_name || '').charCodeAt(0) % TILER_COVER_COLORS.length) : 0
-  const coverBg = TILER_COVER_COLORS[colorIdx]
+  const coverBg = isTiler ? '#1B3A6B' : '#0f2444'
 
   const coverImage = isTiler ? item.cover_image : item.cover_image
   const avatarImage = isTiler ? item.avatar_url : item.profile_image
@@ -342,7 +337,7 @@ function ProviderModal({ item, isTiler, onClose }) {
           {coverImage
             ? <img src={coverImage} alt={name} style={{ width: '100%', height: '100%', objectFit: 'cover' }} />
             : <>
-                <div style={{ position: 'absolute', inset: 0, background: `linear-gradient(135deg, ${isTiler ? coverBg : '#0f2444'} 0%, ${isTiler ? coverBg + 'bb' : '#1B3A6B'} 100%)` }} />
+                <div style={{ position: 'absolute', inset: 0, background: isTiler ? TILER_COVER_BG : 'linear-gradient(135deg, #0f2444 0%, #1B3A6B 100%)' }} />
                 <div style={{ position: 'absolute', inset: 0, opacity: 0.04, backgroundImage: 'repeating-linear-gradient(0deg,transparent,transparent 19px,rgba(255,255,255,0.8) 19px,rgba(255,255,255,0.8) 20px),repeating-linear-gradient(90deg,transparent,transparent 19px,rgba(255,255,255,0.8) 19px,rgba(255,255,255,0.8) 20px)' }} />
               </>
           }

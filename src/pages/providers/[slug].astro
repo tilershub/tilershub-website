@@ -54,13 +54,9 @@ const PROVIDER_TYPE_LABELS = {
 
 const typeLabel = isTiler ? 'Tiler' : (PROVIDER_TYPE_LABELS[item.provider_type] || 'Provider')
 
-const COVER_COLORS = [
-  'linear-gradient(135deg,#1A2B4A,#2B4275)',
-  'linear-gradient(135deg,#C1603A,#8b4513)',
-  'linear-gradient(135deg,#1e3a5f,#0f2444)',
-  'linear-gradient(135deg,#166534,#14532d)',
-]
-const coverBg = COVER_COLORS[name.charCodeAt(0) % COVER_COLORS.length]
+const coverBg = isTiler
+  ? 'linear-gradient(135deg,#0F2444 0%,#1B3A6B 100%)'
+  : 'linear-gradient(135deg,#0f2444 0%,#1B3A6B 100%)'
 ---
 
 <Layout
