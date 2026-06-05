@@ -316,6 +316,16 @@ function TilerCard({ tiler, onClick }) {
             </a>
           )}
         </div>
+        {/* Featured tiler: View Full Profile link */}
+        {tiler.featured && tiler.slug && (
+          <a
+            href={`/tilers/${tiler.slug}`}
+            onClick={e => e.stopPropagation()}
+            style={{ display: 'block', textAlign: 'center', marginTop: 8, fontSize: 11, fontWeight: 700, color: '#1B3A6B', textDecoration: 'none', padding: '6px', borderRadius: 8, background: '#f8fafc', border: '1px solid #e2e8f0' }}
+          >
+            View Full Profile →
+          </a>
+        )}
       </div>
     </div>
   )
