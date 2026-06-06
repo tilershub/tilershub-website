@@ -341,9 +341,11 @@ img { max-width: 100%; display: block; }
 /* ═══ QUICK ACTIONS ═══ */
 .quick-grid {
   display: grid;
-  grid-template-columns: repeat(4, 1fr);
+  grid-template-columns: repeat(2, 1fr);
   gap: 10px;
   padding: 0 16px;
+  max-width: 400px;
+  margin: 0 auto;
 }
 .quick-card {
   display: flex;
@@ -810,7 +812,7 @@ footer.legacy-footer { background: var(--charcoal); color: rgba(245,240,232,0.35
   .form-row { grid-template-columns: 1fr; }
 }
 @media (max-width: 480px) {
-  .quick-grid { grid-template-columns: repeat(4, 1fr); gap: 8px; padding: 0 12px; }
+  .quick-grid { grid-template-columns: repeat(2, 1fr); gap: 8px; padding: 0 12px; max-width: 320px; }
   .qc-icon { width: 42px; height: 42px; font-size: 18px; }
   .qc-label { font-size: 9px; }
 }
