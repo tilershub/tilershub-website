@@ -1,6 +1,7 @@
 ---
 import '../index.css'
 import AuthButton from '../components/AuthButton.jsx'
+import DraftLinker from '../components/DraftLinker.jsx'
 const {
   title = "TilersHub · Sri Lanka's Tile & Bathroom Marketplace",
   description = "Find tilers, contractors, tile shops, brands and products for your tile and bathroom project across Sri Lanka. Free — no login required.",
@@ -67,6 +68,9 @@ const path = Astro.url.pathname
     <a href="/about" class={`drawer-link${path==='/about'?' active':''}`} style="color:rgba(255,255,255,0.5);font-size:13px;">ℹ️ About TilersHub</a>
     <a href="/contact" class={`drawer-link${path==='/contact'?' active':''}`} style="color:rgba(255,255,255,0.5);font-size:13px;">📬 Contact Us</a>
   </div>
+
+  <!-- Links anonymous drafts/claims to account after magic-link sign-in -->
+  <DraftLinker client:load />
 
   <main class="page-wrap">
     <slot />
