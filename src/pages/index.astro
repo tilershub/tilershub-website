@@ -62,9 +62,9 @@ const INSPO = [
 ]
 
 const BLOG_POSTS = [
-  { cat: 'Tiling Tips', title: 'How to Choose the Right Tile Size for Your Room', excerpt: 'Larger tiles make rooms look bigger, but installation requires more precision. Learn the pros and cons of each size.', icon: '📐', bg: 'linear-gradient(135deg,#1A2B4A,#2B4275)' },
-  { cat: 'Buying Guide', title: 'Understanding Tile Grades: What the Numbers Mean', excerpt: 'PEI ratings, water absorption, slip resistance — here\'s what every homeowner in Sri Lanka should know before buying.', icon: '🏷️', bg: 'linear-gradient(135deg,#C1603A,#8b4513)' },
-  { cat: 'Cost Guide', title: 'Tiling Cost Guide for Sri Lanka — 2025 Prices', excerpt: 'Average labour and material costs by room type and tile size across Colombo, Kandy, Galle and beyond.', icon: '💰', bg: 'linear-gradient(135deg,#16a34a,#166534)' },
+  { slug: 'how-to-choose-tile-size',       cat: 'Tiling Tips',   title: 'How to Choose the Right Tile Size for Your Room',  excerpt: 'Larger tiles make rooms look bigger, but installation requires more precision. Learn the pros and cons of each size.', icon: '📐', bg: 'linear-gradient(135deg,#1A2B4A,#2B4275)' },
+  { slug: 'understanding-tile-grades',      cat: 'Buying Guide',  title: 'Understanding Tile Grades: What the Numbers Mean',  excerpt: 'PEI ratings, water absorption, slip resistance — here\'s what every homeowner in Sri Lanka should know before buying.', icon: '🏷️', bg: 'linear-gradient(135deg,#C1603A,#8b4513)' },
+  { slug: 'tiling-cost-guide-sri-lanka',    cat: 'Cost Guide',    title: 'Tiling Cost Guide for Sri Lanka — 2025 Prices',     excerpt: 'Average labour and material costs by room type and tile size across Colombo, Kandy, Galle and beyond.', icon: '💰', bg: 'linear-gradient(135deg,#16a34a,#166534)' },
 ]
 
 const WORKSHOP_COVERS = [
@@ -352,10 +352,11 @@ const BRAND_COLORS = ['#1A2B4A','#C1603A','#D4AF37','#1e3a5f','#7c3aed','#166534
         <div class="section-eyebrow">📚 Tips & Guides</div>
         <div class="section-title-sm">Tiling <span>Knowledge Hub</span></div>
       </div>
+      <a href="/guides" class="see-all">All guides →</a>
     </div>
     <div style="padding:0 16px;display:grid;grid-template-columns:repeat(auto-fill,minmax(260px,1fr));gap:14px;">
       {BLOG_POSTS.map(post => (
-        <div class="blog-card">
+        <a class="blog-card" href={`/guides/${post.slug}`}>
           <div class="blog-cover" style={`background:${post.bg};`}>
             <span>{post.icon}</span>
           </div>
@@ -365,7 +366,7 @@ const BRAND_COLORS = ['#1A2B4A','#C1603A','#D4AF37','#1e3a5f','#7c3aed','#166534
             <div class="blog-excerpt">{post.excerpt}</div>
             <div class="blog-read">Read guide →</div>
           </div>
-        </div>
+        </a>
       ))}
     </div>
   </section>
