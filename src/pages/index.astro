@@ -4,7 +4,7 @@ import { supabase } from '../lib/supabase.js'
 
 const { data: featuredTilers } = await supabase
   .from('tilers')
-  .select('id,full_name,district,city,is_verified,slug,avg_rating,phone,whatsapp,experience_years')
+  .select('id,full_name,district,city,is_verified,slug,avg_rating,experience_years')
   .eq('featured', true)
   .order('experience_years', { ascending: false })
   .limit(8)
@@ -15,23 +15,16 @@ const { data: brandsData } = await supabase
   .eq('status', 'active')
   .limit(10)
 
-const { data: jobsData } = await supabase
-  .from('jobs')
-  .select('id,title,district,city,created_at,budget_min,budget_max')
-  .eq('status', 'open')
+const { data: projectsData } = await supabase
+  .from('projects')
+  .select('id,project_type,district,city,created_at,budget_range')
+  .eq('status', 'active')
   .order('created_at', { ascending: false })
-  .limit(3)
+  .limit(4)
 
-const tilers = featuredTilers || []
-const brands = brandsData     || []
-const jobs   = jobsData       || []
-
-function waLink(phone, name) {
-  const n = (phone||'').replace(/\D/g,'')
-  const num = n.startsWith('94') ? n : '94'+n.replace(/^0/,'')
-  const msg = encodeURIComponent(`ආයුබෝවන්! 🙏\n\nමම *TilersHub* (www.tilershub.lk) හරහා *${name}* සොයාගතිමි.\n\nඔබගේ සේවාව ගැන දැනගැනීමට කැමැත්තෙමි.\n\n📌 *TilersHub.lk* Lead\nස්තූතියි! 🏠`)
-  return `https://wa.me/${num}?text=${msg}`
-}
+const tilers   = featuredTilers || []
+const brands   = brandsData    || []
+const projects = projectsData  || []
 
 function timeAgo(dateStr) {
   if (!dateStr) return ''
@@ -47,12 +40,13 @@ function initials(name) {
   return name?.split(' ').map(w => w[0]).join('').slice(0,2).toUpperCase() || 'TH'
 }
 
-const QUICK_ACTIONS = [
-  { icon: '👷', label: 'Find Tiler',  href: '/providers?type=tiler', bg: '#EEF2FB' },
-  { icon: '📐', label: 'Calculator', href: '/estimator',              bg: '#F5F3FF' },
-]
-
 const BRAND_COL = ['#1A2B4A','#C1603A','#D4AF37','#1e3a5f','#7c3aed','#166534','#92400e','#374151']
+
+const TYPE_ICON = {
+  'Floor Tiling':'🪨','Bathroom Tiling':'🚿','Bathroom Renovation':'🛁',
+  'Granite Works':'💎','Tile Cutting':'✂️','Routering':'🔧',
+  'Waterproofing':'💧','Tile Shop Inquiry':'🏪',
+}
 
 const EXPLORE_PROS = [
   { label:'👷 Find Tilers',    href:'/providers?type=tiler'      },
@@ -81,11 +75,11 @@ const EXPLORE_MORE = [
 
 <Layout
   title="TilersHub · Sri Lanka's Tile & Bathroom Marketplace"
-  description="Find tilers, contractors, tile shops, brands and products for your tile and bathroom project across Sri Lanka. Free quotes — no login required."
+  description="Post your tiling project free, get bids from verified tilers and contractors. Browse profiles, reviews and prices across Sri Lanka."
 >
 
 <!-- ① HERO ─────────────────────────────────────────────── -->
-<div style="position:relative;min-height:360px;display:flex;align-items:center;justify-content:center;overflow:hidden;padding:56px 20px 48px;background:#0a121f;">
+<div style="position:relative;min-height:380px;display:flex;align-items:center;justify-content:center;overflow:hidden;padding:56px 20px 52px;background:#0a121f;">
   <img
     src="https://images.unsplash.com/photo-1552321554-5fefe8c9ef14?auto=format&fit=crop&w=1400&q=75"
     alt=""
@@ -93,22 +87,22 @@ const EXPLORE_MORE = [
     loading="eager"
     fetchpriority="high"
   />
-  <div style="position:absolute;inset:0;background:linear-gradient(160deg,rgba(10,18,31,0.7) 0%,rgba(26,43,74,0.55) 100%);pointer-events:none;"></div>
+  <div style="position:absolute;inset:0;background:linear-gradient(160deg,rgba(10,18,31,0.75) 0%,rgba(26,43,74,0.6) 100%);pointer-events:none;"></div>
   <div style="position:absolute;inset:0;opacity:0.035;background-image:repeating-linear-gradient(0deg,transparent,transparent 39px,rgba(255,255,255,0.8) 39px,rgba(255,255,255,0.8) 40px),repeating-linear-gradient(90deg,transparent,transparent 39px,rgba(255,255,255,0.8) 39px,rgba(255,255,255,0.8) 40px);pointer-events:none;"></div>
 
   <div style="position:relative;text-align:center;max-width:620px;width:100%;">
     <div style="display:inline-flex;align-items:center;gap:6px;background:rgba(245,158,11,0.12);border:1px solid rgba(245,158,11,0.25);border-radius:20px;padding:5px 16px;margin-bottom:18px;">
       <span style="font-size:9px;font-weight:700;color:var(--gold);letter-spacing:2.5px;text-transform:uppercase;">🇱🇰 Sri Lanka's Tile & Bathroom Marketplace</span>
     </div>
-    <h1 style="font-family:'Playfair Display',serif;font-size:clamp(26px,5vw,48px);font-weight:700;color:#fff;line-height:1.15;margin-bottom:14px;">
-      Everything for Your<br/><span style="color:var(--gold);">Tile &amp; Bathroom Project</span>
+    <h1 style="font-family:'Playfair Display',serif;font-size:clamp(26px,5vw,46px);font-weight:700;color:#fff;line-height:1.15;margin-bottom:12px;">
+      Post. Get Bids.<br/><span style="color:var(--gold);">Build with Confidence.</span>
     </h1>
-    <p style="font-size:clamp(13px,1.8vw,15px);color:rgba(255,255,255,0.6);margin-bottom:26px;line-height:1.8;">
-      Find trusted professionals, quality products, leading brands and the best prices.
+    <p style="font-size:clamp(13px,1.8vw,15px);color:rgba(255,255,255,0.6);margin-bottom:26px;line-height:1.85;">
+      Post your project free — verified tilers bid, you compare and choose.<br/>Browse profiles, reviews and prices islandwide.
     </p>
 
     <!-- Search bar -->
-    <div style="position:relative;max-width:500px;margin:0 auto 18px;">
+    <div style="position:relative;max-width:500px;margin:0 auto 20px;">
       <span style="position:absolute;left:16px;top:50%;transform:translateY(-50%);font-size:18px;pointer-events:none;">🔍</span>
       <input
         type="text"
@@ -125,33 +119,39 @@ const EXPLORE_MORE = [
 
     <!-- CTAs -->
     <div style="display:flex;gap:10px;justify-content:center;flex-wrap:wrap;">
-      <a href="/providers?type=tiler"
-        style="display:inline-flex;align-items:center;gap:7px;background:var(--terra);color:#fff;border-radius:12px;padding:12px 22px;font-size:13px;font-weight:700;text-decoration:none;box-shadow:0 4px 20px rgba(224,90,43,0.4);">
-        👷 Find Tiler
-      </a>
       <a href="/post-project"
-        style="display:inline-flex;align-items:center;gap:7px;background:rgba(255,255,255,0.1);color:#fff;border:1.5px solid rgba(255,255,255,0.3);border-radius:12px;padding:12px 22px;font-size:13px;font-weight:600;text-decoration:none;">
+        style="display:inline-flex;align-items:center;gap:7px;background:var(--terra);color:#fff;border-radius:12px;padding:12px 24px;font-size:14px;font-weight:700;text-decoration:none;box-shadow:0 4px 20px rgba(224,90,43,0.45);">
         📋 Post a Project
       </a>
+      <a href="/providers?type=tiler"
+        style="display:inline-flex;align-items:center;gap:7px;background:rgba(255,255,255,0.12);color:#fff;border:1.5px solid rgba(255,255,255,0.3);border-radius:12px;padding:12px 22px;font-size:13px;font-weight:600;text-decoration:none;">
+        👷 Find Tilers
+      </a>
       <a href="/jobs"
-        style="display:inline-flex;align-items:center;gap:7px;background:rgba(255,255,255,0.1);color:#fff;border:1.5px solid rgba(255,255,255,0.3);border-radius:12px;padding:12px 22px;font-size:13px;font-weight:600;text-decoration:none;">
-        💼 Browse Jobs
+        style="display:inline-flex;align-items:center;gap:7px;background:rgba(255,255,255,0.12);color:#fff;border:1.5px solid rgba(255,255,255,0.3);border-radius:12px;padding:12px 22px;font-size:13px;font-weight:600;text-decoration:none;">
+        💼 Browse Projects
       </a>
     </div>
   </div>
 </div>
 
-<!-- ② QUICK ACTIONS ──────────────────────────────────────── -->
-<section style="background:#fff;padding:20px 0 18px;border-bottom:1px solid var(--border);">
-  <div class="quick-grid">
-    {QUICK_ACTIONS.map(a => (
-      <a href={a.href} class="quick-card">
-        <div class="qc-icon" style={`background:${a.bg};`}>{a.icon}</div>
-        <span class="qc-label">{a.label}</span>
-      </a>
+<!-- ② HOW IT WORKS ───────────────────────────────────────── -->
+<div style="background:#fff;border-bottom:1px solid var(--border);padding:20px;">
+  <div style="max-width:700px;margin:0 auto;display:grid;grid-template-columns:repeat(3,1fr);gap:8px;text-align:center;">
+    {[
+      { icon:'📋', step:'1', title:'Post Your Project', desc:'Free, no login. Describe what you need.' },
+      { icon:'💬', step:'2', title:'Providers Bid',     desc:'Tilers submit quotes and messages.' },
+      { icon:'✅', step:'3', title:'You Choose',        desc:'Pick the best bid, contact via WhatsApp.' },
+    ].map((s, i, arr) => (
+      <div style={`padding:14px 10px;position:relative;${i < arr.length-1 ? 'border-right:1px solid var(--border);' : ''}`}>
+        <div style="font-size:24px;margin-bottom:6px;">{s.icon}</div>
+        <div style="font-size:10px;font-weight:700;color:var(--terra);letter-spacing:1px;text-transform:uppercase;margin-bottom:3px;">Step {s.step}</div>
+        <div style="font-size:12px;font-weight:700;color:var(--text);margin-bottom:3px;">{s.title}</div>
+        <div style="font-size:11px;color:var(--text-4);line-height:1.5;">{s.desc}</div>
+      </div>
     ))}
   </div>
-</section>
+</div>
 
 <!-- ③ STATS BAR ───────────────────────────────────────────── -->
 <div style="background:var(--navy);padding:12px 0;">
@@ -159,8 +159,8 @@ const EXPLORE_MORE = [
     {[
       { n: '500+', l: 'Professionals' },
       { n: '25',   l: 'Districts' },
-      { n: 'Free', l: 'Always' },
-      { n: '100%', l: 'WhatsApp Direct' },
+      { n: 'Free', l: 'No Login Needed' },
+      { n: 'Bid',  l: '& Compare Quotes' },
     ].map((s, i, arr) => (
       <div style={`text-align:center;padding:6px 20px;border-right:${i < arr.length-1 ? '1px solid rgba(255,255,255,0.1)' : 'none'}`}>
         <div style="font-family:'Playfair Display',serif;font-size:17px;font-weight:700;color:var(--gold);">{s.n}</div>
@@ -202,28 +202,18 @@ const EXPLORE_MORE = [
           <div class="tiler-meta">
             {t.experience_years > 0 ? `🛡️ ${t.experience_years}+ Yrs · ` : ''}📍 {t.city || t.district}
           </div>
-          {t.slug ? (
-            <a href={`/tilers/${t.slug}`}
-              style="display:flex;align-items:center;justify-content:center;width:100%;padding:7px;background:#0f172a;color:#fff;border-radius:8px;font-size:11px;font-weight:700;text-decoration:none;margin-top:8px;">
-              View Profile →
-            </a>
-          ) : (t.whatsapp || t.phone) ? (
-            <a href={waLink(t.whatsapp || t.phone, t.full_name)} target="_blank" rel="noopener" class="tiler-wa-btn" style="margin-top:8px;">
-              💬 WhatsApp
-            </a>
-          ) : (
-            <a href="/providers?type=tiler"
-              style="display:flex;align-items:center;justify-content:center;width:100%;padding:7px;background:#f1f5f9;color:#64748b;border-radius:8px;font-size:11px;font-weight:600;text-decoration:none;margin-top:8px;">
-              View Profile →
-            </a>
-          )}
+          <a
+            href={t.slug ? `/tilers/${t.slug}` : '/providers?type=tiler'}
+            style="display:flex;align-items:center;justify-content:center;width:100%;padding:7px;background:#0f172a;color:#fff;border-radius:8px;font-size:11px;font-weight:700;text-decoration:none;margin-top:8px;">
+            View Profile →
+          </a>
         </div>
       </div>
     ))}
   </div>
 </section>
 
-<!-- ⑤ POST + LATEST JOBS ─────────────────────────────────── -->
+<!-- ⑤ POST + LATEST PROJECTS ─────────────────────────────── -->
 <section style="background:var(--navy);padding:36px 20px;border-top:1px solid rgba(255,255,255,0.06);">
   <div style="max-width:900px;margin:0 auto;display:grid;grid-template-columns:5fr 7fr;gap:16px;align-items:stretch;">
 
@@ -233,48 +223,61 @@ const EXPLORE_MORE = [
       <div style="font-family:'Playfair Display',serif;font-size:18px;font-weight:700;color:#fff;margin-bottom:8px;line-height:1.3;">
         Post Your Project
       </div>
-      <p style="font-size:12px;color:rgba(255,255,255,0.75);margin-bottom:20px;line-height:1.7;">
-        Get free quotes from verified tilers and contractors. No login · 100% free · WhatsApp direct.
+      <p style="font-size:12px;color:rgba(255,255,255,0.75);margin-bottom:12px;line-height:1.7;">
+        Describe your project — tilers and contractors will submit bids. No login required.
       </p>
+      <div style="display:flex;flex-direction:column;gap:6px;margin-bottom:20px;">
+        {['📋 Free to post — no account needed','💬 Providers bid, you choose','✅ Contact your pick via WhatsApp'].map(f => (
+          <div style="font-size:11px;color:rgba(255,255,255,0.8);">{f}</div>
+        ))}
+      </div>
       <a href="/post-project"
         style="display:inline-flex;align-items:center;justify-content:center;gap:7px;background:#fff;color:var(--terra);border-radius:12px;padding:12px 20px;font-size:13px;font-weight:800;text-decoration:none;">
         Post a Project →
       </a>
     </div>
 
-    <!-- Latest jobs -->
+    <!-- Latest projects -->
     <div style="background:rgba(255,255,255,0.05);border:1px solid rgba(255,255,255,0.1);border-radius:18px;padding:20px 20px 16px;">
       <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:14px;">
         <div style="font-size:13px;font-weight:700;color:#fff;">💼 Latest Projects</div>
         <a href="/jobs" style="font-size:11px;color:rgba(255,255,255,0.5);text-decoration:none;font-weight:600;">Browse all →</a>
       </div>
 
-      {jobs.length > 0 ? (
+      {projects.length > 0 ? (
         <div style="display:flex;flex-direction:column;gap:8px;">
-          {jobs.map(job => (
-            <a href={`/jobs/${job.id}`}
+          {projects.map(job => (
+            <a href={`/job?id=${job.id}`}
               style="display:flex;align-items:center;gap:12px;padding:11px 14px;background:rgba(255,255,255,0.06);border-radius:12px;text-decoration:none;color:inherit;transition:background 0.15s;"
               onmouseover="this.style.background='rgba(255,255,255,0.1)'"
               onmouseout="this.style.background='rgba(255,255,255,0.06)'">
+              <span style="font-size:20px;flex-shrink:0;">{TYPE_ICON[job.project_type] || '🏠'}</span>
               <div style="flex:1;min-width:0;">
-                <div style="font-size:13px;font-weight:700;color:#fff;overflow:hidden;text-overflow:ellipsis;white-space:nowrap;">{job.title}</div>
+                <div style="font-size:13px;font-weight:700;color:#fff;overflow:hidden;text-overflow:ellipsis;white-space:nowrap;">{job.project_type}</div>
                 <div style="font-size:11px;color:rgba(255,255,255,0.45);margin-top:2px;">📍 {job.city || job.district} · {timeAgo(job.created_at)}</div>
               </div>
-              {job.budget_min && (
-                <div style="flex-shrink:0;font-size:12px;font-weight:700;color:var(--gold);">Rs.{job.budget_min}+</div>
+              {job.budget_range && (
+                <div style="flex-shrink:0;font-size:10px;font-weight:700;color:var(--gold);max-width:80px;text-align:right;line-height:1.3;">{job.budget_range.replace('Rs. ','Rs.')}</div>
               )}
               <div style="font-size:16px;color:rgba(255,255,255,0.3);">›</div>
             </a>
           ))}
         </div>
       ) : (
-        <div style="text-align:center;padding:24px 16px;">
+        <div style="text-align:center;padding:28px 16px;">
           <div style="font-size:36px;margin-bottom:10px;">💼</div>
           <div style="font-size:13px;color:rgba(255,255,255,0.5);line-height:1.65;">
             No open projects yet.<br/>Be the first to post — it's free.
           </div>
+          <a href="/post-project" style="display:inline-flex;align-items:center;gap:6px;margin-top:14px;background:rgba(224,90,43,0.8);color:#fff;border-radius:10px;padding:9px 18px;font-size:12px;font-weight:700;text-decoration:none;">Post a Project</a>
         </div>
       )}
+
+      <!-- Provider CTA -->
+      <div style="margin-top:12px;padding:10px 14px;background:rgba(255,255,255,0.04);border:1px solid rgba(255,255,255,0.08);border-radius:12px;">
+        <div style="font-size:11px;color:rgba(255,255,255,0.6);margin-bottom:6px;font-weight:600;">Are you a tiler or contractor?</div>
+        <a href="/jobs" style="font-size:12px;font-weight:700;color:var(--gold);text-decoration:none;">Browse all projects and submit bids →</a>
+      </div>
     </div>
 
   </div>
@@ -372,11 +375,7 @@ const EXPLORE_MORE = [
 </Layout>
 
 <style>
-  @media (max-width: 480px) {
-    .quick-grid { grid-template-columns: repeat(2, 1fr) !important; }
-  }
   @media (max-width: 640px) {
-    /* Jobs section: stack columns */
     div[style*="grid-template-columns:5fr 7fr"] {
       grid-template-columns: 1fr !important;
     }
