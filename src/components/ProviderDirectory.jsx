@@ -154,37 +154,12 @@ function ShopCard({ provider, onClick }) {
   )
 }
 
-// ─── Tiler card colour palette ──────────────────────────────────────────────
-const TILER_COVER_BG = 'linear-gradient(135deg, #0F2444 0%, #1B3A6B 100%)'
-
-const TILING_COVER_PHOTOS = [
-  'https://images.unsplash.com/photo-1558618666-fcd25c85cd64?auto=format&fit=crop&w=800&q=75',
-  'https://images.unsplash.com/photo-1484101403633-562f891dc89a?auto=format&fit=crop&w=800&q=75',
-  'https://images.unsplash.com/photo-1552321554-5fefe8c9ef14?auto=format&fit=crop&w=800&q=75',
-  'https://images.unsplash.com/photo-1534237710431-e2fc698436d0?auto=format&fit=crop&w=800&q=75',
-  'https://images.unsplash.com/photo-1620626011761-996317702149?auto=format&fit=crop&w=800&q=75',
-  'https://images.unsplash.com/photo-1552239937-bd2f32de3f6f?auto=format&fit=crop&w=800&q=75',
-  'https://images.unsplash.com/photo-1574739782594-db4ead022697?auto=format&fit=crop&w=800&q=75',
-]
-
-function getCoverPhoto(tiler) {
-  if (tiler.cover_image && !tiler.cover_image.includes('picsum')) return tiler.cover_image
-  const idx = ((tiler.full_name || '').charCodeAt(0) + (tiler.full_name || '').length) % TILING_COVER_PHOTOS.length
-  return TILING_COVER_PHOTOS[idx]
-}
-
 // Tiler profile card
 function TilerCard({ tiler, onClick }) {
   const phone = tiler.whatsapp || tiler.phone
   const altWaPhone = (tiler.whatsapp && tiler.whatsapp !== tiler.phone) ? tiler.phone : null
   const isVerified = tiler.is_verified
   const hasDedicatedPage = isVerified && tiler.slug
-
-  // Only show real tiling photos from the DB — blank if none
-  const coverImg = tiler.cover_image &&
-    !tiler.cover_image.includes('picsum') &&
-    !tiler.cover_image.includes('randomuser')
-      ? tiler.cover_image : null
 
   return (
     <div
@@ -203,21 +178,16 @@ function TilerCard({ tiler, onClick }) {
       onMouseOver={e => { e.currentTarget.style.transform = 'translateY(-4px)'; e.currentTarget.style.boxShadow = '0 16px 40px rgba(0,0,0,0.12)' }}
       onMouseOut={e => { e.currentTarget.style.transform = ''; e.currentTarget.style.boxShadow = '0 2px 12px rgba(0,0,0,0.06)' }}
     >
-      {/* ── Cover image ── */}
+      {/* ── Cover placeholder ── */}
       <div style={{ height: 180, position: 'relative', overflow: 'hidden', flexShrink: 0 }}>
-        {coverImg ? (
-          <img src={coverImg} alt="Tiling work" loading="lazy"
-            style={{ width: '100%', height: '100%', objectFit: 'cover' }} />
-        ) : (
-          <div style={{
-            width: '100%', height: '100%',
-            background: '#f8fafc',
-            backgroundImage: 'repeating-linear-gradient(0deg,transparent,transparent 39px,#e2e8f0 39px,#e2e8f0 40px),repeating-linear-gradient(90deg,transparent,transparent 39px,#e2e8f0 39px,#e2e8f0 40px)',
-            display: 'flex', alignItems: 'center', justifyContent: 'center',
-          }}>
-            <span style={{ fontSize: 40, opacity: 0.15 }}>🪨</span>
-          </div>
-        )}
+        <div style={{
+          width: '100%', height: '100%',
+          background: '#f8fafc',
+          backgroundImage: 'repeating-linear-gradient(0deg,transparent,transparent 39px,#e2e8f0 39px,#e2e8f0 40px),repeating-linear-gradient(90deg,transparent,transparent 39px,#e2e8f0 39px,#e2e8f0 40px)',
+          display: 'flex', alignItems: 'center', justifyContent: 'center',
+        }}>
+          <span style={{ fontSize: 40, opacity: 0.15 }}>🪨</span>
+        </div>
 
         {/* Verified / Community badge */}
         {isVerified ? (
@@ -344,7 +314,7 @@ function ProviderModal({ item, isTiler, onClose }) {
           {coverImage
             ? <img src={coverImage} alt={name} style={{ width: '100%', height: '100%', objectFit: 'cover' }} />
             : <>
-                <div style={{ position: 'absolute', inset: 0, background: isTiler ? TILER_COVER_BG : 'linear-gradient(135deg, #0f2444 0%, #1B3A6B 100%)' }} />
+                <div style={{ position: 'absolute', inset: 0, background: 'linear-gradient(135deg, #0F2444 0%, #1B3A6B 100%)' }} />
                 <div style={{ position: 'absolute', inset: 0, opacity: 0.04, backgroundImage: 'repeating-linear-gradient(0deg,transparent,transparent 19px,rgba(255,255,255,0.8) 19px,rgba(255,255,255,0.8) 20px),repeating-linear-gradient(90deg,transparent,transparent 19px,rgba(255,255,255,0.8) 19px,rgba(255,255,255,0.8) 20px)' }} />
               </>
           }

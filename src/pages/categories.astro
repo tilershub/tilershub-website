@@ -1,0 +1,73 @@
+---
+import Layout from '../layouts/Layout.astro'
+
+const CATS = [
+  { icon: '👷', label: 'Tilers',                  desc: 'Verified tiling professionals',          href: '/providers?type=tiler',      bg: '#1A2B4A' },
+  { icon: '🚿', label: 'Bathroom Contractors',     desc: 'Full bathroom renovation & fit-out',     href: '/providers?type=contractor', bg: '#0369a1' },
+  { icon: '🏪', label: 'Tile Shops',               desc: 'Showrooms & tile retailers',             href: '/providers?type=tile_shop',  bg: '#C1603A' },
+  { icon: '🏷️', label: 'Brands',                   desc: 'Tile & bathware manufacturers',          href: '/tile',                      bg: '#D4AF37' },
+  { icon: '🪨', label: 'Tiles & Products',          desc: 'Browse tiles, adhesives, grouts & more', href: '/tile',                      bg: '#374151' },
+  { icon: '🪟', label: 'Glass Works',              desc: 'Glass partitions, shower screens',       href: '/providers',                  bg: '#0891b2' },
+  { icon: '🪵', label: 'Vanity Cupboards',         desc: 'Custom vanity & bathroom storage',       href: '/providers',                  bg: '#92400e' },
+  { icon: '🔩', label: 'Plumbing Works',           desc: 'Plumbers for bathrooms & kitchens',      href: '/providers',                  bg: '#1e40af' },
+  { icon: '⚡', label: 'Electrical Works',         desc: 'Bathroom & kitchen electrical',          href: '/providers',                  bg: '#7c3aed' },
+  { icon: '🏗️', label: 'Ceiling Works',            desc: 'False ceiling & PVC ceiling specialists', href: '/providers',                 bg: '#166534' },
+  { icon: '💧', label: 'Waterproofing',            desc: 'Waterproofing membranes & application',  href: '/providers?type=contractor', bg: '#1e3a5f' },
+  { icon: '🪨', label: 'Granite Works',            desc: 'Granite cutting, polishing & fitting',   href: '/providers?type=workshop',   bg: '#4b5563' },
+  { icon: '🔲', label: 'Aluminum Works',           desc: 'Aluminum frames, windows & doors',       href: '/providers',                  bg: '#374151' },
+  { icon: '✂️', label: 'Tile Cutting & Routering', desc: 'Precision cutting & edge profiling',     href: '/providers?type=workshop',   bg: '#0f2444' },
+  { icon: '🚚', label: 'Delivery Services',        desc: 'Tile & materials delivery islandwide',   href: '/providers',                  bg: '#166534' },
+]
+---
+
+<Layout
+  title="Categories · TilersHub"
+  description="Browse all categories on TilersHub — tilers, contractors, tile shops, brands, home improvement services and more."
+>
+
+  <!-- Hero -->
+  <div style="background:linear-gradient(135deg,#1A2B4A,#2B4275);padding:48px 20px 40px;text-align:center;position:relative;overflow:hidden;">
+    <div style="position:absolute;inset:0;opacity:0.04;background-image:repeating-linear-gradient(0deg,transparent,transparent 39px,rgba(255,255,255,0.8) 39px,rgba(255,255,255,0.8) 40px),repeating-linear-gradient(90deg,transparent,transparent 39px,rgba(255,255,255,0.8) 39px,rgba(255,255,255,0.8) 40px);pointer-events:none;"></div>
+    <div style="position:relative;max-width:540px;margin:0 auto;">
+      <span style="font-size:9px;font-weight:700;color:rgba(245,158,11,0.7);letter-spacing:3px;text-transform:uppercase;display:block;margin-bottom:12px;">☰ All Categories</span>
+      <h1 style="font-family:'Playfair Display',serif;font-size:clamp(24px,4vw,36px);font-weight:700;color:#fff;margin:0 0 10px;line-height:1.2;">
+        Browse <span style="color:var(--gold);">All Categories</span>
+      </h1>
+      <p style="font-size:13px;color:rgba(255,255,255,0.5);margin:0;line-height:1.75;">
+        Tilers, contractors, shops, brands and home improvement services — everything in one place.
+      </p>
+    </div>
+  </div>
+
+  <!-- Category grid -->
+  <section style="background:var(--surface);padding:40px 20px 64px;">
+    <div style="max-width:900px;margin:0 auto;display:grid;grid-template-columns:repeat(auto-fill,minmax(160px,1fr));gap:14px;">
+      {CATS.map(c => (
+        <a href={c.href}
+          style="display:flex;flex-direction:column;align-items:center;gap:12px;padding:22px 14px 18px;background:#fff;border:1.5px solid var(--border);border-radius:18px;text-decoration:none;color:inherit;text-align:center;transition:all 0.2s;box-shadow:0 2px 8px rgba(0,0,0,0.04);"
+          onmouseover="this.style.borderColor='#1A2B4A';this.style.transform='translateY(-4px)';this.style.boxShadow='0 12px 32px rgba(0,0,0,0.1)'"
+          onmouseout="this.style.borderColor='';this.style.transform='';this.style.boxShadow='0 2px 8px rgba(0,0,0,0.04)'">
+          <div style={`width:60px;height:60px;border-radius:16px;background:${c.bg};display:flex;align-items:center;justify-content:center;font-size:26px;box-shadow:0 4px 12px rgba(0,0,0,0.2);`}>
+            {c.icon}
+          </div>
+          <div>
+            <div style="font-size:13px;font-weight:700;color:var(--text);line-height:1.3;margin-bottom:4px;">{c.label}</div>
+            <div style="font-size:10px;color:var(--text-4);line-height:1.4;">{c.desc}</div>
+          </div>
+        </a>
+      ))}
+    </div>
+  </section>
+
+  <!-- CTA -->
+  <section style="background:var(--navy);padding:40px 20px;text-align:center;">
+    <div style="max-width:520px;margin:0 auto;">
+      <h2 style="font-family:'Playfair Display',serif;font-size:clamp(18px,3vw,24px);font-weight:700;color:#fff;margin-bottom:8px;">Can't find what you need?</h2>
+      <p style="font-size:13px;color:rgba(255,255,255,0.5);margin-bottom:20px;line-height:1.8;">Post a project and let professionals come to you — free, no login needed.</p>
+      <a href="/post-project" style="display:inline-flex;align-items:center;gap:7px;background:var(--terra);color:#fff;border-radius:12px;padding:12px 24px;font-size:13px;font-weight:700;text-decoration:none;">
+        📋 Post a Project
+      </a>
+    </div>
+  </section>
+
+</Layout>

@@ -2,8 +2,8 @@
 import '../index.css'
 import AuthButton from '../components/AuthButton.jsx'
 const {
-  title = "TilersHub · Sri Lanka's Tiling Marketplace",
-  description = "Find verified tilers, workshops, suppliers and tile brands across Sri Lanka. Post your tiling project free on TilersHub.",
+  title = "TilersHub · Sri Lanka's Tile & Bathroom Marketplace",
+  description = "Find tilers, contractors, tile shops, brands and products for your tile and bathroom project across Sri Lanka. Free — no login required.",
 } = Astro.props
 const path = Astro.url.pathname
 ---
@@ -173,23 +173,21 @@ const path = Astro.url.pathname
         Home
       </a>
       <a href="/providers" class={`bottom-nav-item${path.startsWith('/providers')?' active':''}`}>
-        <span class="bottom-nav-icon">👷</span>
-        Tilers
+        <span class="bottom-nav-icon">🔍</span>
+        Search
       </a>
-      <div style="flex:1;display:flex;align-items:center;justify-content:center;">
-        <a href="/post-project" class="bottom-nav-post" title="Post Project">
-          <span class="bottom-nav-post-icon">＋</span>
-          Post
-        </a>
-      </div>
-      <a href="/estimator" class={`bottom-nav-item${path==='/estimator'?' active':''}`}>
-        <span class="bottom-nav-icon">📐</span>
-        Estimate
-      </a>
-      <button class="bottom-nav-item" id="bottom-menu-btn">
+      <a href="/categories" class={`bottom-nav-item${path==='/categories'?' active':''}`}>
         <span class="bottom-nav-icon">☰</span>
-        More
-      </button>
+        Categories
+      </a>
+      <a href="/jobs" class={`bottom-nav-item${path==='/jobs'?' active':''}`}>
+        <span class="bottom-nav-icon">💼</span>
+        Jobs
+      </a>
+      <a href="/dashboard" class={`bottom-nav-item${path==='/dashboard'?' active':''}`}>
+        <span class="bottom-nav-icon">👤</span>
+        Account
+      </a>
     </div>
   </nav>
 
