@@ -184,7 +184,7 @@ async function uploadImage(file, folder) {
 export default function JoinForm() {
   const [form, setForm] = useState({
     name: '', city: '', district: '',
-    whatsapp: '', phone: '',
+    whatsapp: '',
     service_areas: [],
     services: [],
     description: '',
@@ -238,7 +238,6 @@ export default function JoinForm() {
         city: form.city.trim(),
         district: form.district || null,
         whatsapp: form.whatsapp.replace(/\s/g, ''),
-        phone: form.phone.trim() || null,
         service_areas: form.service_areas.length ? form.service_areas : null,
         services: form.services,
         description: form.description.trim() || null,
@@ -312,29 +311,17 @@ export default function JoinForm() {
         </Field>
       </div>
 
-      {/* WhatsApp + Phone */}
-      <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: 14 }}>
-        <Field label="WhatsApp Number" id="whatsapp" req error={errors.whatsapp} hint="Customers will contact you here.">
-          <input
-            id="whatsapp"
-            value={form.whatsapp}
-            onChange={e => set('whatsapp', e.target.value)}
-            placeholder="+94771234567"
-            type="tel"
-            style={inputStyle(!!errors.whatsapp)}
-          />
-        </Field>
-        <Field label="Phone Number" id="phone" hint="Optional — landline or alternate number.">
-          <input
-            id="phone"
-            value={form.phone}
-            onChange={e => set('phone', e.target.value)}
-            placeholder="+94112345678"
-            type="tel"
-            style={inputStyle(false)}
-          />
-        </Field>
-      </div>
+      {/* WhatsApp */}
+      <Field label="WhatsApp Number" id="whatsapp" req error={errors.whatsapp} hint="Customers will contact you here.">
+        <input
+          id="whatsapp"
+          value={form.whatsapp}
+          onChange={e => set('whatsapp', e.target.value)}
+          placeholder="+94771234567"
+          type="tel"
+          style={inputStyle(!!errors.whatsapp)}
+        />
+      </Field>
 
       {/* Service Areas */}
       <Field label="Service Areas" id="service_areas" hint="Select all districts you're available to work in.">
