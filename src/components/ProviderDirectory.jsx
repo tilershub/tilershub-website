@@ -74,70 +74,78 @@ function ProviderCard({ provider, onClick }) {
   )
 }
 
+const BATH_KWS = ['bathroom', 'sanitary', 'bathware', 'faucet', 'vanity', 'shower', 'basin', 'toilet', 'bathtub']
+const TILE_KWS = ['tile', 'floor', 'wall', 'mosaic', 'porcelain', 'ceramic', 'granite', 'marble']
+
+function shopTagline(type, services) {
+  const s = (services || []).join(' ').toLowerCase()
+  const hasTile = TILE_KWS.some(k => s.includes(k))
+  const hasBath = BATH_KWS.some(k => s.includes(k))
+  if (hasTile && hasBath) return 'Tiles & Bathware'
+  if (type === 'bathroom_shop') return hasTile ? 'Tiles & Bathware' : 'Bathware Specialist'
+  if (type === 'brand_dealer') return 'Authorised Brand Dealer'
+  return hasBath ? 'Tiles & Bathware' : 'Tile Showroom'
+}
+
 function ShopCard({ provider, onClick }) {
-  const pts = PROVIDER_TYPES.find(p => p.value === provider.provider_type)
-  const brands = (provider.services || []).filter(s =>
-    !['Floor Tiles', 'Wall Tiles', 'Bathroom Tiles', 'Outdoor Tiles', 'Commercial'].includes(s)
-  )
-  const categories = (provider.services || []).filter(s =>
-    ['Floor Tiles', 'Wall Tiles', 'Bathroom Tiles', 'Outdoor Tiles', 'Commercial'].includes(s)
-  )
+  const waPhone = provider.whatsapp || provider.phone
+  const waLink = waPhone ? buildWhatsAppLink(waPhone, provider.name) : null
+  const tagline = shopTagline(provider.provider_type, provider.services)
+  const coverImg = provider.cover_image && !provider.cover_image.includes('picsum') ? provider.cover_image : null
+  const chips = (provider.services || []).slice(0, 3)
 
   return (
-    <div onClick={() => onClick(provider)}
-      style={{ background: '#fff', border: '1px solid #e2e8f0', borderRadius: 16, overflow: 'hidden', cursor: 'pointer', transition: 'all 0.2s' }}
-      onMouseOver={e => { e.currentTarget.style.transform = 'translateY(-4px)'; e.currentTarget.style.boxShadow = '0 16px 40px rgba(27,58,107,0.1)' }}
-      onMouseOut={e => { e.currentTarget.style.transform = ''; e.currentTarget.style.boxShadow = '' }}
+    <div
+      onClick={() => onClick(provider)}
+      style={{ background: '#fff', border: '1px solid #e8edf5', borderRadius: 20, overflow: 'hidden', cursor: 'pointer', display: 'flex', boxShadow: '0 2px 12px rgba(0,0,0,0.06)', transition: 'all 0.2s' }}
+      onMouseOver={e => { e.currentTarget.style.transform = 'translateY(-4px)'; e.currentTarget.style.boxShadow = '0 16px 40px rgba(0,0,0,0.12)' }}
+      onMouseOut={e => { e.currentTarget.style.transform = ''; e.currentTarget.style.boxShadow = '0 2px 12px rgba(0,0,0,0.06)' }}
     >
-      {provider.cover_image ? (
-        <div style={{ height: 100, overflow: 'hidden', position: 'relative' }}>
-          <img src={provider.cover_image} alt={provider.name} style={{ width: '100%', height: '100%', objectFit: 'cover' }} />
-          <div style={{ position: 'absolute', inset: 0, background: 'linear-gradient(to top, rgba(15,36,68,0.85) 0%, transparent 60%)' }} />
-        </div>
-      ) : (
-        <div style={{ background: 'linear-gradient(135deg, #0f2444, #1B3A6B)', padding: '18px 18px 14px', display: 'flex', alignItems: 'center', gap: 12 }}>
-          <div style={{ width: 44, height: 44, borderRadius: 12, background: 'rgba(255,255,255,0.12)', display: 'flex', alignItems: 'center', justifyContent: 'center', fontSize: 22, flexShrink: 0 }}>🏪</div>
-          <div style={{ flex: 1, minWidth: 0 }}>
-            <div style={{ fontWeight: 700, fontSize: 15, color: '#fff', overflow: 'hidden', textOverflow: 'ellipsis', whiteSpace: 'nowrap' }}>{provider.name}</div>
-            <div style={{ fontSize: 11, color: 'rgba(255,255,255,0.55)', marginTop: 2 }}>📍 {provider.city}{provider.district ? `, ${provider.district}` : ''}</div>
+      {/* Left: photo */}
+      <div style={{ width: 110, flexShrink: 0, position: 'relative', minHeight: 140 }}>
+        {coverImg ? (
+          <img src={coverImg} alt={provider.name} loading="lazy"
+            style={{ width: '100%', height: '100%', objectFit: 'cover', display: 'block' }} />
+        ) : (
+          <div style={{ width: '100%', height: '100%', background: '#f8fafc', backgroundImage: 'repeating-linear-gradient(0deg,transparent,transparent 19px,#e2e8f0 19px,#e2e8f0 20px),repeating-linear-gradient(90deg,transparent,transparent 19px,#e2e8f0 19px,#e2e8f0 20px)', display: 'flex', alignItems: 'center', justifyContent: 'center' }}>
+            <span style={{ fontSize: 26, opacity: 0.18 }}>🏪</span>
           </div>
-          {pts && <span style={{ fontSize: 10, fontWeight: 700, padding: '2px 8px', borderRadius: 20, background: 'rgba(255,255,255,0.15)', color: 'rgba(255,255,255,0.8)', whiteSpace: 'nowrap' }}>{pts.icon} {pts.label}</span>}
+        )}
+        {provider.is_featured && (
+          <div style={{ position: 'absolute', top: 8, left: 8, background: '#D4AF37', color: '#fff', fontSize: 8, fontWeight: 700, letterSpacing: 0.5, padding: '3px 7px', borderRadius: 20, boxShadow: '0 2px 6px rgba(0,0,0,0.25)', whiteSpace: 'nowrap' }}>
+            ⭐ Top Rated
+          </div>
+        )}
+      </div>
+
+      {/* Right: content */}
+      <div style={{ flex: 1, padding: '14px 16px', display: 'flex', flexDirection: 'column', minWidth: 0 }}>
+        <div style={{ fontSize: 9, fontWeight: 700, color: '#94a3b8', letterSpacing: 1.2, textTransform: 'uppercase', marginBottom: 4 }}>
+          {tagline}
         </div>
-      )}
-      <div style={{ padding: '14px 18px 16px' }}>
+        <div style={{ fontFamily: "'Playfair Display',serif", fontSize: 15, fontWeight: 700, color: '#0f172a', lineHeight: 1.25, marginBottom: 6, overflow: 'hidden', textOverflow: 'ellipsis', whiteSpace: 'nowrap' }}>
+          {provider.name}
+        </div>
         {provider.description && (
-          <p style={{ fontSize: 12, color: '#64748b', lineHeight: 1.6, marginBottom: 12, display: '-webkit-box', WebkitLineClamp: 2, WebkitBoxOrient: 'vertical', overflow: 'hidden' }}>
+          <p style={{ fontSize: 11, color: '#64748b', lineHeight: 1.6, margin: '0 0 8px', display: '-webkit-box', WebkitLineClamp: 2, WebkitBoxOrient: 'vertical', overflow: 'hidden', flex: 1 }}>
             {provider.description}
           </p>
         )}
-        {brands.length > 0 && (
-          <div style={{ marginBottom: 10 }}>
-            <div style={{ fontSize: 10, fontWeight: 700, color: '#94a3b8', textTransform: 'uppercase', letterSpacing: '0.5px', marginBottom: 5 }}>Brands Carried</div>
-            <div style={{ display: 'flex', flexWrap: 'wrap', gap: 5 }}>
-              {brands.map(b => (
-                <span key={b} style={{ fontSize: 10, padding: '2px 8px', borderRadius: 20, background: '#eef3fb', color: '#1B3A6B', border: '1px solid #d5e2f5', fontWeight: 600 }}>{b}</span>
-              ))}
-            </div>
-          </div>
-        )}
-        {categories.length > 0 && (
-          <div style={{ display: 'flex', flexWrap: 'wrap', gap: 5, marginBottom: 12 }}>
-            {categories.map(c => (
-              <span key={c} style={{ fontSize: 10, padding: '2px 8px', borderRadius: 20, background: '#f8fafc', color: '#475569', border: '1px solid #e2e8f0' }}>{c}</span>
+        {chips.length > 0 && (
+          <div style={{ display: 'flex', flexWrap: 'wrap', gap: 4, marginBottom: 10 }}>
+            {chips.map(s => (
+              <span key={s} style={{ fontSize: 9, fontWeight: 600, padding: '2px 7px', borderRadius: 20, background: '#eef3fb', color: '#1B3A6B', border: '1px solid #d5e2f5' }}>{s}</span>
             ))}
           </div>
         )}
-        <div style={{ display: 'flex', gap: 8 }}>
-          {provider.whatsapp && (
-            <a href={buildWhatsAppLink(provider.whatsapp, provider.name)} target="_blank" rel="noopener noreferrer" onClick={e => e.stopPropagation()}
-              style={{ flex: 1, display: 'flex', alignItems: 'center', justifyContent: 'center', gap: 6, background: '#25D366', color: '#fff', borderRadius: 10, padding: '8px 12px', fontSize: 12, fontWeight: 700, textDecoration: 'none' }}>
-              <span>💬</span> WhatsApp
-            </a>
-          )}
-          {provider.phone && (
-            <a href={`tel:${provider.phone}`} onClick={e => e.stopPropagation()}
-              style={{ display: 'flex', alignItems: 'center', justifyContent: 'center', gap: 5, background: '#eef3fb', color: '#1B3A6B', borderRadius: 10, padding: '8px 12px', fontSize: 12, fontWeight: 700, textDecoration: 'none', border: '1px solid #d5e2f5' }}>
-              📞 Call
+        <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', gap: 8, marginTop: 'auto' }}>
+          <div style={{ fontSize: 11, color: '#94a3b8', overflow: 'hidden', whiteSpace: 'nowrap', textOverflow: 'ellipsis' }}>
+            📍 {provider.city || provider.district}
+          </div>
+          {waLink && (
+            <a href={waLink} target="_blank" rel="noopener noreferrer" onClick={e => e.stopPropagation()}
+              style={{ flexShrink: 0, display: 'inline-flex', alignItems: 'center', gap: 4, background: '#0f172a', color: '#fff', borderRadius: 10, padding: '8px 13px', fontSize: 11, fontWeight: 700, textDecoration: 'none', whiteSpace: 'nowrap' }}>
+              View Shop <span style={{ fontSize: 12 }}>›</span>
             </a>
           )}
         </div>
