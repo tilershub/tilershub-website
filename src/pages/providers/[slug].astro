@@ -2,6 +2,7 @@
 import Layout from '../../layouts/Layout.astro'
 import { supabase } from '../../lib/supabase.js'
 import ReviewsSection from '../../components/ReviewsSection.jsx'
+import ClaimProfile from '../../components/ClaimProfile.jsx'
 
 export async function getStaticPaths() {
   const [{ data: providers }, { data: tilers }] = await Promise.all([
@@ -243,6 +244,14 @@ const metaDesc = isUnverified
           style="display:flex;align-items:center;justify-content:center;gap:6px;width:100%;background:#f1f5f9;color:#374151;border:1px solid #e2e8f0;border-radius:12px;padding:10px;font-size:12px;font-weight:700;cursor:pointer;margin-top:10px;">
           🔗 Share Profile
         </button>
+
+        <ClaimProfile
+          client:load
+          profileId={isTiler ? tiler.id : provider.id}
+          profileType={isTiler ? 'tiler' : 'provider'}
+          profileName={name}
+          isClaimed={!!(isTiler ? tiler.user_id : provider.user_id)}
+        />
       </div>
 
     </div>
