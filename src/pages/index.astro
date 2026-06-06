@@ -1,409 +1,582 @@
 ---
 import Layout from '../layouts/Layout.astro'
-import HeroBanner from '../components/HeroBanner.jsx'
-import AdSlider from '../components/AdSlider.jsx'
 import { supabase } from '../lib/supabase.js'
 
 const { data: featuredTilers } = await supabase
   .from('tilers')
-  .select('id,full_name,district,city,services,is_verified,avatar_url,experience_years,avg_rating,phone,whatsapp')
+  .select('id,full_name,district,city,is_verified,slug,avg_rating,phone,whatsapp,experience_years')
   .eq('featured', true)
   .order('experience_years', { ascending: false })
   .limit(8)
 
-const { data: workshopsData } = await supabase
+const { data: contractorsData } = await supabase
   .from('providers')
-  .select('id,name,city,district,services,is_verified,slug,whatsapp')
-  .eq('provider_type', 'workshop')
+  .select('id,name,city,district,services,slug,whatsapp,phone,is_featured,cover_image')
+  .eq('provider_type', 'contractor')
   .eq('status', 'active')
   .limit(6)
 
-const { data: brandsData } = await supabase
-  .from('brands')
-  .select('id,name,slug,description,categories,logo_url')
+const { data: tileShopsData } = await supabase
+  .from('providers')
+  .select('id,name,city,district,services,slug,whatsapp,phone,is_featured,cover_image')
+  .eq('provider_type', 'tile_shop')
   .eq('status', 'active')
   .limit(8)
 
-const tilers = featuredTilers || []
-const workshops = workshopsData || []
-const brands = brandsData || []
+const { data: brandsData } = await supabase
+  .from('brands')
+  .select('id,name,slug,categories,logo_url')
+  .eq('status', 'active')
+  .limit(10)
+
+const { data: jobsData } = await supabase
+  .from('jobs')
+  .select('id,title,district,city,created_at,budget_min,budget_max')
+  .eq('status', 'open')
+  .order('created_at', { ascending: false })
+  .limit(4)
+
+const tilers      = featuredTilers  || []
+const contractors = contractorsData || []
+const tileShops   = tileShopsData   || []
+const brands      = brandsData      || []
+const jobs        = jobsData        || []
 
 function initials(name) {
-  return name?.split(' ').map(w => w[0]).join('').slice(0, 2).toUpperCase() || 'TH'
+  return name?.split(' ').map(w => w[0]).join('').slice(0,2).toUpperCase() || 'TH'
 }
 
 function waLink(phone, name) {
-  const n = (phone || '').replace(/\D/g, '')
-  const normalized = n.startsWith('94') ? n : '94' + n.replace(/^0/, '')
-  const who = name ? `*${name}*` : 'ඔබව'
-  const msg = encodeURIComponent(`ආයුබෝවන්! 🙏\n\nමම *TilersHub* (www.tilershub.lk) හරහා ${who} සොයාගතිමි.\n\nඔබගේ සේවාව ගැන දැනගැනීමට කැමැත්තෙමි.\n\n📌 *TilersHub.lk* Lead\nස්තූතියි! 🏠`)
-  return `https://wa.me/${normalized}?text=${msg}`
+  const n = (phone||'').replace(/\D/g,'')
+  const num = n.startsWith('94') ? n : '94'+n.replace(/^0/,'')
+  const msg = encodeURIComponent(`ආයුබෝවන්! 🙏\n\nමම *TilersHub* (www.tilershub.lk) හරහා *${name}* සොයාගතිමි.\n\nඔබගේ සේවාව ගැන දැනගැනීමට කැමැත්තෙමි.\n\n📌 *TilersHub.lk* Lead\nස්තූතියි! 🏠`)
+  return `https://wa.me/${num}?text=${msg}`
+}
+
+function timeAgo(dateStr) {
+  if (!dateStr) return ''
+  const diff = Math.floor((Date.now() - new Date(dateStr)) / 86400000)
+  if (diff === 0) return 'Today'
+  if (diff === 1) return 'Yesterday'
+  if (diff < 7)  return `${diff}d ago`
+  if (diff < 30) return `${Math.floor(diff/7)}w ago`
+  return `${Math.floor(diff/30)}mo ago`
 }
 
 const QUICK_ACTIONS = [
-  { icon: '👷', label: 'Find Tiler',  href: '/providers?type=tiler',    bg: '#EEF2FB' },
-  { icon: '📋', label: 'Post Project', href: '/post-project',            bg: '#fff1eb' },
-  { icon: '💼', label: 'Browse Jobs', href: '/jobs',                     bg: '#F0FDF4' },
-  { icon: '🔧', label: 'Tools',       href: '/tools',                    bg: '#FEF3C7' },
-  { icon: '🚿', label: 'Bathrooms',   href: '/bathrooms',                bg: '#EFF6FF' },
-  { icon: '📐', label: 'Estimator',   href: '/estimator',                bg: '#F5F3FF' },
-  { icon: '🏭', label: 'Workshops',   href: '/providers?type=workshop',  bg: '#FFF7ED' },
-  { icon: '🪨', label: 'Tile',        href: '/tile',                     bg: '#FFFBEB' },
-  { icon: '📦', label: 'Suppliers',   href: '/providers?type=supplier',  bg: '#F0FDF4' },
+  { icon: '👷', label: 'Find Tiler',     href: '/providers?type=tiler',     bg: '#EEF2FB' },
+  { icon: '🚿', label: 'Bathroom Quote', href: '/post-project',              bg: '#EFF6FF' },
+  { icon: '🏪', label: 'Tile Shops',     href: '/providers?type=tile_shop', bg: '#FFFBEB' },
+  { icon: '📐', label: 'Calculator',     href: '/estimator',                 bg: '#F5F3FF' },
 ]
 
-const INSPO = [
-  { title: 'Minimalist White Bathroom', tag: 'Bathroom', img: 'https://images.unsplash.com/photo-1552321554-5fefe8c9ef14?auto=format&fit=crop&w=400&q=75', overlay: 'rgba(10,18,32,0.38)' },
-  { title: 'Herringbone Floor Pattern', tag: 'Flooring', img: 'https://images.unsplash.com/photo-1584622650111-993a426fbf0a?auto=format&fit=crop&w=400&q=75', overlay: 'rgba(15,20,40,0.42)' },
-  { title: 'Dark Luxury Wall Tiles', tag: 'Wall Tiles', img: 'https://images.unsplash.com/photo-1615873968403-89e068629265?auto=format&fit=crop&w=400&q=75', overlay: 'rgba(10,10,20,0.48)' },
-  { title: 'Terracotta Kitchen Backsplash', tag: 'Kitchen', img: 'https://images.unsplash.com/photo-1556909114-f6e7ad7d3136?auto=format&fit=crop&w=400&q=75', overlay: 'rgba(30,12,4,0.40)' },
-  { title: 'Marble Effect Living Room', tag: 'Living Room', img: 'https://images.unsplash.com/photo-1600585154340-be6161a56a0c?auto=format&fit=crop&w=400&q=75', overlay: 'rgba(20,18,14,0.35)' },
-  { title: 'Blue Mosaic Feature Wall', tag: 'Feature Wall', img: 'https://images.unsplash.com/photo-1558618666-fcd25c85cd64?auto=format&fit=crop&w=400&q=75', overlay: 'rgba(10,20,40,0.44)' },
+const PRODUCTS = [
+  { icon: '🪨', label: 'Tiles',             href: '/tile',                      bg: '#1A2B4A' },
+  { icon: '🚿', label: 'Bathware',          href: '/bathrooms',                 bg: '#0369a1' },
+  { icon: '🔩', label: 'Tapware',           href: '/bathrooms',                 bg: '#0891b2' },
+  { icon: '🧪', label: 'Adhesives',         href: '/tile',                      bg: '#C1603A' },
+  { icon: '🪣', label: 'Grouts',            href: '/tile',                      bg: '#166534' },
+  { icon: '💧', label: 'Waterproofing',     href: '/providers?type=contractor', bg: '#1e40af' },
+  { icon: '🪵', label: 'Vanity Cupboards',  href: '/bathrooms',                 bg: '#92400e' },
+  { icon: '💡', label: 'Lighting',          href: '/bathrooms',                 bg: '#7c3aed' },
 ]
+
+const SERVICES = [
+  { icon: '🪟', label: 'Glass Works',      href: '/providers' },
+  { icon: '🪵', label: 'Vanity Cupboards', href: '/providers' },
+  { icon: '🔩', label: 'Plumbing Works',   href: '/providers' },
+  { icon: '⚡', label: 'Electrical Works', href: '/providers' },
+  { icon: '🏗️', label: 'Ceiling Works',    href: '/providers' },
+  { icon: '💧', label: 'Waterproofing',    href: '/providers?type=contractor' },
+  { icon: '🪨', label: 'Granite Works',    href: '/providers?type=workshop' },
+  { icon: '🔲', label: 'Aluminum Works',   href: '/providers' },
+  { icon: '✂️', label: 'Tile Cutting',     href: '/providers?type=workshop' },
+]
+
+const CONTR_BG = [
+  'linear-gradient(135deg,#1A2B4A,#2B4275)',
+  'linear-gradient(135deg,#C1603A,#8b4513)',
+  'linear-gradient(135deg,#166534,#14532d)',
+  'linear-gradient(135deg,#7c3aed,#4c1d95)',
+  'linear-gradient(135deg,#0f2444,#1e3a5f)',
+  'linear-gradient(135deg,#92400e,#78350f)',
+]
+const CONTR_ICO = ['🏗️','🔨','🚿','🛁','🪞','🔩']
+const BRAND_COL = ['#1A2B4A','#C1603A','#D4AF37','#1e3a5f','#7c3aed','#166534','#92400e','#374151']
 
 const BLOG_POSTS = [
-  { slug: 'how-to-choose-tile-size',       cat: 'Tiling Tips',   title: 'How to Choose the Right Tile Size for Your Room',  excerpt: 'Larger tiles make rooms look bigger, but installation requires more precision. Learn the pros and cons of each size.', icon: '📐', bg: 'linear-gradient(135deg,#1A2B4A,#2B4275)' },
-  { slug: 'understanding-tile-grades',      cat: 'Buying Guide',  title: 'Understanding Tile Grades: What the Numbers Mean',  excerpt: 'PEI ratings, water absorption, slip resistance — here\'s what every homeowner in Sri Lanka should know before buying.', icon: '🏷️', bg: 'linear-gradient(135deg,#C1603A,#8b4513)' },
-  { slug: 'tiling-cost-guide-sri-lanka',    cat: 'Cost Guide',    title: 'Tiling Cost Guide for Sri Lanka — 2025 Prices',     excerpt: 'Average labour and material costs by room type and tile size across Colombo, Kandy, Galle and beyond.', icon: '💰', bg: 'linear-gradient(135deg,#16a34a,#166534)' },
+  { slug: 'how-to-choose-tile-size',    cat: 'Tiling Tips',  title: 'How to Choose the Right Tile Size',  icon: '📐', bg: 'linear-gradient(135deg,#1A2B4A,#2B4275)' },
+  { slug: 'understanding-tile-grades',   cat: 'Buying Guide', title: 'Understanding Tile Grades',          icon: '🏷️', bg: 'linear-gradient(135deg,#C1603A,#8b4513)' },
+  { slug: 'tiling-cost-guide-sri-lanka', cat: 'Cost Guide',   title: 'Tiling Cost Guide — 2025',           icon: '💰', bg: 'linear-gradient(135deg,#16a34a,#166534)' },
 ]
 
-const WORKSHOP_COVERS = [
-  { bg: 'linear-gradient(135deg,#1A2B4A,#2B4275)', icon: '🏭' },
-  { bg: 'linear-gradient(135deg,#C1603A,#8b4513)', icon: '⚙️' },
-  { bg: 'linear-gradient(135deg,#1e3a5f,#0f2444)', icon: '🔧' },
-  { bg: 'linear-gradient(135deg,#166534,#14532d)', icon: '🏗️' },
-  { bg: 'linear-gradient(135deg,#7c3aed,#4c1d95)', icon: '✂️' },
-  { bg: 'linear-gradient(135deg,#92400e,#78350f)', icon: '🪚' },
+const PLACEHOLDER_CONTRACTORS = [
+  { name: 'LUXEhome Bathrooms',    city: 'Colombo',  slug: '/sponsor/luxehome', i: 0 },
+  { name: 'Kandy Bath Centre',     city: 'Kandy',    slug: null,                 i: 1 },
+  { name: 'Southern Renovations',  city: 'Galle',    slug: null,                 i: 2 },
+  { name: 'Metro Bath & Tile',     city: 'Nugegoda', slug: null,                 i: 3 },
 ]
 
-const BRAND_COLORS = ['#1A2B4A','#C1603A','#D4AF37','#1e3a5f','#7c3aed','#166534','#92400e','#374151']
+const PLACEHOLDER_SHOPS = [
+  { name: 'Tile Gedara',       city: 'Colombo 10', slug: null, i: 0 },
+  { name: 'Lanka Tile World',  city: 'Kandy',      slug: null, i: 1 },
+  { name: 'Serandib Bathware', city: 'Galle',      slug: null, i: 2 },
+  { name: 'Metro Tiles',       city: 'Negombo',    slug: null, i: 3 },
+]
 ---
 
 <Layout
-  title="TilersHub · Sri Lanka's Trusted Tiling Marketplace"
-  description="Find verified tilers, workshops, suppliers and tile brands across Sri Lanka. Post your tiling project free on TilersHub."
+  title="TilersHub · Sri Lanka's Tile & Bathroom Marketplace"
+  description="Find tilers, contractors, tile shops, brands and products for your tile and bathroom project across Sri Lanka. Free quotes — no login required."
 >
 
-  <!-- ① Hero Slider -->
-  <HeroBanner client:load />
+<!-- ① HERO ─────────────────────────────────────────────── -->
+<div style="position:relative;min-height:380px;display:flex;align-items:center;justify-content:center;overflow:hidden;padding:60px 20px 52px;background:#0a121f;">
+  <img
+    src="https://images.unsplash.com/photo-1552321554-5fefe8c9ef14?auto=format&fit=crop&w=1400&q=75"
+    alt=""
+    style="position:absolute;inset:0;width:100%;height:100%;object-fit:cover;object-position:center;opacity:0.22;"
+    loading="eager"
+    fetchpriority="high"
+  />
+  <div style="position:absolute;inset:0;background:linear-gradient(160deg,rgba(10,18,31,0.7) 0%,rgba(26,43,74,0.55) 100%);pointer-events:none;"></div>
+  <div style="position:absolute;inset:0;opacity:0.035;background-image:repeating-linear-gradient(0deg,transparent,transparent 39px,rgba(255,255,255,0.8) 39px,rgba(255,255,255,0.8) 40px),repeating-linear-gradient(90deg,transparent,transparent 39px,rgba(255,255,255,0.8) 39px,rgba(255,255,255,0.8) 40px);pointer-events:none;"></div>
+  <div style="position:absolute;top:-60px;right:-60px;width:360px;height:360px;background:radial-gradient(circle,rgba(245,158,11,0.07),transparent 65%);pointer-events:none;"></div>
 
-  <!-- ② Search Bar + Category Pills -->
-  <div class="search-section">
-    <div class="search-box">
-      <span class="search-icon">🔍</span>
-      <input type="text" placeholder="Search tilers, workshops, tile brands…" id="hero-search" />
-      <button class="search-btn" onclick="document.location='/providers?q='+encodeURIComponent(document.getElementById('hero-search').value)">Search</button>
+  <div style="position:relative;text-align:center;max-width:640px;width:100%;">
+    <div style="display:inline-flex;align-items:center;gap:6px;background:rgba(245,158,11,0.12);border:1px solid rgba(245,158,11,0.25);border-radius:20px;padding:5px 16px;margin-bottom:20px;">
+      <span style="font-size:9px;font-weight:700;color:var(--gold);letter-spacing:2.5px;text-transform:uppercase;">🇱🇰 Sri Lanka's Tile & Bathroom Marketplace</span>
     </div>
-    <div class="search-pills">
-      <a href="/providers?type=tiler" class="search-pill">👷 Find Tiler</a>
-      <a href="/jobs" class="search-pill">💼 Browse Jobs</a>
-      <a href="/tile" class="search-pill">🪨 Tile</a>
-      <a href="/bathrooms" class="search-pill">🚿 Bathrooms</a>
-      <a href="/providers?type=workshop" class="search-pill">🏭 Workshops</a>
-      <a href="/providers?type=supplier" class="search-pill">📦 Suppliers</a>
-      <a href="/tools" class="search-pill">🔧 Tools</a>
-      <a href="/estimator" class="search-pill">📐 Estimator</a>
-    </div>
-  </div>
+    <h1 style="font-family:'Playfair Display',serif;font-size:clamp(26px,5vw,50px);font-weight:700;color:#fff;line-height:1.15;margin-bottom:14px;">
+      Everything for Your<br/><span style="color:var(--gold);">Tile &amp; Bathroom Project</span>
+    </h1>
+    <p style="font-size:clamp(13px,1.8vw,16px);color:rgba(255,255,255,0.6);margin-bottom:30px;line-height:1.8;">
+      Find trusted professionals, quality products, leading brands and the best prices.
+    </p>
 
-  <!-- ③ Quick Actions Grid -->
-  <section style="background:#fff;padding:20px 0 16px;border-bottom:1px solid var(--border);">
-    <div class="quick-grid">
-      {QUICK_ACTIONS.map(a => (
-        <a href={a.href} class="quick-card">
-          <div class="qc-icon" style={`background:${a.bg};`}>{a.icon}</div>
-          <span class="qc-label">{a.label}</span>
+    <!-- Hero search bar -->
+    <div style="position:relative;max-width:520px;margin:0 auto 20px;">
+      <span style="position:absolute;left:16px;top:50%;transform:translateY(-50%);font-size:18px;pointer-events:none;">🔍</span>
+      <input
+        type="text"
+        id="hero-search"
+        placeholder="Search tilers, contractors, shops, brands…"
+        style="width:100%;height:52px;padding:0 130px 0 48px;border:none;border-radius:14px;font-size:13px;font-family:inherit;outline:none;background:rgba(255,255,255,0.96);color:#0f172a;box-shadow:0 8px 32px rgba(0,0,0,0.3);"
+      />
+      <button
+        onclick="document.location='/providers?q='+encodeURIComponent(document.getElementById('hero-search').value)"
+        style="position:absolute;right:6px;top:6px;bottom:6px;padding:0 20px;background:var(--terra);color:#fff;border:none;border-radius:10px;font-size:13px;font-weight:700;cursor:pointer;">
+        Search
+      </button>
+    </div>
+
+    <!-- Hero CTAs -->
+    <div style="display:flex;gap:12px;justify-content:center;flex-wrap:wrap;">
+      <a href="/providers?type=tiler"
+        style="display:inline-flex;align-items:center;gap:8px;background:var(--terra);color:#fff;border-radius:12px;padding:13px 24px;font-size:14px;font-weight:700;text-decoration:none;box-shadow:0 4px 20px rgba(224,90,43,0.4);">
+        👷 Find Tiler
+      </a>
+      <a href="/post-project"
+        style="display:inline-flex;align-items:center;gap:8px;background:rgba(255,255,255,0.1);color:#fff;border:1.5px solid rgba(255,255,255,0.3);border-radius:12px;padding:13px 24px;font-size:14px;font-weight:600;text-decoration:none;backdrop-filter:blur(8px);">
+        📋 Get Free Quote
+      </a>
+    </div>
+
+    <!-- Quick pills -->
+    <div style="display:flex;gap:8px;justify-content:center;flex-wrap:wrap;margin-top:18px;">
+      {[
+        { label:'👷 Tilers',     href:'/providers?type=tiler'      },
+        { label:'🚿 Bathrooms',  href:'/bathrooms'                 },
+        { label:'🏪 Tile Shops', href:'/providers?type=tile_shop'  },
+        { label:'🔧 Workshops',  href:'/providers?type=workshop'   },
+        { label:'📦 Suppliers',  href:'/providers?type=supplier'   },
+        { label:'📐 Estimator',  href:'/estimator'                 },
+      ].map(p => (
+        <a href={p.href}
+          style="display:inline-flex;align-items:center;gap:4px;font-size:11px;font-weight:600;padding:5px 12px;border-radius:20px;background:rgba(255,255,255,0.1);color:rgba(255,255,255,0.8);border:1px solid rgba(255,255,255,0.18);white-space:nowrap;text-decoration:none;backdrop-filter:blur(4px);">
+          {p.label}
         </a>
       ))}
     </div>
-  </section>
+  </div>
+</div>
 
-  <!-- ④ Stats Bar -->
-  <div style="background:var(--navy);padding:14px 0;">
-    <div style="display:flex;justify-content:center;flex-wrap:wrap;">
-      {[
-        { n: '500+', l: 'Professionals' },
-        { n: '25', l: 'Districts' },
-        { n: 'Free', l: 'Always' },
-        { n: '100%', l: 'WhatsApp Direct' },
-      ].map((s, i, arr) => (
-        <div style={`text-align:center;padding:8px 20px;border-right:${i < arr.length-1 ? '1px solid rgba(255,255,255,0.1)' : 'none'}`}>
-          <div style="font-family:'Playfair Display',serif;font-size:18px;font-weight:700;color:var(--gold);">{s.n}</div>
-          <div style="font-size:10px;color:rgba(255,255,255,0.45);margin-top:1px;">{s.l}</div>
-        </div>
-      ))}
+<!-- ② QUICK ACTIONS ──────────────────────────────────────── -->
+<section style="background:#fff;padding:20px 0 18px;border-bottom:1px solid var(--border);">
+  <div class="quick-grid">
+    {QUICK_ACTIONS.map(a => (
+      <a href={a.href} class="quick-card">
+        <div class="qc-icon" style={`background:${a.bg};`}>{a.icon}</div>
+        <span class="qc-label">{a.label}</span>
+      </a>
+    ))}
+  </div>
+</section>
+
+<!-- ③ STATS BAR ───────────────────────────────────────────── -->
+<div style="background:var(--navy);padding:14px 0;">
+  <div style="display:flex;justify-content:center;flex-wrap:wrap;">
+    {[
+      { n: '500+', l: 'Professionals' },
+      { n: '25',   l: 'Districts' },
+      { n: 'Free', l: 'Always' },
+      { n: '100%', l: 'WhatsApp Direct' },
+    ].map((s, i, arr) => (
+      <div style={`text-align:center;padding:8px 24px;border-right:${i < arr.length-1 ? '1px solid rgba(255,255,255,0.1)' : 'none'}`}>
+        <div style="font-family:'Playfair Display',serif;font-size:18px;font-weight:700;color:var(--gold);">{s.n}</div>
+        <div style="font-size:10px;color:rgba(255,255,255,0.45);margin-top:1px;">{s.l}</div>
+      </div>
+    ))}
+  </div>
+</div>
+
+<!-- ④ FEATURED TILERS ────────────────────────────────────── -->
+<section class="section" style="background:#fff;">
+  <div class="section-head">
+    <div>
+      <div class="section-eyebrow">⭐ Featured</div>
+      <div class="section-title-sm">Verified Tiling <span>Professionals</span></div>
     </div>
+    <a href="/providers?type=tiler" class="see-all">View all →</a>
   </div>
 
-  <!-- ⑤ Featured Tilers — Horizontal Shelf -->
-  <section class="section" style="background:#fff;">
-    <div class="section-head">
-      <div>
-        <div class="section-eyebrow">⭐ Featured</div>
-        <div class="section-title-sm">Verified Tiling <span>Professionals</span></div>
+  <div class="shelf">
+    {(tilers.length > 0 ? tilers : [
+      { id:'p1', full_name:'Lakmal Perera',    city:'Colombo 7', is_verified:true,  avg_rating:4.9, slug:'lakmal'  },
+      { id:'p2', full_name:'Chamara Silva',    city:'Kandy',     is_verified:true,  avg_rating:4.7, slug:'chamara' },
+      { id:'p3', full_name:'Saman Jayantha',   city:'Galle',     is_verified:false, avg_rating:0,   slug:null      },
+      { id:'p4', full_name:'Kelum Prasad',     city:'Negombo',   is_verified:true,  avg_rating:4.8, slug:'kelum'   },
+    ]).map(t => (
+      <div class="tiler-card" style="width:178px;flex-shrink:0;">
+        <!-- blank tile-grid top -->
+        <div style="height:90px;background:#f8fafc;background-image:repeating-linear-gradient(0deg,transparent,transparent 19px,#e2e8f0 19px,#e2e8f0 20px),repeating-linear-gradient(90deg,transparent,transparent 19px,#e2e8f0 19px,#e2e8f0 20px);display:flex;align-items:center;justify-content:center;position:relative;">
+          <span style="font-size:30px;opacity:0.12;">🪨</span>
+          {t.is_verified && <span class="verified-badge">✓ Skilled</span>}
+        </div>
+        <div class="tiler-body">
+          {t.avg_rating > 0 && <div class="rating">⭐ {t.avg_rating.toFixed(1)}</div>}
+          <div class="tiler-name">{t.full_name}</div>
+          <div class="tiler-meta">📍 {t.city || t.district}</div>
+          {t.slug ? (
+            <a href={`/tilers/${t.slug}`} style="display:flex;align-items:center;justify-content:center;width:100%;padding:7px;background:var(--navy);color:#fff;border-radius:8px;font-size:11px;font-weight:700;text-decoration:none;">
+              View Profile →
+            </a>
+          ) : (t.whatsapp || t.phone) ? (
+            <a href={waLink(t.whatsapp || t.phone, t.full_name)} target="_blank" rel="noopener" class="tiler-wa-btn">💬 WhatsApp</a>
+          ) : (
+            <a href="/providers?type=tiler" style="display:flex;align-items:center;justify-content:center;width:100%;padding:7px;background:#f1f5f9;color:#64748b;border-radius:8px;font-size:11px;font-weight:600;text-decoration:none;">
+              View Profile →
+            </a>
+          )}
+        </div>
       </div>
-      <a href="/providers" class="see-all">View all →</a>
-    </div>
+    ))}
+  </div>
+</section>
 
-    {tilers.length > 0 ? (
-      <div class="shelf">
-        {tilers.map((t, idx) => {
-          return (
-            <div class="tiler-card">
-              <div class="tiler-cover" style="background:linear-gradient(135deg,#0F2444 0%,#1B3A6B 100%);">
-                <span>{t.avatar_url ? '' : '👷'}</span>
-                {t.is_verified && <span class="verified-badge">✓ Skilled</span>}
+<!-- ⑤ BATHROOM CONTRACTORS ──────────────────────────────── -->
+<section class="section" style="background:var(--surface-2);border-top:1px solid var(--border);">
+  <div class="section-head">
+    <div>
+      <div class="section-eyebrow">🚿 Contractors</div>
+      <div class="section-title-sm">Bathroom <span>Contractors</span></div>
+    </div>
+    <a href="/providers?type=contractor" class="see-all">View all →</a>
+  </div>
+
+  <div class="shelf">
+    {(contractors.length > 0 ? contractors : PLACEHOLDER_CONTRACTORS).map((c, i) => {
+      const href = c.slug ? (c.slug.startsWith('/') ? c.slug : `/providers/${c.slug}`) : '/providers?type=contractor'
+      return (
+        <a href={href} style="flex-shrink:0;width:180px;background:#fff;border:1px solid var(--border);border-radius:var(--radius-lg);overflow:hidden;text-decoration:none;color:inherit;box-shadow:var(--shadow-sm);transition:all 0.2s;display:block;"
+          onmouseover="this.style.transform='translateY(-3px)';this.style.boxShadow='0 8px 24px rgba(0,0,0,0.1)'"
+          onmouseout="this.style.transform='';this.style.boxShadow=''">
+          <div style={`height:100px;background:${CONTR_BG[i % CONTR_BG.length]};display:flex;align-items:center;justify-content:center;font-size:38px;`}>
+            {c.cover_image ? (
+              <img src={c.cover_image} alt={c.name} style="width:100%;height:100%;object-fit:cover;" />
+            ) : CONTR_ICO[i % CONTR_ICO.length]}
+          </div>
+          <div style="padding:10px 12px 14px;">
+            <div style="font-size:13px;font-weight:700;color:var(--text);margin-bottom:3px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;">{c.name}</div>
+            <div style="font-size:11px;color:var(--text-3);margin-bottom:8px;">📍 {c.city || c.district}</div>
+            <div style="font-size:11px;font-weight:700;color:var(--navy);">View Profile →</div>
+          </div>
+        </a>
+      )
+    })}
+  </div>
+</section>
+
+<!-- ⑥ TILE SHOPS & SHOWROOMS ────────────────────────────── -->
+<section class="section" style="background:#fff;border-top:1px solid var(--border);">
+  <div class="section-head">
+    <div>
+      <div class="section-eyebrow">🏪 Showrooms</div>
+      <div class="section-title-sm">Tile Shops &amp; <span>Showrooms</span></div>
+    </div>
+    <a href="/providers?type=tile_shop" class="see-all">View all →</a>
+  </div>
+
+  <div class="shelf">
+    {(tileShops.length > 0 ? tileShops : PLACEHOLDER_SHOPS).map((s, i) => {
+      const href = s.slug ? `/providers/${s.slug}` : '/providers?type=tile_shop'
+      const cover = s.cover_image && !s.cover_image.includes('picsum') ? s.cover_image : null
+      return (
+        <a href={href} style="flex-shrink:0;width:180px;background:#fff;border:1px solid var(--border);border-radius:var(--radius-lg);overflow:hidden;text-decoration:none;color:inherit;box-shadow:var(--shadow-sm);transition:all 0.2s;display:block;"
+          onmouseover="this.style.transform='translateY(-3px)';this.style.boxShadow='0 8px 24px rgba(0,0,0,0.1)'"
+          onmouseout="this.style.transform='';this.style.boxShadow=''">
+          <div style="height:100px;position:relative;">
+            {cover ? (
+              <img src={cover} alt={s.name} style="width:100%;height:100%;object-fit:cover;display:block;" loading="lazy" />
+            ) : (
+              <div style="width:100%;height:100%;background:#f8fafc;background-image:repeating-linear-gradient(0deg,transparent,transparent 19px,#e2e8f0 19px,#e2e8f0 20px),repeating-linear-gradient(90deg,transparent,transparent 19px,#e2e8f0 19px,#e2e8f0 20px);display:flex;align-items:center;justify-content:center;">
+                <span style="font-size:32px;opacity:0.15;">🏪</span>
               </div>
-              <div class="tiler-body">
-                {t.avg_rating > 0 && (
-                  <div class="rating">⭐ {(t.avg_rating || 4.8).toFixed(1)}</div>
-                )}
-                <div class="tiler-name">{t.full_name}</div>
-                <div class="tiler-meta">📍 {t.city || t.district}</div>
-                {(t.services || []).length > 0 && (
-                  <div style="font-size:10px;color:var(--text-4);margin-bottom:8px;">{(t.services || []).slice(0,2).join(' · ')}</div>
-                )}
-                {(t.whatsapp || t.phone) && (
-                  <a href={waLink(t.whatsapp || t.phone, t.full_name)} target="_blank" rel="noopener" class="tiler-wa-btn">
-                    <svg width="12" height="12" viewBox="0 0 24 24" fill="currentColor"><path d="M17.472 14.382c-.297-.149-1.758-.867-2.03-.967-.273-.099-.471-.148-.67.15-.197.297-.767.966-.94 1.164-.173.199-.347.223-.644.075-.297-.15-1.255-.463-2.39-1.475-.883-.788-1.48-1.761-1.653-2.059-.173-.297-.018-.458.13-.606.134-.133.298-.347.446-.52.149-.174.198-.298.298-.497.099-.198.05-.371-.025-.52-.075-.149-.669-1.612-.916-2.207-.242-.579-.487-.5-.669-.51-.173-.008-.371-.01-.57-.01-.198 0-.52.074-.792.372-.272.297-1.04 1.016-1.04 2.479 0 1.462 1.065 2.875 1.213 3.074.149.198 2.096 3.2 5.077 4.487.709.306 1.262.489 1.694.625.712.227 1.36.195 1.871.118.571-.085 1.758-.719 2.006-1.413.248-.694.248-1.289.173-1.413-.074-.124-.272-.198-.57-.347m-5.421 7.403h-.004a9.87 9.87 0 01-5.031-1.378l-.361-.214-3.741.982.998-3.648-.235-.374a9.86 9.86 0 01-1.51-5.26c.001-5.45 4.436-9.884 9.888-9.884 2.64 0 5.122 1.03 6.988 2.898a9.825 9.825 0 012.893 6.994c-.003 5.45-4.437 9.884-9.885 9.884m8.413-18.297A11.815 11.815 0 0012.05 0C5.495 0 .16 5.335.157 11.892c0 2.096.547 4.142 1.588 5.945L.057 24l6.305-1.654a11.882 11.882 0 005.683 1.448h.005c6.554 0 11.89-5.335 11.893-11.893a11.821 11.821 0 00-3.48-8.413z"/></svg>
-                    WhatsApp
-                  </a>
-                )}
-              </div>
-            </div>
-          )
-        })}
-      </div>
-    ) : (
-      <div style="padding:24px 16px;text-align:center;">
-        <a href="/providers" class="btn btn-navy">Browse All Tilers →</a>
+            )}
+            {s.is_featured && (
+              <div style="position:absolute;top:6px;left:6px;background:#D4AF37;color:#fff;font-size:8px;font-weight:700;padding:2px 7px;border-radius:20px;">⭐ Top Rated</div>
+            )}
+          </div>
+          <div style="padding:10px 12px 14px;">
+            <div style="font-size:13px;font-weight:700;color:var(--text);margin-bottom:3px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;">{s.name}</div>
+            <div style="font-size:11px;color:var(--text-3);margin-bottom:8px;">📍 {s.city || s.district}</div>
+            <div style="font-size:11px;font-weight:700;color:var(--navy);">View Shop →</div>
+          </div>
+        </a>
+      )
+    })}
+  </div>
+</section>
+
+<!-- ⑦ PRODUCTS & MATERIALS ──────────────────────────────── -->
+<section class="section" style="background:var(--surface-2);border-top:1px solid var(--border);">
+  <div class="section-head">
+    <div>
+      <div class="section-eyebrow">🛍️ Materials</div>
+      <div class="section-title-sm">Products &amp; <span>Materials</span></div>
+    </div>
+  </div>
+  <div style="display:flex;gap:12px;overflow-x:auto;scrollbar-width:none;-webkit-overflow-scrolling:touch;padding:0 16px 12px;">
+    {PRODUCTS.map(p => (
+      <a href={p.href} style="flex-shrink:0;width:88px;display:flex;flex-direction:column;align-items:center;gap:8px;text-decoration:none;">
+        <div style={`width:68px;height:68px;border-radius:18px;background:${p.bg};display:flex;align-items:center;justify-content:center;font-size:28px;box-shadow:0 4px 16px rgba(0,0,0,0.15);transition:transform 0.2s;`}
+          onmouseover="this.style.transform='scale(1.06)'" onmouseout="this.style.transform=''">
+          {p.icon}
+        </div>
+        <span style="font-size:11px;font-weight:600;color:var(--text-2);text-align:center;line-height:1.3;">{p.label}</span>
+      </a>
+    ))}
+  </div>
+</section>
+
+<!-- ⑧ HOME IMPROVEMENT SERVICES ──────────────────────────── -->
+<section class="section" style="background:#fff;border-top:1px solid var(--border);">
+  <div class="section-head">
+    <div>
+      <div class="section-eyebrow">🔨 Services</div>
+      <div class="section-title-sm">Home Improvement <span>Services</span></div>
+    </div>
+    <a href="/providers" class="see-all">View all →</a>
+  </div>
+  <div style="display:grid;grid-template-columns:repeat(auto-fill,minmax(90px,1fr));gap:10px;padding:0 16px;">
+    {SERVICES.map(s => (
+      <a href={s.href}
+        style="display:flex;flex-direction:column;align-items:center;gap:7px;padding:14px 8px;background:var(--surface-2);border:1px solid var(--border);border-radius:14px;text-decoration:none;text-align:center;transition:all 0.2s;"
+        onmouseover="this.style.borderColor='#1A2B4A';this.style.background='#EEF2FB';this.style.transform='translateY(-2px)'"
+        onmouseout="this.style.borderColor='';this.style.background='';this.style.transform=''">
+        <span style="font-size:24px;">{s.icon}</span>
+        <span style="font-size:10px;font-weight:600;color:var(--text-2);line-height:1.3;">{s.label}</span>
+      </a>
+    ))}
+  </div>
+</section>
+
+<!-- ⑨ LATEST JOBS ──────────────────────────────────────── -->
+<section class="section" style="background:var(--surface-2);border-top:1px solid var(--border);">
+  <div class="section-head">
+    <div>
+      <div class="section-eyebrow">💼 Jobs</div>
+      <div class="section-title-sm">Latest <span>Projects</span></div>
+    </div>
+    <a href="/jobs" class="see-all">All jobs →</a>
+  </div>
+
+  <div style="padding:0 16px;display:flex;flex-direction:column;gap:10px;">
+    {jobs.length > 0 ? jobs.map(job => (
+      <a href={`/jobs/${job.id}`}
+        style="display:flex;align-items:center;gap:14px;padding:14px 16px;background:#fff;border:1px solid var(--border);border-radius:14px;text-decoration:none;color:inherit;transition:all 0.2s;"
+        onmouseover="this.style.borderColor='#1A2B4A';this.style.boxShadow='0 4px 16px rgba(0,0,0,0.08)'"
+        onmouseout="this.style.borderColor='';this.style.boxShadow=''">
+        <div style="width:44px;height:44px;border-radius:12px;background:linear-gradient(135deg,#16a34a,#166534);display:flex;align-items:center;justify-content:center;font-size:20px;flex-shrink:0;">💼</div>
+        <div style="flex:1;min-width:0;">
+          <div style="font-weight:700;font-size:14px;color:var(--text);margin-bottom:3px;overflow:hidden;text-overflow:ellipsis;white-space:nowrap;">{job.title}</div>
+          <div style="font-size:12px;color:var(--text-3);">📍 {job.city || job.district} · {timeAgo(job.created_at)}</div>
+        </div>
+        {job.budget_min && <div style="flex-shrink:0;font-size:13px;font-weight:700;color:var(--green);">Rs.{job.budget_min}+</div>}
+        <div style="font-size:18px;color:var(--text-4);">›</div>
+      </a>
+    )) : (
+      <div style="text-align:center;padding:40px 20px;background:#fff;border-radius:16px;border:2px dashed var(--border);">
+        <div style="font-size:44px;margin-bottom:12px;">💼</div>
+        <div style="font-size:16px;font-weight:700;color:var(--text);margin-bottom:6px;">No open projects yet</div>
+        <p style="font-size:13px;color:var(--text-3);margin-bottom:20px;line-height:1.7;">Be the first to post a tiling or bathroom project. Free, no login required.</p>
+        <a href="/post-project" class="btn btn-navy">📋 Post a Project</a>
       </div>
     )}
-  </section>
+  </div>
 
-  <!-- ⑥ Workshops — Horizontal Shelf -->
-  <section class="section" style="background:var(--surface-2);border-top:1px solid var(--border);">
-    <div class="section-head">
-      <div>
-        <div class="section-eyebrow">🏭 Workshops</div>
-        <div class="section-title-sm">Tile & Granite <span>Workshops</span></div>
-      </div>
-      <a href="/providers?type=workshop" class="see-all">View all →</a>
+  {jobs.length > 0 && (
+    <div style="padding:16px 16px 0;text-align:center;">
+      <a href="/post-project" class="btn btn-terra">📋 Post a Project →</a>
     </div>
+  )}
+</section>
 
-    <div class="shelf">
-      {workshops.length > 0 ? workshops.map((w, idx) => (
-        <a href={`/providers/${w.slug || w.id}`} class="workshop-card">
-          <div class="workshop-cover" style={`background:${WORKSHOP_COVERS[idx % WORKSHOP_COVERS.length].bg};`}>
-            <span style="font-size:40px;">{WORKSHOP_COVERS[idx % WORKSHOP_COVERS.length].icon}</span>
-          </div>
-          <div class="workshop-body">
-            <div class="workshop-name">{w.name}</div>
-            <div class="workshop-city">📍 {w.city || w.district}</div>
-            {(w.services || []).slice(0,1).map(s => (
-              <span class="workshop-chip">{s}</span>
-            ))}
-          </div>
-        </a>
-      )) : (
-        /* Placeholder cards if no data */
-        [
-          { name: 'Colombo Tile Cutting', city: 'Colombo 3', s: 'Granite Cutting', i: 0 },
-          { name: 'Lanka Stone Works', city: 'Kandy', s: 'Routering', i: 1 },
-          { name: 'Southern Workshops', city: 'Galle', s: 'Tile Cutting', i: 2 },
-          { name: 'Negombo Stone', city: 'Negombo', s: 'Marble Work', i: 3 },
-        ].map(w => (
-          <a href="/providers?type=workshop" class="workshop-card">
-            <div class="workshop-cover" style={`background:${WORKSHOP_COVERS[w.i].bg};`}>
-              <span style="font-size:40px;">{WORKSHOP_COVERS[w.i].icon}</span>
-            </div>
-            <div class="workshop-body">
-              <div class="workshop-name">{w.name}</div>
-              <div class="workshop-city">📍 {w.city}</div>
-              <span class="workshop-chip">{w.s}</span>
-            </div>
-          </a>
-        ))
-      )}
+<!-- ⑩ COST CALCULATORS ─────────────────────────────────── -->
+<section class="section" style="background:#fff;border-top:1px solid var(--border);">
+  <div class="section-head">
+    <div>
+      <div class="section-eyebrow">📐 Tools</div>
+      <div class="section-title-sm">Cost <span>Calculators</span></div>
     </div>
-  </section>
-
-  <!-- ⑦ Estimator CTA -->
-  <section style="background:var(--navy);padding:52px 20px;position:relative;overflow:hidden;">
-    <div style="position:absolute;inset:0;opacity:0.04;background-image:repeating-linear-gradient(45deg,transparent,transparent 20px,rgba(255,255,255,0.8) 20px,rgba(255,255,255,0.8) 21px);pointer-events:none;"></div>
-    <div style="position:absolute;top:-60px;right:-60px;width:280px;height:280px;border-radius:50%;background:radial-gradient(circle,rgba(245,158,11,0.12) 0%,transparent 70%);pointer-events:none;"></div>
-    <div style="max-width:720px;margin:0 auto;display:flex;align-items:center;gap:36px;flex-wrap:wrap;position:relative;">
-      <!-- Calc visual -->
-      <div style="flex-shrink:0;width:120px;height:120px;border-radius:24px;background:rgba(255,255,255,0.06);border:1px solid rgba(255,255,255,0.12);display:flex;flex-direction:column;align-items:center;justify-content:center;gap:6px;">
-        <span style="font-size:40px;">📐</span>
-        <span style="font-size:10px;color:var(--gold);font-weight:700;letter-spacing:1px;">ESTIMATE</span>
-      </div>
-      <div style="flex:1;min-width:200px;">
-        <div style="font-size:10px;font-weight:700;color:rgba(245,158,11,0.7);letter-spacing:3px;text-transform:uppercase;margin-bottom:10px;">Free Tool</div>
-        <h2 style="font-family:'Playfair Display',serif;font-size:clamp(20px,3.5vw,32px);font-weight:700;color:#fff;margin-bottom:10px;line-height:1.25;">
-          Calculate your <span style="color:var(--gold);">tiling cost</span> before you hire
-        </h2>
-        <p style="font-size:14px;color:rgba(255,255,255,0.55);margin-bottom:22px;line-height:1.7;">
-          Enter room dimensions, tile size and labour rate to get an instant Sri Lanka-specific estimate.
-        </p>
-        <div style="display:flex;gap:10px;flex-wrap:wrap;">
-          <a href="/estimator" class="btn btn-gold">📐 Open Estimator</a>
-          <a href="/post-project" style="background:rgba(255,255,255,0.08);color:rgba(255,255,255,0.8);border:1px solid rgba(255,255,255,0.15);padding:11px 20px;font-size:13px;border-radius:12px;font-weight:600;display:inline-flex;align-items:center;gap:6px;text-decoration:none;">Post a Project →</a>
-        </div>
-      </div>
-    </div>
-  </section>
-
-  <!-- ⑦ Open Jobs CTA -->
-  <section style="background:var(--surface-2);padding:36px 20px;border-top:1px solid var(--border);">
-    <div style="max-width:900px;margin:0 auto;display:flex;align-items:center;justify-content:space-between;flex-wrap:wrap;gap:20px;">
-      <div style="display:flex;align-items:center;gap:18px;">
-        <div style="width:56px;height:56px;background:linear-gradient(135deg,#16a34a,#166534);border-radius:16px;display:flex;align-items:center;justify-content:center;font-size:26px;flex-shrink:0;">💼</div>
+  </div>
+  <div style="display:grid;grid-template-columns:repeat(auto-fill,minmax(260px,1fr));gap:14px;padding:0 16px;">
+    {[
+      { icon:'📐', label:'Tiling Cost Calculator',   sub:'Calculate tiles, labour and total cost for any room in Sri Lanka.', bg:'linear-gradient(135deg,#1A2B4A,#2B4275)', href:'/estimator' },
+      { icon:'🚿', label:'Bathroom Cost Calculator',  sub:'Estimate full bathroom renovation costs — fixtures, tiles and labour.', bg:'linear-gradient(135deg,#0369a1,#0284c7)', href:'/estimator' },
+    ].map(c => (
+      <a href={c.href}
+        style="display:flex;gap:16px;align-items:center;padding:20px;background:var(--surface-2);border:1.5px solid var(--border);border-radius:16px;text-decoration:none;color:inherit;transition:all 0.2s;"
+        onmouseover="this.style.borderColor='#1A2B4A';this.style.boxShadow='0 8px 24px rgba(0,0,0,0.08)';this.style.transform='translateY(-2px)'"
+        onmouseout="this.style.borderColor='';this.style.boxShadow='';this.style.transform=''">
+        <div style={`width:56px;height:56px;border-radius:14px;background:${c.bg};display:flex;align-items:center;justify-content:center;font-size:26px;flex-shrink:0;box-shadow:0 4px 12px rgba(0,0,0,0.2);`}>{c.icon}</div>
         <div>
-          <div style="font-size:17px;font-weight:700;color:var(--text);margin-bottom:4px;">Open Tiling Projects</div>
-          <div style="font-size:13px;color:var(--text-3);line-height:1.5;">Homeowners are posting jobs right now. Find work near you.</div>
+          <div style="font-weight:700;font-size:15px;color:var(--text);margin-bottom:4px;">{c.label}</div>
+          <div style="font-size:12px;color:var(--text-3);line-height:1.55;">{c.sub}</div>
         </div>
-      </div>
-      <div style="display:flex;gap:10px;flex-wrap:wrap;">
-        <a href="/jobs" style="display:inline-flex;align-items:center;gap:7px;background:#16a34a;color:#fff;border-radius:12px;padding:12px 22px;font-size:14px;font-weight:700;text-decoration:none;white-space:nowrap;">
-          💼 Browse Jobs →
-        </a>
-        <a href="/post-project" style="display:inline-flex;align-items:center;gap:7px;background:var(--surface);color:var(--text-2);border:1.5px solid var(--border);border-radius:12px;padding:12px 20px;font-size:13px;font-weight:600;text-decoration:none;white-space:nowrap;">
-          📋 Post a Project
-        </a>
-      </div>
-    </div>
-  </section>
+      </a>
+    ))}
+  </div>
+</section>
 
-  <!-- ⑧ Sponsor (LUXEhome) -->
-  <section style="background:var(--surface-2);padding:44px 0 40px;border-top:1px solid var(--border);">
-    <div class="container" style="max-width:860px;">
-      <div style="text-align:center;margin-bottom:14px;">
-        <span style="font-size:10px;font-weight:700;color:var(--text-4);letter-spacing:2px;text-transform:uppercase;">Sponsored Partner</span>
-      </div>
-      <AdSlider client:visible />
+<!-- ⑪ BRANDS & MANUFACTURERS ────────────────────────────── -->
+<section class="section" style="background:var(--surface-2);border-top:1px solid var(--border);">
+  <div class="section-head">
+    <div>
+      <div class="section-eyebrow">🏷️ Brands</div>
+      <div class="section-title-sm">Brands &amp; <span>Manufacturers</span></div>
     </div>
-  </section>
+    <a href="/tile" class="see-all">All brands →</a>
+  </div>
 
-  <!-- ⑨ Featured Brands — Horizontal Shelf -->
-  <section class="section" style="background:#fff;border-top:1px solid var(--border);">
-    <div class="section-head">
-      <div>
-        <div class="section-eyebrow">🏷️ Brands</div>
-        <div class="section-title-sm">Featured Tile <span>Brands</span></div>
-      </div>
-      <a href="/tile" class="see-all">All brands →</a>
-    </div>
+  <div class="shelf">
+    {(brands.length > 0 ? brands : [
+      { id:'b1', name:'Rocell',      slug:'rocell',       categories:['Porcelain','Wall'], i:0 },
+      { id:'b2', name:'Lanka Tile',  slug:'lanka-tile',   categories:['Floor','Wall'],    i:1 },
+      { id:'b3', name:'Johnson',     slug:'johnson',      categories:['Ceramic'],         i:2 },
+      { id:'b4', name:'NITCO',       slug:'nitco',        categories:['Floor','Outdoor'], i:3 },
+      { id:'b5', name:'Swisstek',    slug:'swisstek',     categories:['Adhesive','Grout'],i:4 },
+      { id:'b6', name:'Tokyo Super', slug:'tokyo-super',  categories:['Adhesive'],        i:5 },
+      { id:'b7', name:'ACL',         slug:'acl',          categories:['Bathroom'],        i:6 },
+      { id:'b8', name:'S-Lon',       slug:'s-lon',        categories:['Plumbing'],        i:7 },
+    ]).map((b, idx) => (
+      <a href={`/brands/${b.slug}`} class="brand-card">
+        <div class="brand-logo" style={`background:${BRAND_COL[idx % BRAND_COL.length]};`}>
+          {initials(b.name)}
+        </div>
+        <div class="brand-name">{b.name}</div>
+        <div class="brand-cat">{(b.categories||[]).slice(0,2).join(' · ')}</div>
+      </a>
+    ))}
+  </div>
+</section>
 
-    <div class="shelf">
-      {brands.length > 0 ? brands.map((b, idx) => (
-        <a href={`/brands/${b.slug}`} class="brand-card">
-          <div class="brand-logo" style={`background:${BRAND_COLORS[idx % BRAND_COLORS.length]};`}>
-            {initials(b.name)}
-          </div>
-          <div class="brand-name">{b.name}</div>
-          <div class="brand-cat">{(b.categories || []).slice(0,2).join(', ')}</div>
-        </a>
-      )) : (
-        [
-          { name: 'Lanka Tile', cats: 'Floor · Wall', i: 0 },
-          { name: 'Rocell', cats: 'Porcelain · Wall', i: 1 },
-          { name: 'LUXEhome', cats: 'Renovation · Bathroom', i: 2 },
-          { name: 'Megatile', cats: 'Floor · Outdoor', i: 3 },
-          { name: 'Macktiles', cats: 'Floor · Wall', i: 4 },
-        ].map(b => (
-          <a href="/brands" class="brand-card">
-            <div class="brand-logo" style={`background:${BRAND_COLORS[b.i]};`}>{initials(b.name)}</div>
-            <div class="brand-name">{b.name}</div>
-            <div class="brand-cat">{b.cats}</div>
-          </a>
-        ))
-      )}
+<!-- ⑫ WHY CHOOSE TILERSHUB ──────────────────────────────── -->
+<section style="background:var(--navy);padding:44px 20px;">
+  <div style="max-width:900px;margin:0 auto;">
+    <div style="text-align:center;margin-bottom:28px;">
+      <div style="font-size:9px;font-weight:700;color:rgba(245,158,11,0.7);letter-spacing:3px;text-transform:uppercase;margin-bottom:8px;">Our Promise</div>
+      <h2 style="font-family:'Playfair Display',serif;font-size:clamp(20px,3vw,28px);font-weight:700;color:#fff;">Why Choose <span style="color:var(--gold);">TILERSHUB?</span></h2>
     </div>
-  </section>
-
-  <!-- ⑩ Bathroom Inspiration — Pinterest Grid -->
-  <section class="section" style="background:var(--surface-2);border-top:1px solid var(--border);">
-    <div class="section-head">
-      <div>
-        <div class="section-eyebrow">💡 Inspiration</div>
-        <div class="section-title-sm">Tiling <span>Inspiration</span></div>
-      </div>
-      <a href="/sponsor/luxehome" class="see-all">Browse more →</a>
-    </div>
-    <div style="padding:0 16px;display:grid;grid-template-columns:repeat(3,1fr);gap:10px;">
-      {INSPO.map(card => (
-        <a href="/sponsor/luxehome" class="inspo-card" style="background:#0a0a12;">
-          <img src={card.img} alt={card.title} style="position:absolute;inset:0;width:100%;height:100%;object-fit:cover;object-position:center;" loading="lazy" />
-          <div style={`position:absolute;inset:0;background:${card.overlay};`}></div>
-          <div class="inspo-overlay">
-            <div class="inspo-title">{card.title}</div>
-            <div class="inspo-tag">{card.tag}</div>
-          </div>
-        </a>
+    <div style="display:grid;grid-template-columns:repeat(auto-fill,minmax(180px,1fr));gap:14px;">
+      {[
+        { icon:'🛡️', title:'Verified Professionals', body:'All tilers and contractors are skill-tested before listing on TilersHub.' },
+        { icon:'💰', title:'Best Prices',              body:'Compare quotes from multiple professionals and get the best deal.' },
+        { icon:'⭐', title:'Quality Work',             body:'Rated and reviewed by real customers across all 25 districts.' },
+        { icon:'🔒', title:'Secure Platform',          body:'Connect directly via WhatsApp. No middlemen, no hidden fees.' },
+      ].map(c => (
+        <div style="background:rgba(255,255,255,0.05);border:1px solid rgba(255,255,255,0.1);border-radius:16px;padding:20px;">
+          <div style="width:44px;height:44px;background:rgba(255,255,255,0.08);border-radius:12px;display:flex;align-items:center;justify-content:center;font-size:22px;margin-bottom:12px;">{c.icon}</div>
+          <div style="font-weight:700;font-size:14px;color:#fff;margin-bottom:6px;">{c.title}</div>
+          <div style="font-size:12px;color:rgba(255,255,255,0.5);line-height:1.65;">{c.body}</div>
+        </div>
       ))}
     </div>
-  </section>
+  </div>
+</section>
 
-  <!-- ⑪ Blog / Tips -->
-  <section class="section" style="background:#fff;border-top:1px solid var(--border);">
-    <div class="section-head">
-      <div>
-        <div class="section-eyebrow">📚 Tips & Guides</div>
-        <div class="section-title-sm">Tiling <span>Knowledge Hub</span></div>
-      </div>
-      <a href="/guides" class="see-all">All guides →</a>
+<!-- ⑬ GUIDES & TIPS ──────────────────────────────────────── -->
+<section class="section" style="background:#fff;border-top:1px solid var(--border);">
+  <div class="section-head">
+    <div>
+      <div class="section-eyebrow">📚 Knowledge</div>
+      <div class="section-title-sm">Guides &amp; <span>Tips</span></div>
     </div>
-    <div style="padding:0 16px;display:grid;grid-template-columns:repeat(auto-fill,minmax(260px,1fr));gap:14px;">
-      {BLOG_POSTS.map(post => (
-        <a class="blog-card" href={`/guides/${post.slug}`}>
-          <div class="blog-cover" style={`background:${post.bg};`}>
-            <span>{post.icon}</span>
-          </div>
-          <div class="blog-body">
-            <div class="blog-cat">{post.cat}</div>
-            <div class="blog-title">{post.title}</div>
-            <div class="blog-excerpt">{post.excerpt}</div>
-            <div class="blog-read">Read guide →</div>
-          </div>
-        </a>
-      ))}
-    </div>
-  </section>
+    <a href="/guides" class="see-all">All guides →</a>
+  </div>
+  <div style="padding:0 16px;display:grid;grid-template-columns:repeat(auto-fill,minmax(240px,1fr));gap:14px;">
+    {BLOG_POSTS.map(post => (
+      <a class="blog-card" href={`/guides/${post.slug}`}>
+        <div class="blog-cover" style={`background:${post.bg};`}><span>{post.icon}</span></div>
+        <div class="blog-body">
+          <div class="blog-cat">{post.cat}</div>
+          <div class="blog-title">{post.title}</div>
+          <div class="blog-read">Read guide →</div>
+        </div>
+      </a>
+    ))}
+  </div>
+</section>
 
-  <!-- ⑫ Community CTA -->
-  <section style="background:var(--navy);padding:52px 20px;position:relative;overflow:hidden;border-top:3px solid var(--gold);">
-    <div style="position:absolute;inset:0;opacity:0.03;background-image:radial-gradient(circle,rgba(255,255,255,0.8) 1px,transparent 1px);background-size:24px 24px;pointer-events:none;"></div>
-    <div style="max-width:560px;margin:0 auto;text-align:center;position:relative;">
-      <div style="font-size:10px;font-weight:700;color:rgba(245,158,11,0.7);letter-spacing:3px;text-transform:uppercase;margin-bottom:12px;">Join the Community</div>
-      <h2 style="font-family:'Playfair Display',serif;font-size:clamp(22px,4vw,34px);font-weight:700;color:#fff;margin-bottom:12px;line-height:1.25;">
-        Connect with Sri Lanka's<br/><span style="color:var(--gold);">Tiling Community</span>
-      </h2>
-      <p style="font-size:14px;color:rgba(255,255,255,0.5);margin-bottom:28px;line-height:1.8;">Join thousands of homeowners, tilers and contractors on WhatsApp and Facebook. Get tips, find help, and share your projects.</p>
-      <div style="display:flex;gap:12px;justify-content:center;flex-wrap:wrap;">
-        <a href="https://chat.whatsapp.com/IR9ZWyFj7ZN15KeOHqwG3Z?s=cl&p=i&mlu=4&ilr=0" target="_blank" rel="noopener" style="display:inline-flex;align-items:center;gap:8px;background:#25D366;color:#fff;border-radius:12px;padding:13px 22px;font-size:14px;font-weight:700;text-decoration:none;box-shadow:0 4px 20px rgba(37,211,102,0.3);">
-          <svg width="18" height="18" viewBox="0 0 24 24" fill="currentColor"><path d="M17.472 14.382c-.297-.149-1.758-.867-2.03-.967-.273-.099-.471-.148-.67.15-.197.297-.767.966-.94 1.164-.173.199-.347.223-.644.075-.297-.15-1.255-.463-2.39-1.475-.883-.788-1.48-1.761-1.653-2.059-.173-.297-.018-.458.13-.606.134-.133.298-.347.446-.52.149-.174.198-.298.298-.497.099-.198.05-.371-.025-.52-.075-.149-.669-1.612-.916-2.207-.242-.579-.487-.5-.669-.51-.173-.008-.371-.01-.57-.01-.198 0-.52.074-.792.372-.272.297-1.04 1.016-1.04 2.479 0 1.462 1.065 2.875 1.213 3.074.149.198 2.096 3.2 5.077 4.487.709.306 1.262.489 1.694.625.712.227 1.36.195 1.871.118.571-.085 1.758-.719 2.006-1.413.248-.694.248-1.289.173-1.413-.074-.124-.272-.198-.57-.347m-5.421 7.403h-.004a9.87 9.87 0 01-5.031-1.378l-.361-.214-3.741.982.998-3.648-.235-.374a9.86 9.86 0 01-1.51-5.26c.001-5.45 4.436-9.884 9.888-9.884 2.64 0 5.122 1.03 6.988 2.898a9.825 9.825 0 012.893 6.994c-.003 5.45-4.437 9.884-9.885 9.884m8.413-18.297A11.815 11.815 0 0012.05 0C5.495 0 .16 5.335.157 11.892c0 2.096.547 4.142 1.588 5.945L.057 24l6.305-1.654a11.882 11.882 0 005.683 1.448h.005c6.554 0 11.89-5.335 11.893-11.893a11.821 11.821 0 00-3.48-8.413z"/></svg>
-          WhatsApp Group
-        </a>
-        <a href="https://www.facebook.com/share/g/1Dsc63BvXS/?mibextid=wwXIfr" target="_blank" rel="noopener" style="display:inline-flex;align-items:center;gap:8px;background:#1877F2;color:#fff;border-radius:12px;padding:13px 22px;font-size:14px;font-weight:700;text-decoration:none;box-shadow:0 4px 20px rgba(24,119,242,0.3);">
-          <svg width="18" height="18" viewBox="0 0 24 24" fill="currentColor"><path d="M24 12.073c0-6.627-5.373-12-12-12s-12 5.373-12 12c0 5.99 4.388 10.954 10.125 11.854v-8.385H7.078v-3.47h3.047V9.43c0-3.007 1.792-4.669 4.533-4.669 1.312 0 2.686.235 2.686.235v2.953H15.83c-1.491 0-1.956.925-1.956 1.874v2.25h3.328l-.532 3.47h-2.796v8.385C19.612 23.027 24 18.062 24 12.073z"/></svg>
-          Facebook Group
-        </a>
-      </div>
+<!-- ⑭ COMMUNITY CTA ──────────────────────────────────────── -->
+<section style="background:var(--navy);padding:48px 20px;position:relative;overflow:hidden;border-top:3px solid var(--gold);">
+  <div style="position:absolute;inset:0;opacity:0.03;background-image:radial-gradient(circle,rgba(255,255,255,0.8) 1px,transparent 1px);background-size:24px 24px;pointer-events:none;"></div>
+  <div style="max-width:540px;margin:0 auto;text-align:center;position:relative;">
+    <div style="font-size:9px;font-weight:700;color:rgba(245,158,11,0.7);letter-spacing:3px;text-transform:uppercase;margin-bottom:12px;">Join the Community</div>
+    <h2 style="font-family:'Playfair Display',serif;font-size:clamp(20px,4vw,30px);font-weight:700;color:#fff;margin-bottom:10px;line-height:1.25;">
+      Connect with Sri Lanka's<br/><span style="color:var(--gold);">Tiling Community</span>
+    </h2>
+    <p style="font-size:13px;color:rgba(255,255,255,0.5);margin-bottom:24px;line-height:1.8;">Get tips, find help, and share your projects on WhatsApp and Facebook.</p>
+    <div style="display:flex;gap:12px;justify-content:center;flex-wrap:wrap;">
+      <a href="https://chat.whatsapp.com/IR9ZWyFj7ZN15KeOHqwG3Z?s=cl&p=i&mlu=4&ilr=0" target="_blank" rel="noopener"
+        style="display:inline-flex;align-items:center;gap:8px;background:#25D366;color:#fff;border-radius:12px;padding:12px 22px;font-size:13px;font-weight:700;text-decoration:none;">
+        💬 WhatsApp Group
+      </a>
+      <a href="https://www.facebook.com/share/g/1Dsc63BvXS/?mibextid=wwXIfr" target="_blank" rel="noopener"
+        style="display:inline-flex;align-items:center;gap:8px;background:#1877F2;color:#fff;border-radius:12px;padding:12px 22px;font-size:13px;font-weight:700;text-decoration:none;">
+        👥 Facebook Group
+      </a>
     </div>
-  </section>
+  </div>
+</section>
 
-  <!-- Post Project CTA -->
-  <section style="background:var(--surface);padding:52px 20px;border-top:1px solid var(--border);">
-    <div style="max-width:600px;margin:0 auto;text-align:center;">
-      <span class="section-label">🛠️ For Everyone</span>
-      <h2 class="section-title" style="margin-top:8px;">Ready to start your tiling project?</h2>
-      <p class="section-sub" style="margin:0 auto 28px;">Post your project free — no login required. Let verified tilers contact you directly on WhatsApp.</p>
-      <div style="display:flex;gap:12px;justify-content:center;flex-wrap:wrap;">
-        <a href="/post-project" class="btn btn-terra btn-lg">📋 Post a Project</a>
-        <a href="/join-tilershub" class="btn btn-navy btn-lg">✅ Join as Provider</a>
-      </div>
+<!-- ⑮ POST PROJECT CTA ────────────────────────────────────── -->
+<section style="background:var(--surface);padding:44px 20px;border-top:1px solid var(--border);">
+  <div style="max-width:580px;margin:0 auto;text-align:center;">
+    <span class="section-label">🛠️ Ready to Start?</span>
+    <h2 class="section-title" style="margin-top:8px;">Post your project free today</h2>
+    <p class="section-sub" style="margin:0 auto 24px;">No login required. Let verified professionals contact you directly on WhatsApp.</p>
+    <div style="display:flex;gap:12px;justify-content:center;flex-wrap:wrap;">
+      <a href="/post-project" class="btn btn-terra btn-lg">📋 Post a Project</a>
+      <a href="/join-tilershub" class="btn btn-navy btn-lg">✅ Join as Provider</a>
     </div>
-  </section>
+  </div>
+</section>
 
 </Layout>
+
+<style>
+  @media (max-width: 480px) {
+    .quick-grid { grid-template-columns: repeat(4, 1fr) !important; }
+  }
+</style>
