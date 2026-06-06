@@ -315,37 +315,6 @@ const EXPLORE_MORE = [
   </div>
 </section>
 
-<!-- ⑦ BRANDS ─────────────────────────────────────────────── -->
-<section class="section" style="background:#fff;border-top:1px solid var(--border);">
-  <div class="section-head">
-    <div>
-      <div class="section-eyebrow">🏷️ Brands</div>
-      <div class="section-title-sm">Tile &amp; Bath <span>Brands</span></div>
-    </div>
-    <a href="/tile" class="see-all">All brands →</a>
-  </div>
-  <div class="shelf">
-    {(brands.length > 0 ? brands : [
-      { id:'b1', name:'Rocell',      slug:'rocell',      categories:['Porcelain','Wall'] },
-      { id:'b2', name:'Lanka Tile',  slug:'lanka-tile',  categories:['Floor','Wall']     },
-      { id:'b3', name:'Johnson',     slug:'johnson',     categories:['Ceramic']          },
-      { id:'b4', name:'NITCO',       slug:'nitco',       categories:['Floor','Outdoor']  },
-      { id:'b5', name:'Swisstek',    slug:'swisstek',    categories:['Adhesive','Grout'] },
-      { id:'b6', name:'Tokyo Super', slug:'tokyo-super', categories:['Adhesive']         },
-      { id:'b7', name:'ACL',         slug:'acl',         categories:['Bathroom']         },
-      { id:'b8', name:'S-Lon',       slug:'s-lon',       categories:['Plumbing']         },
-    ]).map((b, idx) => (
-      <a href={`/brands/${b.slug}`} class="brand-card">
-        <div class="brand-logo" style={`background:${BRAND_COL[idx % BRAND_COL.length]};`}>
-          {initials(b.name)}
-        </div>
-        <div class="brand-name">{b.name}</div>
-        <div class="brand-cat">{(b.categories||[]).slice(0,2).join(' · ')}</div>
-      </a>
-    ))}
-  </div>
-</section>
-
 <!-- ⑧ COMMUNITY + FINAL CTA ──────────────────────────────── -->
 <section style="background:var(--navy);padding:44px 20px;position:relative;overflow:hidden;border-top:3px solid var(--gold);">
   <div style="position:absolute;inset:0;opacity:0.03;background-image:radial-gradient(circle,rgba(255,255,255,0.8) 1px,transparent 1px);background-size:24px 24px;pointer-events:none;"></div>
