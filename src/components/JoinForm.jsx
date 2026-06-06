@@ -1,17 +1,7 @@
 import { useState, useEffect, useRef } from 'react'
-import { supabase, PROVIDER_TYPES, DISTRICTS_EN } from '../lib/supabase.js'
+import { supabase, DISTRICTS_EN } from '../lib/supabase.js'
 
 // ─── All constants & helpers outside component (prevents keyboard-dismiss remount) ───
-
-const PROVIDER_TYPES_SIMPLE = [
-  { value: 'tiler',    label: 'Tiler',    icon: '🪚', desc: 'Tile installation professional' },
-  { value: 'provider', label: 'Provider', icon: '👷', desc: 'Contractor, specialist or service' },
-]
-
-const TYPE_META = {
-  tiler:    { nameLabel: 'Full Name',       namePlaceholder: 'Your full name',            showServiceAreas: true,  showPhone: false },
-  provider: { nameLabel: 'Name / Company',  namePlaceholder: 'Your name or company name', showServiceAreas: true,  showPhone: true  },
-}
 
 const ALL_SERVICES = [
   'Floor Tiling', 'Wall Tiling', 'Bathroom Tiling', 'Kitchen Tiling',
@@ -25,10 +15,7 @@ const ALL_SERVICES = [
   'Ipanel Ceiling',
 ]
 
-const DESC_PLACEHOLDER = {
-  tiler:    '8 years experience in floor and bathroom tiling across Colombo and Western Province...',
-  provider: 'Describe your services, experience, and area of operation...',
-}
+const DESC_PLACEHOLDER = 'Describe your services, experience, and area of operation...'
 
 function Field({ label, id, req, error, hint, children }) {
   return (
@@ -196,7 +183,6 @@ async function uploadImage(file, folder) {
 
 export default function JoinForm() {
   const [form, setForm] = useState({
-    provider_type: '',
     name: '', city: '', district: '',
     whatsapp: '', phone: '',
     service_areas: [],
@@ -217,12 +203,6 @@ export default function JoinForm() {
 
   const set = (k, v) => setForm(f => ({ ...f, [k]: v }))
 
-  function selectType(t) {
-    // Reset type-specific fields when switching type
-    setForm(f => ({ ...f, provider_type: t, services: [], service_areas: [] }))
-    setErrors(e => ({ ...e, provider_type: undefined, services: undefined }))
-  }
-
   function toggleChip(key, val) {
     setForm(f => ({
       ...f,
@@ -232,7 +212,6 @@ export default function JoinForm() {
 
   function validate() {
     const e = {}
-    if (!form.provider_type) e.provider_type = 'Please choose a provider type above'
     if (!form.name.trim()) e.name = 'Required'
     if (!form.city.trim()) e.city = 'Required'
     if (!form.whatsapp.trim()) e.whatsapp = 'Required'
@@ -255,7 +234,7 @@ export default function JoinForm() {
       ])
       await supabase.from('provider_submissions').insert({
         name: form.name.trim(),
-        provider_type: form.provider_type,
+        provider_type: 'provider',
         city: form.city.trim(),
         district: form.district || null,
         whatsapp: form.whatsapp.replace(/\s/g, ''),
@@ -278,7 +257,6 @@ export default function JoinForm() {
   }
 
   if (success) {
-    const meta = TYPE_META[form.provider_type] || {}
     return (
       <div style={{ textAlign: 'center', padding: '60px 24px', background: '#fff', borderRadius: 20, border: '1px solid #e2e8f0', maxWidth: 520, margin: '0 auto' }}>
         <div style={{ fontSize: 56, marginBottom: 16 }}>🎉</div>
@@ -296,203 +274,153 @@ export default function JoinForm() {
     )
   }
 
-  const meta = TYPE_META[form.provider_type]
-  const formVisible = !!form.provider_type
-
   return (
     <form onSubmit={handleSubmit} noValidate style={{ maxWidth: 600, margin: '0 auto' }}>
 
-      {/* ── Step 1: Provider Type ── */}
-      <div style={{ marginBottom: 32 }}>
-        <div style={{ fontSize: 11, fontWeight: 700, color: '#334155', textTransform: 'uppercase', letterSpacing: '0.6px', marginBottom: 12 }}>
-          What are you?<span style={{ color: '#E05A2B', marginLeft: 3 }}>*</span>
-        </div>
-        <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: 12 }}>
-          {PROVIDER_TYPES_SIMPLE.map(t => {
-            const sel = form.provider_type === t.value
-            return (
-              <button
-                key={t.value}
-                type="button"
-                onClick={() => selectType(t.value)}
-                style={{
-                  padding: '18px 16px', borderRadius: 14, cursor: 'pointer', textAlign: 'left',
-                  border: `2px solid ${sel ? '#1B3A6B' : '#e2e8f0'}`,
-                  background: sel ? '#eef3fb' : '#fff',
-                  transition: 'all 0.15s',
-                  display: 'flex', alignItems: 'center', gap: 14,
-                }}
-              >
-                <span style={{ fontSize: 30 }}>{t.icon}</span>
-                <div>
-                  <div style={{ fontSize: 14, fontWeight: 700, color: sel ? '#1B3A6B' : '#0f172a' }}>{t.label}</div>
-                  <div style={{ fontSize: 11, color: '#94a3b8', marginTop: 2 }}>{t.desc}</div>
-                </div>
-              </button>
-            )
-          })}
-        </div>
-        {errors.provider_type && (
-          <p style={{ fontSize: 11, color: '#dc2626', marginTop: 8 }}>⚠ {errors.provider_type}</p>
-        )}
+      {/* Name */}
+      <Field label="Name / Company" id="name" req error={errors.name}>
+        <input
+          id="name"
+          value={form.name}
+          onChange={e => set('name', e.target.value)}
+          placeholder="Your name or company name"
+          style={inputStyle(!!errors.name)}
+        />
+      </Field>
+
+      {/* City + District */}
+      <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: 14 }}>
+        <Field label="City / Town" id="city" req error={errors.city}>
+          <input
+            id="city"
+            value={form.city}
+            onChange={e => set('city', e.target.value)}
+            placeholder="e.g. Nugegoda"
+            style={inputStyle(!!errors.city)}
+          />
+        </Field>
+        <Field label="District" id="district">
+          <select
+            id="district"
+            value={form.district}
+            onChange={e => set('district', e.target.value)}
+            style={{ ...inputStyle(false), WebkitAppearance: 'none', cursor: 'pointer' }}
+          >
+            <option value="">Select district...</option>
+            {DISTRICTS_EN.map(d => <option key={d} value={d}>{d}</option>)}
+          </select>
+        </Field>
       </div>
 
-      {/* ── Step 2: Rest of form (revealed once type chosen) ── */}
-      {formVisible && (
-        <div style={{ animation: 'fadeIn 0.25s ease' }}>
+      {/* WhatsApp + Phone */}
+      <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: 14 }}>
+        <Field label="WhatsApp Number" id="whatsapp" req error={errors.whatsapp} hint="Customers will contact you here.">
+          <input
+            id="whatsapp"
+            value={form.whatsapp}
+            onChange={e => set('whatsapp', e.target.value)}
+            placeholder="+94771234567"
+            type="tel"
+            style={inputStyle(!!errors.whatsapp)}
+          />
+        </Field>
+        <Field label="Phone Number" id="phone" hint="Optional — landline or alternate number.">
+          <input
+            id="phone"
+            value={form.phone}
+            onChange={e => set('phone', e.target.value)}
+            placeholder="+94112345678"
+            type="tel"
+            style={inputStyle(false)}
+          />
+        </Field>
+      </div>
 
-          {/* Name */}
-          <Field label={meta.nameLabel} id="name" req error={errors.name}>
-            <input
-              id="name"
-              value={form.name}
-              onChange={e => set('name', e.target.value)}
-              placeholder={meta.namePlaceholder}
-              style={inputStyle(!!errors.name)}
+      {/* Service Areas */}
+      <Field label="Service Areas" id="service_areas" hint="Select all districts you're available to work in.">
+        <div style={{ display: 'flex', flexWrap: 'wrap', gap: 7 }}>
+          {DISTRICTS_EN.map(d => (
+            <Chip
+              key={d}
+              label={d}
+              checked={form.service_areas.includes(d)}
+              onClick={() => toggleChip('service_areas', d)}
             />
-          </Field>
+          ))}
+        </div>
+      </Field>
 
-          {/* City + District */}
-          <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: 14 }}>
-            <Field label="City / Town" id="city" req error={errors.city}>
-              <input
-                id="city"
-                value={form.city}
-                onChange={e => set('city', e.target.value)}
-                placeholder="e.g. Nugegoda"
-                style={inputStyle(!!errors.city)}
-              />
-            </Field>
-            <Field label="District" id="district">
-              <select
-                id="district"
-                value={form.district}
-                onChange={e => set('district', e.target.value)}
-                style={{ ...inputStyle(false), WebkitAppearance: 'none', cursor: 'pointer' }}
-              >
-                <option value="">Select district...</option>
-                {DISTRICTS_EN.map(d => <option key={d} value={d}>{d}</option>)}
-              </select>
-            </Field>
-          </div>
-
-          {/* WhatsApp + Phone */}
-          <div style={{ display: 'grid', gridTemplateColumns: meta.showPhone ? '1fr 1fr' : '1fr', gap: 14 }}>
-            <Field label="WhatsApp Number" id="whatsapp" req error={errors.whatsapp} hint="Customers will contact you here.">
-              <input
-                id="whatsapp"
-                value={form.whatsapp}
-                onChange={e => set('whatsapp', e.target.value)}
-                placeholder="+94771234567"
-                type="tel"
-                style={inputStyle(!!errors.whatsapp)}
-              />
-            </Field>
-            {meta.showPhone && (
-              <Field label="Phone Number" id="phone" hint="Optional — landline or alternate number.">
-                <input
-                  id="phone"
-                  value={form.phone}
-                  onChange={e => set('phone', e.target.value)}
-                  placeholder="+94112345678"
-                  type="tel"
-                  style={inputStyle(false)}
-                />
-              </Field>
-            )}
-          </div>
-
-          {/* Service Areas (tilers & contractors only) */}
-          {meta.showServiceAreas && (
-            <Field label="Service Areas" id="service_areas" hint="Select all districts you're available to work in.">
-              <div style={{ display: 'flex', flexWrap: 'wrap', gap: 7 }}>
-                {DISTRICTS_EN.map(d => (
-                  <Chip
-                    key={d}
-                    label={d}
-                    checked={form.service_areas.includes(d)}
-                    onClick={() => toggleChip('service_areas', d)}
-                  />
-                ))}
-              </div>
-            </Field>
-          )}
-
-          {/* Services */}
-          <Field label="Services You Offer" id="services" req error={errors.services} hint="Select all that apply — or type your own below.">
-            <div style={{ display: 'flex', flexWrap: 'wrap', gap: 8, marginBottom: 10 }}>
-              {ALL_SERVICES.map(s => (
-                <Chip
-                  key={s}
-                  label={s}
-                  checked={form.services.includes(s)}
-                  onClick={() => toggleChip('services', s)}
-                />
-              ))}
-            </div>
-            <ServiceTextInput
-              value={form.services}
-              onChange={v => set('services', v)}
+      {/* Services */}
+      <Field label="Services You Offer" id="services" req error={errors.services} hint="Select all that apply — or type your own below.">
+        <div style={{ display: 'flex', flexWrap: 'wrap', gap: 8, marginBottom: 10 }}>
+          {ALL_SERVICES.map(s => (
+            <Chip
+              key={s}
+              label={s}
+              checked={form.services.includes(s)}
+              onClick={() => toggleChip('services', s)}
             />
-          </Field>
+          ))}
+        </div>
+        <ServiceTextInput
+          value={form.services}
+          onChange={v => set('services', v)}
+        />
+      </Field>
 
-          {/* Images */}
-          <div style={{ display: 'grid', gridTemplateColumns: '1fr 2fr', gap: 14 }}>
-            <ImageUpload
-              label="Profile Photo"
-              hint="Your photo or logo"
-              aspectRatio="profile"
-              value={profileFile}
-              onChange={setProfileFile}
-            />
-            <ImageUpload
-              label="Cover Image"
-              hint="Showcase your best work"
-              aspectRatio="cover"
-              value={coverFile}
-              onChange={setCoverFile}
-            />
-          </div>
+      {/* Images */}
+      <div style={{ display: 'grid', gridTemplateColumns: '1fr 2fr', gap: 14 }}>
+        <ImageUpload
+          label="Profile Photo"
+          hint="Your photo or logo"
+          aspectRatio="profile"
+          value={profileFile}
+          onChange={setProfileFile}
+        />
+        <ImageUpload
+          label="Cover Image"
+          hint="Showcase your best work"
+          aspectRatio="cover"
+          value={coverFile}
+          onChange={setCoverFile}
+        />
+      </div>
 
-          {/* Portfolio */}
-          <PortfolioUpload files={portfolioFiles} onChange={setPortfolioFiles} />
+      {/* Portfolio */}
+      <PortfolioUpload files={portfolioFiles} onChange={setPortfolioFiles} />
 
-          {/* Description */}
-          <Field label="Short Description" id="description" hint="Optional — describe your experience or what makes you stand out.">
-            <textarea
-              id="description"
-              value={form.description}
-              onChange={e => set('description', e.target.value)}
-              placeholder={DESC_PLACEHOLDER[form.provider_type]}
-              rows={3}
-              style={{ ...inputStyle(false), resize: 'vertical' }}
-            />
-          </Field>
+      {/* Description */}
+      <Field label="Short Description" id="description" hint="Optional — describe your experience or what makes you stand out.">
+        <textarea
+          id="description"
+          value={form.description}
+          onChange={e => set('description', e.target.value)}
+          placeholder={DESC_PLACEHOLDER}
+          rows={3}
+          style={{ ...inputStyle(false), resize: 'vertical' }}
+        />
+      </Field>
 
-          {/* Trust note */}
-          <div style={{ padding: '13px 16px', background: '#f0fdf4', borderRadius: 12, border: '1px solid #bbf7d0', marginBottom: 22 }}>
-            <p style={{ fontSize: 12, color: '#15803d', margin: 0, lineHeight: 1.6 }}>
-              ✓ <strong>Free listing</strong> · Direct WhatsApp leads · No commission ever · TilersHub team reviews within 1–2 business days.
-            </p>
-          </div>
+      {/* Trust note */}
+      <div style={{ padding: '13px 16px', background: '#f0fdf4', borderRadius: 12, border: '1px solid #bbf7d0', marginBottom: 22 }}>
+        <p style={{ fontSize: 12, color: '#15803d', margin: 0, lineHeight: 1.6 }}>
+          ✓ <strong>Free listing</strong> · Direct WhatsApp leads · No commission ever · TilersHub team reviews within 1–2 business days.
+        </p>
+      </div>
 
-          {errors.submit && (
-            <div style={{ padding: '12px 16px', background: '#fef2f2', border: '1px solid #fecaca', borderRadius: 10, fontSize: 13, color: '#dc2626', marginBottom: 18 }}>
-              ⚠ {errors.submit}
-            </div>
-          )}
-
-          <button
-            type="submit"
-            disabled={submitting}
-            style={{ width: '100%', padding: 14, background: submitting ? '#94a3b8' : '#1B3A6B', color: '#fff', border: 'none', borderRadius: 12, fontSize: 15, fontWeight: 700, cursor: submitting ? 'not-allowed' : 'pointer', display: 'flex', alignItems: 'center', justifyContent: 'center', gap: 8, transition: 'background 0.2s' }}
-          >
-            {submitting ? '⏳ Submitting...' : '✅ Submit Application'}
-          </button>
+      {errors.submit && (
+        <div style={{ padding: '12px 16px', background: '#fef2f2', border: '1px solid #fecaca', borderRadius: 10, fontSize: 13, color: '#dc2626', marginBottom: 18 }}>
+          ⚠ {errors.submit}
         </div>
       )}
 
-      <style>{`@keyframes fadeIn { from { opacity: 0; transform: translateY(8px); } to { opacity: 1; transform: translateY(0); } }`}</style>
+      <button
+        type="submit"
+        disabled={submitting}
+        style={{ width: '100%', padding: 14, background: submitting ? '#94a3b8' : '#1B3A6B', color: '#fff', border: 'none', borderRadius: 12, fontSize: 15, fontWeight: 700, cursor: submitting ? 'not-allowed' : 'pointer', display: 'flex', alignItems: 'center', justifyContent: 'center', gap: 8, transition: 'background 0.2s' }}
+      >
+        {submitting ? '⏳ Submitting...' : '✅ Submit Application'}
+      </button>
     </form>
   )
 }
