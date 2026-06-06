@@ -165,159 +165,151 @@ function getCoverPhoto(tiler) {
   return TILING_COVER_PHOTOS[idx]
 }
 
-// TaskRabbit-style tiler profile card
+// Tiler profile card
 function TilerCard({ tiler, onClick }) {
   const phone = tiler.whatsapp || tiler.phone
   const altWaPhone = (tiler.whatsapp && tiler.whatsapp !== tiler.phone) ? tiler.phone : null
   const isVerified = tiler.is_verified
   const hasDedicatedPage = isVerified && tiler.slug
 
+  // Only show real tiling photos from the DB — blank if none
+  const coverImg = tiler.cover_image &&
+    !tiler.cover_image.includes('picsum') &&
+    !tiler.cover_image.includes('randomuser')
+      ? tiler.cover_image : null
+
   return (
     <div
       onClick={() => onClick(tiler)}
       style={{
         background: '#fff',
-        borderRadius: 18,
-        border: isVerified ? '1.5px solid #d5e2f5' : '1px solid #e2e8f0',
-        overflow: 'visible',
+        borderRadius: 20,
+        border: '1px solid #e8edf5',
+        overflow: 'hidden',
         cursor: 'pointer',
         transition: 'all 0.2s',
+        boxShadow: '0 2px 12px rgba(0,0,0,0.06)',
         display: 'flex',
         flexDirection: 'column',
-        position: 'relative',
-        boxShadow: isVerified ? '0 2px 12px rgba(27,58,107,0.06)' : 'none',
       }}
-      onMouseOver={e => { e.currentTarget.style.transform = 'translateY(-5px)'; e.currentTarget.style.boxShadow = '0 20px 48px rgba(27,58,107,0.14)' }}
-      onMouseOut={e => { e.currentTarget.style.transform = ''; e.currentTarget.style.boxShadow = isVerified ? '0 2px 12px rgba(27,58,107,0.06)' : '' }}
+      onMouseOver={e => { e.currentTarget.style.transform = 'translateY(-4px)'; e.currentTarget.style.boxShadow = '0 16px 40px rgba(0,0,0,0.12)' }}
+      onMouseOut={e => { e.currentTarget.style.transform = ''; e.currentTarget.style.boxShadow = '0 2px 12px rgba(0,0,0,0.06)' }}
     >
-      {/* Cover — always shows tiling work photo */}
-      <div style={{ height: 158, borderRadius: '18px 18px 0 0', overflow: 'hidden', position: 'relative', flexShrink: 0 }}>
-        <img
-          src={getCoverPhoto(tiler)}
-          alt="Tiling work"
-          loading="lazy"
-          style={{ width: '100%', height: '100%', objectFit: 'cover' }}
-        />
-        {/* Gradient scrim */}
-        <div style={{ position: 'absolute', inset: 0, background: 'linear-gradient(to top, rgba(0,0,0,0.55) 0%, rgba(0,0,0,0.1) 55%, transparent 100%)' }} />
-
-        {/* Verification badge top-right */}
-        {isVerified
-          ? <span style={{ position: 'absolute', top: 10, right: 10, fontSize: 10, fontWeight: 700, padding: '3px 10px', borderRadius: 20, background: 'rgba(22,163,74,0.92)', color: '#fff', backdropFilter: 'blur(4px)' }}>✓ Skill Verified</span>
-          : <span style={{ position: 'absolute', top: 10, right: 10, fontSize: 10, fontWeight: 700, padding: '3px 10px', borderRadius: 20, background: 'rgba(0,0,0,0.50)', color: 'rgba(255,255,255,0.75)', backdropFilter: 'blur(4px)' }}>Community</span>
-        }
-        {/* Featured badge top-left */}
-        {tiler.featured && (
-          <span style={{ position: 'absolute', top: 10, left: 10, fontSize: 10, fontWeight: 700, padding: '3px 9px', borderRadius: 20, background: 'rgba(212,175,55,0.92)', color: '#0d0b08', backdropFilter: 'blur(4px)' }}>⭐ Featured</span>
-        )}
-        {/* Availability dot — only if no featured badge */}
-        {!tiler.featured && tiler.availability === 'available' && (
-          <span style={{ position: 'absolute', top: 10, left: 10, fontSize: 9, fontWeight: 700, padding: '3px 8px', borderRadius: 20, background: 'rgba(22,163,74,0.85)', color: '#fff' }}>● Available</span>
-        )}
-      </div>
-
-      {/* Circular avatar overlapping cover — initials only, no stranger portraits */}
-      <div style={{
-        position: 'absolute',
-        top: 158 - 28,
-        left: 16,
-        width: 56,
-        height: 56,
-        borderRadius: '50%',
-        border: `3px solid ${isVerified ? '#D4AF37' : '#fff'}`,
-        background: isVerified ? '#1B3A6B' : '#64748b',
-        display: 'flex',
-        alignItems: 'center',
-        justifyContent: 'center',
-        fontSize: 18,
-        fontWeight: 800,
-        color: '#fff',
-        zIndex: 2,
-        boxShadow: '0 3px 10px rgba(0,0,0,0.2)',
-        flexShrink: 0,
-        letterSpacing: '-0.5px',
-      }}>
-        {initials(tiler.full_name)}
-      </div>
-
-      {/* Card body */}
-      <div style={{ padding: '34px 16px 16px', flex: 1, display: 'flex', flexDirection: 'column' }}>
-        {/* Name + location row (offset to clear avatar) */}
-        <div style={{ display: 'flex', alignItems: 'flex-start', marginBottom: 10 }}>
-          <div style={{ width: 66, flexShrink: 0 }} />
-          <div style={{ flex: 1, minWidth: 0 }}>
-            <div style={{ fontWeight: 800, fontSize: 15, color: '#0f172a', overflow: 'hidden', textOverflow: 'ellipsis', whiteSpace: 'nowrap', letterSpacing: '-0.2px' }}>{tiler.full_name}</div>
-            <div style={{ fontSize: 11, color: '#64748b', marginTop: 2 }}>📍 {tiler.city || tiler.district}</div>
+      {/* ── Cover image ── */}
+      <div style={{ height: 180, position: 'relative', overflow: 'hidden', flexShrink: 0 }}>
+        {coverImg ? (
+          <img src={coverImg} alt="Tiling work" loading="lazy"
+            style={{ width: '100%', height: '100%', objectFit: 'cover' }} />
+        ) : (
+          <div style={{
+            width: '100%', height: '100%',
+            background: '#f8fafc',
+            backgroundImage: 'repeating-linear-gradient(0deg,transparent,transparent 39px,#e2e8f0 39px,#e2e8f0 40px),repeating-linear-gradient(90deg,transparent,transparent 39px,#e2e8f0 39px,#e2e8f0 40px)',
+            display: 'flex', alignItems: 'center', justifyContent: 'center',
+          }}>
+            <span style={{ fontSize: 40, opacity: 0.15 }}>🪨</span>
           </div>
-        </div>
+        )}
 
-        {/* Stats row */}
-        <div style={{ display: 'flex', flexWrap: 'wrap', gap: 5, marginBottom: 10 }}>
-          {tiler.experience_years > 0 && (
-            <span style={{ fontSize: 10, padding: '2px 8px', borderRadius: 20, background: '#f0fdf4', color: '#166534', border: '1px solid #bbf7d0', fontWeight: 700 }}>🛠️ {tiler.experience_years}+ yrs exp</span>
-          )}
-          {tiler.avg_rating > 0 && (
-            <span style={{ fontSize: 10, padding: '2px 8px', borderRadius: 20, background: '#fffbeb', color: '#92400e', border: '1px solid #fde68a', fontWeight: 600 }}>⭐ {tiler.avg_rating.toFixed(1)}</span>
-          )}
+        {/* Verified / Community badge */}
+        {isVerified ? (
+          <div style={{
+            position: 'absolute', top: 12, right: 12,
+            background: 'rgba(255,255,255,0.96)', color: '#16a34a',
+            border: '1px solid rgba(22,163,74,0.22)', borderRadius: 20,
+            padding: '5px 12px', fontSize: 11, fontWeight: 700,
+            display: 'flex', alignItems: 'center', gap: 5,
+            boxShadow: '0 2px 8px rgba(0,0,0,0.08)',
+            backdropFilter: 'blur(8px)',
+          }}>
+            🛡️ Verified
+          </div>
+        ) : (
+          <div style={{
+            position: 'absolute', top: 12, right: 12,
+            background: 'rgba(255,255,255,0.88)', color: '#64748b',
+            border: '1px solid rgba(0,0,0,0.08)', borderRadius: 20,
+            padding: '5px 12px', fontSize: 11, fontWeight: 600,
+            backdropFilter: 'blur(8px)',
+          }}>
+            Community
+          </div>
+        )}
+      </div>
+
+      {/* ── Card body ── */}
+      <div style={{ padding: '16px 18px 18px', flex: 1, display: 'flex', flexDirection: 'column' }}>
+
+        {/* Name + rate */}
+        <div style={{ display: 'flex', alignItems: 'flex-start', justifyContent: 'space-between', gap: 8, marginBottom: 6 }}>
+          <div style={{ fontFamily: "'Playfair Display',serif", fontSize: 20, fontWeight: 700, color: '#0f172a', lineHeight: 1.2, flex: 1, minWidth: 0 }}>
+            {tiler.full_name}
+          </div>
           {tiler.daily_rate_min && (
-            <span style={{ fontSize: 10, padding: '2px 8px', borderRadius: 20, background: '#faf5ff', color: '#7c3aed', border: '1px solid #e9d5ff', fontWeight: 600 }}>Rs.{tiler.daily_rate_min}/sqft</span>
+            <div style={{ textAlign: 'right', flexShrink: 0 }}>
+              <div style={{ fontSize: 10, color: '#94a3b8', lineHeight: 1 }}>From</div>
+              <div style={{ fontSize: 17, fontWeight: 800, color: '#0f172a', lineHeight: 1.3 }}>
+                Rs.{tiler.daily_rate_min}<span style={{ fontSize: 11, fontWeight: 500 }}>/sqft</span>
+              </div>
+            </div>
           )}
         </div>
 
-        {/* Bio — only for verified tilers */}
-        {isVerified && tiler.bio && (
-          <p style={{ fontSize: 12, color: '#64748b', lineHeight: 1.65, marginBottom: 10, display: '-webkit-box', WebkitLineClamp: 2, WebkitBoxOrient: 'vertical', overflow: 'hidden' }}>
+        {/* Rating */}
+        {tiler.avg_rating > 0 && (
+          <div style={{ display: 'flex', alignItems: 'center', gap: 5, marginBottom: 10 }}>
+            <span style={{ color: '#f59e0b', fontSize: 15 }}>★</span>
+            <span style={{ fontSize: 14, fontWeight: 700, color: '#0f172a' }}>{tiler.avg_rating.toFixed(1)}</span>
+          </div>
+        )}
+
+        {/* Bio / notice */}
+        {tiler.bio ? (
+          <p style={{ fontSize: 13, color: '#64748b', lineHeight: 1.65, margin: '0 0 14px', display: '-webkit-box', WebkitLineClamp: 2, WebkitBoxOrient: 'vertical', overflow: 'hidden', flex: 1 }}>
             {tiler.bio}
           </p>
-        )}
-        {/* Community notice — for unverified */}
-        {!isVerified && (
-          <p style={{ fontSize: 11, color: '#94a3b8', lineHeight: 1.6, marginBottom: 10, fontStyle: 'italic' }}>
-            Community-submitted profile — not yet verified by TilersHub
+        ) : !isVerified ? (
+          <p style={{ fontSize: 12, color: '#94a3b8', lineHeight: 1.6, margin: '0 0 14px', fontStyle: 'italic', flex: 1 }}>
+            Community-submitted profile — not yet verified by TilersHub.
           </p>
-        )}
+        ) : <div style={{ flex: 1 }} />}
 
-        {/* Services */}
-        {(tiler.services || []).length > 0 && (
-          <div style={{ display: 'flex', flexWrap: 'wrap', gap: 5, marginBottom: 12 }}>
-            {(tiler.services || []).slice(0, 3).map(s => (
-              <span key={s} style={{ fontSize: 10, padding: '2px 8px', borderRadius: 20, background: '#f1f5f9', color: '#475569', border: '1px solid #e2e8f0' }}>{s}</span>
-            ))}
-            {(tiler.services || []).length > 3 && (
-              <span style={{ fontSize: 10, padding: '2px 8px', borderRadius: 20, background: '#f1f5f9', color: '#94a3b8', border: '1px solid #e2e8f0' }}>+{(tiler.services || []).length - 3} more</span>
-            )}
-          </div>
-        )}
+        {/* Divider */}
+        <div style={{ height: 1, background: '#f1f5f9', margin: '0 0 12px' }} />
 
-        {/* CTA buttons */}
-        <div style={{ marginTop: 'auto', display: 'flex', gap: 8 }}>
-          {phone && (
+        {/* Bottom row */}
+        <div style={{ display: 'flex', alignItems: 'center', gap: 14, flexWrap: 'wrap' }}>
+          {tiler.experience_years > 0 && (
+            <div style={{ display: 'flex', alignItems: 'center', gap: 5, fontSize: 12, color: '#64748b' }}>
+              <span style={{ color: '#16a34a' }}>🛡️</span>
+              {tiler.experience_years}+ Yrs Experience
+            </div>
+          )}
+          {(tiler.city || tiler.district) && (
+            <div style={{ display: 'flex', alignItems: 'center', gap: 4, fontSize: 12, color: '#64748b' }}>
+              <span style={{ color: '#16a34a' }}>📍</span>
+              {tiler.city || tiler.district}
+            </div>
+          )}
+
+          {hasDedicatedPage ? (
+            <a href={`/tilers/${tiler.slug}`} onClick={e => e.stopPropagation()}
+              style={{ marginLeft: 'auto', flexShrink: 0, display: 'inline-flex', alignItems: 'center', gap: 6, background: '#0f172a', color: '#fff', borderRadius: 12, padding: '10px 18px', fontSize: 13, fontWeight: 700, textDecoration: 'none', whiteSpace: 'nowrap' }}>
+              View Profile <span style={{ fontSize: 15 }}>›</span>
+            </a>
+          ) : phone ? (
             <a href={buildWhatsAppLink(phone, tiler.full_name)} target="_blank" rel="noopener noreferrer" onClick={e => e.stopPropagation()}
-              style={{ flex: 1, display: 'flex', alignItems: 'center', justifyContent: 'center', gap: 6, background: '#25D366', color: '#fff', borderRadius: 10, padding: '9px 12px', fontSize: 12, fontWeight: 700, textDecoration: 'none' }}>
-              <span>💬</span> WhatsApp
+              style={{ marginLeft: 'auto', flexShrink: 0, display: 'inline-flex', alignItems: 'center', gap: 6, background: '#25D366', color: '#fff', borderRadius: 12, padding: '10px 18px', fontSize: 13, fontWeight: 700, textDecoration: 'none' }}>
+              💬 WhatsApp
             </a>
-          )}
-          {tiler.phone && (
-            <a href={`tel:${tiler.phone}`} onClick={e => e.stopPropagation()}
-              style={{ display: 'flex', alignItems: 'center', justifyContent: 'center', gap: 5, background: '#eef3fb', color: '#1B3A6B', borderRadius: 10, padding: '9px 12px', fontSize: 12, fontWeight: 700, textDecoration: 'none', border: '1px solid #d5e2f5' }}>
-              📞 Call
-            </a>
-          )}
+          ) : null}
         </div>
 
-        {/* Alt WA number */}
+        {/* Alt number */}
         {altWaPhone && (
           <a href={buildWhatsAppLink(altWaPhone, tiler.full_name)} target="_blank" rel="noopener noreferrer" onClick={e => e.stopPropagation()}
-            style={{ display: 'flex', alignItems: 'center', justifyContent: 'center', gap: 5, marginTop: 6, background: '#f0fdf4', color: '#16a34a', borderRadius: 8, padding: '6px 10px', fontSize: 11, fontWeight: 700, textDecoration: 'none', border: '1px solid #bbf7d0' }}>
+            style={{ display: 'flex', alignItems: 'center', justifyContent: 'center', gap: 5, marginTop: 8, background: '#f0fdf4', color: '#16a34a', borderRadius: 10, padding: '7px 12px', fontSize: 11, fontWeight: 700, textDecoration: 'none', border: '1px solid #bbf7d0' }}>
             💬 Alt. Number
-          </a>
-        )}
-
-        {/* View Full Profile — all skill-verified tilers */}
-        {hasDedicatedPage && (
-          <a href={`/tilers/${tiler.slug}`} onClick={e => e.stopPropagation()}
-            style={{ display: 'flex', alignItems: 'center', justifyContent: 'center', gap: 5, marginTop: 8, background: '#f8fafc', color: '#1B3A6B', borderRadius: 10, padding: '9px', fontSize: 12, fontWeight: 700, textDecoration: 'none', border: '1px solid #d5e2f5' }}>
-            View Full Profile →
           </a>
         )}
       </div>
