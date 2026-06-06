@@ -179,7 +179,7 @@ function TilerCard({ tiler, onClick }) {
       onMouseOut={e => { e.currentTarget.style.transform = ''; e.currentTarget.style.boxShadow = '0 2px 12px rgba(0,0,0,0.06)' }}
     >
       {/* ── Cover placeholder ── */}
-      <div style={{ height: 180, position: 'relative', overflow: 'hidden', flexShrink: 0 }}>
+      <div style={{ height: 200, position: 'relative', overflow: 'hidden', flexShrink: 0 }}>
         <div style={{
           width: '100%', height: '100%',
           background: '#f8fafc',
@@ -674,7 +674,7 @@ export default function ProviderDirectory({ initialType, initialSearch }) {
         ) : (
           <>
             {/* ── Card grid ── */}
-            <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fill, minmax(290px, 1fr))', gap: 20 }}>
+            <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fill, minmax(320px, 1fr))', gap: 20 }}>
               {filteredProviders.map(p => (
                 (p.provider_type === 'tile_shop' || p.provider_type === 'brand_dealer')
                   ? <ShopCard key={p.id} provider={p} onClick={item => { setSelected(item); setIsTilerSelected(false) }} />

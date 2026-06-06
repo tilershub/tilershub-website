@@ -51,25 +51,17 @@ const path = Astro.url.pathname
       <button id="close-drawer" style="background:transparent;border:none;color:rgba(255,255,255,0.5);font-size:22px;cursor:pointer;padding:4px;">✕</button>
     </div>
     <a href="/" class={`drawer-link${path==='/'?' active':''}`}>🏠 Home</a>
-    <a href="/providers" class={`drawer-link${path.startsWith('/providers')?' active':''}`}>👷 Find Tiler</a>
-    <a href="/jobs" class={`drawer-link${path==='/jobs'?' active':''}`}>💼 Browse Jobs - වැඩ හොයන්න</a>
-    <a href="/estimator" class={`drawer-link${path==='/estimator'?' active':''}`}>📐 Estimator</a>
+    <a href="/providers?type=tiler" class={`drawer-link${path.startsWith('/providers')?' active':''}`}>👷 Find Tilers</a>
+    <a href="/jobs" class={`drawer-link${path==='/jobs'?' active':''}`}>💼 Browse Projects</a>
+    <a href="/estimator" class={`drawer-link${path==='/estimator'?' active':''}`}>📐 Cost Estimator</a>
     <div class="drawer-divider"></div>
-    <a href="/providers?type=workshop" class="drawer-link">🏭 Workshops</a>
-    <a href="/providers?type=supplier" class="drawer-link">📦 Suppliers</a>
-    <a href="/tile" class={`drawer-link${path==='/tile'?' active':''}`}>🪨 Tile</a>
-    <a href="/tools" class={`drawer-link${path==='/tools'?' active':''}`}>🔧 Tools</a>
-    <a href="/bathrooms" class={`drawer-link${path==='/bathrooms'?' active':''}`}>🚿 Bathrooms</a>
-    <div class="drawer-divider"></div>
-    <a href="/post-project" class="drawer-link highlight">📋 Post Projects</a>
+    <a href="/post-project" class="drawer-link highlight">📋 Post a Project — Get Bids</a>
     <a href="/join-tilershub" class="drawer-link" style="color:rgba(255,255,255,0.6);">✅ Join as Provider</a>
-    <a href="/sponsor/luxehome" class="drawer-link" style="background:linear-gradient(135deg,rgba(212,175,55,0.12),rgba(212,175,55,0.06));border:1px solid rgba(212,175,55,0.2);border-radius:10px;margin:4px 8px;padding:10px 14px;display:flex;align-items:center;gap:10px;">
-      <span style="font-size:16px;">🛁</span>
-      <span>
-        <span style="font-family:'Playfair Display',serif;font-weight:700;color:#D4AF37;">LUXE</span><span style="color:rgba(255,255,255,0.8);font-weight:600;">home</span>
-        <span style="display:block;font-size:10px;color:rgba(255,255,255,0.4);margin-top:1px;">Premium Bathroom Renovation</span>
-      </span>
-    </a>
+    <div class="drawer-divider"></div>
+    <a href="/providers?type=workshop" class="drawer-link" style="color:rgba(255,255,255,0.5);font-size:13px;">🏭 Workshops</a>
+    <a href="/providers?type=supplier" class="drawer-link" style="color:rgba(255,255,255,0.5);font-size:13px;">📦 Suppliers</a>
+    <a href="/providers?type=tile_shop" class="drawer-link" style="color:rgba(255,255,255,0.5);font-size:13px;">🪨 Tile Shops</a>
+    <a href="/providers" class="drawer-link" style="color:rgba(255,255,255,0.5);font-size:13px;">🔍 All Categories</a>
     <div class="drawer-divider"></div>
     <a href="/dashboard" class={`drawer-link${path==='/dashboard'?' active':''}`} style="color:rgba(255,255,255,0.5);font-size:13px;">👤 My Dashboard</a>
     <a href="/about" class={`drawer-link${path==='/about'?' active':''}`} style="color:rgba(255,255,255,0.5);font-size:13px;">ℹ️ About TilersHub</a>
@@ -80,46 +72,6 @@ const path = Astro.url.pathname
     <slot />
   </main>
 
-  <!-- ═══ LUXEHOME SPONSOR STRIP (every page) ═══ -->
-  <section style="background:linear-gradient(135deg,#0c0804 0%,#1a1008 60%,#0c0804 100%);padding:28px 20px;border-top:2px solid rgba(212,175,55,0.2);position:relative;overflow:hidden;">
-    <div style="position:absolute;inset:0;opacity:0.025;background-image:repeating-linear-gradient(45deg,transparent,transparent 20px,rgba(212,175,55,0.8) 20px,rgba(212,175,55,0.8) 21px);pointer-events:none;"></div>
-    <div style="max-width:960px;margin:0 auto;display:flex;align-items:center;justify-content:space-between;flex-wrap:wrap;gap:16px;position:relative;">
-      <div style="display:flex;align-items:center;gap:16px;">
-        <!-- Minimalist bathroom tile mosaic -->
-        <div style="width:72px;height:72px;border-radius:14px;overflow:hidden;flex-shrink:0;border:1px solid rgba(212,175,55,0.2);display:grid;grid-template-columns:repeat(3,1fr);grid-template-rows:repeat(3,1fr);gap:2px;background:#0c0804;padding:3px;">
-          {[
-            ['#F5F3F0','#EDE9E3','#F8F6F2'],
-            ['#E8E4DC','#F2EEE8','#D8D2C8'],
-            ['#FEFCF8','#E4DED4','#F0EBE3'],
-          ].flat().map((c,i) => (
-            <div style={`background:${c};border-radius:2px;position:relative;`}>
-              <div style="position:absolute;inset:0;background:linear-gradient(135deg,rgba(255,255,255,0.4) 0%,transparent 60%);border-radius:2px;"></div>
-            </div>
-          ))}
-        </div>
-        <div>
-          <div style="font-size:9px;font-weight:700;color:rgba(212,175,55,0.55);letter-spacing:3px;text-transform:uppercase;margin-bottom:4px;">◆ Premium Sponsor</div>
-          <div style="font-family:'Playfair Display',serif;font-size:20px;font-weight:700;line-height:1;margin-bottom:4px;">
-            <span style="color:#D4AF37;">LUXE</span><span style="color:rgba(255,255,255,0.88);">home</span>
-          </div>
-          <div style="font-size:12px;color:rgba(255,255,255,0.45);">Premium Bathroom Renovation &amp; Construction · Sri Lanka</div>
-        </div>
-      </div>
-      <div style="display:flex;gap:10px;flex-wrap:wrap;align-items:center;">
-        <div style="display:none;" id="luxe-pills">
-          <div style="display:flex;gap:8px;flex-wrap:wrap;">
-            <span style="font-size:10px;padding:3px 10px;border-radius:20px;background:rgba(212,175,55,0.08);color:rgba(212,175,55,0.6);border:1px solid rgba(212,175,55,0.15);">🚿 Bathroom Design</span>
-            <span style="font-size:10px;padding:3px 10px;border-radius:20px;background:rgba(212,175,55,0.08);color:rgba(212,175,55,0.6);border:1px solid rgba(212,175,55,0.15);">🛁 Full Renovation</span>
-            <span style="font-size:10px;padding:3px 10px;border-radius:20px;background:rgba(212,175,55,0.08);color:rgba(212,175,55,0.6);border:1px solid rgba(212,175,55,0.15);">🏗️ Full Construction</span>
-          </div>
-        </div>
-        <a href="/sponsor/luxehome" style="display:inline-flex;align-items:center;gap:8px;background:#D4AF37;color:#0c0804;border-radius:11px;padding:11px 22px;font-size:13px;font-weight:800;text-decoration:none;white-space:nowrap;box-shadow:0 4px 20px rgba(212,175,55,0.25);">
-          View Bathroom Packages →
-        </a>
-      </div>
-    </div>
-  </section>
-
   <!-- ═══ FOOTER ═══ -->
   <footer class="site-footer">
     <div class="footer-inner">
@@ -128,35 +80,40 @@ const path = Astro.url.pathname
           <div class="site-logo-grid">{[0,1,2,3,4,5,6,7,8].map(i=><div class={`site-logo-tile${i===8?' e':''}`}></div>)}</div>
           <span style="font-family:'Playfair Display',serif;font-size:16px;font-weight:700;color:rgba(255,255,255,0.88);">TILERS<strong>HUB</strong></span>
         </div>
-        <p class="footer-brand-text">Sri Lanka's trusted platform for tilers, workshops, suppliers and tile brands. Connect with verified professionals islandwide.</p>
+        <p class="footer-brand-text">Sri Lanka's bidding marketplace for tiling projects — post a job, get bids, choose your tiler. Free for homeowners.</p>
         <div style="display:flex;gap:6px;margin-top:16px;flex-wrap:wrap;">
           <span style="font-size:11px;color:rgba(255,255,255,0.28);background:rgba(255,255,255,0.04);border:1px solid rgba(255,255,255,0.07);padding:3px 10px;border-radius:8px;">🇱🇰 Sri Lanka</span>
           <span style="font-size:11px;color:rgba(255,255,255,0.28);background:rgba(255,255,255,0.04);border:1px solid rgba(255,255,255,0.07);padding:3px 10px;border-radius:8px;">✓ Free Service</span>
+          <span style="font-size:11px;color:rgba(255,255,255,0.28);background:rgba(255,255,255,0.04);border:1px solid rgba(255,255,255,0.07);padding:3px 10px;border-radius:8px;">💬 Bid System</span>
         </div>
       </div>
       <div>
         <div class="footer-col-head">Discover</div>
         <nav class="footer-links">
-          <a href="/providers">👷 Find Tiler</a>
-          <a href="/jobs">💼 Browse Jobs</a>
-          <a href="/tools">🔧 Tools</a>
-          <a href="/bathrooms">🚿 Bathrooms</a>
-          <a href="/tile">🪨 Tile</a>
-          <a href="/estimator">📐 Estimator</a>
+          <a href="/providers?type=tiler">👷 Find Tilers</a>
+          <a href="/jobs">💼 Browse Projects</a>
+          <a href="/estimator">📐 Cost Estimator</a>
           <a href="/providers?type=workshop">🏭 Workshops</a>
+          <a href="/providers?type=supplier">📦 Suppliers</a>
+          <a href="/providers?type=tile_shop">🪨 Tile Shops</a>
         </nav>
       </div>
       <div>
         <div class="footer-col-head">Get Started</div>
         <nav class="footer-links">
-          <a href="/post-project">📋 Post Projects</a>
+          <a href="/post-project">📋 Post a Project</a>
           <a href="/join-tilershub">✅ Join as Provider</a>
-          <a href="/tile">🪨 Tile</a>
-          <a href="/bathrooms">🚿 Bathrooms</a>
-          <a href="/sponsor/luxehome" style="color:#D4AF37;font-weight:700;">🛁 LUXEhome Bathrooms</a>
+          <a href="/dashboard">👤 Dashboard</a>
           <a href="/about">ℹ️ About Us</a>
           <a href="/contact">📬 Contact</a>
         </nav>
+        <a href="https://chat.whatsapp.com/" style="display:flex;align-items:center;gap:8px;margin-top:14px;background:rgba(37,211,102,0.1);border:1px solid rgba(37,211,102,0.2);border-radius:10px;padding:10px 12px;text-decoration:none;">
+          <span style="font-size:18px;">💬</span>
+          <div>
+            <div style="font-size:11px;font-weight:700;color:#25D366;">WhatsApp Community</div>
+            <div style="font-size:10px;color:rgba(255,255,255,0.35);">Join tilers &amp; homeowners</div>
+          </div>
+        </a>
       </div>
     </div>
     <div class="footer-bottom">
@@ -172,17 +129,17 @@ const path = Astro.url.pathname
         <span class="bottom-nav-icon">🏠</span>
         Home
       </a>
-      <a href="/providers" class={`bottom-nav-item${path.startsWith('/providers')?' active':''}`}>
-        <span class="bottom-nav-icon">🔍</span>
-        Search
+      <a href="/providers?type=tiler" class={`bottom-nav-item${path.startsWith('/providers')?' active':''}`}>
+        <span class="bottom-nav-icon">👷</span>
+        Tilers
       </a>
-      <a href="/categories" class={`bottom-nav-item${path==='/categories'?' active':''}`}>
-        <span class="bottom-nav-icon">☰</span>
-        Categories
+      <a href="/post-project" class="bottom-nav-item bottom-nav-post">
+        <span class="bottom-nav-post-icon">📋</span>
+        Post
       </a>
       <a href="/jobs" class={`bottom-nav-item${path==='/jobs'?' active':''}`}>
         <span class="bottom-nav-icon">💼</span>
-        Jobs
+        Projects
       </a>
       <a href="/dashboard" class={`bottom-nav-item${path==='/dashboard'?' active':''}`}>
         <span class="bottom-nav-icon">👤</span>

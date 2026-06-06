@@ -32,44 +32,6 @@ const pageTitle = type ? `${TYPE_LABELS[type] || 'Providers'} in Sri Lanka` : 'F
     </div>
   </div>
 
-  <!-- LUXEhome Premium Provider -->
-  <div style="background:linear-gradient(180deg,#0e0b06 0%,#120e08 100%);padding:20px 20px 0;border-bottom:1px solid rgba(212,175,55,0.12);">
-    <div style="max-width:1100px;margin:0 auto;">
-      <div style="display:flex;align-items:center;gap:10px;margin-bottom:14px;">
-        <div style="height:1px;flex:1;background:rgba(212,175,55,0.15);"></div>
-        <span style="font-size:9px;font-weight:700;color:rgba(212,175,55,0.55);letter-spacing:3px;text-transform:uppercase;white-space:nowrap;">◆ Premium Provider</span>
-        <div style="height:1px;flex:1;background:rgba(212,175,55,0.15);"></div>
-      </div>
-      <div style="background:linear-gradient(135deg,#1a1408 0%,#261c0c 50%,#1a1408 100%);border-radius:16px;border:1px solid rgba(212,175,55,0.18);overflow:hidden;margin-bottom:20px;box-shadow:0 8px 40px rgba(0,0,0,0.4);">
-        <div style="display:flex;align-items:center;justify-content:space-between;flex-wrap:wrap;gap:14px;padding:20px 24px 16px;">
-          <div style="display:flex;align-items:center;gap:16px;">
-            <div style="display:flex;align-items:baseline;gap:2px;flex-shrink:0;">
-              <span style="font-family:'Playfair Display',serif;font-size:24px;font-weight:700;color:#D4AF37;">LUXE</span>
-              <span style="font-family:'Playfair Display',serif;font-size:24px;font-weight:400;color:rgba(255,255,255,0.88);">home</span>
-            </div>
-            <div style="width:1px;height:28px;background:rgba(212,175,55,0.2);flex-shrink:0;"></div>
-            <div>
-              <div style="font-size:13px;font-weight:700;color:rgba(255,255,255,0.85);margin-bottom:2px;">Premium Construction & Renovation</div>
-              <div style="font-size:11px;color:rgba(255,255,255,0.35);">Bathrooms · Flooring · Ceiling · Full Construction</div>
-            </div>
-          </div>
-          <a href="/sponsor/luxehome" style="display:inline-flex;align-items:center;gap:7px;background:#D4AF37;color:#0c0804;border-radius:10px;padding:9px 18px;font-size:12px;font-weight:800;text-decoration:none;white-space:nowrap;flex-shrink:0;">
-            View Bathroom Packages →
-          </a>
-        </div>
-        <div style="height:1px;background:rgba(212,175,55,0.1);margin:0 24px;"></div>
-        <a href="/sponsor/luxehome" style="display:block;text-decoration:none;padding:18px 24px;transition:background 0.2s;" onmouseover="this.style.background='rgba(212,175,55,0.04)'" onmouseout="this.style.background='transparent'">
-          <div style="display:flex;align-items:center;gap:12px;margin-bottom:8px;">
-            <div style="width:34px;height:34px;border-radius:9px;background:linear-gradient(135deg,#261c0c,#3a2a10);border:1px solid rgba(212,175,55,0.2);display:flex;align-items:center;justify-content:center;font-size:17px;flex-shrink:0;">🚿</div>
-            <div style="font-size:13px;font-weight:700;color:#D4AF37;">Bathroom Construction & Renovation — Full fit-out service</div>
-          </div>
-          <div style="font-size:11px;color:rgba(255,255,255,0.35);line-height:1.7;margin-bottom:8px;">End-to-end bathroom renovation — waterproofing, tiling, fixtures & fittings. Site visit Rs. 10,000 islandwide.</div>
-          <span style="font-size:11px;font-weight:700;color:rgba(212,175,55,0.7);">View Packages →</span>
-        </a>
-      </div>
-    </div>
-  </div>
-
   <ProviderDirectory client:only="react" initialType={type} initialSearch={q} />
 
 </Layout>
