@@ -33,14 +33,15 @@ export const SERVICES = [
 ]
 
 export const SERVICES_EN = [
-  'Floor Tiling',
-  'Bathroom Renovation',
-  'Kitchen Tiling',
-  'Staircase Tiling',
-  'Wall Tiling',
-  'Outdoor Tiling',
-  'Waterproofing',
-  'Grouting & Finishing'
+  'Floor Tiling', 'Wall Tiling', 'Bathroom Tiling', 'Kitchen Tiling',
+  'Staircase Tiling', 'Outdoor Tiling', 'Large Tile Installation',
+  'Waterproofing', 'Grouting & Finishing',
+  'Tile Cutting', 'Tile Routing',
+  'Bathroom Renovation', 'Full Construction',
+  'Bathroom Plumbing', 'Shower Cubicle',
+  'Hand Railing', 'Vanity Cupboard',
+  'Bathroom Lighting', 'Bathroom Wiring', 'Electrical Works',
+  'Ipanel Ceiling',
 ]
 
 export const PROJECT_TYPES = [
@@ -55,14 +56,8 @@ export const PROJECT_TYPES = [
 ]
 
 export const PROVIDER_TYPES = [
-  { value: 'tiler', label: 'Tiler', icon: '🪚' },
-  { value: 'workshop', label: 'Workshop', icon: '🏭' },
-  { value: 'supplier', label: 'Supplier', icon: '📦' },
-  { value: 'contractor', label: 'Contractor', icon: '👷' },
-  { value: 'tile_shop', label: 'Tile Shop', icon: '🏪' },
-  { value: 'brand_dealer', label: 'Brand Dealer', icon: '🏷️' },
-  { value: 'tool_supplier', label: 'Tool Supplier', icon: '🔧' },
-  { value: 'bathroom_shop', label: 'Bathroom Shop', icon: '🚿' },
+  { value: 'tiler',    label: 'Tiler',    icon: '🪚' },
+  { value: 'provider', label: 'Provider', icon: '👷' },
 ]
 
 export const VERIFICATION_BADGES = {

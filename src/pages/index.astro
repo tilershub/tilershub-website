@@ -49,17 +49,18 @@ const TYPE_ICON = {
 }
 
 const EXPLORE_PROS = [
-  { label:'👷 Find Tilers',    href:'/providers?type=tiler'      },
-  { label:'🚿 Contractors',    href:'/providers?type=contractor' },
-  { label:'🏪 Tile Shops',     href:'/providers?type=tile_shop'  },
-  { label:'🏭 Workshops',      href:'/providers?type=workshop'   },
-  { label:'📦 Suppliers',      href:'/providers?type=supplier'   },
-  { label:'🪟 Glass Works',    href:'/providers'                 },
-  { label:'🔩 Plumbing',       href:'/providers'                 },
-  { label:'⚡ Electrical',     href:'/providers'                 },
-  { label:'✂️ Tile Cutting',   href:'/providers?type=workshop'   },
-  { label:'🏗️ Ceiling Works',  href:'/providers'                 },
-  { label:'🪨 Granite Works',  href:'/providers?type=workshop'   },
+  { label:'👷 Tilers',                  href:'/providers?type=tiler'               },
+  { label:'👷 Providers',               href:'/providers?type=provider'            },
+  { label:'✂️ Tile Cutting',            href:'/providers?q=Tile+Cutting'           },
+  { label:'🚿 Bathroom Tiling',         href:'/providers?q=Bathroom+Tiling'        },
+  { label:'🛁 Bathroom Renovation',     href:'/providers?q=Bathroom+Renovation'    },
+  { label:'💧 Waterproofing',           href:'/providers?q=Waterproofing'          },
+  { label:'🏗️ Ipanel Ceiling',          href:'/providers?q=Ipanel+Ceiling'         },
+  { label:'🔩 Bathroom Plumbing',       href:'/providers?q=Bathroom+Plumbing'      },
+  { label:'🚿 Shower Cubicle',          href:'/providers?q=Shower+Cubicle'         },
+  { label:'💡 Bathroom Lighting',       href:'/providers?q=Bathroom+Lighting'      },
+  { label:'⚡ Electrical Works',        href:'/providers?q=Electrical+Works'       },
+  { label:'🪟 Hand Railing',            href:'/providers?q=Hand+Railing'           },
 ]
 
 const EXPLORE_MORE = [
@@ -315,31 +316,6 @@ const EXPLORE_MORE = [
   </div>
 </section>
 
-<!-- ⑧ COMMUNITY + FINAL CTA ──────────────────────────────── -->
-<section style="background:var(--navy);padding:44px 20px;position:relative;overflow:hidden;border-top:3px solid var(--gold);">
-  <div style="position:absolute;inset:0;opacity:0.03;background-image:radial-gradient(circle,rgba(255,255,255,0.8) 1px,transparent 1px);background-size:24px 24px;pointer-events:none;"></div>
-  <div style="max-width:520px;margin:0 auto;text-align:center;position:relative;">
-    <div style="font-size:9px;font-weight:700;color:rgba(245,158,11,0.7);letter-spacing:3px;text-transform:uppercase;margin-bottom:12px;">Join the Community</div>
-    <h2 style="font-family:'Playfair Display',serif;font-size:clamp(20px,4vw,28px);font-weight:700;color:#fff;margin-bottom:10px;line-height:1.25;">
-      Connect with Sri Lanka's<br/><span style="color:var(--gold);">Tiling Community</span>
-    </h2>
-    <p style="font-size:13px;color:rgba(255,255,255,0.5);margin-bottom:22px;line-height:1.8;">Get tips, find work, and share your projects on WhatsApp and Facebook.</p>
-    <div style="display:flex;gap:10px;justify-content:center;flex-wrap:wrap;margin-bottom:24px;">
-      <a href="https://chat.whatsapp.com/IR9ZWyFj7ZN15KeOHqwG3Z?s=cl&p=i&mlu=4&ilr=0" target="_blank" rel="noopener"
-        style="display:inline-flex;align-items:center;gap:7px;background:#25D366;color:#fff;border-radius:11px;padding:11px 20px;font-size:13px;font-weight:700;text-decoration:none;">
-        💬 WhatsApp Group
-      </a>
-      <a href="https://www.facebook.com/share/g/1Dsc63BvXS/?mibextid=wwXIfr" target="_blank" rel="noopener"
-        style="display:inline-flex;align-items:center;gap:7px;background:#1877F2;color:#fff;border-radius:11px;padding:11px 20px;font-size:13px;font-weight:700;text-decoration:none;">
-        👥 Facebook Group
-      </a>
-    </div>
-    <div style="border-top:1px solid rgba(255,255,255,0.1);padding-top:22px;display:flex;gap:10px;justify-content:center;flex-wrap:wrap;">
-      <a href="/post-project" class="btn btn-terra">📋 Post a Project</a>
-      <a href="/join-tilershub" class="btn btn-outline" style="border-color:rgba(255,255,255,0.25);color:rgba(255,255,255,0.8);">✅ Join as Provider</a>
-    </div>
-  </div>
-</section>
 
 </Layout>
 

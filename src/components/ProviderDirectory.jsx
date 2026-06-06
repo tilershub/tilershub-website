@@ -2,9 +2,7 @@ import { useState, useEffect, useRef } from 'react'
 import { supabase, buildWhatsAppLink, DISTRICTS_EN, SERVICES_EN, PROVIDER_TYPES, VERIFICATION_BADGES } from '../lib/supabase.js'
 
 const TYPE_LABELS = {
-  tiler: 'Tilers', workshop: 'Workshops', supplier: 'Suppliers',
-  contractor: 'Contractors', tile_shop: 'Tile Shops', brand_dealer: 'Brand Dealers',
-  tool_supplier: 'Tool Suppliers', bathroom_shop: 'Bathroom Shops',
+  tiler: 'Tilers', provider: 'Providers',
 }
 
 function initials(name) {
@@ -571,7 +569,7 @@ export default function ProviderDirectory({ initialType, initialSearch }) {
   }, [])
 
   const showTilers = !type || type === 'tiler'
-  const showProviders = !!type && type !== 'tiler'
+  const showProviders = !type || type === 'provider'
 
   const filteredTilers = showTilers ? tilers.filter(t => {
     if (district && t.district !== district) return false
@@ -583,7 +581,6 @@ export default function ProviderDirectory({ initialType, initialSearch }) {
   }) : []
 
   const filteredProviders = showProviders ? providers.filter(p => {
-    if (type && p.provider_type !== type) return false
     if (district && p.district !== district && !(p.service_areas || []).includes(district)) return false
     if (search) {
       const q = search.toLowerCase()
@@ -623,8 +620,9 @@ export default function ProviderDirectory({ initialType, initialSearch }) {
             />
           </div>
           <select value={type} onChange={e => setType(e.target.value)} style={{ padding: '9px 12px', border: '1.5px solid #e2e8f0', borderRadius: 10, fontSize: 13, outline: 'none', background: '#fff', fontFamily: 'inherit', cursor: 'pointer' }}>
-            <option value="">All Types</option>
-            {PROVIDER_TYPES.map(p => <option key={p.value} value={p.value}>{p.icon} {p.label}</option>)}
+            <option value="">All</option>
+            <option value="tiler">🪚 Tilers</option>
+            <option value="provider">👷 Providers</option>
           </select>
           <select value={district} onChange={e => setDistrict(e.target.value)} style={{ padding: '9px 12px', border: '1.5px solid #e2e8f0', borderRadius: 10, fontSize: 13, outline: 'none', background: '#fff', fontFamily: 'inherit', cursor: 'pointer' }}>
             <option value="">All Districts</option>
@@ -676,9 +674,7 @@ export default function ProviderDirectory({ initialType, initialSearch }) {
             {/* ── Card grid ── */}
             <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fill, minmax(320px, 1fr))', gap: 20 }}>
               {filteredProviders.map(p => (
-                (p.provider_type === 'tile_shop' || p.provider_type === 'brand_dealer')
-                  ? <ShopCard key={p.id} provider={p} onClick={item => { setSelected(item); setIsTilerSelected(false) }} />
-                  : <ProviderCard key={p.id} provider={p} onClick={item => { setSelected(item); setIsTilerSelected(false) }} />
+                <ProviderCard key={p.id} provider={p} onClick={item => { setSelected(item); setIsTilerSelected(false) }} />
               ))}
               {gridTilers.map(t => (
                 <TilerCard key={t.id} tiler={t} onClick={item => { setSelected(item); setIsTilerSelected(true) }} />

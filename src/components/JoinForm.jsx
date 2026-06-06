@@ -3,37 +3,31 @@ import { supabase, PROVIDER_TYPES, DISTRICTS_EN } from '../lib/supabase.js'
 
 // ─── All constants & helpers outside component (prevents keyboard-dismiss remount) ───
 
+const PROVIDER_TYPES_SIMPLE = [
+  { value: 'tiler',    label: 'Tiler',    icon: '🪚', desc: 'Tile installation professional' },
+  { value: 'provider', label: 'Provider', icon: '👷', desc: 'Contractor, specialist or service' },
+]
+
 const TYPE_META = {
-  tiler:        { nameLabel: 'Full Name',              namePlaceholder: 'Your full name',               servicesLabel: 'Services You Offer',    showServiceAreas: true,  showPhone: false },
-  contractor:   { nameLabel: 'Name / Company',         namePlaceholder: 'Your name or company name',    servicesLabel: 'Services You Offer',    showServiceAreas: true,  showPhone: true  },
-  workshop:     { nameLabel: 'Workshop Name',          namePlaceholder: 'Workshop or business name',    servicesLabel: 'Workshop Capabilities', showServiceAreas: false, showPhone: true  },
-  supplier:     { nameLabel: 'Business Name',          namePlaceholder: 'Company or trade name',        servicesLabel: 'Products You Supply',   showServiceAreas: false, showPhone: true  },
-  tile_shop:    { nameLabel: 'Shop / Showroom Name',   namePlaceholder: 'Shop or showroom name',        servicesLabel: 'Product Categories',    showServiceAreas: false, showPhone: true  },
-  brand_dealer: { nameLabel: 'Dealer / Business Name', namePlaceholder: 'Dealer or business name',      servicesLabel: 'Brands & Products',     showServiceAreas: false, showPhone: true  },
-  tool_supplier:{ nameLabel: 'Business Name',          namePlaceholder: 'Shop or business name',        servicesLabel: 'Tools & Equipment',     showServiceAreas: false, showPhone: true  },
-  bathroom_shop:{ nameLabel: 'Showroom Name',          namePlaceholder: 'Showroom or business name',    servicesLabel: 'Product Categories',    showServiceAreas: false, showPhone: true  },
+  tiler:    { nameLabel: 'Full Name',       namePlaceholder: 'Your full name',            showServiceAreas: true,  showPhone: false },
+  provider: { nameLabel: 'Name / Company',  namePlaceholder: 'Your name or company name', showServiceAreas: true,  showPhone: true  },
 }
 
-const TYPE_SERVICES = {
-  tiler:        ['Floor Tiling','Wall Tiling','Bathroom Tiling','Kitchen Tiling','Staircase Tiling','Outdoor Tiling','Waterproofing','Grouting & Finishing'],
-  contractor:   ['Full Bathroom Renovation','Full Kitchen Renovation','Floor Tiling','Wall Tiling','Waterproofing','Screeding & Leveling','Design Consultation','Project Management'],
-  workshop:     ['Tile Cutting','Routing & Profiling','Bevel Cutting','Polish & Grinding','Waterjet Cutting','Edge Finishing','Notching & Drilling','Custom Sizes'],
-  supplier:     ['Floor Tiles','Wall Tiles','Outdoor Tiles','Mosaic & Feature Tiles','Large Format Tiles','Budget Range','Premium Range','Imported Tiles','Porcelain','Ceramic','Marble & Natural Stone'],
-  tile_shop:    ['Floor Tiles','Wall Tiles','Bathroom Tiles','Outdoor Tiles','Mosaic Tiles','Porcelain','Ceramic','Marble','Budget Range','Premium Range'],
-  brand_dealer: ['Rocell','Lanka Tile','Macktiles','Megatile','Imported Brands','Floor Tiles','Wall Tiles','Porcelain','Ceramic'],
-  tool_supplier:['Tile Cutters','Angle Grinders & Blades','Leveling Systems','Mixing Equipment','Trowels & Hand Tools','Levels & Lasers','Safety Equipment','Tool Rental','Wet Saws'],
-  bathroom_shop:['Sanitary Ware','Showers & Enclosures','Bathtubs','Faucets & Mixers','Mirrors & Cabinets','Accessories & Rails','Bathroom Lighting','Waterproofing & Drainage'],
-}
+const ALL_SERVICES = [
+  'Floor Tiling', 'Wall Tiling', 'Bathroom Tiling', 'Kitchen Tiling',
+  'Staircase Tiling', 'Outdoor Tiling', 'Large Tile Installation',
+  'Waterproofing', 'Grouting & Finishing',
+  'Tile Cutting', 'Tile Routing',
+  'Bathroom Renovation', 'Full Construction',
+  'Bathroom Plumbing', 'Shower Cubicle',
+  'Hand Railing', 'Vanity Cupboard',
+  'Bathroom Lighting', 'Bathroom Wiring', 'Electrical Works',
+  'Ipanel Ceiling',
+]
 
 const DESC_PLACEHOLDER = {
-  tiler:        '8 years experience in floor and bathroom tiling across Colombo and Western Province. Specialise in large format tiles and herringbone patterns...',
-  contractor:   'Full bathroom and kitchen renovation contractor. Handles tiling, plumbing, carpentry and project management end to end...',
-  workshop:     'Tile cutting and routing workshop in Piliyandala. Available for contractors and tilers. Same-day cutting service available on request...',
-  supplier:     'Wholesale and retail tile supplier. 500+ SKUs including imported Italian, Indian and local Sri Lankan tiles at competitive prices...',
-  tile_shop:    'Tile showroom with 200+ designs. Stocking local and imported tiles from Rs.150 to Rs.2,500 per sq.ft. Free delivery within 20km...',
-  brand_dealer: 'Authorised dealer for Rocell and Lanka Tile. Serving Colombo and suburbs with showroom stock and fast delivery...',
-  tool_supplier:'Tiling tools and equipment shop. Stock tile cutters, angle grinders and leveling systems. Tool rental also available by the day or week...',
-  bathroom_shop:'Bathroom products showroom. Stocking sanitary ware, faucets, showers and fittings from leading brands at all price points...',
+  tiler:    '8 years experience in floor and bathroom tiling across Colombo and Western Province...',
+  provider: 'Describe your services, experience, and area of operation...',
 }
 
 function Field({ label, id, req, error, hint, children }) {
@@ -170,6 +164,27 @@ function PortfolioUpload({ files, onChange }) {
   )
 }
 
+function ServiceTextInput({ value, onChange }) {
+  const [text, setText] = useState('')
+  function add() {
+    const s = text.trim()
+    if (s && !value.includes(s)) onChange([...value, s])
+    setText('')
+  }
+  return (
+    <div style={{ display: 'flex', gap: 8 }}>
+      <input
+        value={text}
+        onChange={e => setText(e.target.value)}
+        onKeyDown={e => { if (e.key === 'Enter') { e.preventDefault(); add() } }}
+        placeholder="Add custom service…"
+        style={{ flex: 1, padding: '8px 12px', border: '1.5px solid #e2e8f0', borderRadius: 10, fontSize: 12, outline: 'none', fontFamily: 'inherit' }}
+      />
+      <button type="button" onClick={add} style={{ padding: '8px 14px', background: '#eef3fb', color: '#1B3A6B', border: '1.5px solid #d5e2f5', borderRadius: 10, fontSize: 12, fontWeight: 700, cursor: 'pointer' }}>+ Add</button>
+    </div>
+  )
+}
+
 async function uploadImage(file, folder) {
   const ext = file.name.split('.').pop()
   const path = `${folder}/${Date.now()}-${Math.random().toString(36).slice(2)}.${ext}`
@@ -282,7 +297,6 @@ export default function JoinForm() {
   }
 
   const meta = TYPE_META[form.provider_type]
-  const services = TYPE_SERVICES[form.provider_type] || []
   const formVisible = !!form.provider_type
 
   return (
@@ -291,26 +305,29 @@ export default function JoinForm() {
       {/* ── Step 1: Provider Type ── */}
       <div style={{ marginBottom: 32 }}>
         <div style={{ fontSize: 11, fontWeight: 700, color: '#334155', textTransform: 'uppercase', letterSpacing: '0.6px', marginBottom: 12 }}>
-          What type of provider are you?<span style={{ color: '#E05A2B', marginLeft: 3 }}>*</span>
+          What are you?<span style={{ color: '#E05A2B', marginLeft: 3 }}>*</span>
         </div>
-        <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fill, minmax(128px, 1fr))', gap: 10 }}>
-          {PROVIDER_TYPES.map(t => {
-            const selected = form.provider_type === t.value
+        <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: 12 }}>
+          {PROVIDER_TYPES_SIMPLE.map(t => {
+            const sel = form.provider_type === t.value
             return (
               <button
                 key={t.value}
                 type="button"
                 onClick={() => selectType(t.value)}
                 style={{
-                  padding: '14px 10px', borderRadius: 14, cursor: 'pointer', textAlign: 'center',
-                  border: `2px solid ${selected ? '#1B3A6B' : '#e2e8f0'}`,
-                  background: selected ? '#eef3fb' : '#fff',
+                  padding: '18px 16px', borderRadius: 14, cursor: 'pointer', textAlign: 'left',
+                  border: `2px solid ${sel ? '#1B3A6B' : '#e2e8f0'}`,
+                  background: sel ? '#eef3fb' : '#fff',
                   transition: 'all 0.15s',
-                  display: 'flex', flexDirection: 'column', alignItems: 'center', gap: 6,
+                  display: 'flex', alignItems: 'center', gap: 14,
                 }}
               >
-                <span style={{ fontSize: 24 }}>{t.icon}</span>
-                <span style={{ fontSize: 12, fontWeight: 700, color: selected ? '#1B3A6B' : '#475569', lineHeight: 1.2 }}>{t.label}</span>
+                <span style={{ fontSize: 30 }}>{t.icon}</span>
+                <div>
+                  <div style={{ fontSize: 14, fontWeight: 700, color: sel ? '#1B3A6B' : '#0f172a' }}>{t.label}</div>
+                  <div style={{ fontSize: 11, color: '#94a3b8', marginTop: 2 }}>{t.desc}</div>
+                </div>
               </button>
             )
           })}
@@ -401,10 +418,10 @@ export default function JoinForm() {
             </Field>
           )}
 
-          {/* Services / Products */}
-          <Field label={meta.servicesLabel} id="services" req error={errors.services} hint="Select all that apply.">
-            <div style={{ display: 'flex', flexWrap: 'wrap', gap: 8 }}>
-              {services.map(s => (
+          {/* Services */}
+          <Field label="Services You Offer" id="services" req error={errors.services} hint="Select all that apply — or type your own below.">
+            <div style={{ display: 'flex', flexWrap: 'wrap', gap: 8, marginBottom: 10 }}>
+              {ALL_SERVICES.map(s => (
                 <Chip
                   key={s}
                   label={s}
@@ -413,6 +430,10 @@ export default function JoinForm() {
                 />
               ))}
             </div>
+            <ServiceTextInput
+              value={form.services}
+              onChange={v => set('services', v)}
+            />
           </Field>
 
           {/* Images */}
