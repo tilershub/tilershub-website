@@ -1,6 +1,7 @@
 ---
 import Layout from '../../layouts/Layout.astro'
 import { supabase } from '../../lib/supabase.js'
+import ReviewsSection from '../../components/ReviewsSection.jsx'
 
 export async function getStaticPaths() {
   const { data: tilers } = await supabase
@@ -190,6 +191,9 @@ function stars(r) {
           </div>
         )}
 
+        <!-- Reviews -->
+        <ReviewsSection client:load tilerId={tiler.id} />
+
         <!-- Trust section -->
         <div style="background:linear-gradient(135deg,#0F2444,#1B3A6B);border-radius:16px;padding:28px;color:#fff;">
           <h2 style="font-size:14px;font-weight:700;color:#D4AF37;margin-bottom:14px;letter-spacing:0.5px;">Why Choose a Skill Verified Tiler?</h2>
@@ -280,6 +284,12 @@ function stars(r) {
           style="display:flex;align-items:center;justify-content:center;gap:6px;background:#E05A2B;color:#fff;border-radius:12px;padding:13px;font-size:13px;font-weight:700;text-decoration:none;text-align:center;">
           📋 Post Your Project Free
         </a>
+
+        <button
+          id="share-profile-btn"
+          style="display:flex;align-items:center;justify-content:center;gap:6px;width:100%;background:#f1f5f9;color:#374151;border:1px solid #e2e8f0;border-radius:12px;padding:11px;font-size:12px;font-weight:700;cursor:pointer;margin-top:10px;">
+          🔗 Share Profile
+        </button>
       </div>
 
     </div>
@@ -290,5 +300,22 @@ function stars(r) {
       section > div { grid-template-columns: 1fr !important; }
     }
   </style>
+
+  <script define:vars={{ profileName: name, profileUrl: Astro.url.href }}>
+    const btn = document.getElementById('share-profile-btn')
+    if (btn) {
+      btn.addEventListener('click', async () => {
+        const title = `${profileName} — Verified Tiler on TilersHub`
+        const url = profileUrl
+        if (navigator.share) {
+          try { await navigator.share({ title, url }) } catch (_) {}
+        } else {
+          await navigator.clipboard.writeText(url)
+          btn.textContent = '✓ Link Copied!'
+          setTimeout(() => { btn.textContent = '🔗 Share Profile' }, 2000)
+        }
+      })
+    }
+  </script>
 
 </Layout>
