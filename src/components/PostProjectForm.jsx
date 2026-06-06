@@ -1,5 +1,5 @@
 import { useState, useEffect } from 'react'
-import { supabase, signInWithOtp, PROJECT_TYPES, DISTRICTS_EN, BUDGET_RANGES } from '../lib/supabase.js'
+import { supabase, signInWithOtp, DISTRICTS_EN } from '../lib/supabase.js'
 
 const DRAFT_KEY = 'tilershub_draft_token'
 
@@ -106,7 +106,7 @@ export default function PostProjectForm() {
 
   function validate() {
     const e = {}
-    if (!form.project_type) e.project_type = 'Required'
+    if (!form.project_type.trim()) e.project_type = 'Required'
     if (!form.city.trim()) e.city = 'Required'
     if (!form.description.trim()) e.description = 'Required'
     if (form.description.trim().length < 20) e.description = 'Please describe your project in at least 20 characters'
@@ -217,12 +217,15 @@ export default function PostProjectForm() {
         </div>
       )}
 
-      <Field label="Project Type" id="project_type" req error={errors.project_type}>
-        <select id="project_type" value={form.project_type} onChange={e => set('project_type', e.target.value)}
-          style={{ ...inp(!!errors.project_type), WebkitAppearance: 'none', appearance: 'none', cursor: 'pointer' }}>
-          <option value="">Select project type...</option>
-          {PROJECT_TYPES.map(t => <option key={t} value={t}>{t}</option>)}
-        </select>
+      <Field label="Project Title" id="project_type" req error={errors.project_type}
+        hint="e.g. Bathroom Tiling, Floor Tiling, Bathroom Renovation, Waterproofing…">
+        <input
+          id="project_type"
+          value={form.project_type}
+          onChange={e => set('project_type', e.target.value)}
+          placeholder="e.g. Bathroom Tiling & Renovation"
+          style={inp(!!errors.project_type)}
+        />
       </Field>
 
       <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: 14 }}>
@@ -245,12 +248,14 @@ export default function PostProjectForm() {
           rows={4} style={{ ...inp(!!errors.description), resize: 'vertical', minHeight: 100 }} />
       </Field>
 
-      <Field label="Budget Range" id="budget_range" hint="Optional — helps match you with providers in your range">
-        <select id="budget_range" value={form.budget_range} onChange={e => set('budget_range', e.target.value)}
-          style={{ ...inp(false), WebkitAppearance: 'none', appearance: 'none', cursor: 'pointer' }}>
-          <option value="">Select budget range (optional)</option>
-          {BUDGET_RANGES.map(b => <option key={b} value={b}>{b}</option>)}
-        </select>
+      <Field label="Budget Range" id="budget_range" hint="Optional — e.g. Rs. 50,000, Rs. 150,000–250,000, Negotiable">
+        <input
+          id="budget_range"
+          value={form.budget_range}
+          onChange={e => set('budget_range', e.target.value)}
+          placeholder="e.g. Rs. 150,000 or Negotiable"
+          style={inp(false)}
+        />
       </Field>
 
       <div style={{ height: 1, background: '#f1f5f9', margin: '8px 0 20px' }} />
