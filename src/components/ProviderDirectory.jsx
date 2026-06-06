@@ -165,58 +165,6 @@ function getCoverPhoto(tiler) {
   return TILING_COVER_PHOTOS[idx]
 }
 
-// Promotional banner card (horizontal scroll spotlight)
-function TilerBanner({ tiler, onClick }) {
-  const phone = tiler.whatsapp || tiler.phone
-
-  return (
-    <div
-      onClick={() => onClick(tiler)}
-      style={{ width: 240, minWidth: 240, height: 150, borderRadius: 16, overflow: 'hidden', flexShrink: 0, cursor: 'pointer', position: 'relative', transition: 'transform 0.2s', boxShadow: '0 4px 16px rgba(0,0,0,0.1)' }}
-      onMouseOver={e => { e.currentTarget.style.transform = 'scale(1.02)' }}
-      onMouseOut={e => { e.currentTarget.style.transform = '' }}
-    >
-      {/* Background: tiling work photo */}
-      <img src={getCoverPhoto(tiler)} alt="Tiling work" style={{ position: 'absolute', inset: 0, width: '100%', height: '100%', objectFit: 'cover' }} />
-      {/* Tile-grid texture */}
-      <div style={{ position: 'absolute', inset: 0, opacity: 0.04, backgroundImage: 'repeating-linear-gradient(0deg,transparent,transparent 19px,rgba(255,255,255,0.8) 19px,rgba(255,255,255,0.8) 20px),repeating-linear-gradient(90deg,transparent,transparent 19px,rgba(255,255,255,0.8) 19px,rgba(255,255,255,0.8) 20px)', pointerEvents: 'none' }} />
-      {/* Dark scrim at bottom */}
-      <div style={{ position: 'absolute', inset: 0, background: 'linear-gradient(to top, rgba(0,0,0,0.75) 0%, rgba(0,0,0,0.1) 55%, transparent 100%)' }} />
-
-      {/* Verified / Unverified badge top-right */}
-      {tiler.is_verified
-        ? <span style={{ position: 'absolute', top: 10, right: 10, fontSize: 9, fontWeight: 700, padding: '2px 7px', borderRadius: 20, background: 'rgba(255,255,255,0.18)', color: '#fff', border: '1px solid rgba(255,255,255,0.3)', backdropFilter: 'blur(4px)' }}>✓ Skilled</span>
-        : <span style={{ position: 'absolute', top: 10, right: 10, fontSize: 9, fontWeight: 700, padding: '2px 7px', borderRadius: 20, background: 'rgba(0,0,0,0.35)', color: 'rgba(255,255,255,0.65)', border: '1px solid rgba(255,255,255,0.2)', backdropFilter: 'blur(4px)' }}>Unverified</span>
-      }
-
-      {/* Bottom info */}
-      <div style={{ position: 'absolute', bottom: 0, left: 0, right: 0, padding: '10px 12px' }}>
-        <div style={{ display: 'flex', alignItems: 'center', gap: 8, marginBottom: 6 }}>
-          {/* Avatar */}
-          <div style={{ width: 34, height: 34, borderRadius: '50%', border: '2px solid rgba(255,255,255,0.75)', background: 'rgba(255,255,255,0.18)', display: 'flex', alignItems: 'center', justifyContent: 'center', fontSize: 12, fontWeight: 700, color: '#fff', flexShrink: 0 }}>
-            {initials(tiler.full_name)}
-          </div>
-          <div style={{ minWidth: 0 }}>
-            <div style={{ fontWeight: 700, fontSize: 12, color: '#fff', overflow: 'hidden', textOverflow: 'ellipsis', whiteSpace: 'nowrap' }}>{tiler.full_name}</div>
-            <div style={{ fontSize: 10, color: 'rgba(255,255,255,0.65)' }}>📍 {tiler.city || tiler.district}</div>
-          </div>
-        </div>
-        <div style={{ display: 'flex', gap: 5, flexWrap: 'wrap' }}>
-          {tiler.experience_years > 0 && (
-            <span style={{ fontSize: 9, padding: '1px 7px', borderRadius: 20, background: 'rgba(255,255,255,0.15)', color: '#fff', border: '1px solid rgba(255,255,255,0.2)' }}>🛠️ {tiler.experience_years}+ yrs</span>
-          )}
-          {tiler.avg_rating > 0 && (
-            <span style={{ fontSize: 9, padding: '1px 7px', borderRadius: 20, background: 'rgba(255,255,255,0.15)', color: '#fff', border: '1px solid rgba(255,255,255,0.2)' }}>⭐ {tiler.avg_rating.toFixed(1)}</span>
-          )}
-          {tiler.daily_rate_min && (
-            <span style={{ fontSize: 9, padding: '1px 7px', borderRadius: 20, background: 'rgba(255,255,255,0.15)', color: '#fff', border: '1px solid rgba(255,255,255,0.2)' }}>Rs.{tiler.daily_rate_min}/sqft</span>
-          )}
-        </div>
-      </div>
-    </div>
-  )
-}
-
 // TaskRabbit-style tiler profile card
 function TilerCard({ tiler, onClick }) {
   const phone = tiler.whatsapp || tiler.phone
@@ -568,7 +516,6 @@ const TYPE_INFO_CARDS = {
 
 function SuggestedContent({ type, tilers, providers, onSelectTiler, onSelectProvider }) {
   const infoCards = TYPE_INFO_CARDS[type] || []
-  const suggestedTilers = tilers.slice(0, 4)
   const otherProviders = providers.filter(p => p.provider_type !== type).slice(0, 3)
   const typeLabel = TYPE_LABELS[type] || 'Providers'
 
@@ -606,22 +553,6 @@ function SuggestedContent({ type, tilers, providers, onSelectTiler, onSelectProv
         </div>
       )}
 
-      {/* Suggested tilers */}
-      {suggestedTilers.length > 0 && (
-        <div style={{ marginBottom: 36 }}>
-          <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', marginBottom: 14 }}>
-            <div style={{ fontSize: 12, fontWeight: 700, color: '#94a3b8', textTransform: 'uppercase', letterSpacing: 1 }}>
-              👷 Featured Tilers
-            </div>
-            <a href="/providers?type=tiler" style={{ fontSize: 12, color: '#1B3A6B', fontWeight: 600, textDecoration: 'none' }}>See all →</a>
-          </div>
-          <div style={{ display: 'flex', gap: 12, overflowX: 'auto', paddingBottom: 8, scrollbarWidth: 'none' }}>
-            {suggestedTilers.map(t => (
-              <TilerBanner key={t.id} tiler={t} onClick={onSelectTiler} />
-            ))}
-          </div>
-        </div>
-      )}
 
       {/* Other providers */}
       {otherProviders.length > 0 && (
@@ -693,15 +624,8 @@ export default function ProviderDirectory({ initialType, initialSearch }) {
 
   const total = filteredTilers.length + filteredProviders.length
 
-  // Spotlight: featured tilers, or first 6 if none are featured
-  const spotlightTilers = filteredTilers.filter(t => t.featured).length > 0
-    ? filteredTilers.filter(t => t.featured)
-    : filteredTilers.slice(0, Math.min(6, filteredTilers.length))
-
-  // Grid excludes whatever is already shown in the spotlight, verified tilers first
-  const spotlightIds = new Set(spotlightTilers.map(t => t.id))
+  // All tilers, verified first then by experience
   const gridTilers = filteredTilers
-    .filter(t => !spotlightIds.has(t.id))
     .sort((a, b) => {
       if (a.is_verified !== b.is_verified) return (b.is_verified ? 1 : 0) - (a.is_verified ? 1 : 0)
       return (b.experience_years || 0) - (a.experience_years || 0)
@@ -779,44 +703,6 @@ export default function ProviderDirectory({ initialType, initialSearch }) {
           )
         ) : (
           <>
-            {/* ── Promotional Spotlight (tilers only) ── */}
-            {showTilers && spotlightTilers.length > 0 && (
-              <div style={{ marginBottom: 32 }}>
-                <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', marginBottom: 14 }}>
-                  <div>
-                    <div style={{ fontSize: 13, fontWeight: 700, color: '#1B3A6B', letterSpacing: '0.5px', textTransform: 'uppercase' }}>⭐ Featured Tilers</div>
-                    <div style={{ fontSize: 12, color: '#94a3b8', marginTop: 2 }}>Verified professionals ready for your project</div>
-                  </div>
-                  <a href="/join-tilershub" style={{ fontSize: 12, fontWeight: 700, color: '#1B3A6B', textDecoration: 'none', background: '#eef3fb', padding: '6px 14px', borderRadius: 8, border: '1px solid #d5e2f5' }}>
-                    + List Your Profile
-                  </a>
-                </div>
-                <div style={{ display: 'flex', gap: 12, overflowX: 'auto', paddingBottom: 8, scrollbarWidth: 'none', msOverflowStyle: 'none' }}>
-                  {spotlightTilers.map(t => (
-                    <TilerBanner key={t.id} tiler={t} onClick={item => { setSelected(item); setIsTilerSelected(true) }} />
-                  ))}
-                  {/* Promo card: join as tiler */}
-                  <a href="/join-tilershub" style={{ width: 240, minWidth: 240, height: 150, borderRadius: 16, overflow: 'hidden', flexShrink: 0, textDecoration: 'none', background: 'linear-gradient(135deg, #f1f5f9, #e2e8f0)', border: '2px dashed #cbd5e1', display: 'flex', flexDirection: 'column', alignItems: 'center', justifyContent: 'center', gap: 8, transition: 'all 0.2s' }}
-                    onMouseOver={e => { e.currentTarget.style.borderColor = '#1B3A6B'; e.currentTarget.style.background = '#eef3fb' }}
-                    onMouseOut={e => { e.currentTarget.style.borderColor = '#cbd5e1'; e.currentTarget.style.background = 'linear-gradient(135deg, #f1f5f9, #e2e8f0)' }}
-                  >
-                    <div style={{ width: 40, height: 40, borderRadius: '50%', background: '#1B3A6B', display: 'flex', alignItems: 'center', justifyContent: 'center', fontSize: 18, color: '#fff' }}>+</div>
-                    <div style={{ textAlign: 'center' }}>
-                      <div style={{ fontSize: 12, fontWeight: 700, color: '#1B3A6B' }}>Promote Your Profile</div>
-                      <div style={{ fontSize: 10, color: '#94a3b8', marginTop: 2 }}>Free listing on TilersHub</div>
-                    </div>
-                  </a>
-                </div>
-              </div>
-            )}
-
-            {/* ── All Tilers heading ── */}
-            {showTilers && gridTilers.length > 0 && (
-              <div style={{ fontSize: 13, fontWeight: 700, color: '#475569', marginBottom: 16, letterSpacing: '0.5px', textTransform: 'uppercase' }}>
-                👷 All Tilers — {filteredTilers.length} listed
-              </div>
-            )}
-
             {/* ── Card grid ── */}
             <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fill, minmax(290px, 1fr))', gap: 20 }}>
               {filteredProviders.map(p => (
