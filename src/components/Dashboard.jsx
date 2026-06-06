@@ -6,6 +6,7 @@ export default function Dashboard() {
   const [loading, setLoading] = useState(true)
   const [tab, setTab] = useState('projects')
   const [projects, setProjects] = useState([])
+  const [bids, setBids] = useState({})
   const [submission, setSubmission] = useState(null)
   const [dataLoading, setDataLoading] = useState(false)
 
@@ -28,8 +29,24 @@ export default function Dashboard() {
       supabase.from('projects').select('*').eq('user_id', u.id).order('created_at', { ascending: false }),
       supabase.from('provider_submissions').select('*').eq('user_id', u.id).order('created_at', { ascending: false }).limit(1).maybeSingle(),
     ])
-    setProjects(proj || [])
+    const userProjects = proj || []
+    setProjects(userProjects)
     setSubmission(sub)
+
+    if (userProjects.length > 0) {
+      const ids = userProjects.map(p => p.id)
+      const { data: bidData } = await supabase
+        .from('bids')
+        .select('*')
+        .in('job_id', ids)
+        .order('created_at', { ascending: false })
+      const byJob = {}
+      for (const b of bidData || []) {
+        if (!byJob[b.job_id]) byJob[b.job_id] = []
+        byJob[b.job_id].push(b)
+      }
+      setBids(byJob)
+    }
     setDataLoading(false)
   }
 
@@ -108,7 +125,7 @@ export default function Dashboard() {
           <div className="spinner" style={{ margin: '0 auto', borderColor: 'rgba(26,43,74,0.2)', borderTopColor: 'var(--navy)' }} />
         </div>
       ) : tab === 'projects' ? (
-        <ProjectsTab projects={projects} />
+        <ProjectsTab projects={projects} bids={bids} />
       ) : (
         <ListingTab submission={submission} />
       )}
@@ -116,7 +133,82 @@ export default function Dashboard() {
   )
 }
 
-function ProjectsTab({ projects }) {
+function BidsPanel({ projectBids }) {
+  const [open, setOpen] = useState(false)
+
+  if (!projectBids || projectBids.length === 0) {
+    return (
+      <div style={{ marginTop: 12, padding: '12px 14px', background: '#f8fafc', borderRadius: 10, fontSize: 12, color: '#94a3b8' }}>
+        💬 No bids yet — your project is live and visible to all providers.
+      </div>
+    )
+  }
+
+  const newCount = projectBids.filter(b => b.status === 'new').length
+
+  return (
+    <div style={{ marginTop: 12 }}>
+      <button
+        onClick={() => setOpen(o => !o)}
+        style={{ display: 'flex', alignItems: 'center', gap: 8, background: 'none', border: 'none', cursor: 'pointer', padding: 0, fontSize: 13, fontWeight: 700, color: '#1B3A6B' }}
+      >
+        <span style={{ display: 'inline-flex', alignItems: 'center', justifyContent: 'center', background: newCount > 0 ? '#f59e0b' : '#e2e8f0', color: newCount > 0 ? '#fff' : '#64748b', borderRadius: 20, padding: '2px 8px', fontSize: 11, fontWeight: 700 }}>
+          {projectBids.length}
+        </span>
+        {projectBids.length} Bid{projectBids.length !== 1 ? 's' : ''} Received
+        {newCount > 0 && <span style={{ fontSize: 11, color: '#f59e0b', fontWeight: 700 }}>· {newCount} new</span>}
+        <span style={{ fontSize: 14, color: '#94a3b8' }}>{open ? '▲' : '▼'}</span>
+      </button>
+
+      {open && (
+        <div style={{ marginTop: 12, display: 'flex', flexDirection: 'column', gap: 10 }}>
+          {projectBids.map(bid => {
+            const wa = bid.bidder_whatsapp?.replace(/\D/g, '')
+            const normalized = wa?.startsWith('94') ? wa : '94' + (wa?.replace(/^0/, '') || '')
+            const waLink = `https://wa.me/${normalized}?text=${encodeURIComponent(`ආයුබෝවන්! 🙏\n\nTilersHub හරහා ඔබේ bid දැක්කා. ඔබගේ quote / message ගැන කතා කරමු.\n\nස්තූතියි!`)}`
+
+            return (
+              <div
+                key={bid.id}
+                style={{
+                  padding: '14px 16px', background: '#fff', borderRadius: 12, border: `1.5px solid ${bid.status === 'new' ? '#fde68a' : '#e2e8f0'}`,
+                  borderLeft: `4px solid ${bid.status === 'new' ? '#f59e0b' : '#e2e8f0'}`,
+                }}
+              >
+                <div style={{ display: 'flex', alignItems: 'flex-start', justifyContent: 'space-between', gap: 10, marginBottom: 8 }}>
+                  <div>
+                    <div style={{ fontSize: 13, fontWeight: 700, color: '#0f172a' }}>{bid.bidder_name}</div>
+                    <div style={{ fontSize: 11, color: '#64748b', marginTop: 2 }}>
+                      <span style={{ textTransform: 'capitalize' }}>{bid.bidder_type}</span>
+                      {bid.quote_amount && <span style={{ marginLeft: 8, color: '#166534', fontWeight: 600 }}>· Rs. {bid.quote_amount.toLocaleString()}</span>}
+                      {bid.timeline && <span style={{ marginLeft: 8 }}>· {bid.timeline}</span>}
+                    </div>
+                  </div>
+                  {bid.status === 'new' && (
+                    <span style={{ fontSize: 10, fontWeight: 700, padding: '2px 8px', borderRadius: 20, background: '#fef3c7', color: '#92400e', whiteSpace: 'nowrap' }}>New</span>
+                  )}
+                </div>
+                <p style={{ fontSize: 12, color: '#475569', lineHeight: 1.6, margin: '0 0 10px' }}>
+                  {bid.message.length > 200 ? bid.message.slice(0, 200) + '…' : bid.message}
+                </p>
+                <a
+                  href={waLink}
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  style={{ display: 'inline-flex', alignItems: 'center', gap: 6, fontSize: 12, fontWeight: 700, background: '#25D366', color: '#fff', borderRadius: 8, padding: '7px 14px', textDecoration: 'none' }}
+                >
+                  💬 Contact on WhatsApp
+                </a>
+              </div>
+            )
+          })}
+        </div>
+      )}
+    </div>
+  )
+}
+
+function ProjectsTab({ projects, bids }) {
   const STATUS_COLOR = {
     pending_review: { bg: '#FEF3C7', color: '#92400E', label: 'Under Review' },
     active: { bg: '#F0FDF4', color: '#166534', label: 'Active' },
@@ -130,7 +222,7 @@ function ProjectsTab({ projects }) {
         <div style={{ fontSize: 40, marginBottom: 12 }}>📋</div>
         <div style={{ fontSize: 15, fontWeight: 700, color: 'var(--text)', marginBottom: 8 }}>No projects yet</div>
         <p style={{ fontSize: 13, color: 'var(--text-3)', marginBottom: 20, lineHeight: 1.7 }}>
-          Post a tiling project and verified professionals will contact you on WhatsApp.
+          Post a tiling project and providers will bid. You choose who to contact.
         </p>
         <a href="/post-project" style={{ display: 'inline-flex', alignItems: 'center', gap: 6, padding: '11px 22px', background: 'var(--terra)', color: '#fff', borderRadius: 10, fontSize: 13, fontWeight: 700, textDecoration: 'none' }}>
           📋 Post a Project
@@ -143,6 +235,7 @@ function ProjectsTab({ projects }) {
     <div style={{ display: 'flex', flexDirection: 'column', gap: 12 }}>
       {projects.map(p => {
         const s = STATUS_COLOR[p.status] || STATUS_COLOR.pending_review
+        const projectBids = bids[p.id] || []
         return (
           <div key={p.id} style={{ padding: 20, background: '#fff', border: '1px solid var(--border)', borderRadius: 16, boxShadow: 'var(--shadow-sm)' }}>
             <div style={{ display: 'flex', alignItems: 'flex-start', justifyContent: 'space-between', gap: 12, marginBottom: 10 }}>
@@ -163,6 +256,7 @@ function ProjectsTab({ projects }) {
                 Posted {new Date(p.created_at).toLocaleDateString('en-LK', { day: 'numeric', month: 'short', year: 'numeric' })}
               </div>
             )}
+            <BidsPanel projectBids={projectBids} />
           </div>
         )
       })}

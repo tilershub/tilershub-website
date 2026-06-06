@@ -48,10 +48,8 @@ function initials(name) {
 }
 
 const QUICK_ACTIONS = [
-  { icon: '👷', label: 'Find Tiler',     href: '/providers?type=tiler',     bg: '#EEF2FB' },
-  { icon: '🚿', label: 'Bathroom Quote', href: '/post-project',              bg: '#EFF6FF' },
-  { icon: '🏪', label: 'Tile Shops',     href: '/providers?type=tile_shop', bg: '#FFFBEB' },
-  { icon: '📐', label: 'Calculator',     href: '/estimator',                 bg: '#F5F3FF' },
+  { icon: '👷', label: 'Find Tiler',  href: '/providers?type=tiler', bg: '#EEF2FB' },
+  { icon: '📐', label: 'Calculator', href: '/estimator',              bg: '#F5F3FF' },
 ]
 
 const BRAND_COL = ['#1A2B4A','#C1603A','#D4AF37','#1e3a5f','#7c3aed','#166534','#92400e','#374151']
@@ -375,7 +373,7 @@ const EXPLORE_MORE = [
 
 <style>
   @media (max-width: 480px) {
-    .quick-grid { grid-template-columns: repeat(4, 1fr) !important; }
+    .quick-grid { grid-template-columns: repeat(2, 1fr) !important; }
   }
   @media (max-width: 640px) {
     /* Jobs section: stack columns */

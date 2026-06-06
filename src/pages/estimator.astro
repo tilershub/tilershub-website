@@ -199,9 +199,22 @@ import Layout from '../layouts/Layout.astro'
         <p style="font-size:11px;color:rgba(255,255,255,0.28);text-align:center;margin-top:14px;line-height:1.7;">
           This is an estimate only. Actual costs depend on tile brand, pattern complexity, and site conditions.
         </p>
-        <a href="/post-project" style="display:flex;align-items:center;justify-content:center;gap:8px;background:var(--terra);color:#fff;border-radius:12px;padding:12px;margin-top:14px;font-size:13px;font-weight:700;text-decoration:none;">
-          📋 Post Your Project to Get Quotes
-        </a>
+
+        <!-- Post project CTA -->
+        <div style="margin-top:18px;background:rgba(255,255,255,0.06);border:1px solid rgba(255,255,255,0.12);border-radius:14px;padding:18px 20px;">
+          <div style="font-size:13px;font-weight:700;color:#fff;margin-bottom:4px;">📋 Ready to get started?</div>
+          <p style="font-size:12px;color:rgba(255,255,255,0.55);margin:0 0 14px;line-height:1.7;">
+            Post your project free — tilers in your area will bid and send you quotes.
+          </p>
+          <div style="display:flex;gap:10px;flex-wrap:wrap;">
+            <a href="/post-project" style="display:inline-flex;align-items:center;gap:7px;background:var(--terra);color:#fff;border-radius:10px;padding:10px 20px;font-size:13px;font-weight:700;text-decoration:none;flex:1;justify-content:center;">
+              Post a Project →
+            </a>
+            <button id="share-estimate-btn" style="display:inline-flex;align-items:center;gap:7px;background:rgba(255,255,255,0.1);color:rgba(255,255,255,0.8);border:1px solid rgba(255,255,255,0.2);border-radius:10px;padding:10px 20px;font-size:13px;font-weight:700;cursor:pointer;flex:1;justify-content:center;">
+              🔗 Share Estimate
+            </button>
+          </div>
+        </div>
       </div>
 
     </div>
@@ -298,6 +311,18 @@ import Layout from '../layouts/Layout.astro'
 
       document.getElementById('result').style.display = 'block'
       document.getElementById('result').scrollIntoView({ behavior: 'smooth', block: 'nearest' })
+    })
+
+    document.getElementById('share-estimate-btn').addEventListener('click', async function () {
+      const url = window.location.href
+      const title = 'Tiling Cost Estimate — TilersHub'
+      if (navigator.share) {
+        try { await navigator.share({ title, url }) } catch (_) {}
+      } else {
+        await navigator.clipboard.writeText(url)
+        this.textContent = '✓ Copied!'
+        setTimeout(() => { this.textContent = '🔗 Share Estimate' }, 2000)
+      }
     })
   </script>
 
