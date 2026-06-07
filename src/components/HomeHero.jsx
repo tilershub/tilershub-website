@@ -57,7 +57,7 @@ export default function HomeHero({ heroImg }) {
 
   return role === 'provider'
     ? <><ProviderHero name={providerName} /><ProviderActions /><ProviderProjectsFeed /></>
-    : <><GuestHero heroImg={heroImg} /><GuestActions /></>
+    : <GuestHero heroImg={heroImg} />
 }
 
 // ─── PROVIDER HERO ────────────────────────────────────────────────

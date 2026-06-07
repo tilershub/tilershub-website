@@ -1,0 +1,27 @@
+export const SERVICES = [
+  { slug: 'bathroom-renovation',     icon: '🚿', label: 'Bathroom Renovation',      terms: ['Bathroom Renovation', 'Bathroom Reno', 'Bathroom Tiling'] },
+  { slug: 'bathroom-plumbing',       icon: '🚽', label: 'Bathroom Plumbing',         terms: ['Bathroom Plumbing', 'Plumbing'] },
+  { slug: 'bathroom-lighting',       icon: '💡', label: 'Bathroom Lighting',         terms: ['Bathroom Lighting', 'Lighting'] },
+  { slug: 'shower-cubicle',          icon: '🚿', label: 'Shower Cubicle',            terms: ['Shower Cubicle', 'Shower Installation', 'Shower'] },
+  { slug: 'bathroom-mirrors',        icon: '🪞', label: 'Bathroom Mirrors',          terms: ['Bathroom Mirrors', 'Mirror Installation'] },
+  { slug: 'vanity-cupboard',         icon: '🗄️', label: 'Vanity Cupboard',           terms: ['Vanity Cupboard', 'Vanity'] },
+  { slug: 'floor-tiling',            icon: '⬜', label: 'Floor Tiling',              terms: ['Floor Tiling', 'Flooring'] },
+  { slug: 'large-format-tiling',     icon: '📏', label: 'Large Format Tiling',       terms: ['Large Format Tiling', 'Large Format'] },
+  { slug: 'mosaic-tiling',           icon: '🎨', label: 'Mosaic Tiling',             terms: ['Mosaic Tiling', 'Mosaic'] },
+  { slug: 'pool-tiling',             icon: '🏊', label: 'Pool Tiling',               terms: ['Pool Tiling', 'Swimming Pool'] },
+  { slug: 'outdoor-tiling',          icon: '🏡', label: 'Outdoor Tiling',            terms: ['Outdoor Tiling', 'Outdoor', 'Exterior Tiling'] },
+  { slug: 'tile-cutting-routering',  icon: '🧱', label: 'Tile Cutting & Routering',  terms: ['Tile Cutting', 'Routering', 'Tile Cutting & Routering'] },
+  { slug: 'glass-railing',           icon: '✨', label: 'Glass Railing',             terms: ['Glass Railing', 'Railing', 'Glass Works'] },
+  { slug: 'aluminium-glass-works',   icon: '🪟', label: 'Aluminium & Glass Works',   terms: ['Aluminium', 'Glass Works', 'Aluminium & Glass'] },
+  { slug: 'ipanel-ceiling',          icon: '🏠', label: 'IPanel Ceiling',            terms: ['IPanel', 'IPanel Ceiling', 'Ceiling'] },
+  { slug: 'house-lighting',          icon: '💡', label: 'House Lighting',            terms: ['House Lighting', 'House Lights'] },
+  { slug: 'house-wiring',            icon: '⚡', label: 'House Wiring',             terms: ['House Wiring', 'Wiring', 'Electrical Wiring'] },
+  { slug: 'electrical-repairs',      icon: '🔌', label: 'Electrical Repairs',        terms: ['Electrical Repairs', 'Electrical'] },
+  { slug: 'waterproofing',           icon: '💧', label: 'Waterproofing',             terms: ['Waterproofing'] },
+  { slug: 'landscaping-gardening',   icon: '🌿', label: 'Landscaping & Gardening',   terms: ['Landscaping', 'Gardening', 'Garden'] },
+  { slug: 'granite-countertops',     icon: '🪨', label: 'Granite Countertops',       terms: ['Granite Countertops', 'Granite Works', 'Granite'] },
+  { slug: 'aluminium-doors-windows', icon: '🚪', label: 'Aluminium Doors & Windows', terms: ['Aluminium Doors', 'Aluminium Windows', 'Doors & Windows'] },
+]
+
+export const SERVICES_GROUP_1 = SERVICES.slice(0, 8)
+export const SERVICES_GROUP_2 = SERVICES.slice(8, 16)
