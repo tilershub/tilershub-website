@@ -170,12 +170,6 @@ function ProviderCard({ provider, onClick, T }) {
               {T.whatsapp}
             </a>
           )}
-          {provider.phone && (
-            <a href={`tel:${provider.phone}`} onClick={e => e.stopPropagation()}
-              style={{ display: 'flex', alignItems: 'center', justifyContent: 'center', gap: 5, background: '#eef3fb', color: '#1B3A6B', borderRadius: 10, padding: '8px 12px', fontSize: 12, fontWeight: 700, textDecoration: 'none', border: '1px solid #d5e2f5' }}>
-              {T.call}
-            </a>
-          )}
         </div>
       </div>
     </div>
@@ -472,12 +466,6 @@ function ProviderModal({ item, isTiler, onClose, T }) {
               <a href={buildWhatsAppLink(phone, name)} target="_blank" rel="noopener noreferrer"
                 style={{ flex: 1, display: 'flex', alignItems: 'center', justifyContent: 'center', gap: 8, background: '#25D366', color: '#fff', borderRadius: 12, padding: 13, fontSize: 14, fontWeight: 700, textDecoration: 'none' }}>
                 {T.whatsapp}
-              </a>
-            )}
-            {item.phone && (
-              <a href={`tel:${item.phone}`}
-                style={{ display: 'flex', alignItems: 'center', justifyContent: 'center', gap: 6, background: '#eef3fb', color: '#1B3A6B', borderRadius: 12, padding: '13px 20px', fontSize: 14, fontWeight: 700, textDecoration: 'none', border: '1px solid #d5e2f5' }}>
-                {T.call}
               </a>
             )}
           </div>
