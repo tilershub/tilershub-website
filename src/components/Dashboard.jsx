@@ -1,5 +1,6 @@
 import { useState, useEffect } from 'react'
 import { supabase, getUser, signOut, onAuthStateChange } from '../lib/supabase.js'
+import ProfileEditor from './ProfileEditor.jsx'
 
 export default function Dashboard() {
   const [user, setUser] = useState(null)
@@ -8,6 +9,8 @@ export default function Dashboard() {
   const [projects, setProjects] = useState([])
   const [bids, setBids] = useState({})
   const [submission, setSubmission] = useState(null)
+  const [claimedProfile, setClaimedProfile] = useState(null)
+  const [claimedProfileType, setClaimedProfileType] = useState(null)
   const [dataLoading, setDataLoading] = useState(false)
 
   useEffect(() => {
@@ -25,13 +28,17 @@ export default function Dashboard() {
 
   async function loadData(u) {
     setDataLoading(true)
-    const [{ data: proj }, { data: sub }] = await Promise.all([
+    const [{ data: proj }, { data: sub }, { data: tilerRow }, { data: providerRow }] = await Promise.all([
       supabase.from('projects').select('*').eq('user_id', u.id).order('created_at', { ascending: false }),
       supabase.from('provider_submissions').select('*').eq('user_id', u.id).order('created_at', { ascending: false }).limit(1).maybeSingle(),
+      supabase.from('tilers').select('*').eq('user_id', u.id).maybeSingle(),
+      supabase.from('providers').select('*').eq('user_id', u.id).maybeSingle(),
     ])
     const userProjects = proj || []
     setProjects(userProjects)
     setSubmission(sub)
+    if (tilerRow) { setClaimedProfile(tilerRow); setClaimedProfileType('tiler') }
+    else if (providerRow) { setClaimedProfile(providerRow); setClaimedProfileType('provider') }
 
     if (userProjects.length > 0) {
       const ids = userProjects.map(p => p.id)
@@ -77,9 +84,17 @@ export default function Dashboard() {
   }
 
   const initials = (user.email || '?').split('@')[0].slice(0, 2).toUpperCase()
+  const showClaimedBanner = typeof window !== 'undefined' && new URLSearchParams(window.location.search).has('claimed')
 
   return (
     <div style={{ maxWidth: 800, margin: '0 auto', padding: '32px 20px 64px' }}>
+
+      {/* Claimed profile banner */}
+      {showClaimedBanner && claimedProfile && (
+        <div style={{ padding: '12px 16px', background: '#f0fdf4', border: '1px solid #bbf7d0', borderRadius: 12, marginBottom: 20, display: 'flex', alignItems: 'center', gap: 10 }}>
+          <span style={{ fontSize: 13, color: '#15803d', fontWeight: 600 }}>✓ Profile claimed! You can now edit it in the <strong>My Profile</strong> tab.</span>
+        </div>
+      )}
 
       {/* User header */}
       <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', marginBottom: 28, flexWrap: 'wrap', gap: 12 }}>
@@ -101,10 +116,11 @@ export default function Dashboard() {
       </div>
 
       {/* Tabs */}
-      <div style={{ display: 'flex', gap: 4, marginBottom: 24, background: 'var(--surface-2)', padding: 4, borderRadius: 12, border: '1px solid var(--border)', width: 'fit-content' }}>
+      <div style={{ display: 'flex', gap: 4, marginBottom: 24, background: 'var(--surface-2)', padding: 4, borderRadius: 12, border: '1px solid var(--border)', width: 'fit-content', flexWrap: 'wrap' }}>
         {[
           { key: 'projects', label: '📋 My Projects' },
-          { key: 'listing', label: '👷 My Listing' },
+          { key: 'listing',  label: '👷 My Listing' },
+          ...(claimedProfile ? [{ key: 'profile', label: '✏️ My Profile' }] : []),
         ].map(t => (
           <button
             key={t.key}
@@ -126,6 +142,8 @@ export default function Dashboard() {
         </div>
       ) : tab === 'projects' ? (
         <ProjectsTab projects={projects} bids={bids} />
+      ) : tab === 'profile' && claimedProfile ? (
+        <ProfileEditor profile={claimedProfile} profileType={claimedProfileType} userId={user.id} />
       ) : (
         <ListingTab submission={submission} />
       )}
