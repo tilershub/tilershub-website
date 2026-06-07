@@ -263,83 +263,75 @@ function ProviderProjectsFeed() {
 // ─── GUEST / CONSUMER HERO ────────────────────────────────────────
 
 function GuestHero({ heroImg }) {
-  function doSearch() {
-    const v = document.getElementById('hero-search-r')?.value || ''
-    document.location = '/providers?q=' + encodeURIComponent(v)
-  }
-
   return (
-    <div style={{ position:'relative', minHeight:360, display:'flex', alignItems:'center', justifyContent:'center', overflow:'hidden', padding:'52px 20px 48px', background:'#0a121f' }}>
+    <div style={{ position:'relative', minHeight:320, display:'flex', alignItems:'center', justifyContent:'center', overflow:'hidden', padding:'44px 20px 40px', background:'#0a121f' }}>
       <img src={heroImg} alt="" width="1400" height="800"
-        style={{ position:'absolute', inset:0, width:'100%', height:'100%', objectFit:'cover', objectPosition:'center', opacity:0.28 }}
+        style={{ position:'absolute', inset:0, width:'100%', height:'100%', objectFit:'cover', objectPosition:'center 30%', opacity:0.32 }}
         loading="eager" fetchpriority="high" decoding="sync"
       />
-      <div style={{ position:'absolute', inset:0, background:'linear-gradient(160deg,rgba(10,18,31,0.78) 0%,rgba(26,43,74,0.62) 100%)', pointerEvents:'none' }} />
-      <div style={{ position:'absolute', inset:0, opacity:0.035, backgroundImage:'repeating-linear-gradient(0deg,transparent,transparent 39px,rgba(255,255,255,0.8) 39px,rgba(255,255,255,0.8) 40px),repeating-linear-gradient(90deg,transparent,transparent 39px,rgba(255,255,255,0.8) 39px,rgba(255,255,255,0.8) 40px)', pointerEvents:'none' }} />
+      <div style={{ position:'absolute', inset:0, background:'linear-gradient(175deg,rgba(8,15,28,0.72) 0%,rgba(20,35,65,0.68) 100%)', pointerEvents:'none' }} />
 
-      <div style={{ position:'relative', textAlign:'center', maxWidth:580, width:'100%' }}>
-        <div style={{ display:'inline-flex', alignItems:'center', gap:6, background:'rgba(245,158,11,0.12)', border:'1px solid rgba(245,158,11,0.25)', borderRadius:20, padding:'5px 16px', marginBottom:16 }}>
-          <span style={{ fontSize:9, fontWeight:700, color:'#F59E0B', letterSpacing:'2.5px', textTransform:'uppercase' }}>🇱🇰 Sri Lanka's Tile & Bathroom Marketplace</span>
-        </div>
-
-        <h1 style={{ fontFamily:"'Playfair Display',serif", fontSize:'clamp(24px,5vw,44px)', fontWeight:700, color:'#fff', lineHeight:1.15, marginBottom:12 }}>
-          Need a Professional<br /><span style={{ color:'#F59E0B' }}>for Your Next Project?</span>
+      <div style={{ position:'relative', textAlign:'center', maxWidth:520, width:'100%' }}>
+        <h1 style={{ fontFamily:"'Playfair Display',serif", fontSize:'clamp(26px,5.5vw,42px)', fontWeight:700, color:'#fff', lineHeight:1.15, marginBottom:10 }}>
+          Need a Professional<br />for <span style={{ color:'#F59E0B' }}>Your Project?</span>
         </h1>
 
-        <p style={{ fontSize:'clamp(12px,1.8vw,14px)', color:'rgba(255,255,255,0.6)', marginBottom:22, lineHeight:1.8 }}>
-          Get free quotes from verified tilers and contractors across Sri Lanka.
+        <p style={{ fontSize:13, color:'rgba(255,255,255,0.62)', marginBottom:22, lineHeight:1.7 }}>
+          Post your project and get multiple bids from verified professionals.
         </p>
 
-        {/* Search */}
-        <div style={{ position:'relative', maxWidth:480, margin:'0 auto 18px' }}>
-          <span style={{ position:'absolute', left:14, top:'50%', transform:'translateY(-50%)', fontSize:17, pointerEvents:'none', zIndex:1 }}>🔍</span>
-          <input id="hero-search-r" type="text" placeholder="Search tilers, services, locations…"
-            style={{ width:'100%', height:48, padding:'0 108px 0 44px', border:'none', borderRadius:12, fontSize:13, fontFamily:'inherit', outline:'none', background:'rgba(255,255,255,0.96)', color:'#0f172a', boxShadow:'0 8px 32px rgba(0,0,0,0.3)' }}
-            onKeyDown={e => e.key === 'Enter' && doSearch()}
-          />
-          <button onClick={doSearch}
-            style={{ position:'absolute', right:5, top:5, bottom:5, padding:'0 16px', background:'#E05A2B', color:'#fff', border:'none', borderRadius:9, fontSize:13, fontWeight:700, cursor:'pointer' }}>
-            Search
-          </button>
+        {/* Two primary CTAs */}
+        <div style={{ display:'flex', gap:10, justifyContent:'center', marginBottom:16, flexWrap:'wrap' }}>
+          <a href="/post-project" style={{ display:'inline-flex', alignItems:'center', gap:7, background:'#E05A2B', color:'#fff', borderRadius:24, padding:'12px 24px', fontSize:14, fontWeight:700, textDecoration:'none', boxShadow:'0 4px 20px rgba(224,90,43,0.45)' }}>
+            📋 Post Project
+          </a>
+          <a href="/providers" style={{ display:'inline-flex', alignItems:'center', gap:7, background:'rgba(255,255,255,0.1)', color:'#fff', border:'1.5px solid rgba(255,255,255,0.35)', borderRadius:24, padding:'12px 22px', fontSize:14, fontWeight:600, textDecoration:'none' }}>
+            🔍 Find Providers
+          </a>
         </div>
 
-        {/* CTAs */}
-        <div style={{ display:'flex', gap:10, justifyContent:'center', flexWrap:'wrap' }}>
-          <a href="/post-project" style={{ display:'inline-flex', alignItems:'center', gap:7, background:'#E05A2B', color:'#fff', borderRadius:12, padding:'12px 24px', fontSize:14, fontWeight:700, textDecoration:'none', boxShadow:'0 4px 20px rgba(224,90,43,0.45)' }}>
-            📋 Post a Project
-          </a>
-          <a href="/providers?type=tiler" style={{ display:'inline-flex', alignItems:'center', gap:7, background:'rgba(255,255,255,0.12)', color:'#fff', border:'1.5px solid rgba(255,255,255,0.3)', borderRadius:12, padding:'12px 20px', fontSize:13, fontWeight:600, textDecoration:'none' }}>
-            👷 Find Tilers
-          </a>
-          <a href="/jobs" style={{ display:'inline-flex', alignItems:'center', gap:7, background:'rgba(255,255,255,0.12)', color:'#fff', border:'1.5px solid rgba(255,255,255,0.3)', borderRadius:12, padding:'12px 20px', fontSize:13, fontWeight:600, textDecoration:'none' }}>
-            💼 Browse Projects
-          </a>
+        {/* Benefit pills */}
+        <div style={{ display:'flex', gap:8, justifyContent:'center', flexWrap:'wrap' }}>
+          {['✓ Free to post','✓ Multiple Bids','✓ No obligation'].map(t => (
+            <span key={t} style={{ background:'rgba(255,255,255,0.1)', color:'rgba(255,255,255,0.78)', borderRadius:20, padding:'5px 13px', fontSize:11, fontWeight:600, border:'1px solid rgba(255,255,255,0.15)' }}>{t}</span>
+          ))}
         </div>
       </div>
     </div>
   )
 }
 
-// ─── GUEST QUICK ACTIONS (4×2 grid) ──────────────────────────────
+// ─── POPULAR SERVICES (4×2 icon grid) ────────────────────────────
 
 function GuestActions() {
-  const ACTIONS = [
-    { icon:'🚿', label:'Bathroom',     sub:'Tiling & Reno',     href:'/providers?q=Bathroom',     bg:'#eff6ff', ibg:'rgba(14,165,233,0.12)'  },
-    { icon:'🪨', label:'Floor Tiling', sub:'All floor types',   href:'/providers?q=Floor+Tiling', bg:'#f8fafc', ibg:'rgba(100,116,139,0.12)' },
-    { icon:'🍳', label:'Kitchen',      sub:'Tiles & splashback', href:'/providers?q=Kitchen',      bg:'#fff7ed', ibg:'rgba(245,158,11,0.12)'  },
-    { icon:'💧', label:'Waterproofing',sub:'Wet areas',         href:'/providers?q=Waterproofing', bg:'#ecfeff', ibg:'rgba(6,182,212,0.12)'   },
-    { icon:'🏪', label:'Tile Shops',   sub:'Browse locally',    href:'/providers?type=tile_shop',  bg:'#f0fdf4', ibg:'rgba(22,163,74,0.12)'   },
-    { icon:'📦', label:'Suppliers',    sub:'Wholesale tiles',   href:'/providers?type=supplier',   bg:'#fdf4ff', ibg:'rgba(168,85,247,0.12)'  },
-    { icon:'🏭', label:'Workshops',    sub:'Install & cut',     href:'/providers?type=workshop',   bg:'#fff4f0', ibg:'rgba(224,90,43,0.12)'   },
-    { icon:'☰',  label:'All Services', sub:'Browse all',        href:'/providers',                 bg:'#f8fafc', ibg:'rgba(15,23,42,0.08)'    },
+  const SERVICES = [
+    { icon:'🚿', label:'Bathroom\nPlumbing',   href:'/providers?q=Bathroom+Plumbing'   },
+    { icon:'🪨', label:'Floor\nTiling',         href:'/providers?q=Floor+Tiling'         },
+    { icon:'🏗️', label:'Large\nTiling',          href:'/providers?q=Large+Tiling'          },
+    { icon:'🔷', label:'Mosaic\nTiling',         href:'/providers?q=Mosaic+Tiling'         },
+    { icon:'🚿', label:'Shower\nRepair',         href:'/providers?q=Shower+Repair'         },
+    { icon:'🪟', label:'Glass\nTiling',          href:'/providers?q=Glass+Tiling'          },
+    { icon:'🛁', label:'Bathroom\nRenovation',   href:'/providers?q=Bathroom+Renovation'   },
+    { icon:'🪞', label:'Vanity\nCupboard',       href:'/providers?q=Vanity+Cupboard'       },
   ]
   return (
-    <div style={{ background:'#fff', borderBottom:'1px solid #E5E7EB', padding:'12px 0 4px' }}>
-      <div style={{ padding:'0 16px 8px', display:'flex', alignItems:'center', justifyContent:'space-between' }}>
-        <span style={{ fontSize:12, fontWeight:700, color:'#374151' }}>Browse by service</span>
-        <a href="/providers" style={{ fontSize:11, fontWeight:600, color:'#1B3A6B', textDecoration:'none' }}>All services →</a>
+    <div style={{ background:'#fff', borderBottom:'1px solid #f1f5f9', padding:'16px 16px 12px' }}>
+      <div style={{ display:'flex', alignItems:'center', justifyContent:'space-between', marginBottom:14 }}>
+        <span style={{ fontSize:15, fontWeight:700, color:'#111827' }}>Popular Services</span>
+        <a href="/providers" style={{ fontSize:12, fontWeight:600, color:'#E05A2B', textDecoration:'none' }}>View All &rsaquo;</a>
       </div>
-      <QuickActionsGrid actions={ACTIONS} />
+      <div style={{ display:'grid', gridTemplateColumns:'repeat(4,1fr)', gap:10 }}>
+        {SERVICES.map(s => (
+          <a key={s.href} href={s.href}
+            style={{ display:'flex', flexDirection:'column', alignItems:'center', gap:7, padding:'12px 4px 10px', borderRadius:14, background:'#f8fafc', textDecoration:'none', border:'1px solid #f1f5f9', transition:'background 0.15s' }}
+            onMouseOver={e => e.currentTarget.style.background='#eef2fb'}
+            onMouseOut={e  => e.currentTarget.style.background='#f8fafc'}
+          >
+            <div style={{ width:46, height:46, borderRadius:13, background:'#fff', border:'1px solid #e2e8f0', boxShadow:'0 1px 4px rgba(0,0,0,0.06)', display:'flex', alignItems:'center', justifyContent:'center', fontSize:22 }}>{s.icon}</div>
+            <span style={{ fontSize:10, fontWeight:600, color:'#374151', textAlign:'center', lineHeight:1.35, whiteSpace:'pre-line' }}>{s.label}</span>
+          </a>
+        ))}
+      </div>
     </div>
   )
 }

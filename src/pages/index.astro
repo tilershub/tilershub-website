@@ -5,17 +5,29 @@ import HomeHero from '../components/HomeHero.jsx'
 
 const { data: featuredTilers } = await supabase
   .from('tilers')
-  .select('id,full_name,district,city,is_verified,slug,avg_rating,experience_years')
+  .select('id,full_name,district,city,is_verified,slug,avg_rating,experience_years,avatar_url,speciality')
   .eq('featured', true)
   .order('experience_years', { ascending: false })
   .limit(8)
 
 const { data: projectsData } = await supabase
   .from('projects')
-  .select('id,project_type,district,city,created_at,budget_range')
+  .select('id,project_type,district,city,created_at,budget_range,description')
   .eq('status', 'active')
   .order('created_at', { ascending: false })
   .limit(4)
+
+const { data: bidCountData } = projectsData?.length
+  ? await supabase
+      .from('bids')
+      .select('project_id')
+      .in('project_id', (projectsData || []).map((p: any) => p.id))
+  : { data: [] }
+
+const bidsByProject: Record<string, number> = {}
+;(bidCountData || []).forEach((b: any) => {
+  bidsByProject[b.project_id] = (bidsByProject[b.project_id] || 0) + 1
+})
 
 const tilers   = featuredTilers || []
 const projects = projectsData  || []
@@ -96,30 +108,43 @@ const EXPLORE_MORE = [
 
     <div class="shelf">
       {(tilers.length > 0 ? tilers : [
-        { id:'p1', full_name:'Lakmal Perera',   city:'Colombo 7',  is_verified:true,  avg_rating:4.9, experience_years:12, slug:'lakmal'  },
-        { id:'p2', full_name:'Chamara Silva',   city:'Kandy',      is_verified:true,  avg_rating:4.7, experience_years:8,  slug:'chamara' },
-        { id:'p3', full_name:'Saman Jayantha',  city:'Galle',      is_verified:false, avg_rating:0,   experience_years:5,  slug:null      },
-        { id:'p4', full_name:'Kelum Prasad',    city:'Negombo',    is_verified:true,  avg_rating:4.8, experience_years:10, slug:'kelum'   },
-        { id:'p5', full_name:'Nuwan Bandara',   city:'Kurunegala', is_verified:true,  avg_rating:4.6, experience_years:7,  slug:null      },
+        { id:'p1', full_name:'Lakmal Perera',   city:'Colombo 7',  is_verified:true,  avg_rating:4.9, experience_years:12, slug:'lakmal',  avatar_url:null, speciality:'Bathroom Tiling'  },
+        { id:'p2', full_name:'Chamara Silva',   city:'Kandy',      is_verified:true,  avg_rating:4.7, experience_years:8,  slug:'chamara', avatar_url:null, speciality:'Floor Tiling'     },
+        { id:'p3', full_name:'Saman Jayantha',  city:'Galle',      is_verified:false, avg_rating:0,   experience_years:5,  slug:null,      avatar_url:null, speciality:'Tile Cutting'     },
+        { id:'p4', full_name:'Kelum Prasad',    city:'Negombo',    is_verified:true,  avg_rating:4.8, experience_years:10, slug:'kelum',   avatar_url:null, speciality:'Waterproofing'    },
+        { id:'p5', full_name:'Nuwan Bandara',   city:'Kurunegala', is_verified:true,  avg_rating:4.6, experience_years:7,  slug:null,      avatar_url:null, speciality:'Granite Works'    },
+        { id:'p6', full_name:'Ruwan Perera',    city:'Colombo 3',  is_verified:true,  avg_rating:4.8, experience_years:9,  slug:null,      avatar_url:null, speciality:'Bathroom Reno'    },
       ]).map(t => {
         const color = avatarColor(t.full_name)
         const inits = initials(t.full_name)
         return (
-          <a href={t.slug ? `/tilers/${t.slug}` : '/providers'} class="tiler-card" style="text-decoration:none;color:inherit;display:block;">
-            <div style="padding:18px 12px 12px;display:flex;flex-direction:column;align-items:center;text-align:center;">
-              <!-- Initials avatar -->
-              <div style={`width:54px;height:54px;border-radius:50%;background:${color};color:#fff;font-size:20px;font-weight:800;display:flex;align-items:center;justify-content:center;margin-bottom:10px;flex-shrink:0;`}>
-                {inits}
-              </div>
-              <div class="tiler-name" style="text-align:center;font-size:13px;margin-bottom:4px;">{t.full_name}</div>
-              {t.is_verified
-                ? <span style="font-size:8px;font-weight:700;color:#0369a1;background:#e0f2fe;border-radius:20px;padding:2px 7px;margin-bottom:5px;">✓ Verified Pro</span>
-                : <span style="font-size:8px;color:#94a3b8;background:#f1f5f9;border-radius:20px;padding:2px 7px;margin-bottom:5px;">Community</span>
+          <a href={t.slug ? `/tilers/${t.slug}` : '/providers'} class="tiler-card" style="text-decoration:none;color:inherit;display:block;overflow:hidden;">
+            <!-- Cover / photo area -->
+            <div style={`position:relative;height:100px;background:${color};display:flex;align-items:center;justify-content:center;overflow:hidden;`}>
+              {t.avatar_url
+                ? <img src={t.avatar_url} alt={t.full_name} style="width:100%;height:100%;object-fit:cover;" loading="lazy" />
+                : <span style="font-size:32px;font-weight:800;color:rgba(255,255,255,0.85);">{inits}</span>
               }
-              {t.avg_rating > 0 && <div class="rating" style="margin-bottom:3px;justify-content:center;">⭐ {t.avg_rating.toFixed(1)}</div>}
-              <div class="tiler-meta" style="font-size:10px;margin-bottom:8px;">📍 {t.city || t.district}</div>
-              <div style="width:100%;padding:7px;background:#0f172a;color:#fff;border-radius:8px;font-size:10px;font-weight:700;text-align:center;">
-                View Profile
+              <!-- Rating badge top-left -->
+              {t.avg_rating > 0 && (
+                <div style="position:absolute;top:7px;left:7px;background:rgba(0,0,0,0.55);backdrop-filter:blur(4px);color:#fff;border-radius:8px;padding:2px 7px;font-size:10px;font-weight:700;display:flex;align-items:center;gap:3px;">
+                  ⭐ {t.avg_rating.toFixed(1)}
+                </div>
+              )}
+              <!-- Verified badge top-right -->
+              {t.is_verified && (
+                <div style="position:absolute;top:7px;right:7px;background:#16a34a;color:#fff;border-radius:8px;padding:2px 7px;font-size:9px;font-weight:700;">
+                  TH Verified ✓
+                </div>
+              )}
+            </div>
+            <!-- Info area -->
+            <div style="padding:10px 10px 10px;">
+              <div class="tiler-name" style="font-size:12px;margin-bottom:2px;">{t.full_name}</div>
+              <div class="tiler-meta" style="margin-bottom:4px;">📍 {t.city || t.district}</div>
+              {t.speciality && <div style="font-size:10px;color:#64748b;margin-bottom:6px;">{t.speciality}</div>}
+              <div style="width:100%;padding:6px;background:#1B3A6B;color:#fff;border-radius:8px;font-size:10px;font-weight:700;text-align:center;">
+                Bid
               </div>
             </div>
           </a>
@@ -128,7 +153,68 @@ const EXPLORE_MORE = [
     </div>
   </section>
 
-  <!-- ③ HOW IT WORKS ──────────────────────────────────────── -->
+  <!-- RECENT PROJECTS ───────────────────────────────────────── -->
+  <section style="background:#f8fafc;padding:20px 0 24px;">
+    <div style="padding:0 16px 14px;display:flex;align-items:center;justify-content:space-between;">
+      <span style="font-size:15px;font-weight:700;color:#111827;">Recent Projects</span>
+      <a href="/jobs" style="font-size:12px;font-weight:600;color:#E05A2B;text-decoration:none;">View All &rsaquo;</a>
+    </div>
+    <div style="display:flex;flex-direction:column;gap:10px;padding:0 16px;">
+      {(projects.length > 0 ? projects : [
+        { id:'demo1', project_type:'Bathroom Renovation',   city:'Colombo',  district:'Colombo',  budget_range:'LKR 850,000', created_at: new Date().toISOString() },
+        { id:'demo2', project_type:'Glass Vinyl Installation', city:'Kandy', district:'Kandy',    budget_range:'LKR 250,000', created_at: new Date().toISOString() },
+        { id:'demo3', project_type:'Large Format Tiling',   city:'Galle',    district:'Galle',    budget_range:'LKR 320,000', created_at: new Date().toISOString() },
+      ]).map(job => {
+        const bids = bidsByProject[job.id] || 0
+        const PROJ_COLORS = {
+          'Bathroom Renovation':'#0f766e','Floor Tiling':'#1B3A6B','Large Format Tiling':'#7c3aed',
+          'Granite Works':'#b45309','Waterproofing':'#0369a1','Tile Shop Inquiry':'#E05A2B',
+          'Glass Vinyl Installation':'#16a34a',
+        }
+        const bg = PROJ_COLORS[job.project_type] || '#1B3A6B'
+        return (
+          <a href={`/job?id=${job.id}`}
+            style="display:flex;align-items:center;gap:0;background:#fff;border-radius:14px;overflow:hidden;border:1px solid #e2e8f0;text-decoration:none;color:inherit;box-shadow:0 1px 4px rgba(0,0,0,0.04);">
+            <!-- Photo / color block -->
+            <div style={`width:88px;height:82px;background:${bg};flex-shrink:0;display:flex;align-items:center;justify-content:center;font-size:28px;`}>
+              {TYPE_ICON[job.project_type] || '🏠'}
+            </div>
+            <!-- Info -->
+            <div style="flex:1;padding:12px 12px;">
+              <div style="font-size:13px;font-weight:700;color:#111827;margin-bottom:3px;overflow:hidden;white-space:nowrap;text-overflow:ellipsis;">{job.project_type}</div>
+              <div style="font-size:11px;color:#64748b;margin-bottom:4px;">📍 {job.city || job.district}</div>
+              {job.budget_range && <div style="font-size:11px;font-weight:700;color:#16a34a;">Budget: {job.budget_range}</div>}
+              {bids > 0 && <div style="font-size:10px;color:#64748b;margin-top:2px;">{bids} bid{bids !== 1 ? 's' : ''} received</div>}
+            </div>
+            <!-- Arrow -->
+            <div style="padding:0 14px;font-size:20px;color:#cbd5e1;flex-shrink:0;">›</div>
+          </a>
+        )
+      })}
+    </div>
+  </section>
+
+  <!-- WHY CHOOSE TILERSHUB ─────────────────────────────────── -->
+  <section style="background:#fff;padding:24px 16px 28px;">
+    <div style="font-size:15px;font-weight:700;color:#111827;margin-bottom:16px;">Why Choose TILERSHUB?</div>
+    <div style="display:grid;grid-template-columns:repeat(2,1fr);gap:10px;">
+      {[
+        { icon:'📋', title:'Post Projects for Free',       desc:'No cost, no account needed' },
+        { icon:'💬', title:'Multiple Bids',                desc:'Compare quotes from pros'   },
+        { icon:'🏆', title:'Compare Best Provider',        desc:'Ratings & reviews'          },
+        { icon:'📱', title:'Contact on WhatsApp',          desc:'Direct, instant chat'       },
+        { icon:'✅', title:'Verified & Trusted Professionals', desc:'Background-checked'      },
+      ].map(f => (
+        <div style="background:#f8fafc;border-radius:14px;padding:16px 14px;border:1px solid #f1f5f9;">
+          <div style="font-size:26px;margin-bottom:8px;">{f.icon}</div>
+          <div style="font-size:12px;font-weight:700;color:#111827;margin-bottom:3px;line-height:1.35;">{f.title}</div>
+          <div style="font-size:11px;color:#94a3b8;">{f.desc}</div>
+        </div>
+      ))}
+    </div>
+  </section>
+
+  <!-- HOW IT WORKS ──────────────────────────────────────────── -->
   <div class="hiw-strip">
     <div class="hiw-inner">
       {[
@@ -146,87 +232,7 @@ const EXPLORE_MORE = [
     </div>
   </div>
 
-  <!-- ④ STATS BAR ─────────────────────────────────────────── -->
-  <div class="stats-bar">
-    {[
-      { n:'500+', l:'Professionals' },
-      { n:'25',   l:'Districts'     },
-      { n:'Free', l:'No Login'      },
-      { n:'Bid',  l:'& Compare'     },
-    ].map((s, i, arr) => (
-      <div class={`stat-item${i < arr.length - 1 ? ' sep' : ''}`}>
-        <div class="stat-n">{s.n}</div>
-        <div class="stat-l">{s.l}</div>
-      </div>
-    ))}
-  </div>
-
-  <!-- ⑥ POST + LATEST PROJECTS ──────────────────────────── -->
-  <section style="background:var(--navy);padding:36px 20px;border-top:1px solid rgba(255,255,255,0.06);">
-    <div class="proj-grid">
-
-      <!-- Post CTA -->
-      <div style="background:var(--terra);border-radius:18px;padding:28px 24px;display:flex;flex-direction:column;justify-content:center;">
-        <div style="font-size:32px;margin-bottom:12px;">📋</div>
-        <div style="font-family:'Playfair Display',serif;font-size:18px;font-weight:700;color:#fff;margin-bottom:8px;line-height:1.3;">Post Your Project</div>
-        <p style="font-size:12px;color:rgba(255,255,255,0.75);margin-bottom:12px;line-height:1.7;">
-          Describe what you need — tilers and contractors bid. No login required.
-        </p>
-        <div style="display:flex;flex-direction:column;gap:6px;margin-bottom:20px;">
-          {['📋 Free to post — no account needed','💬 Providers bid, you choose','✅ Contact your pick via WhatsApp'].map(f => (
-            <div style="font-size:11px;color:rgba(255,255,255,0.8);">{f}</div>
-          ))}
-        </div>
-        <a href="/post-project"
-          style="display:inline-flex;align-items:center;justify-content:center;gap:7px;background:#fff;color:var(--terra);border-radius:12px;padding:12px 20px;font-size:13px;font-weight:800;text-decoration:none;">
-          Post a Project →
-        </a>
-      </div>
-
-      <!-- Latest projects -->
-      <div style="background:rgba(255,255,255,0.05);border:1px solid rgba(255,255,255,0.1);border-radius:18px;padding:20px 20px 16px;">
-        <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:14px;">
-          <div style="font-size:13px;font-weight:700;color:#fff;">💼 Latest Projects</div>
-          <a href="/jobs" style="font-size:11px;color:rgba(255,255,255,0.5);text-decoration:none;font-weight:600;">Browse all →</a>
-        </div>
-
-        {projects.length > 0 ? (
-          <div style="display:flex;flex-direction:column;gap:8px;">
-            {projects.map(job => (
-              <a href={`/job?id=${job.id}`}
-                style="display:flex;align-items:center;gap:12px;padding:11px 14px;background:rgba(255,255,255,0.06);border-radius:12px;text-decoration:none;color:inherit;">
-                <span style="font-size:20px;flex-shrink:0;">{TYPE_ICON[job.project_type] || '🏠'}</span>
-                <div style="flex:1;min-width:0;">
-                  <div style="font-size:13px;font-weight:700;color:#fff;overflow:hidden;text-overflow:ellipsis;white-space:nowrap;">{job.project_type}</div>
-                  <div style="font-size:11px;color:rgba(255,255,255,0.45);margin-top:2px;">📍 {job.city || job.district} · {timeAgo(job.created_at)}</div>
-                </div>
-                {job.budget_range && (
-                  <div style="flex-shrink:0;font-size:10px;font-weight:700;color:var(--gold);max-width:80px;text-align:right;line-height:1.3;">{job.budget_range.replace('Rs. ','Rs.')}</div>
-                )}
-                <div style="font-size:16px;color:rgba(255,255,255,0.3);">›</div>
-              </a>
-            ))}
-          </div>
-        ) : (
-          <div style="text-align:center;padding:28px 16px;">
-            <div style="font-size:36px;margin-bottom:10px;">💼</div>
-            <div style="font-size:13px;color:rgba(255,255,255,0.5);line-height:1.65;">
-              No open projects yet.<br/>Be the first to post — it's free.
-            </div>
-            <a href="/post-project" style="display:inline-flex;align-items:center;gap:6px;margin-top:14px;background:rgba(224,90,43,0.8);color:#fff;border-radius:10px;padding:9px 18px;font-size:12px;font-weight:700;text-decoration:none;">Post a Project</a>
-          </div>
-        )}
-
-        <div style="margin-top:12px;padding:10px 14px;background:rgba(255,255,255,0.04);border:1px solid rgba(255,255,255,0.08);border-radius:12px;">
-          <div style="font-size:11px;color:rgba(255,255,255,0.6);margin-bottom:6px;font-weight:600;">Are you a tiler or contractor?</div>
-          <a href="/jobs" style="font-size:12px;font-weight:700;color:var(--gold);text-decoration:none;">Browse all projects and submit bids →</a>
-        </div>
-      </div>
-
-    </div>
-  </section>
-
-  <!-- ⑦ JOIN AS PROVIDER STRIP ────────────────────────────── -->
+  <!-- JOIN AS PROVIDER STRIP ──────────────────────────────── -->
   <section class="join-strip">
     <div class="join-strip-inner">
       <div class="join-strip-text">
