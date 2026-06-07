@@ -1,0 +1,152 @@
+---
+import Layout from '../../layouts/Layout.astro'
+import { supabase } from '../../lib/supabase.js'
+import { SERVICES } from '../../lib/services.js'
+
+export function getStaticPaths() {
+  return SERVICES.map(s => ({ params: { slug: s.slug }, props: { service: s } }))
+}
+
+const { service } = Astro.props
+
+const orFilter = service.terms.map(t => `speciality.ilike.%${t}%`).join(',')
+
+const [{ data: tilersRaw }, { data: providersRaw }] = await Promise.all([
+  supabase
+    .from('tilers')
+    .select('id,full_name,city,district,is_verified,avg_rating,slug,speciality,avatar_url,experience_years')
+    .or(orFilter)
+    .order('avg_rating', { ascending: false })
+    .limit(20),
+  supabase
+    .from('providers')
+    .select('id,name,city,district,verification_status,slug,services,provider_type')
+    .limit(100),
+])
+
+const matchedProviders = (providersRaw || []).filter(p =>
+  (p.services || []).some(s =>
+    service.terms.some(t => String(s).toLowerCase().includes(t.toLowerCase()))
+  )
+)
+
+const tilers = tilersRaw || []
+
+const AVATAR_COLORS = ['#1B3A6B','#0f766e','#7c3aed','#b45309','#0369a1','#E05A2B','#15803d','#be185d']
+function avatarColor(name) {
+  let h = 0
+  for (const c of name) h = (h * 31 + c.charCodeAt(0)) >>> 0
+  return AVATAR_COLORS[h % AVATAR_COLORS.length]
+}
+function initials(name) {
+  return name.split(' ').slice(0,2).map(w => w[0] || '').join('').toUpperCase() || '?'
+}
+
+const pageTitle = `${service.label} Providers in Sri Lanka | TilersHub`
+const pageDesc  = `Find verified ${service.label} specialists across Sri Lanka. Get free quotes from multiple providers on TilersHub.`
+
+const postUrl = `/post-project?type=${encodeURIComponent(service.label)}`
+---
+
+<Layout title={pageTitle} description={pageDesc}>
+
+  <!-- Service header -->
+  <div style="background:linear-gradient(135deg,#0F1E35 0%,#1A2B4A 100%);padding:28px 20px 24px;text-align:center;position:relative;overflow:hidden;">
+    <div style="position:absolute;inset:0;opacity:0.03;background-image:repeating-linear-gradient(0deg,transparent,transparent 39px,rgba(255,255,255,0.8) 39px,rgba(255,255,255,0.8) 40px),repeating-linear-gradient(90deg,transparent,transparent 39px,rgba(255,255,255,0.8) 39px,rgba(255,255,255,0.8) 40px);pointer-events:none;"></div>
+    <div style="position:relative;">
+      <div style="font-size:48px;margin-bottom:10px;">{service.icon}</div>
+      <h1 style="font-family:'Playfair Display',serif;font-size:clamp(20px,4.5vw,30px);font-weight:700;color:#fff;margin:0 0 8px;">{service.label}</h1>
+      <p style="font-size:13px;color:rgba(255,255,255,0.55);margin:0 0 20px;line-height:1.6;">
+        Find verified {service.label} specialists across Sri Lanka
+      </p>
+      <a href={postUrl}
+        style="display:inline-flex;align-items:center;gap:8px;background:#E05A2B;color:#fff;border-radius:24px;padding:12px 26px;font-size:14px;font-weight:700;text-decoration:none;box-shadow:0 4px 20px rgba(224,90,43,0.4);">
+        📋 Post a {service.label} Project
+      </a>
+    </div>
+  </div>
+
+  <!-- Providers list -->
+  <div style="background:#f8fafc;min-height:300px;padding:20px 16px 80px;">
+
+    {tilers.length === 0 && matchedProviders.length === 0 ? (
+
+      <!-- Empty state -->
+      <div style="text-align:center;padding:48px 20px;">
+        <div style="font-size:40px;margin-bottom:12px;">{service.icon}</div>
+        <h2 style="font-family:'Playfair Display',serif;font-size:18px;font-weight:700;color:#0f172a;margin:0 0 8px;">No providers listed yet</h2>
+        <p style="font-size:13px;color:#64748b;margin:0 0 20px;line-height:1.7;">
+          Be the first {service.label} specialist on TilersHub, or post a project to receive bids.
+        </p>
+        <div style="display:flex;gap:10px;justify-content:center;flex-wrap:wrap;">
+          <a href="/join-tilershub" style="display:inline-flex;align-items:center;gap:6px;background:#1B3A6B;color:#fff;border-radius:12px;padding:10px 20px;font-size:13px;font-weight:700;text-decoration:none;">
+            ✅ Join as Provider
+          </a>
+          <a href={postUrl} style="display:inline-flex;align-items:center;gap:6px;background:#E05A2B;color:#fff;border-radius:12px;padding:10px 20px;font-size:13px;font-weight:700;text-decoration:none;">
+            📋 Post a Project
+          </a>
+        </div>
+      </div>
+
+    ) : (
+
+      <div style="display:flex;flex-direction:column;gap:10px;max-width:640px;margin:0 auto;">
+
+        <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:4px;">
+          <span style="font-size:13px;font-weight:700;color:#374151;">{tilers.length + matchedProviders.length} provider{tilers.length + matchedProviders.length !== 1 ? 's' : ''} found</span>
+          <a href="/providers" style="font-size:12px;color:#E05A2B;font-weight:600;text-decoration:none;">Browse all ›</a>
+        </div>
+
+        {tilers.map(t => {
+          const color = avatarColor(t.full_name)
+          const inits = initials(t.full_name)
+          return (
+            <a href={t.slug ? `/tilers/${t.slug}` : '/providers'}
+              style="display:flex;align-items:center;gap:0;background:#fff;border-radius:14px;overflow:hidden;border:1px solid #e2e8f0;text-decoration:none;color:inherit;box-shadow:0 1px 4px rgba(0,0,0,0.04);">
+              <div style={`width:82px;height:82px;background:${color};flex-shrink:0;display:flex;align-items:center;justify-content:center;overflow:hidden;`}>
+                {t.avatar_url
+                  ? <img src={t.avatar_url} alt={t.full_name} style="width:100%;height:100%;object-fit:cover;" loading="lazy" />
+                  : <span style="font-size:26px;font-weight:800;color:rgba(255,255,255,0.85);">{inits}</span>
+                }
+              </div>
+              <div style="flex:1;padding:12px 12px;min-width:0;">
+                <div style="display:flex;align-items:center;gap:6px;margin-bottom:2px;">
+                  <span style="font-size:13px;font-weight:700;color:#111827;overflow:hidden;white-space:nowrap;text-overflow:ellipsis;">{t.full_name}</span>
+                  {t.is_verified && <span style="font-size:8px;font-weight:700;color:#16a34a;background:#f0fdf4;border:1px solid #bbf7d0;border-radius:20px;padding:1px 6px;flex-shrink:0;">✓ Pro</span>}
+                </div>
+                {t.speciality && <div style="font-size:11px;color:#64748b;margin-bottom:2px;overflow:hidden;white-space:nowrap;text-overflow:ellipsis;">{t.speciality}</div>}
+                <div style="font-size:11px;color:#94a3b8;">📍 {t.city || t.district}</div>
+                {t.avg_rating > 0 && <div style="font-size:11px;color:#f59e0b;margin-top:2px;">⭐ {t.avg_rating.toFixed(1)}</div>}
+              </div>
+              <div style="padding:0 14px;font-size:20px;color:#cbd5e1;flex-shrink:0;">›</div>
+            </a>
+          )
+        })}
+
+        {matchedProviders.map(p => {
+          const color = avatarColor(p.name || 'P')
+          const inits = initials(p.name || 'P')
+          return (
+            <a href={p.slug ? `/providers/${p.slug}` : '/providers'}
+              style="display:flex;align-items:center;gap:0;background:#fff;border-radius:14px;overflow:hidden;border:1px solid #e2e8f0;text-decoration:none;color:inherit;box-shadow:0 1px 4px rgba(0,0,0,0.04);">
+              <div style={`width:82px;height:82px;background:${color};flex-shrink:0;display:flex;align-items:center;justify-content:center;`}>
+                <span style="font-size:26px;font-weight:800;color:rgba(255,255,255,0.85);">{inits}</span>
+              </div>
+              <div style="flex:1;padding:12px 12px;min-width:0;">
+                <div style="display:flex;align-items:center;gap:6px;margin-bottom:2px;">
+                  <span style="font-size:13px;font-weight:700;color:#111827;overflow:hidden;white-space:nowrap;text-overflow:ellipsis;">{p.name}</span>
+                  {p.verification_status === 'verified' && <span style="font-size:8px;font-weight:700;color:#16a34a;background:#f0fdf4;border:1px solid #bbf7d0;border-radius:20px;padding:1px 6px;flex-shrink:0;">✓ Pro</span>}
+                </div>
+                <div style="font-size:11px;color:#64748b;margin-bottom:2px;">{p.provider_type}</div>
+                <div style="font-size:11px;color:#94a3b8;">📍 {p.city || p.district}</div>
+              </div>
+              <div style="padding:0 14px;font-size:20px;color:#cbd5e1;flex-shrink:0;">›</div>
+            </a>
+          )
+        })}
+
+      </div>
+    )}
+  </div>
+
+</Layout>

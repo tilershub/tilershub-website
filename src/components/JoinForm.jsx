@@ -1,28 +1,19 @@
 import { useState, useRef } from 'react'
 import { supabase, DISTRICTS, DISTRICTS_EN } from '../lib/supabase.js'
+import { SERVICES } from '../lib/services.js'
 
 // ─── Service names (index-aligned EN ↔ SI) ───────────────────────────────────
-const ALL_SERVICES_EN = [
-  'Floor Tiling', 'Wall Tiling', 'Bathroom Tiling', 'Kitchen Tiling',
-  'Staircase Tiling', 'Outdoor Tiling', 'Large Tile Installation',
-  'Waterproofing', 'Grouting & Finishing',
-  'Tile Cutting', 'Tile Routing',
-  'Bathroom Renovation', 'Full Construction',
-  'Bathroom Plumbing', 'Shower Cubicle',
-  'Hand Railing', 'Vanity Cupboard',
-  'Bathroom Lighting', 'Bathroom Wiring', 'Electrical Works',
-  'Ipanel Ceiling',
-]
+const ALL_SERVICES_EN = SERVICES.map(s => s.label)
+
 const ALL_SERVICES_SI = [
-  'මහල් ටයිල් කිරීම', 'බිත්ති ටයිල් කිරීම', 'නාන කාමර ටයිල් කිරීම', 'කුස්සිය ටයිල් කිරීම',
-  'පඩිපෙළ ටයිල් කිරීම', 'බාහිර ටයිල් කිරීම', 'විශාල ටයිල් සවි කිරීම',
-  'දිය ආරක්ෂාකරණය', 'ග්‍රොට්ටිං සහ නිම කිරීම',
-  'ටයිල් කැපීම', 'ටයිල් රවුටිං',
-  'නාන කාමර ප්‍රතිසංස්කරණය', 'සම්පූර්ණ ඉදිකිරීම',
-  'නාන කාමර නළ වැඩ', 'ෂවර් කියුබිකල්',
-  'රේල් රාමු', 'වැනිටි කබඩ්',
-  'නාන කාමර ආලෝකය', 'නාන කාමර විදුලි', 'විදුලි කාර්ය',
-  'Ipanel සිවිලිම',
+  'නාන කාමර ප්‍රතිසංස්කරණය', 'නාන කාමර නළ වැඩ', 'නාන කාමර ආලෝකය',
+  'ෂවර් කියුබිකල්', 'නාන කාමර දර්පණ', 'වැනිටි කබඩ්',
+  'මහල් ටයිල් කිරීම', 'විශාල ෆෝමැට් ටයිල් කිරීම',
+  'මොසෙයික් ටයිල් කිරීම', 'පිහිනුම් තටාක ටයිල් කිරීම', 'බාහිර ටයිල් කිරීම',
+  'ටයිල් කැපීම සහ රවුටිං', 'ග්ලාස් රේලිං', 'ඇලුමිනියම් සහ ග්ලාස් කාර්ය',
+  'IPanel සිවිලිම', 'ගෙදර ආලෝකය', 'ගෙදර රැහැන් කිරීම',
+  'විදුලි අලුත්වැඩියා', 'දිය ආරක්ෂාකරණය', 'භූ දර්ශනය සහ උද්‍යාන',
+  'ග්‍රැනයිට් කවුන්ටර්ටොප්', 'ඇලුමිනියම් දොරවල් සහ ජනේල',
 ]
 
 const MAX_PORTFOLIO = 8
@@ -66,6 +57,7 @@ const TRANS = {
     errPhone: 'Enter a valid phone number',
     errServices: 'Select at least one service',
     errSubmit: 'Something went wrong. Please try again.',
+    alreadyAdded: 'This service is already added.',
     clickToChange: 'Click to change',
     uploadHint: 'Click or drag to upload',
     maxSize: 'JPG, PNG, WebP · Max 5 MB',
@@ -107,6 +99,7 @@ const TRANS = {
     errPhone: 'වලංගු දුරකතන අංකයක් ඇතුළු කරන්න',
     errServices: 'අවම වශයෙන් සේවාවක් එකක් තෝරන්න',
     errSubmit: 'දෝෂයක් ඇති විය. නැවත උත්සාහ කරන්න.',
+    alreadyAdded: 'මෙම සේවාව දැනටමත් එකතු කර ඇත.',
     clickToChange: 'වෙනස් කිරීමට ක්ලික් කරන්න',
     uploadHint: 'ක්ලික් කරන්න හෝ ඇද දමන්න',
     maxSize: 'JPG, PNG, WebP · උපරිම 5 MB',
@@ -263,21 +256,58 @@ function PortfolioUpload({ files, onChange, T }) {
 
 function ServiceTextInput({ value, onChange, T }) {
   const [text, setText] = useState('')
+  const [dupeError, setDupeError] = useState(false)
+
+  const customServices = value.filter(s => !ALL_SERVICES_EN.includes(s))
+
   function add() {
     const s = text.trim()
-    if (s && !value.includes(s)) onChange([...value, s])
+    if (!s) return
+    const duplicate = value.some(v => v.toLowerCase() === s.toLowerCase())
+    if (duplicate) { setDupeError(true); return }
+    onChange([...value, s])
     setText('')
+    setDupeError(false)
   }
+
+  function remove(s) {
+    onChange(value.filter(v => v !== s))
+    setDupeError(false)
+  }
+
   return (
-    <div style={{ display: 'flex', gap: 8 }}>
-      <input
-        value={text}
-        onChange={e => setText(e.target.value)}
-        onKeyDown={e => { if (e.key === 'Enter') { e.preventDefault(); add() } }}
-        placeholder={T.customSvcPh}
-        style={{ flex: 1, padding: '8px 12px', border: '1.5px solid #e2e8f0', borderRadius: 10, fontSize: 12, outline: 'none', fontFamily: 'inherit' }}
-      />
-      <button type="button" onClick={add} style={{ padding: '8px 14px', background: '#eef3fb', color: '#1B3A6B', border: '1.5px solid #d5e2f5', borderRadius: 10, fontSize: 12, fontWeight: 700, cursor: 'pointer' }}>{T.addBtn}</button>
+    <div>
+      {customServices.length > 0 && (
+        <div style={{ display: 'flex', flexWrap: 'wrap', gap: 6, marginBottom: 8 }}>
+          {customServices.map(s => (
+            <span key={s} style={{ display: 'inline-flex', alignItems: 'center', gap: 4, background: '#eff6ff', color: '#1d4ed8', border: '1px solid #bfdbfe', borderRadius: 20, padding: '3px 10px 3px 12px', fontSize: 11, fontWeight: 600 }}>
+              {s}
+              <button type="button" onClick={() => remove(s)}
+                style={{ background: 'none', border: 'none', cursor: 'pointer', padding: '0 0 0 2px', color: '#93c5fd', fontSize: 14, lineHeight: 1, display: 'flex', alignItems: 'center' }}>
+                ✕
+              </button>
+            </span>
+          ))}
+        </div>
+      )}
+      <div style={{ display: 'flex', gap: 8 }}>
+        <input
+          value={text}
+          onChange={e => { setText(e.target.value); if (dupeError) setDupeError(false) }}
+          onKeyDown={e => { if (e.key === 'Enter') { e.preventDefault(); add() } }}
+          placeholder={T.customSvcPh}
+          style={{ flex: 1, padding: '8px 12px', border: `1.5px solid ${dupeError ? '#fca5a5' : '#e2e8f0'}`, borderRadius: 10, fontSize: 12, outline: 'none', fontFamily: 'inherit', transition: 'border-color 0.15s' }}
+        />
+        <button type="button" onClick={add}
+          style={{ padding: '8px 14px', background: '#eef3fb', color: '#1B3A6B', border: '1.5px solid #d5e2f5', borderRadius: 10, fontSize: 12, fontWeight: 700, cursor: 'pointer' }}>
+          {T.addBtn}
+        </button>
+      </div>
+      {dupeError && (
+        <p style={{ fontSize: 11, color: '#dc2626', margin: '5px 0 0', display: 'flex', alignItems: 'center', gap: 4 }}>
+          ⚠ {T.alreadyAdded}
+        </p>
+      )}
     </div>
   )
 }

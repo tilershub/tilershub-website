@@ -2,12 +2,13 @@
 import Layout from '../layouts/Layout.astro'
 import { supabase } from '../lib/supabase.js'
 import HomeHero from '../components/HomeHero.jsx'
+import { SERVICES_GROUP_1, SERVICES_GROUP_2 } from '../lib/services.js'
 
 const { data: featuredTilers } = await supabase
   .from('tilers')
   .select('id,full_name,district,city,is_verified,slug,avg_rating,experience_years,avatar_url,speciality')
   .eq('featured', true)
-  .order('experience_years', { ascending: false })
+  .order('avg_rating', { ascending: false })
   .limit(8)
 
 const { data: projectsData } = await supabase
@@ -15,7 +16,7 @@ const { data: projectsData } = await supabase
   .select('id,project_type,district,city,created_at,budget_range,description')
   .eq('status', 'active')
   .order('created_at', { ascending: false })
-  .limit(4)
+  .limit(8)
 
 const { data: bidCountData } = projectsData?.length
   ? await supabase
@@ -29,23 +30,39 @@ const bidsByProject: Record<string, number> = {}
   bidsByProject[b.project_id] = (bidsByProject[b.project_id] || 0) + 1
 })
 
-const tilers   = featuredTilers || []
-const projects = projectsData  || []
+const FALLBACK_TILERS = [
+  { id:'p1', full_name:'Lakmal Perera',    city:'Colombo 7',   is_verified:true,  avg_rating:4.9, slug:'lakmal',  avatar_url:null, speciality:'Bathroom Tiling'  },
+  { id:'p2', full_name:'Chamara Silva',    city:'Kandy',       is_verified:true,  avg_rating:4.7, slug:'chamara', avatar_url:null, speciality:'Floor Tiling'     },
+  { id:'p3', full_name:'Saman Jayantha',   city:'Galle',       is_verified:false, avg_rating:0,   slug:null,      avatar_url:null, speciality:'Tile Cutting'     },
+  { id:'p4', full_name:'Kelum Prasad',     city:'Negombo',     is_verified:true,  avg_rating:4.8, slug:'kelum',   avatar_url:null, speciality:'Waterproofing'    },
+  { id:'p5', full_name:'Nuwan Bandara',    city:'Kurunegala',  is_verified:true,  avg_rating:4.6, slug:null,      avatar_url:null, speciality:'Granite Works'    },
+  { id:'p6', full_name:'Ruwan Perera',     city:'Colombo 3',   is_verified:true,  avg_rating:4.8, slug:null,      avatar_url:null, speciality:'Bathroom Reno'    },
+  { id:'p7', full_name:'Sunil Fernando',   city:'Matara',      is_verified:true,  avg_rating:4.5, slug:null,      avatar_url:null, speciality:'Floor Tiling'     },
+  { id:'p8', full_name:'Asanka Rajapaksa', city:'Kurunegala',  is_verified:false, avg_rating:0,   slug:null,      avatar_url:null, speciality:'Mosaic Tiling'    },
+]
 
-function timeAgo(dateStr) {
-  if (!dateStr) return ''
-  const diff = Math.floor((Date.now() - new Date(dateStr)) / 86400000)
-  if (diff === 0) return 'Today'
-  if (diff === 1) return 'Yesterday'
-  if (diff < 7)  return `${diff}d ago`
-  if (diff < 30) return `${Math.floor(diff/7)}w ago`
-  return `${Math.floor(diff/30)}mo ago`
-}
+const FALLBACK_PROJECTS = [
+  { id:'d1', project_type:'Bathroom Renovation',      city:'Colombo',    district:'Colombo', budget_range:'LKR 850,000', created_at: new Date().toISOString() },
+  { id:'d2', project_type:'Glass Vinyl Installation', city:'Kandy',      district:'Kandy',   budget_range:'LKR 250,000', created_at: new Date().toISOString() },
+  { id:'d3', project_type:'Large Format Tiling',      city:'Galle',      district:'Galle',   budget_range:'LKR 320,000', created_at: new Date().toISOString() },
+  { id:'d4', project_type:'Floor Tiling',             city:'Negombo',    district:'Gampaha', budget_range:'LKR 180,000', created_at: new Date().toISOString() },
+  { id:'d5', project_type:'Waterproofing',            city:'Colombo',    district:'Colombo', budget_range:'LKR 95,000',  created_at: new Date().toISOString() },
+  { id:'d6', project_type:'Bathroom Renovation',      city:'Kandy',      district:'Kandy',   budget_range:'LKR 650,000', created_at: new Date().toISOString() },
+  { id:'d7', project_type:'Tile Cutting & Routering', city:'Gampaha',    district:'Gampaha', budget_range:'LKR 75,000',  created_at: new Date().toISOString() },
+  { id:'d8', project_type:'Mosaic Tiling',            city:'Colombo 5',  district:'Colombo', budget_range:'LKR 210,000', created_at: new Date().toISOString() },
+]
+
+const allTilers   = (featuredTilers || []).length  > 0 ? (featuredTilers || []) : FALLBACK_TILERS
+const allProjects = (projectsData  || []).length   > 0 ? (projectsData  || []) : FALLBACK_PROJECTS
+
+const b1Tilers   = allTilers.slice(0, 3)
+const b2Tilers   = allTilers.slice(3, 7)
+const b1Projects = allProjects.slice(0, 4)
+const b2Projects = allProjects.slice(4, 8)
 
 function initials(name: string) {
   return name.split(' ').slice(0,2).map((w: string) => w[0] || '').join('').toUpperCase() || '?'
 }
-
 const AVATAR_COLORS = ['#1B3A6B','#0f766e','#7c3aed','#b45309','#0369a1','#E05A2B','#15803d','#be185d']
 function avatarColor(name: string) {
   let h = 0
@@ -53,22 +70,21 @@ function avatarColor(name: string) {
   return AVATAR_COLORS[h % AVATAR_COLORS.length]
 }
 
-const TYPE_ICON: Record<string, string> = {
+const TYPE_ICON = {
   'Floor Tiling':'🪨','Bathroom Tiling':'🚿','Bathroom Renovation':'🛁',
-  'Granite Works':'💎','Tile Cutting':'✂️','Routering':'🔧',
-  'Waterproofing':'💧','Tile Shop Inquiry':'🏪',
+  'Granite Works':'💎','Tile Cutting':'✂️','Tile Cutting & Routering':'✂️',
+  'Waterproofing':'💧','Tile Shop Inquiry':'🏪','Glass Vinyl Installation':'✨',
+  'Large Format Tiling':'📏','Mosaic Tiling':'🎨','Mosaic':'🎨',
+}
+
+const PROJ_COLORS = {
+  'Bathroom Renovation':'#0f766e','Floor Tiling':'#1B3A6B','Large Format Tiling':'#7c3aed',
+  'Granite Works':'#b45309','Waterproofing':'#0369a1','Tile Shop Inquiry':'#E05A2B',
+  'Glass Vinyl Installation':'#16a34a','Mosaic Tiling':'#7c3aed',
+  'Tile Cutting & Routering':'#b45309',
 }
 
 const HERO_IMG = 'https://images.unsplash.com/photo-1552321554-5fefe8c9ef14?auto=format&fit=crop&w=1400&q=75'
-
-const EXPLORE_MORE = [
-  { label:'🪨 Tiles',         href:'/tile'       },
-  { label:'🚿 Bathware',      href:'/bathrooms'  },
-  { label:'📐 Estimator',     href:'/estimator'  },
-  { label:'📚 Guides',        href:'/guides'     },
-  { label:'🏷️ Brands',        href:'/tile'       },
-  { label:'☰ All Categories', href:'/categories' },
-]
 ---
 
 <Layout
@@ -77,19 +93,41 @@ const EXPLORE_MORE = [
 >
   <link slot="head" rel="preload" as="image" href={HERO_IMG} fetchpriority="high" />
 
-  <!-- ① + ② HERO + QUICK ACTIONS (role-aware React island) ──── -->
+  <!-- Hero (role-aware React island) -->
   <HomeHero client:load heroImg={HERO_IMG} />
 
-  <!-- ⑤ TOP PROVIDERS ────────────────────────────────────── -->
-  <section class="section" style="background:#fff;">
-    <div class="section-head">
-      <div class="section-title-sm">Top <span>Providers</span></div>
-      <a href="/providers" class="see-all">View all →</a>
-    </div>
+  <!-- ════════════════════════════════════════════════════════
+       BLOCK 1
+  ════════════════════════════════════════════════════════ -->
 
+  <!-- Services Group 1 -->
+  <section style="background:#fff;border-bottom:1px solid #f1f5f9;padding:16px 16px 14px;">
+    <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:14px;">
+      <span style="font-size:15px;font-weight:700;color:#111827;">Popular Services</span>
+      <a href="/providers" style="font-size:12px;font-weight:600;color:#E05A2B;text-decoration:none;">View All &rsaquo;</a>
+    </div>
+    <div style="display:grid;grid-template-columns:repeat(4,1fr);gap:10px;">
+      {SERVICES_GROUP_1.map(s => (
+        <a href={`/services/${s.slug}`}
+          style="display:flex;flex-direction:column;align-items:center;gap:7px;padding:12px 4px 10px;border-radius:14px;background:#f8fafc;text-decoration:none;border:1px solid #f1f5f9;">
+          <div style="width:46px;height:46px;border-radius:13px;background:#fff;border:1px solid #e2e8f0;box-shadow:0 1px 4px rgba(0,0,0,0.06);display:flex;align-items:center;justify-content:center;font-size:22px;">
+            {s.icon}
+          </div>
+          <span style="font-size:10px;font-weight:600;color:#374151;text-align:center;line-height:1.35;">{s.label}</span>
+        </a>
+      ))}
+    </div>
+  </section>
+
+  <!-- Top Providers — Block 1 -->
+  <section style="background:#fff;padding:20px 0 24px;">
+    <div style="padding:0 16px 14px;display:flex;align-items:center;justify-content:space-between;">
+      <span style="font-size:15px;font-weight:700;color:#111827;">Top Providers</span>
+      <a href="/providers" style="font-size:12px;font-weight:600;color:#E05A2B;text-decoration:none;">View all &rsaquo;</a>
+    </div>
     <div style="display:flex;flex-direction:column;gap:10px;padding:0 16px;">
 
-      <!-- LUXEhome featured card -->
+      <!-- LUXEhome featured -->
       <a href="/sponsor/luxehome" style="display:flex;align-items:center;gap:0;background:#fff;border-radius:14px;overflow:hidden;border:1.5px solid #D4AF37;text-decoration:none;color:inherit;box-shadow:0 2px 10px rgba(212,175,55,0.18);">
         <div style="width:82px;height:82px;background:linear-gradient(135deg,#0c0804 0%,#1a120a 100%);flex-shrink:0;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:3px;">
           <span style="font-family:'Playfair Display',serif;font-size:12px;font-weight:800;color:#D4AF37;letter-spacing:0.5px;">LUXE</span>
@@ -106,27 +144,18 @@ const EXPLORE_MORE = [
         <div style="padding:0 14px;font-size:20px;color:#D4AF37;flex-shrink:0;">›</div>
       </a>
 
-      {(tilers.length > 0 ? tilers : [
-        { id:'p1', full_name:'Lakmal Perera',   city:'Colombo 7',  is_verified:true,  avg_rating:4.9, experience_years:12, slug:'lakmal',  avatar_url:null, speciality:'Bathroom Tiling'  },
-        { id:'p2', full_name:'Chamara Silva',   city:'Kandy',      is_verified:true,  avg_rating:4.7, experience_years:8,  slug:'chamara', avatar_url:null, speciality:'Floor Tiling'     },
-        { id:'p3', full_name:'Saman Jayantha',  city:'Galle',      is_verified:false, avg_rating:0,   experience_years:5,  slug:null,      avatar_url:null, speciality:'Tile Cutting'     },
-        { id:'p4', full_name:'Kelum Prasad',    city:'Negombo',    is_verified:true,  avg_rating:4.8, experience_years:10, slug:'kelum',   avatar_url:null, speciality:'Waterproofing'    },
-        { id:'p5', full_name:'Nuwan Bandara',   city:'Kurunegala', is_verified:true,  avg_rating:4.6, experience_years:7,  slug:null,      avatar_url:null, speciality:'Granite Works'    },
-        { id:'p6', full_name:'Ruwan Perera',    city:'Colombo 3',  is_verified:true,  avg_rating:4.8, experience_years:9,  slug:null,      avatar_url:null, speciality:'Bathroom Reno'    },
-      ]).map(t => {
+      {b1Tilers.map(t => {
         const color = avatarColor(t.full_name)
         const inits = initials(t.full_name)
         return (
           <a href={t.slug ? `/tilers/${t.slug}` : '/providers'}
             style="display:flex;align-items:center;gap:0;background:#fff;border-radius:14px;overflow:hidden;border:1px solid #e2e8f0;text-decoration:none;color:inherit;box-shadow:0 1px 4px rgba(0,0,0,0.04);">
-            <!-- Avatar block -->
             <div style={`width:82px;height:82px;background:${color};flex-shrink:0;display:flex;align-items:center;justify-content:center;overflow:hidden;`}>
               {t.avatar_url
                 ? <img src={t.avatar_url} alt={t.full_name} style="width:100%;height:100%;object-fit:cover;" loading="lazy" />
                 : <span style="font-size:26px;font-weight:800;color:rgba(255,255,255,0.85);">{inits}</span>
               }
             </div>
-            <!-- Info -->
             <div style="flex:1;padding:12px 12px;min-width:0;">
               <div style="display:flex;align-items:center;gap:6px;margin-bottom:2px;">
                 <span style="font-size:13px;font-weight:700;color:#111827;overflow:hidden;white-space:nowrap;text-overflow:ellipsis;">{t.full_name}</span>
@@ -136,7 +165,6 @@ const EXPLORE_MORE = [
               <div style="font-size:11px;color:#94a3b8;">📍 {t.city || t.district}</div>
               {t.avg_rating > 0 && <div style="font-size:11px;color:#f59e0b;margin-top:2px;">⭐ {t.avg_rating.toFixed(1)}</div>}
             </div>
-            <!-- Arrow -->
             <div style="padding:0 14px;font-size:20px;color:#cbd5e1;flex-shrink:0;">›</div>
           </a>
         )
@@ -144,40 +172,28 @@ const EXPLORE_MORE = [
     </div>
   </section>
 
-  <!-- RECENT PROJECTS ───────────────────────────────────────── -->
+  <!-- Recent Projects — Block 1 -->
   <section style="background:#f8fafc;padding:20px 0 24px;">
     <div style="padding:0 16px 14px;display:flex;align-items:center;justify-content:space-between;">
       <span style="font-size:15px;font-weight:700;color:#111827;">Recent Projects</span>
       <a href="/jobs" style="font-size:12px;font-weight:600;color:#E05A2B;text-decoration:none;">View All &rsaquo;</a>
     </div>
     <div style="display:flex;flex-direction:column;gap:10px;padding:0 16px;">
-      {(projects.length > 0 ? projects : [
-        { id:'demo1', project_type:'Bathroom Renovation',   city:'Colombo',  district:'Colombo',  budget_range:'LKR 850,000', created_at: new Date().toISOString() },
-        { id:'demo2', project_type:'Glass Vinyl Installation', city:'Kandy', district:'Kandy',    budget_range:'LKR 250,000', created_at: new Date().toISOString() },
-        { id:'demo3', project_type:'Large Format Tiling',   city:'Galle',    district:'Galle',    budget_range:'LKR 320,000', created_at: new Date().toISOString() },
-      ]).map(job => {
+      {b1Projects.map(job => {
         const bids = bidsByProject[job.id] || 0
-        const PROJ_COLORS = {
-          'Bathroom Renovation':'#0f766e','Floor Tiling':'#1B3A6B','Large Format Tiling':'#7c3aed',
-          'Granite Works':'#b45309','Waterproofing':'#0369a1','Tile Shop Inquiry':'#E05A2B',
-          'Glass Vinyl Installation':'#16a34a',
-        }
         const bg = PROJ_COLORS[job.project_type] || '#1B3A6B'
         return (
           <a href={`/job?id=${job.id}`}
             style="display:flex;align-items:center;gap:0;background:#fff;border-radius:14px;overflow:hidden;border:1px solid #e2e8f0;text-decoration:none;color:inherit;box-shadow:0 1px 4px rgba(0,0,0,0.04);">
-            <!-- Photo / color block -->
             <div style={`width:88px;height:82px;background:${bg};flex-shrink:0;display:flex;align-items:center;justify-content:center;font-size:28px;`}>
               {TYPE_ICON[job.project_type] || '🏠'}
             </div>
-            <!-- Info -->
-            <div style="flex:1;padding:12px 12px;">
+            <div style="flex:1;padding:12px 12px;min-width:0;">
               <div style="font-size:13px;font-weight:700;color:#111827;margin-bottom:3px;overflow:hidden;white-space:nowrap;text-overflow:ellipsis;">{job.project_type}</div>
               <div style="font-size:11px;color:#64748b;margin-bottom:4px;">📍 {job.city || job.district}</div>
               {job.budget_range && <div style="font-size:11px;font-weight:700;color:#16a34a;">Budget: {job.budget_range}</div>}
               {bids > 0 && <div style="font-size:10px;color:#64748b;margin-top:2px;">{bids} bid{bids !== 1 ? 's' : ''} received</div>}
             </div>
-            <!-- Arrow -->
             <div style="padding:0 14px;font-size:20px;color:#cbd5e1;flex-shrink:0;">›</div>
           </a>
         )
@@ -185,16 +201,103 @@ const EXPLORE_MORE = [
     </div>
   </section>
 
-  <!-- WHY CHOOSE TILERSHUB ─────────────────────────────────── -->
+  <!-- ════════════════════════════════════════════════════════
+       BLOCK 2
+  ════════════════════════════════════════════════════════ -->
+
+  <!-- Services Group 2 -->
+  <section style="background:#fff;border-bottom:1px solid #f1f5f9;padding:16px 16px 14px;">
+    <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:14px;">
+      <span style="font-size:15px;font-weight:700;color:#111827;">More Services</span>
+      <a href="/providers" style="font-size:12px;font-weight:600;color:#E05A2B;text-decoration:none;">View All &rsaquo;</a>
+    </div>
+    <div style="display:grid;grid-template-columns:repeat(4,1fr);gap:10px;">
+      {SERVICES_GROUP_2.map(s => (
+        <a href={`/services/${s.slug}`}
+          style="display:flex;flex-direction:column;align-items:center;gap:7px;padding:12px 4px 10px;border-radius:14px;background:#f8fafc;text-decoration:none;border:1px solid #f1f5f9;">
+          <div style="width:46px;height:46px;border-radius:13px;background:#fff;border:1px solid #e2e8f0;box-shadow:0 1px 4px rgba(0,0,0,0.06);display:flex;align-items:center;justify-content:center;font-size:22px;">
+            {s.icon}
+          </div>
+          <span style="font-size:10px;font-weight:600;color:#374151;text-align:center;line-height:1.35;">{s.label}</span>
+        </a>
+      ))}
+    </div>
+  </section>
+
+  <!-- Top Providers — Block 2 -->
+  <section style="background:#fff;padding:20px 0 24px;">
+    <div style="padding:0 16px 14px;display:flex;align-items:center;justify-content:space-between;">
+      <span style="font-size:15px;font-weight:700;color:#111827;">Top Providers</span>
+      <a href="/providers" style="font-size:12px;font-weight:600;color:#E05A2B;text-decoration:none;">View all &rsaquo;</a>
+    </div>
+    <div style="display:flex;flex-direction:column;gap:10px;padding:0 16px;">
+      {b2Tilers.map(t => {
+        const color = avatarColor(t.full_name)
+        const inits = initials(t.full_name)
+        return (
+          <a href={t.slug ? `/tilers/${t.slug}` : '/providers'}
+            style="display:flex;align-items:center;gap:0;background:#fff;border-radius:14px;overflow:hidden;border:1px solid #e2e8f0;text-decoration:none;color:inherit;box-shadow:0 1px 4px rgba(0,0,0,0.04);">
+            <div style={`width:82px;height:82px;background:${color};flex-shrink:0;display:flex;align-items:center;justify-content:center;overflow:hidden;`}>
+              {t.avatar_url
+                ? <img src={t.avatar_url} alt={t.full_name} style="width:100%;height:100%;object-fit:cover;" loading="lazy" />
+                : <span style="font-size:26px;font-weight:800;color:rgba(255,255,255,0.85);">{inits}</span>
+              }
+            </div>
+            <div style="flex:1;padding:12px 12px;min-width:0;">
+              <div style="display:flex;align-items:center;gap:6px;margin-bottom:2px;">
+                <span style="font-size:13px;font-weight:700;color:#111827;overflow:hidden;white-space:nowrap;text-overflow:ellipsis;">{t.full_name}</span>
+                {t.is_verified && <span style="font-size:8px;font-weight:700;color:#16a34a;background:#f0fdf4;border:1px solid #bbf7d0;border-radius:20px;padding:1px 6px;flex-shrink:0;">✓ Pro</span>}
+              </div>
+              {t.speciality && <div style="font-size:11px;color:#64748b;margin-bottom:2px;overflow:hidden;white-space:nowrap;text-overflow:ellipsis;">{t.speciality}</div>}
+              <div style="font-size:11px;color:#94a3b8;">📍 {t.city || t.district}</div>
+              {t.avg_rating > 0 && <div style="font-size:11px;color:#f59e0b;margin-top:2px;">⭐ {t.avg_rating.toFixed(1)}</div>}
+            </div>
+            <div style="padding:0 14px;font-size:20px;color:#cbd5e1;flex-shrink:0;">›</div>
+          </a>
+        )
+      })}
+    </div>
+  </section>
+
+  <!-- Recent Projects — Block 2 -->
+  <section style="background:#f8fafc;padding:20px 0 24px;">
+    <div style="padding:0 16px 14px;display:flex;align-items:center;justify-content:space-between;">
+      <span style="font-size:15px;font-weight:700;color:#111827;">Recent Projects</span>
+      <a href="/jobs" style="font-size:12px;font-weight:600;color:#E05A2B;text-decoration:none;">View All &rsaquo;</a>
+    </div>
+    <div style="display:flex;flex-direction:column;gap:10px;padding:0 16px;">
+      {b2Projects.map(job => {
+        const bids = bidsByProject[job.id] || 0
+        const bg = PROJ_COLORS[job.project_type] || '#1B3A6B'
+        return (
+          <a href={`/job?id=${job.id}`}
+            style="display:flex;align-items:center;gap:0;background:#fff;border-radius:14px;overflow:hidden;border:1px solid #e2e8f0;text-decoration:none;color:inherit;box-shadow:0 1px 4px rgba(0,0,0,0.04);">
+            <div style={`width:88px;height:82px;background:${bg};flex-shrink:0;display:flex;align-items:center;justify-content:center;font-size:28px;`}>
+              {TYPE_ICON[job.project_type] || '🏠'}
+            </div>
+            <div style="flex:1;padding:12px 12px;min-width:0;">
+              <div style="font-size:13px;font-weight:700;color:#111827;margin-bottom:3px;overflow:hidden;white-space:nowrap;text-overflow:ellipsis;">{job.project_type}</div>
+              <div style="font-size:11px;color:#64748b;margin-bottom:4px;">📍 {job.city || job.district}</div>
+              {job.budget_range && <div style="font-size:11px;font-weight:700;color:#16a34a;">Budget: {job.budget_range}</div>}
+              {bids > 0 && <div style="font-size:10px;color:#64748b;margin-top:2px;">{bids} bid{bids !== 1 ? 's' : ''} received</div>}
+            </div>
+            <div style="padding:0 14px;font-size:20px;color:#cbd5e1;flex-shrink:0;">›</div>
+          </a>
+        )
+      })}
+    </div>
+  </section>
+
+  <!-- WHY CHOOSE TILERSHUB -->
   <section style="background:#fff;padding:24px 16px 28px;">
     <div style="font-size:15px;font-weight:700;color:#111827;margin-bottom:16px;">Why Choose TILERSHUB?</div>
     <div style="display:grid;grid-template-columns:repeat(2,1fr);gap:10px;">
       {[
-        { icon:'📋', title:'Post Projects for Free',       desc:'No cost, no account needed' },
-        { icon:'💬', title:'Multiple Bids',                desc:'Compare quotes from pros'   },
-        { icon:'🏆', title:'Compare Best Provider',        desc:'Ratings & reviews'          },
-        { icon:'📱', title:'Contact on WhatsApp',          desc:'Direct, instant chat'       },
-        { icon:'✅', title:'Verified & Trusted Professionals', desc:'Background-checked'      },
+        { icon:'📋', title:'Post Projects for Free',           desc:'No cost, no account needed' },
+        { icon:'💬', title:'Multiple Bids',                    desc:'Compare quotes from pros'   },
+        { icon:'🏆', title:'Compare Best Provider',            desc:'Ratings & reviews'          },
+        { icon:'📱', title:'Contact on WhatsApp',              desc:'Direct, instant chat'       },
+        { icon:'✅', title:'Verified & Trusted Professionals', desc:'Background-checked'         },
       ].map(f => (
         <div style="background:#f8fafc;border-radius:14px;padding:16px 14px;border:1px solid #f1f5f9;">
           <div style="font-size:26px;margin-bottom:8px;">{f.icon}</div>
@@ -205,7 +308,7 @@ const EXPLORE_MORE = [
     </div>
   </section>
 
-  <!-- HOW IT WORKS ──────────────────────────────────────────── -->
+  <!-- HOW IT WORKS -->
   <div class="hiw-strip">
     <div class="hiw-inner">
       {[
@@ -223,7 +326,7 @@ const EXPLORE_MORE = [
     </div>
   </div>
 
-  <!-- JOIN AS PROVIDER STRIP ──────────────────────────────── -->
+  <!-- JOIN AS PROVIDER STRIP -->
   <section class="join-strip">
     <div class="join-strip-inner">
       <div class="join-strip-text">
@@ -266,118 +369,25 @@ const EXPLORE_MORE = [
 }
 .luxe-shelf-glow {
   position: absolute;
-  inset: 0;
-  background: radial-gradient(ellipse at 50% 0%, rgba(212,175,55,0.18) 0%, transparent 70%);
-  pointer-events: none;
+  width: 120px; height: 120px;
+  background: radial-gradient(ellipse, rgba(212,175,55,0.18) 0%, transparent 70%);
+  top: -20px; left: 50%; transform: translateX(-50%);
 }
 .luxe-shelf-wordmark {
   font-family: 'Playfair Display', serif;
-  font-size: 20px;
-  font-weight: 700;
-  line-height: 1;
+  font-size: 15px;
+  font-weight: 800;
+  letter-spacing: 1px;
   position: relative;
-  z-index: 1;
 }
 .luxe-shelf-badge {
-  position: relative;
-  z-index: 1;
   font-size: 9px;
   font-weight: 700;
   color: #D4AF37;
-  background: rgba(212,175,55,0.12);
+  background: rgba(212,175,55,0.15);
   border: 1px solid rgba(212,175,55,0.3);
   border-radius: 20px;
-  padding: 2px 8px;
+  padding: 3px 8px;
+  position: relative;
 }
-
-/* ── HOW IT WORKS ────────────────────────────────────────── */
-.hiw-strip {
-  background: #fff;
-  border-bottom: 1px solid var(--border);
-  padding: 20px;
-}
-.hiw-inner {
-  max-width: 640px;
-  margin: 0 auto;
-  display: grid;
-  grid-template-columns: repeat(3, 1fr);
-  gap: 4px;
-  text-align: center;
-}
-.hiw-step { padding: 14px 8px; }
-.hiw-step.sep { border-right: 1px solid var(--border); }
-.hiw-icon { font-size: 26px; margin-bottom: 8px; }
-.hiw-num { font-size: 9px; font-weight: 700; color: var(--terra); letter-spacing: 1px; text-transform: uppercase; margin-bottom: 3px; }
-.hiw-title { font-size: 12px; font-weight: 700; color: var(--text); margin-bottom: 3px; }
-.hiw-desc { font-size: 11px; color: var(--text-4); line-height: 1.5; }
-
-/* ── STATS BAR ───────────────────────────────────────────── */
-.stats-bar {
-  background: var(--navy);
-  padding: 12px 0;
-  display: flex;
-  justify-content: center;
-  flex-wrap: wrap;
-}
-.stat-item {
-  text-align: center;
-  padding: 6px 20px;
-}
-.stat-item.sep { border-right: 1px solid rgba(255,255,255,0.1); }
-.stat-n { font-family: 'Playfair Display', serif; font-size: 17px; font-weight: 700; color: var(--gold); }
-.stat-l { font-size: 10px; color: rgba(255,255,255,0.45); margin-top: 1px; }
-
-/* ── PROJECTS GRID (responsive) ──────────────────────────── */
-.proj-grid {
-  max-width: 900px;
-  margin: 0 auto;
-  display: grid;
-  grid-template-columns: 5fr 7fr;
-  gap: 16px;
-  align-items: stretch;
-}
-@media (max-width: 640px) {
-  .proj-grid { grid-template-columns: 1fr; }
-}
-
-/* ── JOIN STRIP ──────────────────────────────────────────── */
-.join-strip {
-  background: #0f1e35;
-  border-top: 1px solid rgba(255,255,255,0.06);
-  padding: 24px 20px;
-}
-.join-strip-inner {
-  max-width: 900px;
-  margin: 0 auto;
-  display: flex;
-  align-items: center;
-  justify-content: space-between;
-  gap: 20px;
-  flex-wrap: wrap;
-}
-.join-strip-text { flex: 1; min-width: 200px; }
-.join-strip-eyebrow { font-size: 9px; font-weight: 700; color: rgba(255,255,255,0.35); letter-spacing: 2px; text-transform: uppercase; margin-bottom: 5px; }
-.join-strip-title { font-size: 15px; font-weight: 700; color: #fff; line-height: 1.35; margin-bottom: 4px; }
-.join-strip-sub { font-size: 12px; color: rgba(255,255,255,0.45); line-height: 1.6; }
-.join-strip-btn {
-  flex-shrink: 0;
-  display: inline-flex;
-  align-items: center;
-  gap: 8px;
-  background: var(--gold);
-  color: #111;
-  border-radius: 12px;
-  padding: 12px 22px;
-  font-size: 13px;
-  font-weight: 700;
-  text-decoration: none;
-  white-space: nowrap;
-  transition: background 0.15s, transform 0.15s;
-}
-.join-strip-btn:hover { background: var(--gold-light); transform: translateY(-1px); }
-@media (max-width: 480px) {
-  .join-strip-btn { width: 100%; justify-content: center; }
-}
-
-
 </style>
