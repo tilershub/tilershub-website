@@ -57,7 +57,7 @@ export default function HomeHero({ heroImg }) {
 
   return role === 'provider'
     ? <><ProviderHero name={providerName} /><ProviderActions /><ProviderProjectsFeed /></>
-    : <><GuestHero heroImg={heroImg} /><GuestActions /></>
+    : <><GuestHero heroImg={heroImg} /><GuestActions /><GuestProvidersPreview /></>
 }
 
 // ─── PROVIDER HERO ────────────────────────────────────────────────
@@ -296,13 +296,127 @@ function GuestHero({ heroImg }) {
 }
 
 function GuestActions() {
-  const ACTIONS = [
-    { icon:'📋', label:'Post Project',  sub:'Free, no login',   href:'/post-project',        bg:'#fff4f0', ibg:'rgba(224,90,43,0.14)'  },
-    { icon:'👷', label:'Find Tilers',   sub:'Islandwide',       href:'/providers?type=tiler', bg:'#eef2fb', ibg:'rgba(26,43,74,0.12)'   },
-    { icon:'💼', label:'Browse Jobs',   sub:'Active projects',  href:'/jobs',                 bg:'#fffbeb', ibg:'rgba(245,158,11,0.14)' },
-    { icon:'📐', label:'Estimator',     sub:'Cost calculator',  href:'/estimator',            bg:'#f0fdf4', ibg:'rgba(22,163,74,0.13)'  },
-  ]
-  return <QuickActionsGrid actions={ACTIONS} />
+  return (
+    <div style={{ background:'#fff', padding:'16px', borderBottom:'1px solid #E5E7EB' }}>
+      {/* Two primary action cards */}
+      <div style={{ maxWidth:560, margin:'0 auto 12px', display:'grid', gridTemplateColumns:'1fr 1fr', gap:12 }}>
+        <a href="/post-project"
+          style={{ display:'flex', flexDirection:'column', alignItems:'center', gap:8, padding:'22px 16px', borderRadius:16, textDecoration:'none', background:'linear-gradient(135deg,#E05A2B 0%,#c94d22 100%)', boxShadow:'0 4px 20px rgba(224,90,43,0.32)', transition:'transform 0.15s,box-shadow 0.15s' }}
+          onMouseOver={e => { e.currentTarget.style.transform='translateY(-2px)'; e.currentTarget.style.boxShadow='0 8px 28px rgba(224,90,43,0.4)' }}
+          onMouseOut={e  => { e.currentTarget.style.transform=''; e.currentTarget.style.boxShadow='0 4px 20px rgba(224,90,43,0.32)' }}
+        >
+          <span style={{ fontSize:30 }}>📋</span>
+          <div style={{ fontSize:14, fontWeight:800, color:'#fff', textAlign:'center', lineHeight:1.2 }}>Post a Project</div>
+          <div style={{ fontSize:11, color:'rgba(255,255,255,0.75)', textAlign:'center', lineHeight:1.4 }}>Free — verified tilers bid, you choose</div>
+          <div style={{ fontSize:12, fontWeight:700, color:'#fff', background:'rgba(255,255,255,0.2)', borderRadius:20, padding:'5px 14px', marginTop:2 }}>Start Free →</div>
+        </a>
+
+        <a href="/providers?type=tiler"
+          style={{ display:'flex', flexDirection:'column', alignItems:'center', gap:8, padding:'22px 16px', borderRadius:16, textDecoration:'none', background:'linear-gradient(135deg,#0F1E35 0%,#1A2B4A 100%)', boxShadow:'0 4px 20px rgba(15,30,53,0.25)', transition:'transform 0.15s,box-shadow 0.15s' }}
+          onMouseOver={e => { e.currentTarget.style.transform='translateY(-2px)'; e.currentTarget.style.boxShadow='0 8px 28px rgba(15,30,53,0.35)' }}
+          onMouseOut={e  => { e.currentTarget.style.transform=''; e.currentTarget.style.boxShadow='0 4px 20px rgba(15,30,53,0.25)' }}
+        >
+          <span style={{ fontSize:30 }}>👷</span>
+          <div style={{ fontSize:14, fontWeight:800, color:'#fff', textAlign:'center', lineHeight:1.2 }}>Find Tilers</div>
+          <div style={{ fontSize:11, color:'rgba(255,255,255,0.6)', textAlign:'center', lineHeight:1.4 }}>Browse islandwide professionals</div>
+          <div style={{ fontSize:12, fontWeight:700, color:'#D4AF37', background:'rgba(212,175,55,0.15)', borderRadius:20, padding:'5px 14px', marginTop:2, border:'1px solid rgba(212,175,55,0.3)' }}>Browse All →</div>
+        </a>
+      </div>
+
+      {/* Secondary quick links */}
+      <div style={{ maxWidth:560, margin:'0 auto', display:'flex', gap:8, justifyContent:'center', flexWrap:'wrap' }}>
+        <a href="/jobs"      style={{ display:'inline-flex', alignItems:'center', gap:5, padding:'8px 14px', borderRadius:10, fontSize:12, fontWeight:600, color:'#64748b', background:'#f8fafc', border:'1px solid #e2e8f0', textDecoration:'none' }}>💼 Browse Projects</a>
+        <a href="/estimator" style={{ display:'inline-flex', alignItems:'center', gap:5, padding:'8px 14px', borderRadius:10, fontSize:12, fontWeight:600, color:'#64748b', background:'#f8fafc', border:'1px solid #e2e8f0', textDecoration:'none' }}>📐 Estimator</a>
+        <a href="/providers" style={{ display:'inline-flex', alignItems:'center', gap:5, padding:'8px 14px', borderRadius:10, fontSize:12, fontWeight:600, color:'#64748b', background:'#f8fafc', border:'1px solid #e2e8f0', textDecoration:'none' }}>🔍 All Providers</a>
+      </div>
+    </div>
+  )
+}
+
+// ─── GUEST PROVIDERS PREVIEW ──────────────────────────────────────
+
+function GuestProvidersPreview() {
+  const [tilers,  setTilers]  = useState([])
+  const [loading, setLoading] = useState(true)
+
+  useEffect(() => {
+    supabase
+      .from('tilers')
+      .select('id,full_name,slug,city,is_verified,avg_rating,experience_years')
+      .eq('featured', true)
+      .order('avg_rating', { ascending: false })
+      .limit(8)
+      .then(({ data }) => { setTilers(data || []); setLoading(false) })
+  }, [])
+
+  return (
+    <div style={{ background:'#f8fafc', borderBottom:'1px solid #e2e8f0' }}>
+
+      {/* Header */}
+      <div style={{ maxWidth:860, margin:'0 auto', padding:'16px 16px 0', display:'flex', alignItems:'center', justifyContent:'space-between' }}>
+        <span style={{ fontSize:14, fontWeight:700, color:'#0f172a' }}>Featured Tilers</span>
+        <a href="/providers?type=tiler" style={{ fontSize:12, fontWeight:600, color:'#1B3A6B', textDecoration:'none' }}>View all →</a>
+      </div>
+
+      {/* Horizontal scrollable cards */}
+      <div style={{ overflowX:'auto', padding:'10px 16px 16px', display:'flex', gap:10, scrollbarWidth:'none', WebkitOverflowScrolling:'touch' }}>
+
+        {loading
+          ? Array.from({ length: 4 }).map((_, i) => (
+              <div key={i} style={{ width:158, flexShrink:0, background:'#fff', borderRadius:14, border:'1px solid #e2e8f0', padding:'16px 14px', display:'flex', flexDirection:'column', gap:8 }}>
+                <div style={{ width:44, height:44, borderRadius:12, background:'#f1f5f9' }} />
+                <div style={{ height:12, background:'#f1f5f9', borderRadius:6, width:'75%' }} />
+                <div style={{ height:10, background:'#f1f5f9', borderRadius:6, width:'55%' }} />
+                <div style={{ height:10, background:'#f1f5f9', borderRadius:6, width:'40%' }} />
+              </div>
+            ))
+          : tilers.map(t => (
+              <a key={t.id} href={`/tilers/${t.slug || t.id}`}
+                style={{ width:158, flexShrink:0, background:'#fff', borderRadius:14, border:'1px solid #e2e8f0', padding:'16px 14px', textDecoration:'none', color:'inherit', display:'flex', flexDirection:'column', gap:6, transition:'box-shadow 0.15s,border-color 0.15s' }}
+                onMouseOver={e => { e.currentTarget.style.boxShadow='0 4px 14px rgba(0,0,0,0.08)'; e.currentTarget.style.borderColor='#cbd5e1' }}
+                onMouseOut={e  => { e.currentTarget.style.boxShadow=''; e.currentTarget.style.borderColor='#e2e8f0' }}
+              >
+                <div style={{ width:44, height:44, borderRadius:12, background:'#eef2fb', display:'flex', alignItems:'center', justifyContent:'center', fontSize:22 }}>👷</div>
+
+                <div>
+                  <div style={{ fontSize:13, fontWeight:700, color:'#0f172a', lineHeight:1.2, marginBottom:3 }}>{t.full_name}</div>
+                  <div style={{ fontSize:11, color:'#64748b' }}>📍 {t.city}</div>
+                </div>
+
+                <div style={{ display:'flex', flexWrap:'wrap', gap:4 }}>
+                  {t.is_verified && (
+                    <span style={{ fontSize:9, fontWeight:700, color:'#0369a1', background:'#e0f2fe', borderRadius:20, padding:'2px 7px', border:'1px solid #bae6fd' }}>✓ Verified</span>
+                  )}
+                  {t.experience_years > 0 && (
+                    <span style={{ fontSize:9, fontWeight:600, color:'#64748b', background:'#f1f5f9', borderRadius:20, padding:'2px 7px' }}>{t.experience_years}+ yrs</span>
+                  )}
+                </div>
+
+                {t.avg_rating > 0 && (
+                  <div style={{ fontSize:11, color:'#F59E0B', fontWeight:600 }}>
+                    ⭐ {t.avg_rating.toFixed(1)}
+                  </div>
+                )}
+
+                <div style={{ marginTop:'auto', paddingTop:4, fontSize:11, fontWeight:700, color:'#E05A2B' }}>View Profile →</div>
+              </a>
+            ))
+        }
+
+        {/* View more card */}
+        {!loading && (
+          <a href="/providers?type=tiler"
+            style={{ width:140, flexShrink:0, background:'transparent', borderRadius:14, border:'1.5px dashed #cbd5e1', padding:'16px 14px', textDecoration:'none', display:'flex', flexDirection:'column', alignItems:'center', justifyContent:'center', gap:8 }}
+            onMouseOver={e => e.currentTarget.style.borderColor='#1B3A6B'}
+            onMouseOut={e  => e.currentTarget.style.borderColor='#cbd5e1'}
+          >
+            <div style={{ width:44, height:44, borderRadius:12, background:'#eef2fb', display:'flex', alignItems:'center', justifyContent:'center', fontSize:20 }}>🔍</div>
+            <div style={{ fontSize:12, fontWeight:600, color:'#64748b', textAlign:'center', lineHeight:1.3 }}>View all tilers</div>
+          </a>
+        )}
+      </div>
+    </div>
+  )
 }
 
 // ─── SHARED QUICK ACTIONS GRID ────────────────────────────────────
