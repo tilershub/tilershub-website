@@ -251,12 +251,6 @@ function logoText(name) { return name.split(' ').map(w => w[0]).join('').slice(0
                       💬 WhatsApp
                     </a>
                   )}
-                  {item.phone && (
-                    <a href={`tel:${item.phone}`}
-                      style="display:inline-flex;align-items:center;gap:5px;background:#eef3fb;color:var(--navy);border-radius:8px;padding:7px 12px;font-size:11px;font-weight:700;text-decoration:none;border:1px solid #d5e2f5;white-space:nowrap;">
-                      📞 Call
-                    </a>
-                  )}
                 </div>
               </div>
             ))}
