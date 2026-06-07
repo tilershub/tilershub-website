@@ -1,10 +1,123 @@
 import { useState, useEffect, useRef } from 'react'
-import { supabase, buildWhatsAppLink, DISTRICTS_EN, SERVICES_EN, PROVIDER_TYPES, VERIFICATION_BADGES } from '../lib/supabase.js'
+import { supabase, buildWhatsAppLink, DISTRICTS, DISTRICTS_EN, PROVIDER_TYPES, VERIFICATION_BADGES } from '../lib/supabase.js'
 
-const TYPE_LABELS = {
-  tiler: 'Tilers', provider: 'Providers',
+// ─── Translations ──────────────────────────────────────────────────────────────
+const TRANS = {
+  en: {
+    searchPh: 'Search by name, service...',
+    allDistricts: 'All Districts',
+    all: 'All',
+    tilersOpt: '🪚 Tilers',
+    providersOpt: '👷 Providers',
+    clear: label => label ? `✕ Clear (${label})` : '✕ Clear',
+    found: n => `${n} found`,
+    loading: 'Loading providers...',
+    noResults: 'No results found',
+    noResultsHint: 'Try adjusting your filters or search term',
+    clearSearch: 'Clear Search',
+    browseAll: 'Browse All',
+    verified: '🛡️ Verified',
+    community: 'Community',
+    from: 'From',
+    yrsExp: 'Yrs Experience',
+    yearsExpLabel: 'Years Exp.',
+    jobsDoneLabel: 'Jobs Done',
+    perSqftLabel: 'Per sq.ft',
+    reviewsLabel: n => `${n} reviews`,
+    servicesLabel: 'Services',
+    portfolioLabel: 'Portfolio',
+    serviceAreasLabel: 'Service Areas',
+    viewProfile: 'View Profile',
+    viewShop: 'View Shop ›',
+    whatsapp: '💬 WhatsApp',
+    call: '📞 Call',
+    altNumber: '💬 Alt. Number',
+    skilled: '✓ Skilled',
+    unverified: 'Unverified',
+    unverifiedNotice: 'ℹ️ This profile was added from community-submitted information and has not yet been verified by TILERSHUB.',
+    communityProfile: 'Community-submitted profile — not yet verified by TilersHub.',
+    noTypeListed: type => `No ${type} listed yet`,
+    noTypeHint: type => `We're onboarding ${type.toLowerCase()} now. Be the first to list yours — free, direct WhatsApp leads.`,
+    joinAs: type => `✅ Join as ${type.replace(/s$/, '')}`,
+    whatTheyDo: type => `What ${type} Do`,
+    otherProviders: '🏪 Other Providers',
+    seeAll: 'See all →',
+    topRated: '⭐ Top Rated',
+  },
+  si: {
+    searchPh: 'නමින්, සේවාවෙන් සොයන්න...',
+    allDistricts: 'සියලු දිස්ත්‍රික්ක',
+    all: 'සියල්ල',
+    tilersOpt: '🪚 ටයිල් ශිල්පීන්',
+    providersOpt: '👷 සේවා සපයන්නන්',
+    clear: label => label ? `✕ ඉවත් (${label})` : '✕ ඉවත් කරන්න',
+    found: n => `${n} ක් හමු විය`,
+    loading: 'Loading...',
+    noResults: 'ප්‍රතිඵල නොමැත',
+    noResultsHint: 'ෆිල්ටර හෝ සෙවුම් යෙදුම වෙනස් කරන්න',
+    clearSearch: 'සෙවුම ඉවත් කරන්න',
+    browseAll: 'සියල්ල බලන්න',
+    verified: '🛡️ සත්‍යාපිත',
+    community: 'ප්‍රජා',
+    from: 'සිට',
+    yrsExp: 'වසර අත්දැකීම',
+    yearsExpLabel: 'අත්දැකීම (වසර)',
+    jobsDoneLabel: 'සේවා ගණන',
+    perSqftLabel: 'sq.ft. ට',
+    reviewsLabel: n => `සමාලෝචන ${n}`,
+    servicesLabel: 'සේවාවන්',
+    portfolioLabel: 'Portfolio',
+    serviceAreasLabel: 'සේවා ප්‍රදේශ',
+    viewProfile: 'පූර්ණ විස්තරය',
+    viewShop: 'Shop බලන්න ›',
+    whatsapp: '💬 WhatsApp',
+    call: '📞 ඇමතීම',
+    altNumber: '💬 වෙනත් අංකය',
+    skilled: '✓ දක්ෂ',
+    unverified: 'සත්‍යාපිත නොවේ',
+    unverifiedNotice: 'ℹ️ මෙම ගොනුව ප්‍රජාව ඉදිරිපත් කළ තොරතුරු ආශ්‍රිතව TILERSHUB විසින් තවම සත්‍යාපනය කර නොමැත.',
+    communityProfile: 'ප්‍රජා-ඉදිරිපත් ගොනුව — TilersHub විසින් තවම සත්‍යාපනය කර නොමැත.',
+    noTypeListed: type => `${type} ලැයිස්තු ගත නොවේ`,
+    noTypeHint: () => 'නොමිලේ ලැයිස්තු කරන්න. WhatsApp ඇමතුම් ලබාගන්න.',
+    joinAs: type => `✅ ${type} ලෙස එකතු වන්න`,
+    whatTheyDo: type => `${type} කරන දේ`,
+    otherProviders: '🏪 වෙනත් සේවා සපයන්නන්',
+    seeAll: 'සියල්ල →',
+    topRated: '⭐ Top Rated',
+  },
 }
 
+const TYPE_LABELS_EN = { tiler: 'Tilers', provider: 'Providers' }
+const TYPE_LABELS_SI = { tiler: 'ටයිල් ශිල්පීන්', provider: 'සේවා සපයන්නන්' }
+
+// ─── Language hook ─────────────────────────────────────────────────────────────
+function useLang() {
+  const [lang, setLangState] = useState(() => {
+    try { return localStorage.getItem('tilershub_lang') || 'en' } catch { return 'en' }
+  })
+  function toggle() {
+    const next = lang === 'en' ? 'si' : 'en'
+    setLangState(next)
+    try { localStorage.setItem('tilershub_lang', next) } catch {}
+  }
+  return [lang, toggle]
+}
+
+function LangToggle({ lang, onToggle }) {
+  return (
+    <button
+      onClick={onToggle}
+      style={{ fontSize: 12, fontWeight: 700, padding: '7px 14px', border: '1.5px solid #e2e8f0', borderRadius: 20, cursor: 'pointer', background: '#fff', color: '#334155', display: 'inline-flex', gap: 6, alignItems: 'center', flexShrink: 0 }}
+      title="Switch language / භාෂාව මාරු කරන්න"
+    >
+      <span style={{ opacity: lang === 'en' ? 1 : 0.35 }}>EN</span>
+      <span style={{ opacity: 0.2, fontWeight: 300 }}>|</span>
+      <span style={{ opacity: lang === 'si' ? 1 : 0.35 }}>සිං</span>
+    </button>
+  )
+}
+
+// ─── Shared helpers ────────────────────────────────────────────────────────────
 function initials(name) {
   return (name || '').split(' ').map(w => w[0]).join('').slice(0, 2).toUpperCase() || 'TH'
 }
@@ -18,7 +131,8 @@ function VerificationBadge({ status }) {
   )
 }
 
-function ProviderCard({ provider, onClick }) {
+// ─── Provider card ─────────────────────────────────────────────────────────────
+function ProviderCard({ provider, onClick, T }) {
   const pts = PROVIDER_TYPES.find(p => p.value === provider.provider_type)
   return (
     <div
@@ -44,11 +158,7 @@ function ProviderCard({ provider, onClick }) {
           </p>
         )}
         <div style={{ display: 'flex', flexWrap: 'wrap', gap: 5, marginBottom: 14 }}>
-          {pts && (
-            <span style={{ fontSize: 10, fontWeight: 700, padding: '2px 8px', borderRadius: 20, background: '#eef3fb', color: '#1B3A6B', border: '1px solid #d5e2f5' }}>
-              {pts.icon} {pts.label}
-            </span>
-          )}
+          {pts && <span style={{ fontSize: 10, fontWeight: 700, padding: '2px 8px', borderRadius: 20, background: '#eef3fb', color: '#1B3A6B', border: '1px solid #d5e2f5' }}>{pts.icon} {pts.label}</span>}
           {(provider.services || []).slice(0, 2).map(s => (
             <span key={s} style={{ fontSize: 10, padding: '2px 8px', borderRadius: 20, background: '#f8fafc', color: '#475569', border: '1px solid #e2e8f0' }}>{s}</span>
           ))}
@@ -57,13 +167,13 @@ function ProviderCard({ provider, onClick }) {
           {provider.whatsapp && (
             <a href={buildWhatsAppLink(provider.whatsapp, provider.name)} target="_blank" rel="noopener noreferrer" onClick={e => e.stopPropagation()}
               style={{ flex: 1, display: 'flex', alignItems: 'center', justifyContent: 'center', gap: 6, background: '#25D366', color: '#fff', borderRadius: 10, padding: '8px 12px', fontSize: 12, fontWeight: 700, textDecoration: 'none' }}>
-              <span>💬</span> WhatsApp
+              {T.whatsapp}
             </a>
           )}
           {provider.phone && (
             <a href={`tel:${provider.phone}`} onClick={e => e.stopPropagation()}
               style={{ display: 'flex', alignItems: 'center', justifyContent: 'center', gap: 5, background: '#eef3fb', color: '#1B3A6B', borderRadius: 10, padding: '8px 12px', fontSize: 12, fontWeight: 700, textDecoration: 'none', border: '1px solid #d5e2f5' }}>
-              📞 Call
+              {T.call}
             </a>
           )}
         </div>
@@ -72,6 +182,7 @@ function ProviderCard({ provider, onClick }) {
   )
 }
 
+// ─── Shop card ─────────────────────────────────────────────────────────────────
 const BATH_KWS = ['bathroom', 'sanitary', 'bathware', 'faucet', 'vanity', 'shower', 'basin', 'toilet', 'bathtub']
 const TILE_KWS = ['tile', 'floor', 'wall', 'mosaic', 'porcelain', 'ceramic', 'granite', 'marble']
 
@@ -85,7 +196,7 @@ function shopTagline(type, services) {
   return hasBath ? 'Tiles & Bathware' : 'Tile Showroom'
 }
 
-function ShopCard({ provider, onClick }) {
+function ShopCard({ provider, onClick, T }) {
   const waPhone = provider.whatsapp || provider.phone
   const waLink = waPhone ? buildWhatsAppLink(waPhone, provider.name) : null
   const tagline = shopTagline(provider.provider_type, provider.services)
@@ -99,11 +210,9 @@ function ShopCard({ provider, onClick }) {
       onMouseOver={e => { e.currentTarget.style.transform = 'translateY(-4px)'; e.currentTarget.style.boxShadow = '0 16px 40px rgba(0,0,0,0.12)' }}
       onMouseOut={e => { e.currentTarget.style.transform = ''; e.currentTarget.style.boxShadow = '0 2px 12px rgba(0,0,0,0.06)' }}
     >
-      {/* Left: photo */}
       <div style={{ width: 110, flexShrink: 0, position: 'relative', minHeight: 140 }}>
         {coverImg ? (
-          <img src={coverImg} alt={provider.name} loading="lazy"
-            style={{ width: '100%', height: '100%', objectFit: 'cover', display: 'block' }} />
+          <img src={coverImg} alt={provider.name} loading="lazy" style={{ width: '100%', height: '100%', objectFit: 'cover', display: 'block' }} />
         ) : (
           <div style={{ width: '100%', height: '100%', background: '#f8fafc', backgroundImage: 'repeating-linear-gradient(0deg,transparent,transparent 19px,#e2e8f0 19px,#e2e8f0 20px),repeating-linear-gradient(90deg,transparent,transparent 19px,#e2e8f0 19px,#e2e8f0 20px)', display: 'flex', alignItems: 'center', justifyContent: 'center' }}>
             <span style={{ fontSize: 26, opacity: 0.18 }}>🏪</span>
@@ -111,39 +220,27 @@ function ShopCard({ provider, onClick }) {
         )}
         {provider.is_featured && (
           <div style={{ position: 'absolute', top: 8, left: 8, background: '#D4AF37', color: '#fff', fontSize: 8, fontWeight: 700, letterSpacing: 0.5, padding: '3px 7px', borderRadius: 20, boxShadow: '0 2px 6px rgba(0,0,0,0.25)', whiteSpace: 'nowrap' }}>
-            ⭐ Top Rated
+            {T.topRated}
           </div>
         )}
       </div>
-
-      {/* Right: content */}
       <div style={{ flex: 1, padding: '14px 16px', display: 'flex', flexDirection: 'column', minWidth: 0 }}>
-        <div style={{ fontSize: 9, fontWeight: 700, color: '#94a3b8', letterSpacing: 1.2, textTransform: 'uppercase', marginBottom: 4 }}>
-          {tagline}
-        </div>
-        <div style={{ fontFamily: "'Playfair Display',serif", fontSize: 15, fontWeight: 700, color: '#0f172a', lineHeight: 1.25, marginBottom: 6, overflow: 'hidden', textOverflow: 'ellipsis', whiteSpace: 'nowrap' }}>
-          {provider.name}
-        </div>
+        <div style={{ fontSize: 9, fontWeight: 700, color: '#94a3b8', letterSpacing: 1.2, textTransform: 'uppercase', marginBottom: 4 }}>{tagline}</div>
+        <div style={{ fontFamily: "'Playfair Display',serif", fontSize: 15, fontWeight: 700, color: '#0f172a', lineHeight: 1.25, marginBottom: 6, overflow: 'hidden', textOverflow: 'ellipsis', whiteSpace: 'nowrap' }}>{provider.name}</div>
         {provider.description && (
-          <p style={{ fontSize: 11, color: '#64748b', lineHeight: 1.6, margin: '0 0 8px', display: '-webkit-box', WebkitLineClamp: 2, WebkitBoxOrient: 'vertical', overflow: 'hidden', flex: 1 }}>
-            {provider.description}
-          </p>
+          <p style={{ fontSize: 11, color: '#64748b', lineHeight: 1.6, margin: '0 0 8px', display: '-webkit-box', WebkitLineClamp: 2, WebkitBoxOrient: 'vertical', overflow: 'hidden', flex: 1 }}>{provider.description}</p>
         )}
         {chips.length > 0 && (
           <div style={{ display: 'flex', flexWrap: 'wrap', gap: 4, marginBottom: 10 }}>
-            {chips.map(s => (
-              <span key={s} style={{ fontSize: 9, fontWeight: 600, padding: '2px 7px', borderRadius: 20, background: '#eef3fb', color: '#1B3A6B', border: '1px solid #d5e2f5' }}>{s}</span>
-            ))}
+            {chips.map(s => <span key={s} style={{ fontSize: 9, fontWeight: 600, padding: '2px 7px', borderRadius: 20, background: '#eef3fb', color: '#1B3A6B', border: '1px solid #d5e2f5' }}>{s}</span>)}
           </div>
         )}
         <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', gap: 8, marginTop: 'auto' }}>
-          <div style={{ fontSize: 11, color: '#94a3b8', overflow: 'hidden', whiteSpace: 'nowrap', textOverflow: 'ellipsis' }}>
-            📍 {provider.city || provider.district}
-          </div>
+          <div style={{ fontSize: 11, color: '#94a3b8', overflow: 'hidden', whiteSpace: 'nowrap', textOverflow: 'ellipsis' }}>📍 {provider.city || provider.district}</div>
           {waLink && (
             <a href={waLink} target="_blank" rel="noopener noreferrer" onClick={e => e.stopPropagation()}
               style={{ flexShrink: 0, display: 'inline-flex', alignItems: 'center', gap: 4, background: '#0f172a', color: '#fff', borderRadius: 10, padding: '8px 13px', fontSize: 11, fontWeight: 700, textDecoration: 'none', whiteSpace: 'nowrap' }}>
-              View Shop <span style={{ fontSize: 12 }}>›</span>
+              {T.viewShop}
             </a>
           )}
         </div>
@@ -152,8 +249,8 @@ function ShopCard({ provider, onClick }) {
   )
 }
 
-// Tiler profile card
-function TilerCard({ tiler, onClick }) {
+// ─── Tiler card ────────────────────────────────────────────────────────────────
+function TilerCard({ tiler, onClick, T }) {
   const phone = tiler.whatsapp || tiler.phone
   const altWaPhone = (tiler.whatsapp && tiler.whatsapp !== tiler.phone) ? tiler.phone : null
   const isVerified = tiler.is_verified
@@ -162,68 +259,35 @@ function TilerCard({ tiler, onClick }) {
   return (
     <div
       onClick={() => onClick(tiler)}
-      style={{
-        background: '#fff',
-        borderRadius: 20,
-        border: '1px solid #e8edf5',
-        overflow: 'hidden',
-        cursor: 'pointer',
-        transition: 'all 0.2s',
-        boxShadow: '0 2px 12px rgba(0,0,0,0.06)',
-        display: 'flex',
-        flexDirection: 'column',
-      }}
+      style={{ background: '#fff', borderRadius: 20, border: '1px solid #e8edf5', overflow: 'hidden', cursor: 'pointer', transition: 'all 0.2s', boxShadow: '0 2px 12px rgba(0,0,0,0.06)', display: 'flex', flexDirection: 'column' }}
       onMouseOver={e => { e.currentTarget.style.transform = 'translateY(-4px)'; e.currentTarget.style.boxShadow = '0 16px 40px rgba(0,0,0,0.12)' }}
       onMouseOut={e => { e.currentTarget.style.transform = ''; e.currentTarget.style.boxShadow = '0 2px 12px rgba(0,0,0,0.06)' }}
     >
-      {/* ── Cover placeholder ── */}
       <div style={{ height: 200, position: 'relative', overflow: 'hidden', flexShrink: 0 }}>
-        <div style={{
-          width: '100%', height: '100%',
-          background: '#f8fafc',
-          backgroundImage: 'repeating-linear-gradient(0deg,transparent,transparent 39px,#e2e8f0 39px,#e2e8f0 40px),repeating-linear-gradient(90deg,transparent,transparent 39px,#e2e8f0 39px,#e2e8f0 40px)',
-          display: 'flex', alignItems: 'center', justifyContent: 'center',
-        }}>
-          <span style={{ fontSize: 40, opacity: 0.15 }}>🪨</span>
-        </div>
-
-        {/* Verified / Community badge */}
+        {tiler.cover_image ? (
+          <img src={tiler.cover_image} alt={tiler.full_name} style={{ width: '100%', height: '100%', objectFit: 'cover' }} />
+        ) : (
+          <div style={{ width: '100%', height: '100%', background: '#f8fafc', backgroundImage: 'repeating-linear-gradient(0deg,transparent,transparent 39px,#e2e8f0 39px,#e2e8f0 40px),repeating-linear-gradient(90deg,transparent,transparent 39px,#e2e8f0 39px,#e2e8f0 40px)', display: 'flex', alignItems: 'center', justifyContent: 'center' }}>
+            <span style={{ fontSize: 40, opacity: 0.15 }}>🪨</span>
+          </div>
+        )}
         {isVerified ? (
-          <div style={{
-            position: 'absolute', top: 12, right: 12,
-            background: 'rgba(255,255,255,0.96)', color: '#16a34a',
-            border: '1px solid rgba(22,163,74,0.22)', borderRadius: 20,
-            padding: '5px 12px', fontSize: 11, fontWeight: 700,
-            display: 'flex', alignItems: 'center', gap: 5,
-            boxShadow: '0 2px 8px rgba(0,0,0,0.08)',
-            backdropFilter: 'blur(8px)',
-          }}>
-            🛡️ Verified
+          <div style={{ position: 'absolute', top: 12, right: 12, background: 'rgba(255,255,255,0.96)', color: '#16a34a', border: '1px solid rgba(22,163,74,0.22)', borderRadius: 20, padding: '5px 12px', fontSize: 11, fontWeight: 700, display: 'flex', alignItems: 'center', gap: 5, boxShadow: '0 2px 8px rgba(0,0,0,0.08)', backdropFilter: 'blur(8px)' }}>
+            {T.verified}
           </div>
         ) : (
-          <div style={{
-            position: 'absolute', top: 12, right: 12,
-            background: 'rgba(255,255,255,0.88)', color: '#64748b',
-            border: '1px solid rgba(0,0,0,0.08)', borderRadius: 20,
-            padding: '5px 12px', fontSize: 11, fontWeight: 600,
-            backdropFilter: 'blur(8px)',
-          }}>
-            Community
+          <div style={{ position: 'absolute', top: 12, right: 12, background: 'rgba(255,255,255,0.88)', color: '#64748b', border: '1px solid rgba(0,0,0,0.08)', borderRadius: 20, padding: '5px 12px', fontSize: 11, fontWeight: 600, backdropFilter: 'blur(8px)' }}>
+            {T.community}
           </div>
         )}
       </div>
 
-      {/* ── Card body ── */}
       <div style={{ padding: '16px 18px 18px', flex: 1, display: 'flex', flexDirection: 'column' }}>
-
-        {/* Name + rate */}
         <div style={{ display: 'flex', alignItems: 'flex-start', justifyContent: 'space-between', gap: 8, marginBottom: 6 }}>
-          <div style={{ fontFamily: "'Playfair Display',serif", fontSize: 20, fontWeight: 700, color: '#0f172a', lineHeight: 1.2, flex: 1, minWidth: 0 }}>
-            {tiler.full_name}
-          </div>
+          <div style={{ fontFamily: "'Playfair Display',serif", fontSize: 20, fontWeight: 700, color: '#0f172a', lineHeight: 1.2, flex: 1, minWidth: 0 }}>{tiler.full_name}</div>
           {tiler.daily_rate_min && (
             <div style={{ textAlign: 'right', flexShrink: 0 }}>
-              <div style={{ fontSize: 10, color: '#94a3b8', lineHeight: 1 }}>From</div>
+              <div style={{ fontSize: 10, color: '#94a3b8', lineHeight: 1 }}>{T.from}</div>
               <div style={{ fontSize: 17, fontWeight: 800, color: '#0f172a', lineHeight: 1.3 }}>
                 Rs.{tiler.daily_rate_min}<span style={{ fontSize: 11, fontWeight: 500 }}>/sqft</span>
               </div>
@@ -231,7 +295,6 @@ function TilerCard({ tiler, onClick }) {
           )}
         </div>
 
-        {/* Rating */}
         {tiler.avg_rating > 0 && (
           <div style={{ display: 'flex', alignItems: 'center', gap: 5, marginBottom: 10 }}>
             <span style={{ color: '#f59e0b', fontSize: 15 }}>★</span>
@@ -239,26 +302,19 @@ function TilerCard({ tiler, onClick }) {
           </div>
         )}
 
-        {/* Bio / notice */}
         {tiler.bio ? (
-          <p style={{ fontSize: 13, color: '#64748b', lineHeight: 1.65, margin: '0 0 14px', display: '-webkit-box', WebkitLineClamp: 2, WebkitBoxOrient: 'vertical', overflow: 'hidden', flex: 1 }}>
-            {tiler.bio}
-          </p>
+          <p style={{ fontSize: 13, color: '#64748b', lineHeight: 1.65, margin: '0 0 14px', display: '-webkit-box', WebkitLineClamp: 2, WebkitBoxOrient: 'vertical', overflow: 'hidden', flex: 1 }}>{tiler.bio}</p>
         ) : !isVerified ? (
-          <p style={{ fontSize: 12, color: '#94a3b8', lineHeight: 1.6, margin: '0 0 14px', fontStyle: 'italic', flex: 1 }}>
-            Community-submitted profile — not yet verified by TilersHub.
-          </p>
+          <p style={{ fontSize: 12, color: '#94a3b8', lineHeight: 1.6, margin: '0 0 14px', fontStyle: 'italic', flex: 1 }}>{T.communityProfile}</p>
         ) : <div style={{ flex: 1 }} />}
 
-        {/* Divider */}
         <div style={{ height: 1, background: '#f1f5f9', margin: '0 0 12px' }} />
 
-        {/* Bottom row */}
         <div style={{ display: 'flex', alignItems: 'center', gap: 14, flexWrap: 'wrap' }}>
           {tiler.experience_years > 0 && (
             <div style={{ display: 'flex', alignItems: 'center', gap: 5, fontSize: 12, color: '#64748b' }}>
               <span style={{ color: '#16a34a' }}>🛡️</span>
-              {tiler.experience_years}+ Yrs Experience
+              {tiler.experience_years}+ {T.yrsExp}
             </div>
           )}
           {(tiler.city || tiler.district) && (
@@ -267,25 +323,23 @@ function TilerCard({ tiler, onClick }) {
               {tiler.city || tiler.district}
             </div>
           )}
-
           {hasDedicatedPage ? (
             <a href={`/tilers/${tiler.slug}`} onClick={e => e.stopPropagation()}
               style={{ marginLeft: 'auto', flexShrink: 0, display: 'inline-flex', alignItems: 'center', gap: 6, background: '#0f172a', color: '#fff', borderRadius: 12, padding: '10px 18px', fontSize: 13, fontWeight: 700, textDecoration: 'none', whiteSpace: 'nowrap' }}>
-              View Profile <span style={{ fontSize: 15 }}>›</span>
+              {T.viewProfile} <span style={{ fontSize: 15 }}>›</span>
             </a>
           ) : phone ? (
             <a href={buildWhatsAppLink(phone, tiler.full_name)} target="_blank" rel="noopener noreferrer" onClick={e => e.stopPropagation()}
               style={{ marginLeft: 'auto', flexShrink: 0, display: 'inline-flex', alignItems: 'center', gap: 6, background: '#25D366', color: '#fff', borderRadius: 12, padding: '10px 18px', fontSize: 13, fontWeight: 700, textDecoration: 'none' }}>
-              💬 WhatsApp
+              {T.whatsapp}
             </a>
           ) : null}
         </div>
 
-        {/* Alt number */}
         {altWaPhone && (
           <a href={buildWhatsAppLink(altWaPhone, tiler.full_name)} target="_blank" rel="noopener noreferrer" onClick={e => e.stopPropagation()}
             style={{ display: 'flex', alignItems: 'center', justifyContent: 'center', gap: 5, marginTop: 8, background: '#f0fdf4', color: '#16a34a', borderRadius: 10, padding: '7px 12px', fontSize: 11, fontWeight: 700, textDecoration: 'none', border: '1px solid #bbf7d0' }}>
-            💬 Alt. Number
+            {T.altNumber}
           </a>
         )}
       </div>
@@ -293,21 +347,19 @@ function TilerCard({ tiler, onClick }) {
   )
 }
 
-function ProviderModal({ item, isTiler, onClose }) {
+// ─── Profile modal ─────────────────────────────────────────────────────────────
+function ProviderModal({ item, isTiler, onClose, T }) {
   if (!item) return null
   const name = isTiler ? item.full_name : item.name
   const phone = isTiler ? (item.whatsapp || item.phone) : (item.whatsapp || item.phone)
   const altWaPhone = isTiler && item.whatsapp && item.phone && item.whatsapp !== item.phone ? item.phone : null
   const pts = !isTiler && PROVIDER_TYPES.find(p => p.value === item.provider_type)
-  const coverBg = isTiler ? '#1B3A6B' : '#0f2444'
-
-  const coverImage = isTiler ? item.cover_image : item.cover_image
   const avatarImage = isTiler ? item.avatar_url : item.profile_image
+  const coverImage  = item.cover_image
 
   return (
     <div style={{ position: 'fixed', inset: 0, background: 'rgba(0,0,0,0.55)', backdropFilter: 'blur(4px)', zIndex: 400, display: 'flex', alignItems: 'center', justifyContent: 'center', padding: 16 }} onClick={onClose}>
       <div style={{ background: '#fff', borderRadius: 20, width: '100%', maxWidth: 520, maxHeight: '90vh', overflowY: 'auto' }} onClick={e => e.stopPropagation()}>
-        {/* Modal cover */}
         <div style={{ height: 160, position: 'relative', borderRadius: '20px 20px 0 0', overflow: 'hidden' }}>
           {coverImage
             ? <img src={coverImage} alt={name} style={{ width: '100%', height: '100%', objectFit: 'cover' }} />
@@ -317,83 +369,72 @@ function ProviderModal({ item, isTiler, onClose }) {
               </>
           }
           {coverImage && <div style={{ position: 'absolute', inset: 0, background: 'linear-gradient(to top, rgba(0,0,0,0.5) 0%, transparent 60%)' }} />}
-          {/* Close button */}
           <button onClick={onClose} style={{ position: 'absolute', top: 12, right: 12, background: 'rgba(0,0,0,0.35)', border: 'none', borderRadius: '50%', width: 34, height: 34, cursor: 'pointer', fontSize: 16, color: '#fff', display: 'flex', alignItems: 'center', justifyContent: 'center', backdropFilter: 'blur(4px)' }}>✕</button>
         </div>
 
-        {/* Avatar overlapping cover */}
-        <div style={{ position: 'relative', paddingTop: 0 }}>
-          <div style={{ position: 'absolute', top: -32, left: 24, width: 64, height: 64, borderRadius: '50%', border: '3px solid #fff', background: isTiler ? coverBg : '#1B3A6B', display: 'flex', alignItems: 'center', justifyContent: 'center', fontSize: 22, fontWeight: 700, color: '#fff', overflow: 'hidden', boxShadow: '0 2px 12px rgba(0,0,0,0.18)' }}>
-            {avatarImage
-              ? <img src={avatarImage} alt={name} style={{ width: '100%', height: '100%', objectFit: 'cover' }} />
-              : initials(name)
-            }
+        <div style={{ position: 'relative' }}>
+          <div style={{ position: 'absolute', top: -32, left: 24, width: 64, height: 64, borderRadius: '50%', border: '3px solid #fff', background: '#1B3A6B', display: 'flex', alignItems: 'center', justifyContent: 'center', fontSize: 22, fontWeight: 700, color: '#fff', overflow: 'hidden', boxShadow: '0 2px 12px rgba(0,0,0,0.18)' }}>
+            {avatarImage ? <img src={avatarImage} alt={name} style={{ width: '100%', height: '100%', objectFit: 'cover' }} /> : initials(name)}
           </div>
         </div>
 
         <div style={{ padding: '10px 24px 24px', paddingTop: 40 }}>
-          {/* Name & location */}
           <div style={{ marginBottom: 14 }}>
             <div style={{ fontSize: 20, fontWeight: 700, color: '#0f172a', marginBottom: 3 }}>{name}</div>
             <div style={{ fontSize: 13, color: '#64748b' }}>📍 {item.city || item.district}{item.district && item.city ? `, ${item.district}` : ''}</div>
           </div>
 
-          {/* Badges */}
           <div style={{ display: 'flex', flexWrap: 'wrap', gap: 6, marginBottom: 16 }}>
             {!isTiler && pts && <span style={{ fontSize: 11, fontWeight: 700, padding: '3px 10px', borderRadius: 20, background: '#eef3fb', color: '#1B3A6B' }}>{pts.icon} {pts.label}</span>}
-            {isTiler && item.is_verified && <span style={{ fontSize: 11, fontWeight: 700, padding: '3px 10px', borderRadius: 20, background: '#f0fdf4', color: '#16a34a', border: '1px solid #bbf7d0' }}>✓ Skilled</span>}
-            {isTiler && !item.is_verified && <span style={{ fontSize: 11, fontWeight: 700, padding: '3px 10px', borderRadius: 20, background: '#f8fafc', color: '#94a3b8', border: '1px solid #e2e8f0' }}>Unverified</span>}
+            {isTiler && item.is_verified && <span style={{ fontSize: 11, fontWeight: 700, padding: '3px 10px', borderRadius: 20, background: '#f0fdf4', color: '#16a34a', border: '1px solid #bbf7d0' }}>{T.skilled}</span>}
+            {isTiler && !item.is_verified && <span style={{ fontSize: 11, fontWeight: 700, padding: '3px 10px', borderRadius: 20, background: '#f8fafc', color: '#94a3b8', border: '1px solid #e2e8f0' }}>{T.unverified}</span>}
             {!isTiler && <VerificationBadge status={item.verification_status} />}
           </div>
 
-          {/* Unverified notice */}
           {isTiler && !item.is_verified && (
             <div style={{ fontSize: 12, color: '#78716c', background: '#fef9f0', border: '1px solid #fde68a', borderRadius: 10, padding: '10px 14px', marginBottom: 16, lineHeight: 1.6 }}>
-              ℹ️ This profile was added from community-submitted information and has not yet been verified by TILERSHUB.
+              {T.unverifiedNotice}
             </div>
           )}
 
-          {/* Bio / Description */}
           {(isTiler ? item.bio : item.description) && (
             <p style={{ fontSize: 13, color: '#475569', lineHeight: 1.75, marginBottom: 18, padding: 14, background: '#f8fafc', borderRadius: 10 }}>
               {isTiler ? item.bio : item.description}
             </p>
           )}
 
-          {/* Stats (tilers only) */}
           {isTiler && (item.experience_years || item.total_jobs || item.daily_rate_min) && (
             <div style={{ display: 'flex', gap: 10, marginBottom: 18, flexWrap: 'wrap' }}>
               {item.experience_years > 0 && (
                 <div style={{ padding: '10px 16px', background: '#f8fafc', borderRadius: 10, border: '1px solid #e2e8f0', textAlign: 'center', flex: 1 }}>
                   <div style={{ fontSize: 17, fontWeight: 700, color: '#1B3A6B' }}>{item.experience_years}+</div>
-                  <div style={{ fontSize: 10, color: '#94a3b8' }}>Years Exp.</div>
+                  <div style={{ fontSize: 10, color: '#94a3b8' }}>{T.yearsExpLabel}</div>
                 </div>
               )}
               {item.total_jobs > 0 && (
                 <div style={{ padding: '10px 16px', background: '#f8fafc', borderRadius: 10, border: '1px solid #e2e8f0', textAlign: 'center', flex: 1 }}>
                   <div style={{ fontSize: 17, fontWeight: 700, color: '#1B3A6B' }}>{item.total_jobs}</div>
-                  <div style={{ fontSize: 10, color: '#94a3b8' }}>Jobs Done</div>
+                  <div style={{ fontSize: 10, color: '#94a3b8' }}>{T.jobsDoneLabel}</div>
                 </div>
               )}
               {item.daily_rate_min && (
                 <div style={{ padding: '10px 16px', background: '#f8fafc', borderRadius: 10, border: '1px solid #e2e8f0', textAlign: 'center', flex: 1 }}>
                   <div style={{ fontSize: 13, fontWeight: 700, color: '#1B3A6B' }}>Rs.{item.daily_rate_min}–{item.daily_rate_max || '?'}</div>
-                  <div style={{ fontSize: 10, color: '#94a3b8' }}>Per sq.ft</div>
+                  <div style={{ fontSize: 10, color: '#94a3b8' }}>{T.perSqftLabel}</div>
                 </div>
               )}
               {item.avg_rating > 0 && (
                 <div style={{ padding: '10px 16px', background: '#fffbeb', borderRadius: 10, border: '1px solid #fde68a', textAlign: 'center', flex: 1 }}>
                   <div style={{ fontSize: 17, fontWeight: 700, color: '#92400e' }}>⭐ {item.avg_rating.toFixed(1)}</div>
-                  <div style={{ fontSize: 10, color: '#94a3b8' }}>{item.review_count || 0} reviews</div>
+                  <div style={{ fontSize: 10, color: '#94a3b8' }}>{T.reviewsLabel(item.review_count || 0)}</div>
                 </div>
               )}
             </div>
           )}
 
-          {/* Services */}
           {(item.services || []).length > 0 && (
             <div style={{ marginBottom: 18 }}>
-              <div style={{ fontSize: 11, fontWeight: 700, color: '#94a3b8', letterSpacing: 1, textTransform: 'uppercase', marginBottom: 8 }}>Services</div>
+              <div style={{ fontSize: 11, fontWeight: 700, color: '#94a3b8', letterSpacing: 1, textTransform: 'uppercase', marginBottom: 8 }}>{T.servicesLabel}</div>
               <div style={{ display: 'flex', flexWrap: 'wrap', gap: 6 }}>
                 {(item.services || []).map(s => (
                   <span key={s} style={{ fontSize: 12, padding: '4px 10px', borderRadius: 20, background: '#eef3fb', color: '#1B3A6B', border: '1px solid #d5e2f5' }}>{s}</span>
@@ -402,40 +443,48 @@ function ProviderModal({ item, isTiler, onClose }) {
             </div>
           )}
 
-          {/* Portfolio */}
-          {(item.gallery || item.photo_urls || []).length > 0 && (() => {
+          {(() => {
             const imgs = item.gallery || item.photo_urls || []
+            if (!imgs.length) return null
             return (
               <div style={{ marginBottom: 18 }}>
-                <div style={{ fontSize: 11, fontWeight: 700, color: '#94a3b8', letterSpacing: 1, textTransform: 'uppercase', marginBottom: 8 }}>Portfolio</div>
+                <div style={{ fontSize: 11, fontWeight: 700, color: '#94a3b8', letterSpacing: 1, textTransform: 'uppercase', marginBottom: 8 }}>{T.portfolioLabel}</div>
                 <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fill, minmax(90px, 1fr))', gap: 6 }}>
-                  {imgs.map((img, i) => (
-                    <img key={i} src={img} alt="" style={{ width: '100%', aspectRatio: '1', borderRadius: 8, objectFit: 'cover', border: '1px solid #e2e8f0' }} />
-                  ))}
+                  {imgs.map((img, i) => <img key={i} src={img} alt="" style={{ width: '100%', aspectRatio: '1', borderRadius: 8, objectFit: 'cover', border: '1px solid #e2e8f0' }} />)}
                 </div>
               </div>
             )
           })()}
 
-          {/* Contact buttons */}
+          {(item.service_areas || []).length > 0 && (
+            <div style={{ marginBottom: 18 }}>
+              <div style={{ fontSize: 11, fontWeight: 700, color: '#94a3b8', letterSpacing: 1, textTransform: 'uppercase', marginBottom: 8 }}>{T.serviceAreasLabel}</div>
+              <div style={{ display: 'flex', flexWrap: 'wrap', gap: 6 }}>
+                {(item.service_areas || []).map(a => (
+                  <span key={a} style={{ fontSize: 11, padding: '3px 9px', borderRadius: 20, background: '#f1f5f9', color: '#334155' }}>{a}</span>
+                ))}
+              </div>
+            </div>
+          )}
+
           <div style={{ display: 'flex', gap: 10 }}>
             {phone && (
               <a href={buildWhatsAppLink(phone, name)} target="_blank" rel="noopener noreferrer"
                 style={{ flex: 1, display: 'flex', alignItems: 'center', justifyContent: 'center', gap: 8, background: '#25D366', color: '#fff', borderRadius: 12, padding: 13, fontSize: 14, fontWeight: 700, textDecoration: 'none' }}>
-                💬 WhatsApp
+                {T.whatsapp}
               </a>
             )}
             {item.phone && (
               <a href={`tel:${item.phone}`}
                 style={{ display: 'flex', alignItems: 'center', justifyContent: 'center', gap: 6, background: '#eef3fb', color: '#1B3A6B', borderRadius: 12, padding: '13px 20px', fontSize: 14, fontWeight: 700, textDecoration: 'none', border: '1px solid #d5e2f5' }}>
-                📞 Call
+                {T.call}
               </a>
             )}
           </div>
           {altWaPhone && (
             <a href={buildWhatsAppLink(altWaPhone, name)} target="_blank" rel="noopener noreferrer"
               style={{ display: 'flex', alignItems: 'center', justifyContent: 'center', gap: 8, width: '100%', marginTop: 8, background: '#f0fdf4', color: '#16a34a', border: '1px solid #bbf7d0', borderRadius: 12, padding: 11, fontSize: 13, fontWeight: 700, textDecoration: 'none' }}>
-              💬 Alt. Number
+              {T.altNumber}
             </a>
           )}
         </div>
@@ -444,6 +493,7 @@ function ProviderModal({ item, isTiler, onClose }) {
   )
 }
 
+// ─── Suggested content (empty state) ──────────────────────────────────────────
 const TYPE_INFO_CARDS = {
   workshop: [
     { icon: '🔪', title: 'Tile Cutting', body: 'Straight cuts, bevel edges and L-shapes for perfect fits on any site.' },
@@ -482,32 +532,30 @@ const TYPE_INFO_CARDS = {
   ],
 }
 
-function SuggestedContent({ type, tilers, providers, onSelectTiler, onSelectProvider }) {
+function SuggestedContent({ type, tilers, providers, onSelectTiler, onSelectProvider, T }) {
   const infoCards = TYPE_INFO_CARDS[type] || []
   const otherProviders = providers.filter(p => p.provider_type !== type).slice(0, 3)
-  const typeLabel = TYPE_LABELS[type] || 'Providers'
+  const typeLabel = TYPE_LABELS_EN[type] || type || 'Providers'
 
   return (
     <div>
-      {/* Empty notice */}
       <div style={{ background: '#fff', borderRadius: 16, border: '2px dashed #e2e8f0', padding: '36px 24px', textAlign: 'center', marginBottom: 36 }}>
         <div style={{ fontSize: 44, marginBottom: 12 }}>🏗️</div>
         <h3 style={{ fontSize: 18, fontWeight: 700, color: '#0f172a', marginBottom: 8 }}>
-          No {typeLabel} listed yet
+          {T.noTypeListed(typeLabel)}
         </h3>
         <p style={{ fontSize: 13, color: '#64748b', marginBottom: 20, maxWidth: 360, margin: '0 auto 20px' }}>
-          We're onboarding {typeLabel.toLowerCase()} now. Be the first to list yours — free, direct WhatsApp leads.
+          {T.noTypeHint(typeLabel)}
         </p>
         <a href="/join-tilershub" style={{ display: 'inline-flex', alignItems: 'center', gap: 7, background: '#E05A2B', color: '#fff', borderRadius: 10, padding: '10px 22px', fontSize: 13, fontWeight: 700, textDecoration: 'none' }}>
-          ✅ Join as {typeLabel.replace(/s$/, '')}
+          {T.joinAs(typeLabel)}
         </a>
       </div>
 
-      {/* Info cards about what this type does */}
       {infoCards.length > 0 && (
         <div style={{ marginBottom: 36 }}>
           <div style={{ fontSize: 12, fontWeight: 700, color: '#94a3b8', textTransform: 'uppercase', letterSpacing: 1, marginBottom: 14 }}>
-            What {typeLabel} Do
+            {T.whatTheyDo(typeLabel)}
           </div>
           <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fill, minmax(220px, 1fr))', gap: 12 }}>
             {infoCards.map(c => (
@@ -521,20 +569,14 @@ function SuggestedContent({ type, tilers, providers, onSelectTiler, onSelectProv
         </div>
       )}
 
-
-      {/* Other providers */}
       {otherProviders.length > 0 && (
         <div>
           <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', marginBottom: 14 }}>
-            <div style={{ fontSize: 12, fontWeight: 700, color: '#94a3b8', textTransform: 'uppercase', letterSpacing: 1 }}>
-              🏪 Other Providers
-            </div>
-            <a href="/providers" style={{ fontSize: 12, color: '#1B3A6B', fontWeight: 600, textDecoration: 'none' }}>See all →</a>
+            <div style={{ fontSize: 12, fontWeight: 700, color: '#94a3b8', textTransform: 'uppercase', letterSpacing: 1 }}>{T.otherProviders}</div>
+            <a href="/providers" style={{ fontSize: 12, color: '#1B3A6B', fontWeight: 600, textDecoration: 'none' }}>{T.seeAll}</a>
           </div>
           <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fill, minmax(280px, 1fr))', gap: 16 }}>
-            {otherProviders.map(p => (
-              <ProviderCard key={p.id} provider={p} onClick={onSelectProvider} />
-            ))}
+            {otherProviders.map(p => <ProviderCard key={p.id} provider={p} onClick={onSelectProvider} T={T} />)}
           </div>
         </div>
       )}
@@ -542,15 +584,19 @@ function SuggestedContent({ type, tilers, providers, onSelectTiler, onSelectProv
   )
 }
 
+// ─── Main component ────────────────────────────────────────────────────────────
 export default function ProviderDirectory({ initialType, initialSearch }) {
-  const [tilers, setTilers] = useState([])
+  const [lang, toggleLang] = useLang()
+  const T = TRANS[lang]
+
+  const [tilers,    setTilers]    = useState([])
   const [providers, setProviders] = useState([])
-  const [loading, setLoading] = useState(true)
+  const [loading,   setLoading]   = useState(true)
   const [inputValue, setInputValue] = useState(initialSearch || '')
-  const [search, setSearch] = useState(initialSearch || '')
-  const [district, setDistrict] = useState('')
-  const [type, setType] = useState(initialType || '')
-  const [selected, setSelected] = useState(null)
+  const [search,    setSearch]    = useState(initialSearch || '')
+  const [district,  setDistrict]  = useState('')
+  const [type,      setType]      = useState(initialType || '')
+  const [selected,  setSelected]  = useState(null)
   const [isTilerSelected, setIsTilerSelected] = useState(false)
   const debounceRef = useRef(null)
 
@@ -568,7 +614,7 @@ export default function ProviderDirectory({ initialType, initialSearch }) {
     load()
   }, [])
 
-  const showTilers = !type || type === 'tiler'
+  const showTilers    = !type || type === 'tiler'
   const showProviders = !type || type === 'provider'
 
   const filteredTilers = showTilers ? tilers.filter(t => {
@@ -591,18 +637,21 @@ export default function ProviderDirectory({ initialType, initialSearch }) {
 
   const total = filteredTilers.length + filteredProviders.length
 
-  // All tilers, verified first then by experience
-  const gridTilers = filteredTilers
-    .sort((a, b) => {
-      if (a.is_verified !== b.is_verified) return (b.is_verified ? 1 : 0) - (a.is_verified ? 1 : 0)
-      return (b.experience_years || 0) - (a.experience_years || 0)
-    })
+  const gridTilers = filteredTilers.sort((a, b) => {
+    if (a.is_verified !== b.is_verified) return (b.is_verified ? 1 : 0) - (a.is_verified ? 1 : 0)
+    return (b.experience_years || 0) - (a.experience_years || 0)
+  })
+
+  const clearLabel = type && !inputValue && !district
+    ? (lang === 'si' ? TYPE_LABELS_SI[type] : TYPE_LABELS_EN[type]) || type
+    : null
 
   return (
     <div style={{ background: '#f8fafc', minHeight: '60vh' }}>
       {/* Sticky filter bar */}
       <div style={{ background: '#fff', borderBottom: '1px solid #e2e8f0', padding: '16px 0', position: 'sticky', top: 64, zIndex: 100, boxShadow: '0 2px 8px rgba(0,0,0,0.04)' }}>
         <div style={{ maxWidth: 1100, margin: '0 auto', padding: '0 20px', display: 'flex', gap: 10, flexWrap: 'wrap', alignItems: 'center' }}>
+          {/* Search */}
           <div style={{ position: 'relative', flex: '1 1 200px', minWidth: 160 }}>
             <span style={{ position: 'absolute', left: 10, top: '50%', transform: 'translateY(-50%)', fontSize: 14, pointerEvents: 'none' }}>🔍</span>
             <input
@@ -613,27 +662,38 @@ export default function ProviderDirectory({ initialType, initialSearch }) {
                 clearTimeout(debounceRef.current)
                 debounceRef.current = setTimeout(() => setSearch(val), 280)
               }}
-              placeholder="Search by name, service..."
+              placeholder={T.searchPh}
               style={{ width: '100%', padding: '9px 12px 9px 32px', border: '1.5px solid #e2e8f0', borderRadius: 10, fontSize: 13, outline: 'none', fontFamily: 'inherit' }}
               onFocus={e => e.target.style.borderColor = '#1B3A6B'}
               onBlur={e => e.target.style.borderColor = '#e2e8f0'}
             />
           </div>
+
+          {/* Type filter */}
           <select value={type} onChange={e => setType(e.target.value)} style={{ padding: '9px 12px', border: '1.5px solid #e2e8f0', borderRadius: 10, fontSize: 13, outline: 'none', background: '#fff', fontFamily: 'inherit', cursor: 'pointer' }}>
-            <option value="">All</option>
-            <option value="tiler">🪚 Tilers</option>
-            <option value="provider">👷 Providers</option>
+            <option value="">{T.all}</option>
+            <option value="tiler">{T.tilersOpt}</option>
+            <option value="provider">{T.providersOpt}</option>
           </select>
+
+          {/* District filter */}
           <select value={district} onChange={e => setDistrict(e.target.value)} style={{ padding: '9px 12px', border: '1.5px solid #e2e8f0', borderRadius: 10, fontSize: 13, outline: 'none', background: '#fff', fontFamily: 'inherit', cursor: 'pointer' }}>
-            <option value="">All Districts</option>
-            {DISTRICTS_EN.map(d => <option key={d} value={d}>{d}</option>)}
+            <option value="">{T.allDistricts}</option>
+            {DISTRICTS_EN.map((d, i) => (
+              <option key={d} value={d}>{lang === 'si' ? DISTRICTS[i] : d}</option>
+            ))}
           </select>
+
           {(inputValue || type || district) && (
             <button onClick={() => { setInputValue(''); setSearch(''); setType(''); setDistrict('') }} style={{ padding: '9px 14px', background: '#fee2e2', color: '#dc2626', border: 'none', borderRadius: 10, fontSize: 12, fontWeight: 600, cursor: 'pointer' }}>
-              ✕ {type && !inputValue && !district ? `Clear (${TYPE_LABELS[type] || type})` : 'Clear'}
+              {T.clear(clearLabel)}
             </button>
           )}
-          <span style={{ fontSize: 12, color: '#94a3b8', marginLeft: 'auto' }}>{total} found</span>
+
+          <span style={{ fontSize: 12, color: '#94a3b8', marginLeft: 'auto' }}>{T.found(total)}</span>
+
+          {/* Language toggle */}
+          <LangToggle lang={lang} onToggle={toggleLang} />
         </div>
       </div>
 
@@ -641,51 +701,47 @@ export default function ProviderDirectory({ initialType, initialSearch }) {
         {loading ? (
           <div style={{ textAlign: 'center', padding: '80px 0', color: '#94a3b8' }}>
             <div style={{ fontSize: 36, marginBottom: 16 }}>⏳</div>
-            <p>Loading providers...</p>
+            <p>{T.loading}</p>
           </div>
         ) : total === 0 ? (
           type && type !== 'tiler' && !search && !district ? (
             <SuggestedContent
-              type={type}
-              tilers={tilers}
-              providers={providers}
+              type={type} tilers={tilers} providers={providers}
               onSelectTiler={item => { setSelected(item); setIsTilerSelected(true) }}
               onSelectProvider={item => { setSelected(item); setIsTilerSelected(false) }}
+              T={T}
             />
           ) : (
-          <div style={{ textAlign: 'center', padding: '80px 20px', background: '#fff', borderRadius: 16, border: '1px solid #e2e8f0' }}>
-            <div style={{ fontSize: 48, marginBottom: 16 }}>🔍</div>
-            <h3 style={{ fontSize: 18, fontWeight: 700, color: '#0f172a', marginBottom: 8 }}>No results found</h3>
-            <p style={{ color: '#64748b', marginBottom: 24 }}>Try adjusting your filters or search term</p>
-            <div style={{ display: 'flex', gap: 10, justifyContent: 'center', flexWrap: 'wrap' }}>
-              {(search || district) && (
-                <button onClick={() => { setSearch(''); setInputValue(''); setDistrict('') }} style={{ padding: '10px 20px', background: '#1B3A6B', color: '#fff', border: 'none', borderRadius: 10, fontSize: 14, fontWeight: 600, cursor: 'pointer' }}>
-                  Clear Search
-                </button>
-              )}
-              <a href="/providers" style={{ padding: '10px 20px', background: '#f1f5f9', color: '#334155', borderRadius: 10, fontSize: 14, fontWeight: 600, textDecoration: 'none', display: 'inline-block' }}>
-                Browse All
-              </a>
+            <div style={{ textAlign: 'center', padding: '80px 20px', background: '#fff', borderRadius: 16, border: '1px solid #e2e8f0' }}>
+              <div style={{ fontSize: 48, marginBottom: 16 }}>🔍</div>
+              <h3 style={{ fontSize: 18, fontWeight: 700, color: '#0f172a', marginBottom: 8 }}>{T.noResults}</h3>
+              <p style={{ color: '#64748b', marginBottom: 24 }}>{T.noResultsHint}</p>
+              <div style={{ display: 'flex', gap: 10, justifyContent: 'center', flexWrap: 'wrap' }}>
+                {(search || district) && (
+                  <button onClick={() => { setSearch(''); setInputValue(''); setDistrict('') }} style={{ padding: '10px 20px', background: '#1B3A6B', color: '#fff', border: 'none', borderRadius: 10, fontSize: 14, fontWeight: 600, cursor: 'pointer' }}>
+                    {T.clearSearch}
+                  </button>
+                )}
+                <a href="/providers" style={{ padding: '10px 20px', background: '#f1f5f9', color: '#334155', borderRadius: 10, fontSize: 14, fontWeight: 600, textDecoration: 'none', display: 'inline-block' }}>
+                  {T.browseAll}
+                </a>
+              </div>
             </div>
-          </div>
           )
         ) : (
-          <>
-            {/* ── Card grid ── */}
-            <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fill, minmax(320px, 1fr))', gap: 20 }}>
-              {filteredProviders.map(p => (
-                <ProviderCard key={p.id} provider={p} onClick={item => { setSelected(item); setIsTilerSelected(false) }} />
-              ))}
-              {gridTilers.map(t => (
-                <TilerCard key={t.id} tiler={t} onClick={item => { setSelected(item); setIsTilerSelected(true) }} />
-              ))}
-            </div>
-          </>
+          <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fill, minmax(320px, 1fr))', gap: 20 }}>
+            {filteredProviders.map(p => (
+              <ProviderCard key={p.id} provider={p} T={T} onClick={item => { setSelected(item); setIsTilerSelected(false) }} />
+            ))}
+            {gridTilers.map(t => (
+              <TilerCard key={t.id} tiler={t} T={T} onClick={item => { setSelected(item); setIsTilerSelected(true) }} />
+            ))}
+          </div>
         )}
       </div>
 
       {selected && (
-        <ProviderModal item={selected} isTiler={isTilerSelected} onClose={() => setSelected(null)} />
+        <ProviderModal item={selected} isTiler={isTilerSelected} onClose={() => setSelected(null)} T={T} />
       )}
     </div>
   )
