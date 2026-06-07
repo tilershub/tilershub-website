@@ -138,55 +138,55 @@ const EXPLORE_MORE = [
     <div class="luxe-grid-bg"></div>
     <div class="luxe-glow"></div>
 
-    <div class="luxe-inner">
-      <!-- Left: branding + info -->
-      <div class="luxe-left">
-        <div class="luxe-eyebrow">◆ Signature Renovation Partner</div>
-
-        <div class="luxe-wordmark">
-          <span class="luxe-gold">LUXE</span><span class="luxe-white">home</span>
+    <div class="luxe-card">
+      <!-- Top row: eyebrow + wordmark + meta -->
+      <div class="luxe-top">
+        <div class="luxe-top-left">
+          <div class="luxe-eyebrow">◆ Signature Renovation Partner</div>
+          <div class="luxe-wordmark">
+            <span class="luxe-gold">LUXE</span><span class="luxe-white">home</span>
+          </div>
+          <div class="luxe-tagline">Premium Bathroom Construction &amp; Renovation · Islandwide</div>
         </div>
-
-        <div class="luxe-tagline">Premium Bathroom Construction &amp; Renovation</div>
-
-        <div class="luxe-meta">
-          <span class="luxe-badge">🛡️ TH Master Verified</span>
-          <span class="luxe-stat">⭐ 4.9</span>
-          <span class="luxe-stat-sep">·</span>
-          <span class="luxe-stat">47 Reviews</span>
-          <span class="luxe-stat-sep">·</span>
-          <span class="luxe-stat">12+ Yrs Experience</span>
-        </div>
-
-        <div class="luxe-chips">
-          {['🚿 Bathroom Renovation','💧 Waterproofing','🏗️ Full Construction','🛡️ 2-Year Warranty','📐 Free 3D Design'].map(s => (
-            <span class="luxe-chip">{s}</span>
-          ))}
-        </div>
-
-        <div class="luxe-actions">
-          <a
-            href="https://wa.me/94774503744?text=Hi%20LUXEhome%2C%20I%20found%20you%20on%20TilersHub.%20I%27d%20like%20a%20site%20visit%20for%20a%20bathroom%20renovation."
-            target="_blank" rel="noopener"
-            class="luxe-btn-wa"
-          >💬 Book Free Site Visit</a>
-          <a href="/sponsor/luxehome" class="luxe-btn-profile">View Full Profile →</a>
+        <div class="luxe-top-right">
+          <div class="luxe-badge">🛡️ TH Master Verified</div>
+          <div class="luxe-rating-row">
+            <span class="luxe-stars-sm">⭐⭐⭐⭐⭐</span>
+            <span class="luxe-avg">4.9</span>
+            <span class="luxe-stat-sep">·</span>
+            <span class="luxe-stat">47 Reviews</span>
+            <span class="luxe-stat-sep">·</span>
+            <span class="luxe-stat">12+ Yrs Exp</span>
+          </div>
         </div>
       </div>
 
-      <!-- Right: review highlight -->
-      <div class="luxe-right">
-        <div class="luxe-review-card">
-          <div class="luxe-review-stars">⭐⭐⭐⭐⭐</div>
-          <p class="luxe-review-text">"Exceptional service from start to finish. The 3D design was spot on, and the team executed it perfectly. Our master bathroom looks like something from a magazine."</p>
-          <div class="luxe-review-author">— Priyantha W., Colombo</div>
-          <div class="luxe-review-job">Bathroom Renovation</div>
+      <!-- Divider -->
+      <div class="luxe-divider"></div>
+
+      <!-- Middle: chips + quote side by side -->
+      <div class="luxe-mid">
+        <div class="luxe-chips-col">
+          <div class="luxe-chips">
+            {['🚿 Bathroom Renovation','💧 Waterproofing','🏗️ Full Construction','🛡️ 2-Year Warranty','📐 Free 3D Design'].map(s => (
+              <span class="luxe-chip">{s}</span>
+            ))}
+          </div>
         </div>
-        <div class="luxe-review-count">
-          <span>47 verified reviews</span>
-          <div class="luxe-stars-row">{"⭐".repeat(5)}</div>
-          <span class="luxe-avg">4.9 / 5.0</span>
+        <div class="luxe-quote-col">
+          <p class="luxe-quote">"LUXEhome transformed our bathroom into a luxury space. Flawless waterproofing and tiling — no issues after 8 months."</p>
+          <div class="luxe-quote-author">— Shehara F., Colombo · Bathroom Renovation</div>
         </div>
+      </div>
+
+      <!-- Actions -->
+      <div class="luxe-actions">
+        <a
+          href="https://wa.me/94774503744?text=Hi%20LUXEhome%2C%20I%20found%20you%20on%20TilersHub.%20I%27d%20like%20a%20site%20visit%20for%20a%20bathroom%20renovation."
+          target="_blank" rel="noopener"
+          class="luxe-btn-wa"
+        >💬 Book Free Site Visit</a>
+        <a href="/sponsor/luxehome" class="luxe-btn-profile">View Full Profile →</a>
       </div>
     </div>
   </section>
@@ -532,7 +532,7 @@ const EXPLORE_MORE = [
   position: relative;
   background: linear-gradient(135deg, #0c0804 0%, #1a120a 55%, #0c0804 100%);
   overflow: hidden;
-  padding: 32px 20px;
+  padding: 20px 16px;
   border-bottom: 1px solid rgba(212,175,55,0.15);
 }
 .luxe-grid-bg {
@@ -547,51 +547,60 @@ const EXPLORE_MORE = [
 .luxe-glow {
   position: absolute;
   top: -60px;
-  left: 30%;
+  left: 40%;
   width: 400px;
-  height: 300px;
-  background: radial-gradient(ellipse, rgba(212,175,55,0.1) 0%, transparent 70%);
+  height: 280px;
+  background: radial-gradient(ellipse, rgba(212,175,55,0.09) 0%, transparent 70%);
   pointer-events: none;
 }
-.luxe-inner {
+/* single card */
+.luxe-card {
   position: relative;
   max-width: 900px;
   margin: 0 auto;
-  display: grid;
-  grid-template-columns: 1fr 1fr;
-  gap: 32px;
-  align-items: center;
+  background: rgba(255,255,255,0.035);
+  border: 1px solid rgba(212,175,55,0.2);
+  border-radius: 18px;
+  padding: 22px 24px 20px;
+}
+/* top row */
+.luxe-top {
+  display: flex;
+  align-items: flex-start;
+  justify-content: space-between;
+  gap: 16px;
+  flex-wrap: wrap;
+  margin-bottom: 14px;
 }
 .luxe-eyebrow {
   font-size: 9px;
   font-weight: 700;
-  color: rgba(212,175,55,0.6);
+  color: rgba(212,175,55,0.55);
   letter-spacing: 2.5px;
   text-transform: uppercase;
-  margin-bottom: 12px;
+  margin-bottom: 6px;
 }
 .luxe-wordmark {
   font-family: 'Playfair Display', serif;
-  font-size: clamp(32px, 6vw, 48px);
+  font-size: clamp(26px, 5vw, 38px);
   font-weight: 700;
   line-height: 1;
-  margin-bottom: 8px;
+  margin-bottom: 4px;
   letter-spacing: -0.5px;
 }
 .luxe-gold  { color: #D4AF37; }
 .luxe-white { color: rgba(255,255,255,0.88); font-weight: 400; }
 .luxe-tagline {
-  font-size: 13px;
-  color: rgba(255,255,255,0.5);
-  margin-bottom: 14px;
+  font-size: 12px;
+  color: rgba(255,255,255,0.4);
   line-height: 1.4;
 }
-.luxe-meta {
+.luxe-top-right {
   display: flex;
-  align-items: center;
-  flex-wrap: wrap;
+  flex-direction: column;
+  align-items: flex-end;
   gap: 6px;
-  margin-bottom: 14px;
+  flex-shrink: 0;
 }
 .luxe-badge {
   font-size: 11px;
@@ -600,30 +609,58 @@ const EXPLORE_MORE = [
   background: rgba(212,175,55,0.12);
   border: 1px solid rgba(212,175,55,0.25);
   border-radius: 20px;
-  padding: 3px 10px;
+  padding: 3px 11px;
+  white-space: nowrap;
 }
-.luxe-stat { font-size: 12px; color: rgba(255,255,255,0.6); font-weight: 600; }
-.luxe-stat-sep { font-size: 12px; color: rgba(255,255,255,0.25); }
+.luxe-rating-row {
+  display: flex;
+  align-items: center;
+  gap: 5px;
+  flex-wrap: wrap;
+  justify-content: flex-end;
+}
+.luxe-stars-sm { font-size: 11px; }
+.luxe-avg   { font-size: 12px; font-weight: 700; color: #D4AF37; }
+.luxe-stat  { font-size: 11px; color: rgba(255,255,255,0.55); font-weight: 600; }
+.luxe-stat-sep { font-size: 11px; color: rgba(255,255,255,0.2); }
+/* divider */
+.luxe-divider { height: 1px; background: rgba(212,175,55,0.12); margin-bottom: 14px; }
+/* middle row: chips + quote */
+.luxe-mid {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 20px;
+  align-items: start;
+  margin-bottom: 18px;
+}
 .luxe-chips {
   display: flex;
   flex-wrap: wrap;
   gap: 6px;
-  margin-bottom: 20px;
 }
 .luxe-chip {
   font-size: 11px;
   padding: 4px 10px;
   border-radius: 20px;
-  background: rgba(212,175,55,0.08);
-  color: rgba(212,175,55,0.7);
-  border: 1px solid rgba(212,175,55,0.18);
+  background: rgba(212,175,55,0.07);
+  color: rgba(212,175,55,0.65);
+  border: 1px solid rgba(212,175,55,0.15);
   white-space: nowrap;
 }
+.luxe-quote {
+  font-size: 12px;
+  color: rgba(255,255,255,0.5);
+  line-height: 1.75;
+  font-style: italic;
+  margin-bottom: 6px;
+}
+.luxe-quote-author { font-size: 10px; color: rgba(212,175,55,0.45); }
+/* actions */
 .luxe-actions {
   display: flex;
-  gap: 10px;
-  flex-wrap: wrap;
+  gap: 12px;
   align-items: center;
+  flex-wrap: wrap;
 }
 .luxe-btn-wa {
   display: inline-flex;
@@ -632,7 +669,7 @@ const EXPLORE_MORE = [
   background: #D4AF37;
   color: #0c0804;
   border-radius: 10px;
-  padding: 11px 20px;
+  padding: 10px 20px;
   font-size: 13px;
   font-weight: 800;
   text-decoration: none;
@@ -643,44 +680,19 @@ const EXPLORE_MORE = [
 .luxe-btn-profile {
   font-size: 12px;
   font-weight: 700;
-  color: rgba(212,175,55,0.75);
+  color: rgba(212,175,55,0.7);
   text-decoration: none;
   transition: color 0.15s;
   white-space: nowrap;
 }
 .luxe-btn-profile:hover { color: #D4AF37; }
-.luxe-review-card {
-  background: rgba(255,255,255,0.04);
-  border: 1px solid rgba(212,175,55,0.15);
-  border-radius: 14px;
-  padding: 20px 22px;
-  margin-bottom: 12px;
-}
-.luxe-review-stars { font-size: 14px; margin-bottom: 10px; }
-.luxe-review-text {
-  font-size: 13px;
-  color: rgba(255,255,255,0.65);
-  line-height: 1.75;
-  margin-bottom: 12px;
-  font-style: italic;
-}
-.luxe-review-author { font-size: 12px; font-weight: 700; color: rgba(255,255,255,0.5); }
-.luxe-review-job { font-size: 10px; color: rgba(212,175,55,0.5); margin-top: 2px; }
-.luxe-review-count {
-  display: flex;
-  align-items: center;
-  gap: 10px;
-  font-size: 11px;
-  color: rgba(255,255,255,0.35);
-  padding: 0 4px;
-}
-.luxe-stars-row { font-size: 12px; }
-.luxe-avg { font-size: 12px; font-weight: 700; color: #D4AF37; }
 
-@media (max-width: 640px) {
-  .luxe-inner { grid-template-columns: 1fr; gap: 20px; }
-  .luxe-right { display: none; }
-  .luxe-banner { padding: 24px 16px; }
+@media (max-width: 580px) {
+  .luxe-mid { grid-template-columns: 1fr; gap: 12px; }
+  .luxe-quote-col { border-top: 1px solid rgba(212,175,55,0.1); padding-top: 10px; }
+  .luxe-top-right { align-items: flex-start; }
+  .luxe-rating-row { justify-content: flex-start; }
+  .luxe-card { padding: 16px; }
 }
 
 /* ── QUICK ACTIONS ───────────────────────────────────────── */
