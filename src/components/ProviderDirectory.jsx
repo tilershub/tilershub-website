@@ -145,6 +145,7 @@ function ProviderCard({ provider, onClick, T }) {
   const isVerified = VERIFIED_STATUSES.has(provider.verification_status)
   const color = avatarColor(provider.name || 'P')
   const inits = initials(provider.name || 'P')
+  const phone = provider.whatsapp || provider.phone
   return (
     <div
       onClick={() => onClick(provider)}
@@ -167,7 +168,15 @@ function ProviderCard({ provider, onClick, T }) {
         {(provider.city || provider.district) && <div style={{ fontSize: 11, color: '#94a3b8' }}>📍 {provider.city || provider.district}</div>}
         {provider.description && <div style={{ fontSize: 11, color: '#64748b', marginTop: 2, overflow: 'hidden', whiteSpace: 'nowrap', textOverflow: 'ellipsis' }}>{provider.description}</div>}
       </div>
-      <div style={{ padding: '0 14px', fontSize: 20, color: '#cbd5e1', flexShrink: 0 }}>›</div>
+      <div style={{ padding: '0 12px', flexShrink: 0 }}>
+        {phone
+          ? <a href={buildWhatsAppLink(phone, provider.name)} target="_blank" rel="noopener noreferrer" onClick={e => e.stopPropagation()}
+              style={{ display: 'inline-flex', alignItems: 'center', gap: 5, background: '#25D366', color: '#fff', borderRadius: 10, padding: '8px 12px', fontSize: 12, fontWeight: 700, textDecoration: 'none', whiteSpace: 'nowrap' }}>
+              💬 WhatsApp
+            </a>
+          : <span style={{ fontSize: 20, color: '#cbd5e1' }}>›</span>
+        }
+      </div>
     </div>
   )
 }
@@ -244,6 +253,7 @@ function TilerCard({ tiler, onClick, T }) {
   const isVerified = tiler.is_verified
   const color = avatarColor(tiler.full_name)
   const inits = initials(tiler.full_name)
+  const phone = tiler.whatsapp || tiler.phone
   return (
     <div
       onClick={() => onClick(tiler)}
@@ -269,7 +279,15 @@ function TilerCard({ tiler, onClick, T }) {
         {(tiler.city || tiler.district) && <div style={{ fontSize: 11, color: '#94a3b8' }}>📍 {tiler.city || tiler.district}</div>}
         {tiler.avg_rating > 0 && <div style={{ fontSize: 11, color: '#f59e0b', marginTop: 2 }}>⭐ {tiler.avg_rating.toFixed(1)}{tiler.experience_years > 0 ? ` · ${tiler.experience_years}+ yrs` : ''}</div>}
       </div>
-      <div style={{ padding: '0 14px', fontSize: 20, color: '#cbd5e1', flexShrink: 0 }}>›</div>
+      <div style={{ padding: '0 12px', flexShrink: 0 }}>
+        {phone
+          ? <a href={buildWhatsAppLink(phone, tiler.full_name)} target="_blank" rel="noopener noreferrer" onClick={e => e.stopPropagation()}
+              style={{ display: 'inline-flex', alignItems: 'center', gap: 5, background: '#25D366', color: '#fff', borderRadius: 10, padding: '8px 12px', fontSize: 12, fontWeight: 700, textDecoration: 'none', whiteSpace: 'nowrap' }}>
+              💬 WhatsApp
+            </a>
+          : <span style={{ fontSize: 20, color: '#cbd5e1' }}>›</span>
+        }
+      </div>
     </div>
   )
 }
