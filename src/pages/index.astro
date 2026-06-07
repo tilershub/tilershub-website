@@ -100,26 +100,26 @@ const EXPLORE_MORE = [
       <a href="/providers" class="see-all">View all →</a>
     </div>
 
-    <div class="shelf">
-      <!-- LUXEhome premium card — always first -->
-      <a href="/sponsor/luxehome" class="luxe-shelf-card" style="flex-shrink:0;">
-        <div class="luxe-shelf-cover">
-          <div class="luxe-shelf-glow"></div>
-          <div class="luxe-shelf-wordmark">
-            <span style="color:#D4AF37;">LUXE</span><span style="color:rgba(255,255,255,0.88);font-weight:400;">home</span>
-          </div>
-          <span class="luxe-shelf-badge">🛡️ TH Master</span>
+    <!-- LUXEhome featured banner — full-width horizontal card above grid -->
+    <a href="/sponsor/luxehome" class="luxe-shelf-card" style="display:flex;flex-direction:row;overflow:hidden;margin:0 16px 10px;border-radius:var(--radius-lg);">
+      <div class="luxe-shelf-cover" style="width:88px;flex-shrink:0;min-height:80px;">
+        <div class="luxe-shelf-glow"></div>
+        <div class="luxe-shelf-wordmark" style="font-size:13px;">
+          <span style="color:#D4AF37;">LUXE</span><span style="color:rgba(255,255,255,0.88);font-weight:400;">home</span>
         </div>
-        <div class="tiler-body">
-          <div class="rating">⭐ 4.9 · 47 reviews</div>
-          <div class="tiler-name" style="color:#0c0804;">LUXEhome</div>
-          <div class="tiler-meta">🏗️ 12+ Yrs · 🚿 Bathroom Reno</div>
-          <div style="display:flex;align-items:center;justify-content:center;width:100%;padding:7px;background:#D4AF37;color:#0c0804;border-radius:8px;font-size:11px;font-weight:800;margin-top:8px;">
-            View Profile →
-          </div>
+        <span class="luxe-shelf-badge" style="font-size:8px;padding:2px 6px;">🛡️ TH Master</span>
+      </div>
+      <div class="tiler-body" style="flex:1;display:flex;flex-direction:column;justify-content:center;gap:2px;">
+        <div class="rating" style="margin-bottom:0;">⭐ 4.9 · 47 reviews</div>
+        <div class="tiler-name" style="color:#0c0804;font-size:13px;">LUXEhome</div>
+        <div class="tiler-meta" style="margin-bottom:4px;">🏗️ 12+ Yrs · 🚿 Bathroom Reno</div>
+        <div style="display:inline-flex;align-items:center;padding:5px 10px;background:#D4AF37;color:#0c0804;border-radius:8px;font-size:10px;font-weight:800;align-self:flex-start;">
+          View Profile →
         </div>
-      </a>
+      </div>
+    </a>
 
+    <div class="shelf">
       {(tilers.length > 0 ? tilers : [
         { id:'p1', full_name:'Lakmal Perera',   city:'Colombo 7',  is_verified:true,  avg_rating:4.9, experience_years:12, slug:'lakmal'  },
         { id:'p2', full_name:'Chamara Silva',   city:'Kandy',      is_verified:true,  avg_rating:4.7, experience_years:8,  slug:'chamara' },
@@ -127,24 +127,24 @@ const EXPLORE_MORE = [
         { id:'p4', full_name:'Kelum Prasad',    city:'Negombo',    is_verified:true,  avg_rating:4.8, experience_years:10, slug:'kelum'   },
         { id:'p5', full_name:'Nuwan Bandara',   city:'Kurunegala', is_verified:true,  avg_rating:4.6, experience_years:7,  slug:null      },
       ]).map(t => (
-        <div class="tiler-card" style="width:186px;flex-shrink:0;">
-          <div style="height:110px;background:#f8fafc;background-image:repeating-linear-gradient(0deg,transparent,transparent 19px,#e2e8f0 19px,#e2e8f0 20px),repeating-linear-gradient(90deg,transparent,transparent 19px,#e2e8f0 19px,#e2e8f0 20px);display:flex;align-items:center;justify-content:center;position:relative;">
-            <span style="font-size:32px;opacity:0.1;">🪨</span>
-            {t.is_verified
-              ? <span class="verified-badge">✓ Skilled</span>
-              : <span class="verified-badge" style="background:#f8fafc;color:#94a3b8;border-color:#e2e8f0;">Community</span>
-            }
-          </div>
+        <div class="tiler-card">
           <div class="tiler-body">
-            {t.avg_rating > 0 && <div class="rating">⭐ {t.avg_rating.toFixed(1)}</div>}
-            <div class="tiler-name">{t.full_name}</div>
-            <div class="tiler-meta">
-              {t.experience_years > 0 ? `🛡️ ${t.experience_years}+ Yrs · ` : ''}📍 {t.city || t.district}
+            <div style="display:flex;align-items:center;gap:7px;margin-bottom:7px;">
+              <div style="width:32px;height:32px;border-radius:50%;background:#eef2fb;display:flex;align-items:center;justify-content:center;font-size:15px;flex-shrink:0;">👷</div>
+              <div style="min-width:0;">
+                <div class="tiler-name">{t.full_name}</div>
+                {t.is_verified
+                  ? <span style="font-size:8px;font-weight:700;color:#0369a1;background:#e0f2fe;border-radius:20px;padding:1px 5px;">✓ Pro</span>
+                  : <span style="font-size:8px;color:#94a3b8;background:#f1f5f9;border-radius:20px;padding:1px 5px;">Community</span>
+                }
+              </div>
             </div>
+            {t.avg_rating > 0 && <div class="rating" style="margin-bottom:3px;">⭐ {t.avg_rating.toFixed(1)}</div>}
+            <div class="tiler-meta">📍 {t.city || t.district}</div>
             <a
-              href={t.slug ? `/tilers/${t.slug}` : '/providers?type=tiler'}
-              style="display:flex;align-items:center;justify-content:center;width:100%;padding:7px;background:#0f172a;color:#fff;border-radius:8px;font-size:11px;font-weight:700;text-decoration:none;margin-top:8px;">
-              View Profile →
+              href={t.slug ? `/tilers/${t.slug}` : '/providers'}
+              style="display:flex;align-items:center;justify-content:center;width:100%;padding:6px;background:#0f172a;color:#fff;border-radius:8px;font-size:10px;font-weight:700;text-decoration:none;margin-top:6px;">
+              View →
             </a>
           </div>
         </div>
