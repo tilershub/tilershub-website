@@ -30,6 +30,17 @@ function timeAgo(dateStr) {
   return `${Math.floor(diff/30)}mo ago`
 }
 
+function initials(name: string) {
+  return name.split(' ').slice(0,2).map((w: string) => w[0] || '').join('').toUpperCase() || '?'
+}
+
+const AVATAR_COLORS = ['#1B3A6B','#0f766e','#7c3aed','#b45309','#0369a1','#E05A2B','#15803d','#be185d']
+function avatarColor(name: string) {
+  let h = 0
+  for (const c of name) h = (h * 31 + c.charCodeAt(0)) >>> 0
+  return AVATAR_COLORS[h % AVATAR_COLORS.length]
+}
+
 const TYPE_ICON: Record<string, string> = {
   'Floor Tiling':'🪨','Bathroom Tiling':'🚿','Bathroom Renovation':'🛁',
   'Granite Works':'💎','Tile Cutting':'✂️','Routering':'🔧',
@@ -57,7 +68,67 @@ const EXPLORE_MORE = [
   <!-- ① + ② HERO + QUICK ACTIONS (role-aware React island) ──── -->
   <HomeHero client:load heroImg={HERO_IMG} />
 
-  <!-- ④ HOW IT WORKS ──────────────────────────────────────── -->
+  <!-- ⑤ TOP PROVIDERS ────────────────────────────────────── -->
+  <section class="section" style="background:#fff;">
+    <div class="section-head">
+      <div class="section-title-sm">Top <span>Providers</span></div>
+      <a href="/providers" class="see-all">View all →</a>
+    </div>
+
+    <!-- LUXEhome featured banner — full-width horizontal card above grid -->
+    <a href="/sponsor/luxehome" class="luxe-shelf-card" style="display:flex;flex-direction:row;overflow:hidden;margin:0 16px 10px;border-radius:var(--radius-lg);">
+      <div class="luxe-shelf-cover" style="width:88px;flex-shrink:0;min-height:80px;">
+        <div class="luxe-shelf-glow"></div>
+        <div class="luxe-shelf-wordmark" style="font-size:13px;">
+          <span style="color:#D4AF37;">LUXE</span><span style="color:rgba(255,255,255,0.88);font-weight:400;">home</span>
+        </div>
+        <span class="luxe-shelf-badge" style="font-size:8px;padding:2px 6px;">🛡️ TH Master</span>
+      </div>
+      <div class="tiler-body" style="flex:1;display:flex;flex-direction:column;justify-content:center;gap:2px;">
+        <div class="rating" style="margin-bottom:0;">⭐ 4.9 · 47 reviews</div>
+        <div class="tiler-name" style="color:#0c0804;font-size:13px;">LUXEhome</div>
+        <div class="tiler-meta" style="margin-bottom:4px;">🏗️ 12+ Yrs · 🚿 Bathroom Reno</div>
+        <div style="display:inline-flex;align-items:center;padding:5px 10px;background:#D4AF37;color:#0c0804;border-radius:8px;font-size:10px;font-weight:800;align-self:flex-start;">
+          View Profile →
+        </div>
+      </div>
+    </a>
+
+    <div class="shelf">
+      {(tilers.length > 0 ? tilers : [
+        { id:'p1', full_name:'Lakmal Perera',   city:'Colombo 7',  is_verified:true,  avg_rating:4.9, experience_years:12, slug:'lakmal'  },
+        { id:'p2', full_name:'Chamara Silva',   city:'Kandy',      is_verified:true,  avg_rating:4.7, experience_years:8,  slug:'chamara' },
+        { id:'p3', full_name:'Saman Jayantha',  city:'Galle',      is_verified:false, avg_rating:0,   experience_years:5,  slug:null      },
+        { id:'p4', full_name:'Kelum Prasad',    city:'Negombo',    is_verified:true,  avg_rating:4.8, experience_years:10, slug:'kelum'   },
+        { id:'p5', full_name:'Nuwan Bandara',   city:'Kurunegala', is_verified:true,  avg_rating:4.6, experience_years:7,  slug:null      },
+      ]).map(t => {
+        const color = avatarColor(t.full_name)
+        const inits = initials(t.full_name)
+        return (
+          <a href={t.slug ? `/tilers/${t.slug}` : '/providers'} class="tiler-card" style="text-decoration:none;color:inherit;display:block;">
+            <div style="padding:18px 12px 12px;display:flex;flex-direction:column;align-items:center;text-align:center;">
+              <!-- Initials avatar -->
+              <div style={`width:54px;height:54px;border-radius:50%;background:${color};color:#fff;font-size:20px;font-weight:800;display:flex;align-items:center;justify-content:center;margin-bottom:10px;flex-shrink:0;`}>
+                {inits}
+              </div>
+              <div class="tiler-name" style="text-align:center;font-size:13px;margin-bottom:4px;">{t.full_name}</div>
+              {t.is_verified
+                ? <span style="font-size:8px;font-weight:700;color:#0369a1;background:#e0f2fe;border-radius:20px;padding:2px 7px;margin-bottom:5px;">✓ Verified Pro</span>
+                : <span style="font-size:8px;color:#94a3b8;background:#f1f5f9;border-radius:20px;padding:2px 7px;margin-bottom:5px;">Community</span>
+              }
+              {t.avg_rating > 0 && <div class="rating" style="margin-bottom:3px;justify-content:center;">⭐ {t.avg_rating.toFixed(1)}</div>}
+              <div class="tiler-meta" style="font-size:10px;margin-bottom:8px;">📍 {t.city || t.district}</div>
+              <div style="width:100%;padding:7px;background:#0f172a;color:#fff;border-radius:8px;font-size:10px;font-weight:700;text-align:center;">
+                View Profile
+              </div>
+            </div>
+          </a>
+        )
+      })}
+    </div>
+  </section>
+
+  <!-- ③ HOW IT WORKS ──────────────────────────────────────── -->
   <div class="hiw-strip">
     <div class="hiw-inner">
       {[
@@ -89,68 +160,6 @@ const EXPLORE_MORE = [
       </div>
     ))}
   </div>
-
-  <!-- ⑤ FEATURED PROFESSIONALS ──────────────────────────── -->
-  <section class="section" style="background:#fff;">
-    <div class="section-head">
-      <div>
-        <div class="section-eyebrow">⭐ Featured</div>
-        <div class="section-title-sm">Top Tiling <span>Professionals</span></div>
-      </div>
-      <a href="/providers" class="see-all">View all →</a>
-    </div>
-
-    <!-- LUXEhome featured banner — full-width horizontal card above grid -->
-    <a href="/sponsor/luxehome" class="luxe-shelf-card" style="display:flex;flex-direction:row;overflow:hidden;margin:0 16px 10px;border-radius:var(--radius-lg);">
-      <div class="luxe-shelf-cover" style="width:88px;flex-shrink:0;min-height:80px;">
-        <div class="luxe-shelf-glow"></div>
-        <div class="luxe-shelf-wordmark" style="font-size:13px;">
-          <span style="color:#D4AF37;">LUXE</span><span style="color:rgba(255,255,255,0.88);font-weight:400;">home</span>
-        </div>
-        <span class="luxe-shelf-badge" style="font-size:8px;padding:2px 6px;">🛡️ TH Master</span>
-      </div>
-      <div class="tiler-body" style="flex:1;display:flex;flex-direction:column;justify-content:center;gap:2px;">
-        <div class="rating" style="margin-bottom:0;">⭐ 4.9 · 47 reviews</div>
-        <div class="tiler-name" style="color:#0c0804;font-size:13px;">LUXEhome</div>
-        <div class="tiler-meta" style="margin-bottom:4px;">🏗️ 12+ Yrs · 🚿 Bathroom Reno</div>
-        <div style="display:inline-flex;align-items:center;padding:5px 10px;background:#D4AF37;color:#0c0804;border-radius:8px;font-size:10px;font-weight:800;align-self:flex-start;">
-          View Profile →
-        </div>
-      </div>
-    </a>
-
-    <div class="shelf">
-      {(tilers.length > 0 ? tilers : [
-        { id:'p1', full_name:'Lakmal Perera',   city:'Colombo 7',  is_verified:true,  avg_rating:4.9, experience_years:12, slug:'lakmal'  },
-        { id:'p2', full_name:'Chamara Silva',   city:'Kandy',      is_verified:true,  avg_rating:4.7, experience_years:8,  slug:'chamara' },
-        { id:'p3', full_name:'Saman Jayantha',  city:'Galle',      is_verified:false, avg_rating:0,   experience_years:5,  slug:null      },
-        { id:'p4', full_name:'Kelum Prasad',    city:'Negombo',    is_verified:true,  avg_rating:4.8, experience_years:10, slug:'kelum'   },
-        { id:'p5', full_name:'Nuwan Bandara',   city:'Kurunegala', is_verified:true,  avg_rating:4.6, experience_years:7,  slug:null      },
-      ]).map(t => (
-        <div class="tiler-card">
-          <div class="tiler-body">
-            <div style="display:flex;align-items:center;gap:7px;margin-bottom:7px;">
-              <div style="width:32px;height:32px;border-radius:50%;background:#eef2fb;display:flex;align-items:center;justify-content:center;font-size:15px;flex-shrink:0;">👷</div>
-              <div style="min-width:0;">
-                <div class="tiler-name">{t.full_name}</div>
-                {t.is_verified
-                  ? <span style="font-size:8px;font-weight:700;color:#0369a1;background:#e0f2fe;border-radius:20px;padding:1px 5px;">✓ Pro</span>
-                  : <span style="font-size:8px;color:#94a3b8;background:#f1f5f9;border-radius:20px;padding:1px 5px;">Community</span>
-                }
-              </div>
-            </div>
-            {t.avg_rating > 0 && <div class="rating" style="margin-bottom:3px;">⭐ {t.avg_rating.toFixed(1)}</div>}
-            <div class="tiler-meta">📍 {t.city || t.district}</div>
-            <a
-              href={t.slug ? `/tilers/${t.slug}` : '/providers'}
-              style="display:flex;align-items:center;justify-content:center;width:100%;padding:6px;background:#0f172a;color:#fff;border-radius:8px;font-size:10px;font-weight:700;text-decoration:none;margin-top:6px;">
-              View →
-            </a>
-          </div>
-        </div>
-      ))}
-    </div>
-  </section>
 
   <!-- ⑥ POST + LATEST PROJECTS ──────────────────────────── -->
   <section style="background:var(--navy);padding:36px 20px;border-top:1px solid rgba(255,255,255,0.06);">

@@ -330,10 +330,12 @@ img { max-width: 100%; display: block; }
 /* ═══ PROVIDER GRID ═══ */
 .shelf {
   display: grid;
-  grid-template-columns: repeat(3, 1fr);
+  grid-template-columns: repeat(2, 1fr);
   gap: 10px;
   padding: 8px 16px 16px;
 }
+@media (min-width: 540px) { .shelf { grid-template-columns: repeat(3, 1fr); } }
+@media (min-width: 860px) { .shelf { grid-template-columns: repeat(4, 1fr); } }
 
 /* ═══ QUICK ACTIONS ═══ */
 .quick-grid {
