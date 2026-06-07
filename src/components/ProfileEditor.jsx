@@ -1,0 +1,420 @@
+import { useState, useRef } from 'react'
+import { supabase, DISTRICTS_EN } from '../lib/supabase.js'
+
+// ─── Constants (module scope — no remount on typing) ──────────────────────────
+
+const ALL_SERVICES = [
+  'Floor Tiling', 'Wall Tiling', 'Bathroom Tiling', 'Kitchen Tiling',
+  'Staircase Tiling', 'Outdoor Tiling', 'Large Tile Installation',
+  'Waterproofing', 'Grouting & Finishing',
+  'Tile Cutting', 'Tile Routing',
+  'Bathroom Renovation', 'Full Construction',
+  'Bathroom Plumbing', 'Shower Cubicle',
+  'Hand Railing', 'Vanity Cupboard',
+  'Bathroom Lighting', 'Bathroom Wiring', 'Electrical Works',
+  'Ipanel Ceiling',
+]
+
+function lbl(text) {
+  return { display: 'block', fontSize: 11, fontWeight: 700, color: '#334155', textTransform: 'uppercase', letterSpacing: '0.6px', marginBottom: 7 }
+}
+
+function inp(hasError) {
+  return {
+    width: '100%', padding: '10px 13px',
+    border: `1.5px solid ${hasError ? '#fca5a5' : '#e2e8f0'}`,
+    borderRadius: 10, fontSize: 13, outline: 'none', fontFamily: 'inherit',
+    background: hasError ? '#fef2f2' : '#fff', boxSizing: 'border-box',
+  }
+}
+
+function Field({ label, error, hint, children }) {
+  return (
+    <div style={{ marginBottom: 18 }}>
+      <label style={lbl(label)}>{label}</label>
+      {children}
+      {hint && !error && <p style={{ fontSize: 11, color: '#94a3b8', marginTop: 4, lineHeight: 1.5 }}>{hint}</p>}
+      {error && <p style={{ fontSize: 11, color: '#dc2626', marginTop: 4 }}>⚠ {error}</p>}
+    </div>
+  )
+}
+
+function Chip({ label, checked, onClick }) {
+  return (
+    <button type="button" onClick={onClick} style={{
+      padding: '6px 13px', borderRadius: 20, fontSize: 12, fontWeight: 600, cursor: 'pointer',
+      border: `1.5px solid ${checked ? '#1B3A6B' : '#e2e8f0'}`,
+      background: checked ? '#eef3fb' : '#fff',
+      color: checked ? '#1B3A6B' : '#64748b',
+      transition: 'all 0.15s',
+    }}>
+      {checked ? '✓ ' : ''}{label}
+    </button>
+  )
+}
+
+function ServiceTextInput({ value, onChange }) {
+  const [text, setText] = useState('')
+  function add() {
+    const s = text.trim()
+    if (s && !value.includes(s)) onChange([...value, s])
+    setText('')
+  }
+  return (
+    <div style={{ display: 'flex', gap: 8 }}>
+      <input value={text} onChange={e => setText(e.target.value)}
+        onKeyDown={e => { if (e.key === 'Enter') { e.preventDefault(); add() } }}
+        placeholder="Add custom service…"
+        style={{ flex: 1, padding: '8px 12px', border: '1.5px solid #e2e8f0', borderRadius: 10, fontSize: 12, outline: 'none', fontFamily: 'inherit' }} />
+      <button type="button" onClick={add} style={{ padding: '8px 14px', background: '#eef3fb', color: '#1B3A6B', border: '1.5px solid #d5e2f5', borderRadius: 10, fontSize: 12, fontWeight: 700, cursor: 'pointer' }}>+ Add</button>
+    </div>
+  )
+}
+
+function ImageUploadBox({ label, hint, value, onChange, aspect }) {
+  const ref = useRef(null)
+  const [preview, setPreview] = useState(value || null)
+  const [dragging, setDragging] = useState(false)
+
+  function handle(file) {
+    if (!file || !file.type.startsWith('image/')) return
+    onChange(file)
+    setPreview(URL.createObjectURL(file))
+  }
+
+  const height = aspect === 'cover' ? 140 : 110
+
+  return (
+    <div style={{ marginBottom: 18 }}>
+      <div style={lbl(label)}>{label}</div>
+      <div onClick={() => ref.current?.click()}
+        onDragOver={e => { e.preventDefault(); setDragging(true) }}
+        onDragLeave={() => setDragging(false)}
+        onDrop={e => { e.preventDefault(); setDragging(false); handle(e.dataTransfer.files[0]) }}
+        style={{ position: 'relative', height, borderRadius: 12, border: `2px dashed ${dragging ? '#1B3A6B' : '#cbd5e1'}`, background: dragging ? '#eef3fb' : preview ? '#000' : '#f8fafc', cursor: 'pointer', overflow: 'hidden', display: 'flex', alignItems: 'center', justifyContent: 'center', transition: 'all 0.2s' }}>
+        {preview ? (
+          <>
+            <img src={preview} alt="" style={{ position: 'absolute', inset: 0, width: '100%', height: '100%', objectFit: 'cover', opacity: 0.85 }} />
+            <div style={{ position: 'relative', zIndex: 1, background: 'rgba(0,0,0,0.55)', color: '#fff', borderRadius: 8, padding: '4px 12px', fontSize: 11, fontWeight: 600 }}>Click to change</div>
+          </>
+        ) : (
+          <div style={{ textAlign: 'center', color: '#94a3b8', pointerEvents: 'none' }}>
+            <div style={{ fontSize: 22, marginBottom: 4 }}>{aspect === 'cover' ? '🖼️' : '👤'}</div>
+            <div style={{ fontSize: 12, fontWeight: 600 }}>Click or drag to upload</div>
+            <div style={{ fontSize: 10, marginTop: 2 }}>JPG, PNG, WebP · Max 5 MB</div>
+          </div>
+        )}
+      </div>
+      {hint && <p style={{ fontSize: 11, color: '#94a3b8', marginTop: 4, lineHeight: 1.5 }}>{hint}</p>}
+      <input ref={ref} type="file" accept="image/*" onChange={e => handle(e.target.files[0])} style={{ display: 'none' }} />
+    </div>
+  )
+}
+
+const MAX_GALLERY = 8
+
+function GalleryEditor({ existing, newFiles, onNewFiles, onRemoveExisting }) {
+  const ref = useRef(null)
+
+  function addFiles(files) {
+    const combined = [...newFiles, ...Array.from(files)].slice(0, MAX_GALLERY - existing.length)
+    onNewFiles(combined)
+  }
+
+  return (
+    <div style={{ marginBottom: 18 }}>
+      <div style={lbl('Portfolio / Gallery')}> Portfolio / Gallery <span style={{ fontSize: 10, color: '#94a3b8', textTransform: 'none', fontWeight: 400 }}>(up to {MAX_GALLERY} photos)</span></div>
+      <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fill,minmax(90px,1fr))', gap: 8, marginBottom: 8 }}>
+        {existing.map((url, i) => (
+          <div key={url} style={{ position: 'relative', aspectRatio: '1', borderRadius: 10, overflow: 'hidden', border: '1px solid #e2e8f0' }}>
+            <img src={url} alt="" style={{ width: '100%', height: '100%', objectFit: 'cover' }} />
+            <button type="button" onClick={() => onRemoveExisting(i)} style={{ position: 'absolute', top: 3, right: 3, background: 'rgba(0,0,0,0.65)', color: '#fff', border: 'none', borderRadius: '50%', width: 20, height: 20, cursor: 'pointer', fontSize: 11, display: 'flex', alignItems: 'center', justifyContent: 'center' }}>✕</button>
+          </div>
+        ))}
+        {newFiles.map((f, i) => (
+          <div key={i} style={{ position: 'relative', aspectRatio: '1', borderRadius: 10, overflow: 'hidden', border: '1px solid #bbf7d0' }}>
+            <img src={URL.createObjectURL(f)} alt="" style={{ width: '100%', height: '100%', objectFit: 'cover' }} />
+            <button type="button" onClick={() => onNewFiles(newFiles.filter((_, j) => j !== i))} style={{ position: 'absolute', top: 3, right: 3, background: 'rgba(0,0,0,0.65)', color: '#fff', border: 'none', borderRadius: '50%', width: 20, height: 20, cursor: 'pointer', fontSize: 11, display: 'flex', alignItems: 'center', justifyContent: 'center' }}>✕</button>
+          </div>
+        ))}
+        {(existing.length + newFiles.length) < MAX_GALLERY && (
+          <div onClick={() => ref.current?.click()} style={{ aspectRatio: '1', borderRadius: 10, border: '2px dashed #cbd5e1', display: 'flex', flexDirection: 'column', alignItems: 'center', justifyContent: 'center', cursor: 'pointer', background: '#f8fafc', gap: 4 }}>
+            <span style={{ fontSize: 20, color: '#94a3b8' }}>+</span>
+            <span style={{ fontSize: 10, color: '#94a3b8' }}>Add</span>
+          </div>
+        )}
+      </div>
+      <input ref={ref} type="file" accept="image/*" multiple onChange={e => addFiles(e.target.files)} style={{ display: 'none' }} />
+      <p style={{ fontSize: 11, color: '#94a3b8', margin: 0 }}>JPG/PNG/WebP. Showcase your best work.</p>
+    </div>
+  )
+}
+
+async function uploadImage(file, folder, userId) {
+  const ext = file.name.split('.').pop()
+  const path = `${folder}/${userId}-${Date.now()}-${Math.random().toString(36).slice(2)}.${ext}`
+  const { error } = await supabase.storage.from('provider-assets').upload(path, file, { upsert: false })
+  if (error) throw error
+  const { data } = supabase.storage.from('provider-assets').getPublicUrl(path)
+  return data.publicUrl
+}
+
+export default function ProfileEditor({ profile, profileType, userId }) {
+  const isTiler = profileType === 'tiler'
+  const table = isTiler ? 'tilers' : 'providers'
+
+  const [editing, setEditing] = useState(false)
+  const [saved, setSaved] = useState(false)
+  const [saving, setSaving] = useState(false)
+  const [saveErr, setSaveErr] = useState('')
+
+  // Form state — initialised from profile
+  const [name, setName]           = useState(isTiler ? (profile.full_name || '') : (profile.name || ''))
+  const [whatsapp, setWhatsapp]   = useState(profile.whatsapp || '')
+  const [city, setCity]           = useState(profile.city || '')
+  const [district, setDistrict]   = useState(profile.district || '')
+  const [bio, setBio]             = useState(isTiler ? (profile.bio || '') : (profile.description || ''))
+  const [services, setServices]   = useState(profile.services || [])
+  const [serviceAreas, setServiceAreas] = useState(profile.service_areas || [])
+  const [expYears, setExpYears]   = useState(profile.experience_years || '')
+  const [rateMin, setRateMin]     = useState(profile.daily_rate_min || '')
+  const [rateMax, setRateMax]     = useState(profile.daily_rate_max || '')
+  const [website, setWebsite]     = useState(profile.website_url || '')
+  const [existingGallery, setExistingGallery] = useState(profile.gallery || [])
+  const [newGalleryFiles, setNewGalleryFiles] = useState([])
+
+  // Image file states (null = no change)
+  const [profileImageFile, setProfileImageFile] = useState(null)
+  const [coverImageFile, setCoverImageFile]     = useState(null)
+
+  function toggleArr(arr, setArr, val) {
+    setArr(arr.includes(val) ? arr.filter(x => x !== val) : [...arr, val])
+  }
+
+  // Current display values for the summary view
+  const displayName  = isTiler ? (profile.full_name || 'Profile') : (profile.name || 'Profile')
+  const displayImg   = isTiler ? profile.avatar_url : profile.profile_image
+  const profilePath  = profile.slug
+    ? (isTiler ? `/providers/${profile.slug}` : `/providers/${profile.slug}`)
+    : null
+
+  async function save() {
+    setSaving(true); setSaveErr('')
+    try {
+      let profileImageUrl = undefined
+      let coverImageUrl   = undefined
+      const newGalleryUrls = []
+
+      if (profileImageFile) {
+        profileImageUrl = await uploadImage(profileImageFile, 'profiles', userId)
+      }
+      if (coverImageFile) {
+        coverImageUrl = await uploadImage(coverImageFile, 'covers', userId)
+      }
+      for (const f of newGalleryFiles) {
+        newGalleryUrls.push(await uploadImage(f, 'portfolio', userId))
+      }
+
+      const payload = {
+        [isTiler ? 'full_name' : 'name']: name.trim(),
+        whatsapp: whatsapp.replace(/\s/g, ''),
+        city: city.trim(),
+        district: district || null,
+        [isTiler ? 'bio' : 'description']: bio.trim() || null,
+        services: services.length ? services : null,
+        service_areas: serviceAreas.length ? serviceAreas : null,
+        gallery: [...existingGallery, ...newGalleryUrls],
+      }
+
+      if (isTiler) {
+        if (expYears) payload.experience_years = parseInt(expYears, 10)
+        if (rateMin)  payload.daily_rate_min   = parseInt(rateMin, 10)
+        if (rateMax)  payload.daily_rate_max   = parseInt(rateMax, 10)
+        if (profileImageUrl !== undefined) payload.avatar_url = profileImageUrl
+      } else {
+        if (website) payload.website_url = website.trim()
+        if (profileImageUrl !== undefined) payload.profile_image = profileImageUrl
+        if (coverImageUrl   !== undefined) payload.cover_image   = coverImageUrl
+      }
+
+      const { error } = await supabase.from(table).update(payload).eq('id', profile.id).eq('user_id', userId)
+      if (error) throw error
+
+      setSaved(true)
+      setEditing(false)
+      setNewGalleryFiles([])
+    } catch (e) {
+      setSaveErr(e?.message || 'Something went wrong. Please try again.')
+    } finally {
+      setSaving(false)
+    }
+  }
+
+  // ── Summary (non-editing) ──────────────────────────────────────────────────
+  if (!editing) {
+    return (
+      <div style={{ background: '#fff', border: '1px solid #e2e8f0', borderRadius: 16, padding: 24 }}>
+        {saved && (
+          <div style={{ padding: '10px 14px', background: '#f0fdf4', border: '1px solid #bbf7d0', borderRadius: 10, marginBottom: 20, display: 'flex', alignItems: 'center', justifyContent: 'space-between', gap: 10 }}>
+            <span style={{ fontSize: 13, color: '#15803d', fontWeight: 600 }}>✓ Profile updated!</span>
+            {profilePath && (
+              <a href={profilePath} target="_blank" rel="noopener" style={{ fontSize: 12, color: '#1B3A6B', fontWeight: 700, textDecoration: 'none' }}>View Profile →</a>
+            )}
+          </div>
+        )}
+        <div style={{ display: 'flex', alignItems: 'center', gap: 16, marginBottom: 20 }}>
+          <div style={{ width: 64, height: 64, borderRadius: 14, background: '#1B3A6B', border: '2px solid #e2e8f0', overflow: 'hidden', flexShrink: 0, display: 'flex', alignItems: 'center', justifyContent: 'center', fontSize: 22, fontWeight: 700, color: '#fff' }}>
+            {displayImg
+              ? <img src={displayImg} alt={displayName} style={{ width: '100%', height: '100%', objectFit: 'cover' }} />
+              : displayName.split(' ').map(w => w[0]).join('').slice(0, 2).toUpperCase()
+            }
+          </div>
+          <div>
+            <div style={{ fontSize: 16, fontWeight: 700, color: '#0f172a' }}>{displayName}</div>
+            <div style={{ fontSize: 12, color: '#64748b', marginTop: 2 }}>
+              {isTiler ? 'Tiler' : 'Provider'} · {profile.city || '—'}
+            </div>
+            {profilePath && (
+              <a href={profilePath} target="_blank" rel="noopener" style={{ fontSize: 11, color: '#1B3A6B', fontWeight: 600, textDecoration: 'none' }}>
+                View public profile →
+              </a>
+            )}
+          </div>
+        </div>
+
+        <div style={{ display: 'flex', gap: 10, flexWrap: 'wrap' }}>
+          <button onClick={() => { setEditing(true); setSaved(false) }}
+            style={{ padding: '10px 22px', background: '#1B3A6B', color: '#fff', border: 'none', borderRadius: 10, fontSize: 13, fontWeight: 700, cursor: 'pointer' }}>
+            ✏️ Edit Profile
+          </button>
+          {profilePath && (
+            <a href={profilePath} target="_blank" rel="noopener"
+              style={{ padding: '10px 18px', background: '#f1f5f9', color: '#334155', border: '1px solid #e2e8f0', borderRadius: 10, fontSize: 13, fontWeight: 600, textDecoration: 'none', display: 'inline-flex', alignItems: 'center' }}>
+              🔗 View Profile
+            </a>
+          )}
+        </div>
+      </div>
+    )
+  }
+
+  // ── Editing form ───────────────────────────────────────────────────────────
+  return (
+    <div style={{ background: '#fff', border: '1px solid #e2e8f0', borderRadius: 16, padding: 24 }}>
+      <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', marginBottom: 24 }}>
+        <h3 style={{ fontFamily: "'Playfair Display',serif", fontSize: 18, fontWeight: 700, color: '#0f172a', margin: 0 }}>Edit Profile</h3>
+        <button onClick={() => setEditing(false)} style={{ background: 'none', border: 'none', color: '#94a3b8', fontSize: 20, cursor: 'pointer', padding: 4 }}>✕</button>
+      </div>
+
+      {/* Images */}
+      {!isTiler ? (
+        <div style={{ display: 'grid', gridTemplateColumns: '1fr 2fr', gap: 14 }}>
+          <ImageUploadBox label="Profile Photo" hint="Your photo or logo" aspect="profile"
+            value={isTiler ? profile.avatar_url : profile.profile_image}
+            onChange={setProfileImageFile} />
+          <ImageUploadBox label="Cover Image" hint="Banner shown at the top of your profile" aspect="cover"
+            value={profile.cover_image} onChange={setCoverImageFile} />
+        </div>
+      ) : (
+        <ImageUploadBox label="Profile Photo" hint="Your photo shown on your profile and listing cards" aspect="profile"
+          value={profile.avatar_url} onChange={setProfileImageFile} />
+      )}
+
+      {/* Name */}
+      <Field label={isTiler ? 'Full Name' : 'Name / Company'}>
+        <input value={name} onChange={e => setName(e.target.value)} style={inp(false)} placeholder={isTiler ? 'Your full name' : 'Your name or company name'} />
+      </Field>
+
+      {/* City + District */}
+      <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: 14 }}>
+        <Field label="City / Town">
+          <input value={city} onChange={e => setCity(e.target.value)} style={inp(false)} placeholder="e.g. Nugegoda" />
+        </Field>
+        <Field label="District">
+          <select value={district} onChange={e => setDistrict(e.target.value)} style={{ ...inp(false), WebkitAppearance: 'none', cursor: 'pointer' }}>
+            <option value="">Select district…</option>
+            {DISTRICTS_EN.map(d => <option key={d} value={d}>{d}</option>)}
+          </select>
+        </Field>
+      </div>
+
+      {/* WhatsApp */}
+      <Field label="WhatsApp Number" hint="Customers contact you here">
+        <input value={whatsapp} onChange={e => setWhatsapp(e.target.value)} style={inp(false)} placeholder="+94771234567" type="tel" />
+      </Field>
+
+      {/* Bio / Description */}
+      <Field label={isTiler ? 'Bio' : 'Description'} hint="Describe your experience and what makes you stand out">
+        <textarea value={bio} onChange={e => setBio(e.target.value)} rows={3}
+          placeholder={isTiler ? 'Years of experience, specialisations, area coverage…' : 'Your services, team, and what makes you stand out…'}
+          style={{ ...inp(false), resize: 'vertical' }} />
+      </Field>
+
+      {/* Tiler-specific */}
+      {isTiler && (
+        <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr 1fr', gap: 14 }}>
+          <Field label="Experience (years)">
+            <input value={expYears} onChange={e => setExpYears(e.target.value)} style={inp(false)} placeholder="e.g. 8" type="number" min="0" />
+          </Field>
+          <Field label="Rate Min (Rs/sqft)">
+            <input value={rateMin} onChange={e => setRateMin(e.target.value)} style={inp(false)} placeholder="e.g. 180" type="number" min="0" />
+          </Field>
+          <Field label="Rate Max (Rs/sqft)">
+            <input value={rateMax} onChange={e => setRateMax(e.target.value)} style={inp(false)} placeholder="e.g. 300" type="number" min="0" />
+          </Field>
+        </div>
+      )}
+
+      {/* Website (providers only) */}
+      {!isTiler && (
+        <Field label="Website URL" hint="Optional">
+          <input value={website} onChange={e => setWebsite(e.target.value)} style={inp(false)} placeholder="https://yoursite.lk" type="url" />
+        </Field>
+      )}
+
+      {/* Services */}
+      <Field label="Services You Offer" hint="Select all that apply — or type your own below">
+        <div style={{ display: 'flex', flexWrap: 'wrap', gap: 7, marginBottom: 10 }}>
+          {ALL_SERVICES.map(s => (
+            <Chip key={s} label={s} checked={services.includes(s)} onClick={() => toggleArr(services, setServices, s)} />
+          ))}
+        </div>
+        <ServiceTextInput value={services} onChange={setServices} />
+      </Field>
+
+      {/* Service Areas */}
+      <Field label="Service Areas" hint="Districts you cover">
+        <div style={{ display: 'flex', flexWrap: 'wrap', gap: 7 }}>
+          {DISTRICTS_EN.map(d => (
+            <Chip key={d} label={d} checked={serviceAreas.includes(d)} onClick={() => toggleArr(serviceAreas, setServiceAreas, d)} />
+          ))}
+        </div>
+      </Field>
+
+      {/* Gallery */}
+      <GalleryEditor
+        existing={existingGallery}
+        newFiles={newGalleryFiles}
+        onNewFiles={setNewGalleryFiles}
+        onRemoveExisting={i => setExistingGallery(existingGallery.filter((_, j) => j !== i))}
+      />
+
+      {saveErr && (
+        <div style={{ padding: '10px 14px', background: '#fef2f2', border: '1px solid #fecaca', borderRadius: 10, fontSize: 13, color: '#dc2626', marginBottom: 16 }}>
+          ⚠ {saveErr}
+        </div>
+      )}
+
+      <div style={{ display: 'flex', gap: 10 }}>
+        <button onClick={save} disabled={saving}
+          style={{ flex: 1, padding: '13px', background: saving ? '#94a3b8' : '#1B3A6B', color: '#fff', border: 'none', borderRadius: 12, fontSize: 14, fontWeight: 700, cursor: saving ? 'not-allowed' : 'pointer', transition: 'background 0.2s' }}>
+          {saving ? '⏳ Saving…' : '💾 Save Changes'}
+        </button>
+        <button onClick={() => setEditing(false)} disabled={saving}
+          style={{ padding: '13px 20px', background: '#f1f5f9', color: '#334155', border: '1px solid #e2e8f0', borderRadius: 12, fontSize: 14, fontWeight: 600, cursor: 'pointer' }}>
+          Cancel
+        </button>
+      </div>
+    </div>
+  )
+}
