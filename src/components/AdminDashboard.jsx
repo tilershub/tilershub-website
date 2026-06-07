@@ -1,5 +1,5 @@
-import { useState, useEffect, useCallback } from 'react'
-import { supabase, signInWithOtp } from '../lib/supabase.js'
+import { useState, useEffect, useCallback, useRef } from 'react'
+import { supabase, signInWithOtp, DISTRICTS_EN } from '../lib/supabase.js'
 
 // ─── Design tokens ────────────────────────────────────────────────────────────
 const NAVY  = '#1B3A6B'
@@ -26,9 +26,23 @@ const STATUS_BADGE = {
   completed:      ['#F3F4F6','#374151'],
   pending_code:   ['#FEF3C7','#92400E'],
   verified:       ['#D1FAE5','#065F46'],
+  featured:       ['#EDE9FE','#5B21B6'],
+  none:           ['#F3F4F6','#64748b'],
   new:            ['#FEF3C7','#92400E'],
   seen:           ['#F3F4F6','#374151'],
 }
+
+const ALL_SERVICES = [
+  'Floor Tiling', 'Wall Tiling', 'Bathroom Tiling', 'Kitchen Tiling',
+  'Staircase Tiling', 'Outdoor Tiling', 'Large Tile Installation',
+  'Waterproofing', 'Grouting & Finishing',
+  'Tile Cutting', 'Tile Routing',
+  'Bathroom Renovation', 'Full Construction',
+  'Bathroom Plumbing', 'Shower Cubicle',
+  'Hand Railing', 'Vanity Cupboard',
+  'Bathroom Lighting', 'Bathroom Wiring', 'Electrical Works',
+  'Ipanel Ceiling',
+]
 
 function StatusBadge({ status }) {
   const [bg, color] = STATUS_BADGE[status] || ['#f1f5f9','#64748b']
@@ -61,6 +75,362 @@ function Pagination({ page, setPage, count, perPage }) {
       <span style={{ fontSize: 12, color: '#64748b' }}>Page {page + 1} of {total}</span>
       <button onClick={() => setPage(p => Math.max(0, p - 1))} disabled={page === 0} style={S.btn('#f1f5f9','#334155')}>← Prev</button>
       <button onClick={() => setPage(p => Math.min(total - 1, p + 1))} disabled={page >= total - 1} style={S.btn('#f1f5f9','#334155')}>Next →</button>
+    </div>
+  )
+}
+
+// ─── Shared form helpers ──────────────────────────────────────────────────────
+function lbl() {
+  return { display: 'block', fontSize: 11, fontWeight: 700, color: '#334155', textTransform: 'uppercase', letterSpacing: '0.6px', marginBottom: 7 }
+}
+function inp(hasError) {
+  return { width: '100%', padding: '10px 13px', border: `1.5px solid ${hasError ? '#fca5a5' : '#e2e8f0'}`, borderRadius: 10, fontSize: 13, outline: 'none', fontFamily: 'inherit', background: hasError ? '#fef2f2' : '#fff', boxSizing: 'border-box' }
+}
+function Chip({ label, checked, onClick }) {
+  return (
+    <button type="button" onClick={onClick} style={{ padding: '5px 12px', borderRadius: 20, fontSize: 12, fontWeight: 600, cursor: 'pointer', border: `1.5px solid ${checked ? NAVY : '#e2e8f0'}`, background: checked ? '#eef3fb' : '#fff', color: checked ? NAVY : '#64748b' }}>
+      {checked ? '✓ ' : ''}{label}
+    </button>
+  )
+}
+function toggleArr(arr, val) {
+  return arr.includes(val) ? arr.filter(x => x !== val) : [...arr, val]
+}
+function slugify(text) {
+  return text.toLowerCase().replace(/[^a-z0-9\s-]/g,'').replace(/\s+/g,'-').replace(/-+/g,'-').replace(/^-|-$/g,'')
+}
+async function uploadImage(file, folder, prefix) {
+  const ext = file.name.split('.').pop()
+  const path = `${folder}/${prefix}-${Date.now()}-${Math.random().toString(36).slice(2)}.${ext}`
+  const { error } = await supabase.storage.from('provider-assets').upload(path, file, { upsert: false })
+  if (error) throw error
+  const { data } = supabase.storage.from('provider-assets').getPublicUrl(path)
+  return data.publicUrl
+}
+
+function ImageUploadBox({ label, hint, value, onChange, aspect }) {
+  const ref = useRef(null)
+  const [preview, setPreview] = useState(value || null)
+  const [dragging, setDragging] = useState(false)
+  function handle(file) {
+    if (!file || !file.type.startsWith('image/')) return
+    onChange(file)
+    setPreview(URL.createObjectURL(file))
+  }
+  const height = aspect === 'cover' ? 120 : 90
+  return (
+    <div style={{ marginBottom: 16 }}>
+      <div style={lbl()}>{label}</div>
+      <div onClick={() => ref.current?.click()}
+        onDragOver={e => { e.preventDefault(); setDragging(true) }}
+        onDragLeave={() => setDragging(false)}
+        onDrop={e => { e.preventDefault(); setDragging(false); handle(e.dataTransfer.files[0]) }}
+        style={{ position: 'relative', height, borderRadius: 10, border: `2px dashed ${dragging ? NAVY : '#cbd5e1'}`, background: dragging ? '#eef3fb' : preview ? '#000' : '#f8fafc', cursor: 'pointer', overflow: 'hidden', display: 'flex', alignItems: 'center', justifyContent: 'center' }}>
+        {preview ? (
+          <>
+            <img src={preview} alt="" style={{ position: 'absolute', inset: 0, width: '100%', height: '100%', objectFit: 'cover', opacity: 0.85 }} />
+            <div style={{ position: 'relative', zIndex: 1, background: 'rgba(0,0,0,0.55)', color: '#fff', borderRadius: 8, padding: '3px 10px', fontSize: 11, fontWeight: 600 }}>Click to change</div>
+          </>
+        ) : (
+          <div style={{ textAlign: 'center', color: '#94a3b8', fontSize: 11, pointerEvents: 'none' }}>
+            <div style={{ fontSize: 18, marginBottom: 3 }}>{aspect === 'cover' ? '🖼️' : '👤'}</div>
+            Click or drag to upload
+          </div>
+        )}
+      </div>
+      {hint && <p style={{ fontSize: 11, color: '#94a3b8', marginTop: 3 }}>{hint}</p>}
+      <input ref={ref} type="file" accept="image/*" onChange={e => handle(e.target.files[0])} style={{ display: 'none' }} />
+    </div>
+  )
+}
+
+function GalleryEditor({ existing, newFiles, onNewFiles, onRemoveExisting }) {
+  const ref = useRef(null)
+  const MAX = 8
+  function addFiles(files) {
+    const combined = [...newFiles, ...Array.from(files)].slice(0, MAX - existing.length)
+    onNewFiles(combined)
+  }
+  return (
+    <div style={{ marginBottom: 16 }}>
+      <div style={lbl()}>Gallery / Portfolio <span style={{ fontSize: 10, color: '#94a3b8', textTransform: 'none', fontWeight: 400 }}>(up to {MAX})</span></div>
+      <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fill,minmax(80px,1fr))', gap: 6, marginBottom: 6 }}>
+        {existing.map((url, i) => (
+          <div key={url} style={{ position: 'relative', aspectRatio: '1', borderRadius: 8, overflow: 'hidden', border: '1px solid #e2e8f0' }}>
+            <img src={url} alt="" style={{ width: '100%', height: '100%', objectFit: 'cover' }} />
+            <button type="button" onClick={() => onRemoveExisting(i)} style={{ position: 'absolute', top: 2, right: 2, background: 'rgba(0,0,0,0.65)', color: '#fff', border: 'none', borderRadius: '50%', width: 18, height: 18, cursor: 'pointer', fontSize: 10, display: 'flex', alignItems: 'center', justifyContent: 'center' }}>✕</button>
+          </div>
+        ))}
+        {newFiles.map((f, i) => (
+          <div key={i} style={{ position: 'relative', aspectRatio: '1', borderRadius: 8, overflow: 'hidden', border: '1px solid #bbf7d0' }}>
+            <img src={URL.createObjectURL(f)} alt="" style={{ width: '100%', height: '100%', objectFit: 'cover' }} />
+            <button type="button" onClick={() => onNewFiles(newFiles.filter((_,j) => j!==i))} style={{ position: 'absolute', top: 2, right: 2, background: 'rgba(0,0,0,0.65)', color: '#fff', border: 'none', borderRadius: '50%', width: 18, height: 18, cursor: 'pointer', fontSize: 10, display: 'flex', alignItems: 'center', justifyContent: 'center' }}>✕</button>
+          </div>
+        ))}
+        {(existing.length + newFiles.length) < MAX && (
+          <div onClick={() => ref.current?.click()} style={{ aspectRatio: '1', borderRadius: 8, border: '2px dashed #cbd5e1', display: 'flex', flexDirection: 'column', alignItems: 'center', justifyContent: 'center', cursor: 'pointer', background: '#f8fafc' }}>
+            <span style={{ fontSize: 18, color: '#94a3b8' }}>+</span>
+          </div>
+        )}
+      </div>
+      <input ref={ref} type="file" accept="image/*" multiple onChange={e => addFiles(e.target.files)} style={{ display: 'none' }} />
+    </div>
+  )
+}
+
+// ─── Profile create/edit modal ────────────────────────────────────────────────
+function ProfileModal({ profile, profileType, adminUserId, onClose, onSaved }) {
+  const isTiler = profileType === 'tiler'
+  const table   = isTiler ? 'tilers' : 'providers'
+  const isCreate = !profile
+
+  const [name,       setName]       = useState(isTiler ? (profile?.full_name || '') : (profile?.name || ''))
+  const [whatsapp,   setWhatsapp]   = useState(profile?.whatsapp || '')
+  const [city,       setCity]       = useState(profile?.city || '')
+  const [district,   setDistrict]   = useState(profile?.district || '')
+  const [bio,        setBio]        = useState(isTiler ? (profile?.bio || '') : (profile?.description || ''))
+  const [services,   setServices]   = useState(profile?.services || [])
+  const [svcAreas,   setSvcAreas]   = useState(profile?.service_areas || [])
+  const [expYears,   setExpYears]   = useState(profile?.experience_years ?? '')
+  const [rateMin,    setRateMin]    = useState(profile?.daily_rate_min ?? '')
+  const [rateMax,    setRateMax]    = useState(profile?.daily_rate_max ?? '')
+  const [website,    setWebsite]    = useState(profile?.website_url || '')
+  const [badge,      setBadge]      = useState(profile?.verification_status || 'none')
+  const [existingGallery, setExistingGallery] = useState(profile?.gallery || [])
+  const [newGalleryFiles, setNewGalleryFiles] = useState([])
+  const [profileImageFile, setProfileImageFile] = useState(null)
+  const [coverImageFile,   setCoverImageFile]   = useState(null)
+  const [saving,     setSaving]     = useState(false)
+  const [err,        setErr]        = useState('')
+
+  const [customSvc, setCustomSvc] = useState('')
+  function addCustomSvc() {
+    const s = customSvc.trim()
+    if (s && !services.includes(s)) setServices(prev => [...prev, s])
+    setCustomSvc('')
+  }
+
+  async function save() {
+    if (!name.trim())     { setErr('Name is required'); return }
+    if (!whatsapp.trim()) { setErr('WhatsApp number is required'); return }
+    if (!city.trim())     { setErr('City is required'); return }
+    setSaving(true); setErr('')
+    try {
+      const prefix = `admin-${adminUserId?.slice(0,8) || 'admin'}`
+      let profileImageUrl, coverImageUrl
+      const newGalleryUrls = []
+      if (profileImageFile) profileImageUrl = await uploadImage(profileImageFile, 'profiles', prefix)
+      if (coverImageFile)   coverImageUrl   = await uploadImage(coverImageFile,   'covers',   prefix)
+      for (const f of newGalleryFiles) newGalleryUrls.push(await uploadImage(f, 'portfolio', prefix))
+
+      const payload = {
+        [isTiler ? 'full_name' : 'name']: name.trim(),
+        whatsapp: whatsapp.replace(/\s/g,''),
+        city: city.trim(),
+        district: district || null,
+        [isTiler ? 'bio' : 'description']: bio.trim() || null,
+        services: services.length ? services : null,
+        service_areas: svcAreas.length ? svcAreas : null,
+        gallery: [...existingGallery, ...newGalleryUrls],
+      }
+
+      if (isTiler) {
+        payload.experience_years = expYears !== '' ? parseInt(expYears,10)||null : null
+        payload.daily_rate_min   = rateMin   !== '' ? parseInt(rateMin,10)||null  : null
+        payload.daily_rate_max   = rateMax   !== '' ? parseInt(rateMax,10)||null  : null
+        if (profileImageUrl !== undefined) payload.avatar_url = profileImageUrl
+      } else {
+        payload.verification_status = badge
+        payload.website_url = website.trim() || null
+        if (profileImageUrl !== undefined) payload.profile_image = profileImageUrl
+        if (coverImageUrl   !== undefined) payload.cover_image   = coverImageUrl
+      }
+
+      if (isCreate) {
+        payload.slug = slugify(name.trim()) + '-' + Math.random().toString(36).slice(2,6)
+        if (!isTiler) payload.provider_type = 'provider'
+        const { error } = await supabase.from(table).insert(payload)
+        if (error) throw error
+      } else {
+        const { error } = await supabase.from(table).update(payload).eq('id', profile.id)
+        if (error) throw error
+      }
+      onSaved()
+    } catch(e) {
+      setErr(e?.message || 'Something went wrong')
+    } finally {
+      setSaving(false)
+    }
+  }
+
+  return (
+    <div style={{ position: 'fixed', inset: 0, zIndex: 1000, display: 'flex' }}
+      onClick={e => { if (e.target === e.currentTarget) onClose() }}>
+      <div style={{ flex: 1, background: 'rgba(15,23,42,0.5)' }} onClick={onClose} />
+      <div style={{ width: 520, background: '#fff', overflowY: 'auto', boxShadow: '-4px 0 30px rgba(0,0,0,0.15)', display: 'flex', flexDirection: 'column' }}>
+        {/* Drawer header */}
+        <div style={{ padding: '20px 24px', borderBottom: '1px solid #f1f5f9', display: 'flex', alignItems: 'center', justifyContent: 'space-between', flexShrink: 0, background: '#fff', position: 'sticky', top: 0, zIndex: 1 }}>
+          <div>
+            <div style={{ fontSize: 16, fontWeight: 700, color: '#0f172a' }}>
+              {isCreate ? `Create ${isTiler ? 'Tiler' : 'Provider'}` : `Edit ${isTiler ? 'Tiler' : 'Provider'}`}
+            </div>
+            {!isCreate && profile?.slug && (
+              <div style={{ fontSize: 11, color: '#94a3b8', marginTop: 2 }}>/{profile.slug}</div>
+            )}
+          </div>
+          <button onClick={onClose} style={{ background: 'none', border: 'none', fontSize: 20, cursor: 'pointer', color: '#94a3b8', padding: 4 }}>✕</button>
+        </div>
+
+        {/* Drawer body */}
+        <div style={{ padding: '20px 24px', flex: 1 }}>
+          {/* Images */}
+          {!isTiler ? (
+            <div style={{ display: 'grid', gridTemplateColumns: '1fr 1.6fr', gap: 12 }}>
+              <ImageUploadBox label="Profile Photo" aspect="profile"
+                value={profile?.profile_image} onChange={setProfileImageFile} />
+              <ImageUploadBox label="Cover Image" aspect="cover"
+                value={profile?.cover_image} onChange={setCoverImageFile} />
+            </div>
+          ) : (
+            <ImageUploadBox label="Profile Photo" aspect="profile"
+              value={profile?.avatar_url} onChange={setProfileImageFile} />
+          )}
+
+          {/* Name */}
+          <div style={{ marginBottom: 14 }}>
+            <label style={lbl()}>{isTiler ? 'Full Name' : 'Name / Company'} *</label>
+            <input value={name} onChange={e => setName(e.target.value)} style={inp(!name && err)} placeholder={isTiler ? 'Full name' : 'Business or person name'} />
+          </div>
+
+          {/* City + District */}
+          <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: 12, marginBottom: 14 }}>
+            <div>
+              <label style={lbl()}>City *</label>
+              <input value={city} onChange={e => setCity(e.target.value)} style={inp(!city && err)} placeholder="e.g. Colombo" />
+            </div>
+            <div>
+              <label style={lbl()}>District</label>
+              <select value={district} onChange={e => setDistrict(e.target.value)} style={{ ...inp(false), WebkitAppearance: 'none', cursor: 'pointer' }}>
+                <option value="">Select…</option>
+                {DISTRICTS_EN.map(d => <option key={d} value={d}>{d}</option>)}
+              </select>
+            </div>
+          </div>
+
+          {/* WhatsApp */}
+          <div style={{ marginBottom: 14 }}>
+            <label style={lbl()}>WhatsApp *</label>
+            <input value={whatsapp} onChange={e => setWhatsapp(e.target.value)} style={inp(!whatsapp && err)} placeholder="+94771234567" type="tel" />
+          </div>
+
+          {/* Tiler rate/experience */}
+          {isTiler && (
+            <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr 1fr', gap: 12, marginBottom: 14 }}>
+              <div>
+                <label style={lbl()}>Experience (years)</label>
+                <input value={expYears} onChange={e => setExpYears(e.target.value)} style={inp(false)} placeholder="e.g. 8" type="number" min="0" />
+              </div>
+              <div>
+                <label style={lbl()}>Rate Min (Rs/sqft)</label>
+                <input value={rateMin} onChange={e => setRateMin(e.target.value)} style={inp(false)} placeholder="e.g. 180" type="number" min="0" />
+              </div>
+              <div>
+                <label style={lbl()}>Rate Max (Rs/sqft)</label>
+                <input value={rateMax} onChange={e => setRateMax(e.target.value)} style={inp(false)} placeholder="e.g. 300" type="number" min="0" />
+              </div>
+            </div>
+          )}
+
+          {/* Provider: website + badge */}
+          {!isTiler && (
+            <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: 12, marginBottom: 14 }}>
+              <div>
+                <label style={lbl()}>Website URL</label>
+                <input value={website} onChange={e => setWebsite(e.target.value)} style={inp(false)} placeholder="https://…" type="url" />
+              </div>
+              <div>
+                <label style={lbl()}>Badge</label>
+                <select value={badge} onChange={e => setBadge(e.target.value)} style={{ ...inp(false), WebkitAppearance: 'none', cursor: 'pointer' }}>
+                  <option value="none">None</option>
+                  <option value="verified">Verified</option>
+                  <option value="featured">Featured</option>
+                </select>
+              </div>
+            </div>
+          )}
+
+          {/* Bio / Description */}
+          <div style={{ marginBottom: 14 }}>
+            <label style={lbl()}>{isTiler ? 'Bio' : 'Description'}</label>
+            <textarea value={bio} onChange={e => setBio(e.target.value)} rows={3}
+              placeholder="Profile description…"
+              style={{ ...inp(false), resize: 'vertical' }} />
+          </div>
+
+          {/* Services */}
+          <div style={{ marginBottom: 14 }}>
+            <label style={lbl()}>Services</label>
+            <div style={{ display: 'flex', flexWrap: 'wrap', gap: 6, marginBottom: 8 }}>
+              {ALL_SERVICES.map(s => (
+                <Chip key={s} label={s} checked={services.includes(s)} onClick={() => setServices(p => toggleArr(p, s))} />
+              ))}
+            </div>
+            <div style={{ display: 'flex', gap: 8 }}>
+              <input value={customSvc} onChange={e => setCustomSvc(e.target.value)}
+                onKeyDown={e => { if (e.key==='Enter'){e.preventDefault();addCustomSvc()} }}
+                placeholder="Add custom service…"
+                style={{ flex:1, padding:'7px 12px', border:'1.5px solid #e2e8f0', borderRadius:10, fontSize:12, outline:'none', fontFamily:'inherit' }} />
+              <button type="button" onClick={addCustomSvc} style={{ padding:'7px 12px', background:'#eef3fb', color:NAVY, border:`1.5px solid #d5e2f5`, borderRadius:10, fontSize:12, fontWeight:700, cursor:'pointer' }}>+ Add</button>
+            </div>
+            {services.filter(s => !ALL_SERVICES.includes(s)).length > 0 && (
+              <div style={{ display:'flex', flexWrap:'wrap', gap:6, marginTop:6 }}>
+                {services.filter(s => !ALL_SERVICES.includes(s)).map(s => (
+                  <span key={s} style={{ fontSize:11, padding:'3px 10px', background:'#f0fdf4', border:'1px solid #bbf7d0', borderRadius:20, color:'#15803d', fontWeight:600, display:'flex', alignItems:'center', gap:5 }}>
+                    {s}
+                    <button type="button" onClick={() => setServices(p => p.filter(x=>x!==s))} style={{ background:'none', border:'none', cursor:'pointer', color:'#15803d', padding:0, fontSize:12, lineHeight:1 }}>✕</button>
+                  </span>
+                ))}
+              </div>
+            )}
+          </div>
+
+          {/* Service Areas */}
+          <div style={{ marginBottom: 14 }}>
+            <label style={lbl()}>Service Areas</label>
+            <div style={{ display: 'flex', flexWrap: 'wrap', gap: 6 }}>
+              {DISTRICTS_EN.map(d => (
+                <Chip key={d} label={d} checked={svcAreas.includes(d)} onClick={() => setSvcAreas(p => toggleArr(p, d))} />
+              ))}
+            </div>
+          </div>
+
+          {/* Gallery */}
+          <GalleryEditor
+            existing={existingGallery}
+            newFiles={newGalleryFiles}
+            onNewFiles={setNewGalleryFiles}
+            onRemoveExisting={i => setExistingGallery(prev => prev.filter((_,j) => j!==i))}
+          />
+
+          {err && (
+            <div style={{ padding:'10px 14px', background:'#fef2f2', border:'1px solid #fecaca', borderRadius:10, fontSize:13, color:'#dc2626', marginBottom:14 }}>
+              ⚠ {err}
+            </div>
+          )}
+        </div>
+
+        {/* Sticky footer */}
+        <div style={{ padding:'16px 24px', borderTop:'1px solid #f1f5f9', display:'flex', gap:10, background:'#fff', flexShrink:0, position:'sticky', bottom:0 }}>
+          <button onClick={save} disabled={saving}
+            style={{ flex:1, padding:'12px', background: saving ? '#94a3b8' : NAVY, color:'#fff', border:'none', borderRadius:10, fontSize:14, fontWeight:700, cursor: saving ? 'not-allowed' : 'pointer' }}>
+            {saving ? '⏳ Saving…' : isCreate ? '✓ Create Profile' : '💾 Save Changes'}
+          </button>
+          <button onClick={onClose} disabled={saving}
+            style={{ padding:'12px 18px', background:'#f1f5f9', color:'#334155', border:'1px solid #e2e8f0', borderRadius:10, fontSize:14, fontWeight:600, cursor:'pointer' }}>
+            Cancel
+          </button>
+        </div>
+      </div>
     </div>
   )
 }
@@ -118,7 +488,9 @@ function OverviewTab() {
       supabase.from('bids').select('id', { count: 'exact', head: true }).eq('status', 'new'),
       supabase.from('projects').select('id', { count: 'exact', head: true }),
       supabase.from('provider_submissions').select('id', { count: 'exact', head: true }),
-    ]).then(([pend, claims, activeProj, newBids, totalProj, totalSub]) => {
+      supabase.from('tilers').select('id', { count: 'exact', head: true }),
+      supabase.from('providers').select('id', { count: 'exact', head: true }),
+    ]).then(([pend, claims, activeProj, newBids, totalProj, totalSub, totalTilers, totalProviders]) => {
       setStats({
         pendingSubmissions: pend.count ?? 0,
         pendingClaims:      claims.count ?? 0,
@@ -126,6 +498,8 @@ function OverviewTab() {
         newBids:            newBids.count ?? 0,
         totalProjects:      totalProj.count ?? 0,
         totalSubmissions:   totalSub.count ?? 0,
+        totalTilers:        totalTilers.count ?? 0,
+        totalProviders:     totalProviders.count ?? 0,
       })
     })
   }, [])
@@ -135,6 +509,8 @@ function OverviewTab() {
     { label: 'Pending Claims',      value: stats.pendingClaims,      color: stats.pendingClaims > 0 ? '#f59e0b' : '#64748b', emoji: '📲' },
     { label: 'Active Projects',     value: stats.activeProjects,     color: '#16a34a', emoji: '📋' },
     { label: 'New Bids',            value: stats.newBids,            color: stats.newBids > 0 ? TERRA : '#64748b', emoji: '💬' },
+    { label: 'Total Tilers',        value: stats.totalTilers,        color: NAVY, emoji: '👷' },
+    { label: 'Total Providers',     value: stats.totalProviders,     color: NAVY, emoji: '🏪' },
     { label: 'Total Projects',      value: stats.totalProjects,      color: '#64748b', emoji: '📊' },
     { label: 'Total Submissions',   value: stats.totalSubmissions,   color: '#64748b', emoji: '👥' },
   ] : []
@@ -143,10 +519,10 @@ function OverviewTab() {
     <div>
       <h2 style={S.h2}>Overview</h2>
       {!stats ? <p style={{ color: '#94a3b8' }}>Loading…</p> : (
-        <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fill,minmax(180px,1fr))', gap: 14 }}>
+        <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fill,minmax(160px,1fr))', gap: 14 }}>
           {cards.map(c => (
             <div key={c.label} style={{ ...S.card, textAlign: 'center' }}>
-              <div style={{ fontSize: 28, marginBottom: 8 }}>{c.emoji}</div>
+              <div style={{ fontSize: 26, marginBottom: 8 }}>{c.emoji}</div>
               <div style={{ fontSize: 32, fontWeight: 800, color: c.color }}>{c.value}</div>
               <div style={{ fontSize: 12, color: '#64748b', marginTop: 4 }}>{c.label}</div>
             </div>
@@ -537,9 +913,149 @@ function ReviewsTab() {
   )
 }
 
+// ─── Profiles tab ─────────────────────────────────────────────────────────────
+function ProfilesTab({ adminUserId }) {
+  const [subTab,  setSubTab]  = useState('providers')
+  const [rows,    setRows]    = useState([])
+  const [loading, setLoading] = useState(true)
+  const [page,    setPage]    = useState(0)
+  const [count,   setCount]   = useState(0)
+  const [search,  setSearch]  = useState('')
+  const [editProfile, setEditProfile] = useState(null)
+  const [creating,    setCreating]    = useState(false)
+  const PER = 20
+
+  const load = useCallback(async () => {
+    setLoading(true)
+    const table   = subTab === 'tilers' ? 'tilers' : 'providers'
+    const nameCol = subTab === 'tilers' ? 'full_name' : 'name'
+    let q = supabase.from(table).select('*', { count: 'exact' })
+      .order('created_at', { ascending: false })
+      .range(page * PER, page * PER + PER - 1)
+    if (search.trim()) q = q.ilike(nameCol, `%${search.trim()}%`)
+    const { data, count: c } = await q
+    setRows(data || [])
+    setCount(c || 0)
+    setLoading(false)
+  }, [subTab, page, search])
+
+  useEffect(() => { load() }, [load])
+  useEffect(() => { setPage(0) }, [subTab, search])
+
+  async function del(id) {
+    const table = subTab === 'tilers' ? 'tilers' : 'providers'
+    if (!confirm(`Permanently delete this ${subTab === 'tilers' ? 'tiler' : 'provider'} profile? This cannot be undone.`)) return
+    await supabase.from(table).delete().eq('id', id)
+    load()
+  }
+
+  const isTilerTab = subTab === 'tilers'
+
+  return (
+    <div>
+      <div style={{ display: 'flex', alignItems: 'center', gap: 10, marginBottom: 18, flexWrap: 'wrap' }}>
+        <h2 style={{ ...S.h2, marginBottom: 0 }}>Profiles</h2>
+        <div style={{ display: 'flex', gap: 6 }}>
+          {[['providers','🏪 Providers'],['tilers','👷 Tilers']].map(([k,l]) => (
+            <button key={k} onClick={() => setSubTab(k)}
+              style={S.btn(subTab === k ? NAVY : '#f1f5f9', subTab === k ? '#fff' : '#334155')}>
+              {l}
+            </button>
+          ))}
+        </div>
+        <input value={search} onChange={e => setSearch(e.target.value)}
+          placeholder="Search by name…"
+          style={{ padding: '7px 12px', border: '1.5px solid #e2e8f0', borderRadius: 10, fontSize: 13, outline: 'none', fontFamily: 'inherit', minWidth: 180 }} />
+        <button onClick={() => setCreating(true)} style={{ ...S.btn('#16a34a'), marginLeft: 'auto' }}>
+          + New {isTilerTab ? 'Tiler' : 'Provider'}
+        </button>
+      </div>
+
+      {loading ? <p style={{ color: '#94a3b8' }}>Loading…</p> : (
+        <>
+          <div style={S.card}>
+            <Table
+              heads={isTilerTab
+                ? ['Name','City','WhatsApp','Services','Exp','Rate','Actions']
+                : ['Name','City','WhatsApp','Services','Badge','Actions']}
+              empty={rows.length === 0 ? `No ${subTab} found` : null}
+            >
+              {rows.map(r => (
+                <tr key={r.id}>
+                  <td style={S.td}>
+                    <strong>{isTilerTab ? r.full_name : r.name}</strong>
+                    {r.slug && <div style={{ fontSize: 10, color: '#94a3b8' }}>/{r.slug}</div>}
+                  </td>
+                  <td style={S.td}>{r.city}{r.district ? `, ${r.district}` : ''}</td>
+                  <td style={S.td}>
+                    <a href={`https://wa.me/${(r.whatsapp||'').replace(/\D/g,'')}`} target="_blank" rel="noopener"
+                      style={{ color: '#16a34a', fontWeight: 600, textDecoration: 'none', fontSize: 12 }}>
+                      {r.whatsapp}
+                    </a>
+                  </td>
+                  <td style={S.td}>
+                    <div style={{ display: 'flex', flexWrap: 'wrap', gap: 3 }}>
+                      {(r.services||[]).slice(0,2).map(s => (
+                        <span key={s} style={{ fontSize: 10, padding: '2px 6px', background: '#eef3fb', color: NAVY, borderRadius: 8, fontWeight: 600 }}>{s}</span>
+                      ))}
+                      {(r.services||[]).length > 2 && <span style={{ fontSize: 10, color: '#94a3b8' }}>+{r.services.length-2}</span>}
+                    </div>
+                  </td>
+                  {isTilerTab ? (
+                    <>
+                      <td style={S.td}>{r.experience_years ? `${r.experience_years}y` : '—'}</td>
+                      <td style={S.td}>{r.daily_rate_min ? `Rs.${r.daily_rate_min}${r.daily_rate_max ? `–${r.daily_rate_max}` : '+'}` : '—'}</td>
+                    </>
+                  ) : (
+                    <td style={S.td}><StatusBadge status={r.verification_status || 'none'} /></td>
+                  )}
+                  <td style={S.td}>
+                    <div style={{ display: 'flex', gap: 5 }}>
+                      <button
+                        onClick={() => setEditProfile({ ...r, _type: isTilerTab ? 'tiler' : 'provider' })}
+                        style={S.btn(NAVY)}>✏️ Edit</button>
+                      {r.slug && (
+                        <a href={`/providers/${r.slug}`} target="_blank" rel="noopener"
+                          style={{ ...S.btn('#f1f5f9','#334155'), textDecoration: 'none', display: 'inline-flex', alignItems: 'center' }}>🔗</a>
+                      )}
+                      <button onClick={() => del(r.id)} style={S.btn('#fef2f2','#dc2626')}>🗑</button>
+                    </div>
+                  </td>
+                </tr>
+              ))}
+            </Table>
+          </div>
+          <Pagination page={page} setPage={setPage} count={count} perPage={PER} />
+        </>
+      )}
+
+      {editProfile && (
+        <ProfileModal
+          profile={editProfile}
+          profileType={editProfile._type}
+          adminUserId={adminUserId}
+          onClose={() => setEditProfile(null)}
+          onSaved={() => { setEditProfile(null); load() }}
+        />
+      )}
+
+      {creating && (
+        <ProfileModal
+          profile={null}
+          profileType={isTilerTab ? 'tiler' : 'provider'}
+          adminUserId={adminUserId}
+          onClose={() => setCreating(false)}
+          onSaved={() => { setCreating(false); load() }}
+        />
+      )}
+    </div>
+  )
+}
+
 // ─── Main AdminDashboard ───────────────────────────────────────────────────────
 const TABS = [
   { key: 'overview',     label: '📊 Overview' },
+  { key: 'profiles',     label: '👥 Profiles' },
   { key: 'submissions',  label: '📝 Submissions' },
   { key: 'claims',       label: '📲 Claims' },
   { key: 'projects',     label: '📋 Projects' },
@@ -550,7 +1066,7 @@ const TABS = [
 export default function AdminDashboard() {
   const [loading,   setLoading]   = useState(true)
   const [user,      setUser]      = useState(null)
-  const [isAdmin,   setIsAdmin]   = useState(null) // null=checking, true/false
+  const [isAdmin,   setIsAdmin]   = useState(null)
   const [tab,       setTab]       = useState('overview')
 
   useEffect(() => {
@@ -610,7 +1126,6 @@ export default function AdminDashboard() {
 
   return (
     <div style={S.page}>
-      {/* Sidebar */}
       <aside style={S.sidebar}>
         <div style={{ padding: '24px 20px 20px' }}>
           <div style={{ fontSize: 13, fontWeight: 800, letterSpacing: 1, marginBottom: 2 }}>TILERS<span style={{ color: TERRA }}>HUB</span></div>
@@ -626,7 +1141,6 @@ export default function AdminDashboard() {
                 fontSize: 13, fontWeight: 600, cursor: 'pointer', border: 'none',
                 background: tab === t.key ? 'rgba(255,255,255,0.12)' : 'transparent',
                 color: tab === t.key ? '#fff' : 'rgba(255,255,255,0.55)',
-                transition: 'all 0.15s',
               }}>
               {t.label}
             </button>
@@ -642,9 +1156,9 @@ export default function AdminDashboard() {
         </div>
       </aside>
 
-      {/* Main content */}
       <main style={S.main}>
         {tab === 'overview'    && <OverviewTab />}
+        {tab === 'profiles'    && <ProfilesTab adminUserId={user.id} />}
         {tab === 'submissions' && <SubmissionsTab />}
         {tab === 'claims'      && <ClaimsTab />}
         {tab === 'projects'    && <ProjectsTab />}
