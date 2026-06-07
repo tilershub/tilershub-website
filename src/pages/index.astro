@@ -38,19 +38,6 @@ const TYPE_ICON: Record<string, string> = {
 
 const HERO_IMG = 'https://images.unsplash.com/photo-1552321554-5fefe8c9ef14?auto=format&fit=crop&w=1400&q=75'
 
-const EXPLORE_PROS = [
-  { label:'👷 Tilers',              href:'/providers?type=tiler'            },
-  { label:'✂️ Tile Cutting',        href:'/providers?q=Tile+Cutting'        },
-  { label:'🚿 Bathroom Tiling',     href:'/providers?q=Bathroom+Tiling'     },
-  { label:'🛁 Bathroom Renovation', href:'/providers?q=Bathroom+Renovation' },
-  { label:'💧 Waterproofing',       href:'/providers?q=Waterproofing'       },
-  { label:'🏗️ Ipanel Ceiling',      href:'/providers?q=Ipanel+Ceiling'      },
-  { label:'🔩 Bathroom Plumbing',   href:'/providers?q=Bathroom+Plumbing'   },
-  { label:'🚿 Shower Cubicle',      href:'/providers?q=Shower+Cubicle'      },
-  { label:'💡 Bathroom Lighting',   href:'/providers?q=Bathroom+Lighting'   },
-  { label:'⚡ Electrical Works',    href:'/providers?q=Electrical+Works'    },
-]
-
 const EXPLORE_MORE = [
   { label:'🪨 Tiles',         href:'/tile'       },
   { label:'🚿 Bathware',      href:'/bathrooms'  },
@@ -242,26 +229,6 @@ const EXPLORE_MORE = [
     </div>
   </section>
 
-  <!-- ⑧ EXPLORE TILERSHUB ─────────────────────────────────── -->
-  <section style="background:var(--surface-2);padding:28px 0 24px;border-top:1px solid var(--border);">
-    <div style="padding:0 16px 10px;display:flex;align-items:center;justify-content:space-between;">
-      <div style="font-size:13px;font-weight:700;color:var(--text);">Explore TilersHub</div>
-      <a href="/categories" style="font-size:11px;font-weight:600;color:var(--navy);text-decoration:none;">All categories →</a>
-    </div>
-
-    <div style="display:flex;gap:8px;overflow-x:auto;scrollbar-width:none;-webkit-overflow-scrolling:touch;padding:0 16px 10px;">
-      {EXPLORE_PROS.map(c => (
-        <a href={c.href} class="explore-chip">{c.label}</a>
-      ))}
-    </div>
-
-    <div style="display:flex;gap:8px;overflow-x:auto;scrollbar-width:none;-webkit-overflow-scrolling:touch;padding:0 16px 4px;">
-      {EXPLORE_MORE.map(c => (
-        <a href={c.href} class="explore-chip">{c.label}</a>
-      ))}
-    </div>
-  </section>
-
 </Layout>
 
 <style>
@@ -406,22 +373,5 @@ const EXPLORE_MORE = [
   .join-strip-btn { width: 100%; justify-content: center; }
 }
 
-/* ── EXPLORE CHIPS ───────────────────────────────────────── */
-.explore-chip {
-  display: inline-flex;
-  align-items: center;
-  gap: 5px;
-  font-size: 12px;
-  font-weight: 600;
-  padding: 8px 14px;
-  border-radius: 20px;
-  background: #fff;
-  color: var(--text-2);
-  border: 1px solid var(--border);
-  white-space: nowrap;
-  text-decoration: none;
-  flex-shrink: 0;
-  transition: border-color 0.15s, color 0.15s;
-}
-.explore-chip:hover { border-color: var(--navy); color: var(--navy); }
+
 </style>
