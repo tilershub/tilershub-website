@@ -224,17 +224,36 @@ const EXPLORE_MORE = [
     ))}
   </div>
 
-  <!-- ⑤ FEATURED TILERS ───────────────────────────────────── -->
+  <!-- ⑤ FEATURED PROFESSIONALS ──────────────────────────── -->
   <section class="section" style="background:#fff;">
     <div class="section-head">
       <div>
         <div class="section-eyebrow">⭐ Featured</div>
-        <div class="section-title-sm">Verified Tiling <span>Professionals</span></div>
+        <div class="section-title-sm">Top Tiling <span>Professionals</span></div>
       </div>
-      <a href="/providers?type=tiler" class="see-all">View all →</a>
+      <a href="/providers" class="see-all">View all →</a>
     </div>
 
     <div class="shelf">
+      <!-- LUXEhome premium card — always first -->
+      <a href="/sponsor/luxehome" class="luxe-shelf-card" style="flex-shrink:0;">
+        <div class="luxe-shelf-cover">
+          <div class="luxe-shelf-glow"></div>
+          <div class="luxe-shelf-wordmark">
+            <span style="color:#D4AF37;">LUXE</span><span style="color:rgba(255,255,255,0.88);font-weight:400;">home</span>
+          </div>
+          <span class="luxe-shelf-badge">🛡️ TH Master</span>
+        </div>
+        <div class="tiler-body">
+          <div class="rating">⭐ 4.9 · 47 reviews</div>
+          <div class="tiler-name" style="color:#0c0804;">LUXEhome</div>
+          <div class="tiler-meta">🏗️ 12+ Yrs · 🚿 Bathroom Reno</div>
+          <div style="display:flex;align-items:center;justify-content:center;width:100%;padding:7px;background:#D4AF37;color:#0c0804;border-radius:8px;font-size:11px;font-weight:800;margin-top:8px;">
+            View Profile →
+          </div>
+        </div>
+      </a>
+
       {(tilers.length > 0 ? tilers : [
         { id:'p1', full_name:'Lakmal Perera',   city:'Colombo 7',  is_verified:true,  avg_rating:4.9, experience_years:12, slug:'lakmal'  },
         { id:'p2', full_name:'Chamara Silva',   city:'Kandy',      is_verified:true,  avg_rating:4.7, experience_years:8,  slug:'chamara' },
@@ -693,6 +712,58 @@ const EXPLORE_MORE = [
   .luxe-top-right { align-items: flex-start; }
   .luxe-rating-row { justify-content: flex-start; }
   .luxe-card { padding: 16px; }
+}
+
+/* ── LUXEHOME SHELF CARD ─────────────────────────────────── */
+.luxe-shelf-card {
+  width: 186px;
+  flex-shrink: 0;
+  background: #fff;
+  border: 1.5px solid #D4AF37;
+  border-radius: var(--radius-lg);
+  overflow: hidden;
+  box-shadow: 0 4px 16px rgba(212,175,55,0.18);
+  text-decoration: none;
+  color: inherit;
+  display: block;
+  transition: transform 0.2s, box-shadow 0.2s;
+}
+.luxe-shelf-card:hover { transform: translateY(-3px); box-shadow: 0 8px 28px rgba(212,175,55,0.28); }
+.luxe-shelf-cover {
+  height: 110px;
+  background: linear-gradient(135deg, #0c0804 0%, #1a120a 100%);
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  gap: 6px;
+  position: relative;
+  overflow: hidden;
+}
+.luxe-shelf-glow {
+  position: absolute;
+  inset: 0;
+  background: radial-gradient(ellipse at 50% 0%, rgba(212,175,55,0.18) 0%, transparent 70%);
+  pointer-events: none;
+}
+.luxe-shelf-wordmark {
+  font-family: 'Playfair Display', serif;
+  font-size: 20px;
+  font-weight: 700;
+  line-height: 1;
+  position: relative;
+  z-index: 1;
+}
+.luxe-shelf-badge {
+  position: relative;
+  z-index: 1;
+  font-size: 9px;
+  font-weight: 700;
+  color: #D4AF37;
+  background: rgba(212,175,55,0.12);
+  border: 1px solid rgba(212,175,55,0.3);
+  border-radius: 20px;
+  padding: 2px 8px;
 }
 
 /* ── QUICK ACTIONS ───────────────────────────────────────── */
