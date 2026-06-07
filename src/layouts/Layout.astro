@@ -25,8 +25,12 @@ const path = Astro.url.pathname
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
   <link href="https://fonts.googleapis.com/css2?family=Noto+Sans+Sinhala:wght@300;400;500;600;700;800&family=Playfair+Display:ital,wght@0,400;0,600;0,700;1,400&display=swap" rel="stylesheet" />
   <slot name="head" />
+  <!-- Google Tag Manager -->
+  <script>(function(w,d,s,l,i){w[l]=w[l]||[];w[l].push({'gtm.start':new Date().getTime(),event:'gtm.js'});var f=d.getElementsByTagName(s)[0],j=d.createElement(s),dl=l!='dataLayer'?'&l='+l:'';j.async=true;j.src='https://www.googletagmanager.com/gtm.js?id='+i+dl;f.parentNode.insertBefore(j,f);})(window,document,'script','dataLayer','GTM-MX727MR5');</script>
 </head>
 <body>
+  <!-- Google Tag Manager (noscript) -->
+  <noscript><iframe src="https://www.googletagmanager.com/ns.html?id=GTM-MX727MR5" height="0" width="0" style="display:none;visibility:hidden"></iframe></noscript>
 
   <!-- ═══ WHITE MARKETPLACE HEADER ═══ -->
   <header class="site-header">
@@ -61,10 +65,7 @@ const path = Astro.url.pathname
     <a href="/post-project" class="drawer-link highlight">📋 Post a Project — Get Bids</a>
     <a href="/join-tilershub" class="drawer-link" style="color:rgba(255,255,255,0.6);">✅ Join as Provider</a>
     <div class="drawer-divider"></div>
-    <a href="/providers?type=workshop" class="drawer-link" style="color:rgba(255,255,255,0.5);font-size:13px;">🏭 Workshops</a>
-    <a href="/providers?type=supplier" class="drawer-link" style="color:rgba(255,255,255,0.5);font-size:13px;">📦 Suppliers</a>
-    <a href="/providers?type=tile_shop" class="drawer-link" style="color:rgba(255,255,255,0.5);font-size:13px;">🪨 Tile Shops</a>
-    <a href="/providers" class="drawer-link" style="color:rgba(255,255,255,0.5);font-size:13px;">🔍 All Categories</a>
+    <a href="/providers" class="drawer-link" style="color:rgba(255,255,255,0.5);font-size:13px;">🔍 All Providers</a>
     <div class="drawer-divider"></div>
     <a href="/dashboard" class={`drawer-link${path==='/dashboard'?' active':''}`} style="color:rgba(255,255,255,0.5);font-size:13px;">👤 My Dashboard</a>
     <a href="/about" class={`drawer-link${path==='/about'?' active':''}`} style="color:rgba(255,255,255,0.5);font-size:13px;">ℹ️ About TilersHub</a>
@@ -99,9 +100,7 @@ const path = Astro.url.pathname
           <a href="/providers?type=tiler">👷 Find Tilers</a>
           <a href="/jobs">💼 Browse Projects</a>
           <a href="/estimator">📐 Cost Estimator</a>
-          <a href="/providers?type=workshop">🏭 Workshops</a>
-          <a href="/providers?type=supplier">📦 Suppliers</a>
-          <a href="/providers?type=tile_shop">🪨 Tile Shops</a>
+          <a href="/providers">🔍 All Providers</a>
         </nav>
       </div>
       <div>
