@@ -1,9 +1,8 @@
-import { useState, useEffect, useRef } from 'react'
-import { supabase, DISTRICTS_EN } from '../lib/supabase.js'
+import { useState, useRef } from 'react'
+import { supabase, DISTRICTS, DISTRICTS_EN } from '../lib/supabase.js'
 
-// ─── All constants & helpers outside component (prevents keyboard-dismiss remount) ───
-
-const ALL_SERVICES = [
+// ─── Service names (index-aligned EN ↔ SI) ───────────────────────────────────
+const ALL_SERVICES_EN = [
   'Floor Tiling', 'Wall Tiling', 'Bathroom Tiling', 'Kitchen Tiling',
   'Staircase Tiling', 'Outdoor Tiling', 'Large Tile Installation',
   'Waterproofing', 'Grouting & Finishing',
@@ -14,8 +13,133 @@ const ALL_SERVICES = [
   'Bathroom Lighting', 'Bathroom Wiring', 'Electrical Works',
   'Ipanel Ceiling',
 ]
+const ALL_SERVICES_SI = [
+  'මහල් ටයිල් කිරීම', 'බිත්ති ටයිල් කිරීම', 'නාන කාමර ටයිල් කිරීම', 'කුස්සිය ටයිල් කිරීම',
+  'පඩිපෙළ ටයිල් කිරීම', 'බාහිර ටයිල් කිරීම', 'විශාල ටයිල් සවි කිරීම',
+  'දිය ආරක්ෂාකරණය', 'ග්‍රොට්ටිං සහ නිම කිරීම',
+  'ටයිල් කැපීම', 'ටයිල් රවුටිං',
+  'නාන කාමර ප්‍රතිසංස්කරණය', 'සම්පූර්ණ ඉදිකිරීම',
+  'නාන කාමර නළ වැඩ', 'ෂවර් කියුබිකල්',
+  'රේල් රාමු', 'වැනිටි කබඩ්',
+  'නාන කාමර ආලෝකය', 'නාන කාමර විදුලි', 'විදුලි කාර්ය',
+  'Ipanel සිවිලිම',
+]
 
-const DESC_PLACEHOLDER = 'Describe your services, experience, and area of operation...'
+const MAX_PORTFOLIO = 8
+
+// ─── Translations ─────────────────────────────────────────────────────────────
+const TRANS = {
+  en: {
+    nameLabel: 'Name / Company',
+    namePlaceholder: 'Your name or company name',
+    cityLabel: 'City / Town',
+    cityPlaceholder: 'e.g. Nugegoda',
+    districtLabel: 'District',
+    districtDefault: 'Select district...',
+    whatsappLabel: 'WhatsApp Number',
+    whatsappHint: 'Customers will contact you here.',
+    serviceAreasLabel: 'Service Areas',
+    serviceAreasHint: "Select all districts you're available to work in.",
+    servicesLabel: 'Services You Offer',
+    servicesHint: 'Select all that apply — or type your own below.',
+    customSvcPh: 'Add custom service…',
+    addBtn: '+ Add',
+    profilePhotoLabel: 'Profile Photo',
+    profilePhotoHint: 'Your photo or logo',
+    coverLabel: 'Cover Image',
+    coverHint: 'Showcase your best work',
+    portfolioLabel: 'Portfolio / Highlights',
+    portfolioCount: `(up to ${MAX_PORTFOLIO} photos)`,
+    portfolioHint: 'Showcase your best work — tiling jobs, showroom, products. JPG/PNG/WebP.',
+    addPhotoBtn: 'Add Photo',
+    descLabel: 'Short Description',
+    descHint: 'Optional — describe your experience or what makes you stand out.',
+    descPh: 'Describe your services, experience, and area of operation...',
+    trustNote: '✓ <strong>Free listing</strong> · Direct WhatsApp leads · No commission ever · TilersHub team reviews within 1–2 business days.',
+    submitBtn: '✅ Submit Application',
+    submittingBtn: '⏳ Submitting...',
+    successTitle: 'Application Submitted!',
+    successBody: 'Thank you for applying to join TilersHub. Our team will review your application and contact you on WhatsApp within 1–2 business days.',
+    successReach: wa => `✓ We'll reach out to ${wa} soon.`,
+    browseBtn: 'Browse Provider Directory',
+    errRequired: 'Required',
+    errPhone: 'Enter a valid phone number',
+    errServices: 'Select at least one service',
+    errSubmit: 'Something went wrong. Please try again.',
+    clickToChange: 'Click to change',
+    uploadHint: 'Click or drag to upload',
+    maxSize: 'JPG, PNG, WebP · Max 5 MB',
+  },
+  si: {
+    nameLabel: 'නම / ව්‍යාපාර නාමය',
+    namePlaceholder: 'ඔබේ නම හෝ ව්‍යාපාරයේ නම',
+    cityLabel: 'නගරය / ප්‍රදේශය',
+    cityPlaceholder: 'උදා: නුගේගොඩ',
+    districtLabel: 'දිස්ත්‍රික්කය',
+    districtDefault: 'දිස්ත්‍රික්කය තෝරන්න...',
+    whatsappLabel: 'WhatsApp අංකය',
+    whatsappHint: 'ගාහකයින් ඔබ හා සම්බන්ධ වනු ලැබේ.',
+    serviceAreasLabel: 'සේවා ප්‍රදේශ',
+    serviceAreasHint: 'ඔබ සේවය ලබාදෙන සියලු දිස්ත්‍රික්ක තෝරන්න.',
+    servicesLabel: 'ඔබ ලබාදෙන සේවාවන්',
+    servicesHint: 'සියල්ල තෝරන්න — හෝ ඔබේ ම සේවාව ඇතුළු කරන්න.',
+    customSvcPh: 'අභිරුචි සේවාවක් ඇතුළු කරන්න…',
+    addBtn: '+ එකතු',
+    profilePhotoLabel: 'පරිශීලක ඡායාරූපය',
+    profilePhotoHint: 'ඔබේ ඡායාරූපය හෝ ලාංඡනය',
+    coverLabel: 'ප්‍රධාන රූපය',
+    coverHint: 'ඔබේ හොඳම වැඩ පෙන්වන්න',
+    portfolioLabel: 'Portfolio / ලකුණු',
+    portfolioCount: '(ඡායාරූප 8 දක්වා)',
+    portfolioHint: 'ඔබේ හොඳම ටයිල් කාර්ය, ප්‍රදර්ශනාගාරය, නිෂ්පාදන.',
+    addPhotoBtn: 'ඡායාරූපය',
+    descLabel: 'කෙටි විස්තරය',
+    descHint: 'අත්‍යාවශ්‍ය නොවේ — ඔබේ සේවාව හෝ ඔබ ඉස්මතු වන ආකාරය විස්තර කරන්න.',
+    descPh: 'ඔබේ සේවාව, අත්දැකීම් සහ සේවා ප්‍රදේශය විස්තර කරන්න...',
+    trustNote: '✓ <strong>නොමිලේ ලැයිස්තු</strong> · WhatsApp සෘජු ඇමතුම් · කොමිස් නොමැත · TilersHub කණ්ඩායම ව්‍යාපාරික දින 1–2 ඇතුළත සමාලෝචනය කරයි.',
+    submitBtn: '✅ අයදුම්පත ඉදිරිපත් කරන්න',
+    submittingBtn: '⏳ ඉදිරිපත් කරමින්...',
+    successTitle: 'අයදුම්පත ඉදිරිපත් කරන ලදී!',
+    successBody: 'TilersHub හා සම්බන්ධ වීමට ස්තූතිය. අපගේ කණ්ඩායම ව්‍යාපාරික දින 1–2 ඇතුළත WhatsApp හරහා ඔබ හා සම්බන්ධ වනු ඇත.',
+    successReach: wa => `✓ ඉක්මනින් ${wa} ඇමතීමට කටයුතු කරමු.`,
+    browseBtn: 'සේවා සපයන්නන් බ්‍රවුස් කරන්න',
+    errRequired: 'අවශ්‍යයි',
+    errPhone: 'වලංගු දුරකතන අංකයක් ඇතුළු කරන්න',
+    errServices: 'අවම වශයෙන් සේවාවක් එකක් තෝරන්න',
+    errSubmit: 'දෝෂයක් ඇති විය. නැවත උත්සාහ කරන්න.',
+    clickToChange: 'වෙනස් කිරීමට ක්ලික් කරන්න',
+    uploadHint: 'ක්ලික් කරන්න හෝ ඇද දමන්න',
+    maxSize: 'JPG, PNG, WebP · උපරිම 5 MB',
+  },
+}
+
+// ─── Shared helpers ───────────────────────────────────────────────────────────
+function useLang() {
+  const [lang, setLangState] = useState(() => {
+    try { return localStorage.getItem('tilershub_lang') || 'en' } catch { return 'en' }
+  })
+  function toggle() {
+    const next = lang === 'en' ? 'si' : 'en'
+    setLangState(next)
+    try { localStorage.setItem('tilershub_lang', next) } catch {}
+  }
+  return [lang, toggle]
+}
+
+function LangToggle({ lang, onToggle }) {
+  return (
+    <button
+      type="button"
+      onClick={onToggle}
+      style={{ fontSize: 12, fontWeight: 700, padding: '5px 14px', border: '1.5px solid #e2e8f0', borderRadius: 20, cursor: 'pointer', background: '#fff', color: '#334155', display: 'inline-flex', gap: 6, alignItems: 'center', boxShadow: '0 1px 4px rgba(0,0,0,0.06)', flexShrink: 0 }}
+      title="Switch language / භාෂාව මාරු කරන්න"
+    >
+      <span style={{ opacity: lang === 'en' ? 1 : 0.35 }}>EN</span>
+      <span style={{ opacity: 0.2, fontWeight: 300 }}>|</span>
+      <span style={{ opacity: lang === 'si' ? 1 : 0.35 }}>සිං</span>
+    </button>
+  )
+}
 
 function Field({ label, id, req, error, hint, children }) {
   return (
@@ -57,7 +181,7 @@ function Chip({ label, checked, onClick }) {
   )
 }
 
-function ImageUpload({ label, hint, aspectRatio, value, onChange }) {
+function ImageUpload({ label, hint, aspectRatio, onChange, T }) {
   const inputRef = useRef(null)
   const [preview, setPreview] = useState(null)
   const [dragging, setDragging] = useState(false)
@@ -68,9 +192,6 @@ function ImageUpload({ label, hint, aspectRatio, value, onChange }) {
     setPreview(URL.createObjectURL(file))
   }
 
-  function onInputChange(e) { handleFile(e.target.files[0]) }
-  function onDrop(e) { e.preventDefault(); setDragging(false); handleFile(e.dataTransfer.files[0]) }
-
   const height = aspectRatio === 'cover' ? 130 : 100
 
   return (
@@ -80,38 +201,31 @@ function ImageUpload({ label, hint, aspectRatio, value, onChange }) {
         onClick={() => inputRef.current?.click()}
         onDragOver={e => { e.preventDefault(); setDragging(true) }}
         onDragLeave={() => setDragging(false)}
-        onDrop={onDrop}
-        style={{
-          position: 'relative', height, borderRadius: 12, border: `2px dashed ${dragging ? '#1B3A6B' : '#cbd5e1'}`,
-          background: dragging ? '#eef3fb' : preview ? '#000' : '#f8fafc',
-          cursor: 'pointer', overflow: 'hidden', display: 'flex', alignItems: 'center', justifyContent: 'center',
-          transition: 'all 0.2s',
-        }}
+        onDrop={e => { e.preventDefault(); setDragging(false); handleFile(e.dataTransfer.files[0]) }}
+        style={{ position: 'relative', height, borderRadius: 12, border: `2px dashed ${dragging ? '#1B3A6B' : '#cbd5e1'}`, background: dragging ? '#eef3fb' : preview ? '#000' : '#f8fafc', cursor: 'pointer', overflow: 'hidden', display: 'flex', alignItems: 'center', justifyContent: 'center', transition: 'all 0.2s' }}
       >
         {preview ? (
           <>
-            <img src={preview} alt="preview" style={{ position: 'absolute', inset: 0, width: '100%', height: '100%', objectFit: 'cover', opacity: 0.85 }} />
+            <img src={preview} alt="" style={{ position: 'absolute', inset: 0, width: '100%', height: '100%', objectFit: 'cover', opacity: 0.85 }} />
             <div style={{ position: 'relative', zIndex: 1, background: 'rgba(0,0,0,0.5)', color: '#fff', borderRadius: 8, padding: '5px 12px', fontSize: 11, fontWeight: 600 }}>
-              Click to change
+              {T.clickToChange}
             </div>
           </>
         ) : (
           <div style={{ textAlign: 'center', color: '#94a3b8', pointerEvents: 'none' }}>
             <div style={{ fontSize: 24, marginBottom: 4 }}>{aspectRatio === 'cover' ? '🖼️' : '👤'}</div>
-            <div style={{ fontSize: 12, fontWeight: 600 }}>Click or drag to upload</div>
-            <div style={{ fontSize: 10, marginTop: 2 }}>JPG, PNG, WebP · Max 5 MB</div>
+            <div style={{ fontSize: 12, fontWeight: 600 }}>{T.uploadHint}</div>
+            <div style={{ fontSize: 10, marginTop: 2 }}>{T.maxSize}</div>
           </div>
         )}
       </div>
       {hint && <p style={{ fontSize: 11, color: '#94a3b8', marginTop: 5, lineHeight: 1.5 }}>{hint}</p>}
-      <input ref={inputRef} type="file" accept="image/*" onChange={onInputChange} style={{ display: 'none' }} />
+      <input ref={inputRef} type="file" accept="image/*" onChange={e => handleFile(e.target.files[0])} style={{ display: 'none' }} />
     </div>
   )
 }
 
-const MAX_PORTFOLIO = 8
-
-function PortfolioUpload({ files, onChange }) {
+function PortfolioUpload({ files, onChange, T }) {
   const inputRef = useRef(null)
 
   function addFiles(newFiles) {
@@ -119,20 +233,16 @@ function PortfolioUpload({ files, onChange }) {
     onChange(combined)
   }
 
-  function remove(idx) {
-    onChange(files.filter((_, i) => i !== idx))
-  }
-
   return (
     <div style={{ marginBottom: 20 }}>
       <div style={{ fontSize: 11, fontWeight: 700, color: '#334155', textTransform: 'uppercase', letterSpacing: '0.6px', marginBottom: 7 }}>
-        Portfolio / Highlights <span style={{ fontSize: 11, color: '#94a3b8', textTransform: 'none', fontWeight: 400 }}>(up to {MAX_PORTFOLIO} photos)</span>
+        {T.portfolioLabel} <span style={{ fontSize: 11, color: '#94a3b8', textTransform: 'none', fontWeight: 400 }}>{T.portfolioCount}</span>
       </div>
       <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fill, minmax(100px, 1fr))', gap: 8, marginBottom: 8 }}>
         {files.map((f, i) => (
           <div key={i} style={{ position: 'relative', aspectRatio: '1', borderRadius: 10, overflow: 'hidden', border: '1px solid #e2e8f0' }}>
             <img src={URL.createObjectURL(f)} alt="" style={{ width: '100%', height: '100%', objectFit: 'cover' }} />
-            <button type="button" onClick={() => remove(i)} style={{ position: 'absolute', top: 4, right: 4, background: 'rgba(0,0,0,0.6)', color: '#fff', border: 'none', borderRadius: '50%', width: 22, height: 22, cursor: 'pointer', fontSize: 12, lineHeight: 1, display: 'flex', alignItems: 'center', justifyContent: 'center' }}>✕</button>
+            <button type="button" onClick={() => onChange(files.filter((_, j) => j !== i))} style={{ position: 'absolute', top: 4, right: 4, background: 'rgba(0,0,0,0.6)', color: '#fff', border: 'none', borderRadius: '50%', width: 22, height: 22, cursor: 'pointer', fontSize: 12, display: 'flex', alignItems: 'center', justifyContent: 'center' }}>✕</button>
           </div>
         ))}
         {files.length < MAX_PORTFOLIO && (
@@ -141,17 +251,17 @@ function PortfolioUpload({ files, onChange }) {
             style={{ aspectRatio: '1', borderRadius: 10, border: '2px dashed #cbd5e1', display: 'flex', flexDirection: 'column', alignItems: 'center', justifyContent: 'center', cursor: 'pointer', background: '#f8fafc', gap: 4 }}
           >
             <span style={{ fontSize: 22, color: '#94a3b8' }}>+</span>
-            <span style={{ fontSize: 10, color: '#94a3b8' }}>Add Photo</span>
+            <span style={{ fontSize: 10, color: '#94a3b8' }}>{T.addPhotoBtn}</span>
           </div>
         )}
       </div>
       <input ref={inputRef} type="file" accept="image/*" multiple onChange={e => addFiles(e.target.files)} style={{ display: 'none' }} />
-      <p style={{ fontSize: 11, color: '#94a3b8', margin: 0, lineHeight: 1.5 }}>Showcase your best work — tiling jobs, showroom, products. JPG/PNG/WebP.</p>
+      <p style={{ fontSize: 11, color: '#94a3b8', margin: 0, lineHeight: 1.5 }}>{T.portfolioHint}</p>
     </div>
   )
 }
 
-function ServiceTextInput({ value, onChange }) {
+function ServiceTextInput({ value, onChange, T }) {
   const [text, setText] = useState('')
   function add() {
     const s = text.trim()
@@ -164,10 +274,10 @@ function ServiceTextInput({ value, onChange }) {
         value={text}
         onChange={e => setText(e.target.value)}
         onKeyDown={e => { if (e.key === 'Enter') { e.preventDefault(); add() } }}
-        placeholder="Add custom service…"
+        placeholder={T.customSvcPh}
         style={{ flex: 1, padding: '8px 12px', border: '1.5px solid #e2e8f0', borderRadius: 10, fontSize: 12, outline: 'none', fontFamily: 'inherit' }}
       />
-      <button type="button" onClick={add} style={{ padding: '8px 14px', background: '#eef3fb', color: '#1B3A6B', border: '1.5px solid #d5e2f5', borderRadius: 10, fontSize: 12, fontWeight: 700, cursor: 'pointer' }}>+ Add</button>
+      <button type="button" onClick={add} style={{ padding: '8px 14px', background: '#eef3fb', color: '#1B3A6B', border: '1.5px solid #d5e2f5', borderRadius: 10, fontSize: 12, fontWeight: 700, cursor: 'pointer' }}>{T.addBtn}</button>
     </div>
   )
 }
@@ -182,6 +292,9 @@ async function uploadImage(file, folder) {
 }
 
 export default function JoinForm() {
+  const [lang, toggleLang] = useLang()
+  const T = TRANS[lang]
+
   const [form, setForm] = useState({
     name: '', city: '', district: '',
     whatsapp: '',
@@ -190,16 +303,11 @@ export default function JoinForm() {
     description: '',
   })
   const [profileFile, setProfileFile] = useState(null)
-  const [coverFile, setCoverFile] = useState(null)
+  const [coverFile, setCoverFile]     = useState(null)
   const [portfolioFiles, setPortfolioFiles] = useState([])
-  const [errors, setErrors] = useState({})
+  const [errors, setErrors]   = useState({})
   const [submitting, setSubmitting] = useState(false)
   const [success, setSuccess] = useState(false)
-  const [userId, setUserId] = useState(null)
-
-  useEffect(() => {
-    supabase.auth.getUser().then(({ data: { user } }) => setUserId(user?.id ?? null))
-  }, [])
 
   const set = (k, v) => setForm(f => ({ ...f, [k]: v }))
 
@@ -212,11 +320,11 @@ export default function JoinForm() {
 
   function validate() {
     const e = {}
-    if (!form.name.trim()) e.name = 'Required'
-    if (!form.city.trim()) e.city = 'Required'
-    if (!form.whatsapp.trim()) e.whatsapp = 'Required'
-    else if (!/^\+?[0-9]{9,15}$/.test(form.whatsapp.replace(/\s/g, ''))) e.whatsapp = 'Enter a valid phone number'
-    if (form.services.length === 0) e.services = 'Select at least one option'
+    if (!form.name.trim()) e.name = T.errRequired
+    if (!form.city.trim()) e.city = T.errRequired
+    if (!form.whatsapp.trim()) e.whatsapp = T.errRequired
+    else if (!/^\+?[0-9]{9,15}$/.test(form.whatsapp.replace(/\s/g, ''))) e.whatsapp = T.errPhone
+    if (form.services.length === 0) e.services = T.errServices
     return e
   }
 
@@ -245,11 +353,10 @@ export default function JoinForm() {
         cover_image: coverUrl,
         photo_urls: portfolioUrls.length ? portfolioUrls : null,
         status: 'pending_review',
-        ...(userId ? { user_id: userId } : {}),
       })
       setSuccess(true)
     } catch {
-      setErrors({ submit: 'Something went wrong. Please try again.' })
+      setErrors({ submit: T.errSubmit })
     } finally {
       setSubmitting(false)
     }
@@ -259,15 +366,15 @@ export default function JoinForm() {
     return (
       <div style={{ textAlign: 'center', padding: '60px 24px', background: '#fff', borderRadius: 20, border: '1px solid #e2e8f0', maxWidth: 520, margin: '0 auto' }}>
         <div style={{ fontSize: 56, marginBottom: 16 }}>🎉</div>
-        <h2 style={{ fontFamily: "'Playfair Display', serif", fontSize: 26, fontWeight: 700, color: '#0f172a', marginBottom: 12 }}>Application Submitted!</h2>
+        <h2 style={{ fontFamily: "'Playfair Display', serif", fontSize: 26, fontWeight: 700, color: '#0f172a', marginBottom: 12 }}>{T.successTitle}</h2>
         <p style={{ fontSize: 14, color: '#64748b', lineHeight: 1.8, marginBottom: 20, maxWidth: 380, margin: '0 auto 20px' }}>
-          Thank you for applying to join TilersHub. Our team will review your application and contact you on WhatsApp within 1–2 business days.
+          {T.successBody}
         </p>
         <div style={{ padding: 16, background: '#f0fdf4', borderRadius: 12, border: '1px solid #bbf7d0', marginBottom: 24 }}>
-          <p style={{ fontSize: 13, color: '#15803d', margin: 0 }}>✓ We'll reach out to <strong>{form.whatsapp}</strong> soon.</p>
+          <p style={{ fontSize: 13, color: '#15803d', margin: 0 }}>{T.successReach(<strong>{form.whatsapp}</strong>)}</p>
         </div>
         <a href="/providers" style={{ padding: '11px 24px', background: '#1B3A6B', color: '#fff', borderRadius: 12, fontSize: 14, fontWeight: 600, textDecoration: 'none', display: 'inline-block' }}>
-          Browse Provider Directory
+          {T.browseBtn}
         </a>
       </div>
     )
@@ -276,60 +383,47 @@ export default function JoinForm() {
   return (
     <form onSubmit={handleSubmit} noValidate style={{ maxWidth: 600, margin: '0 auto' }}>
 
+      {/* Language toggle */}
+      <div style={{ display: 'flex', justifyContent: 'flex-end', marginBottom: 24 }}>
+        <LangToggle lang={lang} onToggle={toggleLang} />
+      </div>
+
       {/* Name */}
-      <Field label="Name / Company" id="name" req error={errors.name}>
-        <input
-          id="name"
-          value={form.name}
-          onChange={e => set('name', e.target.value)}
-          placeholder="Your name or company name"
-          style={inputStyle(!!errors.name)}
-        />
+      <Field label={T.nameLabel} id="name" req error={errors.name}>
+        <input id="name" value={form.name} onChange={e => set('name', e.target.value)}
+          placeholder={T.namePlaceholder} style={inputStyle(!!errors.name)} />
       </Field>
 
       {/* City + District */}
       <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: 14 }}>
-        <Field label="City / Town" id="city" req error={errors.city}>
-          <input
-            id="city"
-            value={form.city}
-            onChange={e => set('city', e.target.value)}
-            placeholder="e.g. Nugegoda"
-            style={inputStyle(!!errors.city)}
-          />
+        <Field label={T.cityLabel} id="city" req error={errors.city}>
+          <input id="city" value={form.city} onChange={e => set('city', e.target.value)}
+            placeholder={T.cityPlaceholder} style={inputStyle(!!errors.city)} />
         </Field>
-        <Field label="District" id="district">
-          <select
-            id="district"
-            value={form.district}
-            onChange={e => set('district', e.target.value)}
-            style={{ ...inputStyle(false), WebkitAppearance: 'none', cursor: 'pointer' }}
-          >
-            <option value="">Select district...</option>
-            {DISTRICTS_EN.map(d => <option key={d} value={d}>{d}</option>)}
+        <Field label={T.districtLabel} id="district">
+          <select id="district" value={form.district} onChange={e => set('district', e.target.value)}
+            style={{ ...inputStyle(false), WebkitAppearance: 'none', cursor: 'pointer' }}>
+            <option value="">{T.districtDefault}</option>
+            {DISTRICTS_EN.map((d, i) => (
+              <option key={d} value={d}>{lang === 'si' ? DISTRICTS[i] : d}</option>
+            ))}
           </select>
         </Field>
       </div>
 
       {/* WhatsApp */}
-      <Field label="WhatsApp Number" id="whatsapp" req error={errors.whatsapp} hint="Customers will contact you here.">
-        <input
-          id="whatsapp"
-          value={form.whatsapp}
-          onChange={e => set('whatsapp', e.target.value)}
-          placeholder="+94771234567"
-          type="tel"
-          style={inputStyle(!!errors.whatsapp)}
-        />
+      <Field label={T.whatsappLabel} id="whatsapp" req error={errors.whatsapp} hint={T.whatsappHint}>
+        <input id="whatsapp" value={form.whatsapp} onChange={e => set('whatsapp', e.target.value)}
+          placeholder="+94771234567" type="tel" style={inputStyle(!!errors.whatsapp)} />
       </Field>
 
       {/* Service Areas */}
-      <Field label="Service Areas" id="service_areas" hint="Select all districts you're available to work in.">
+      <Field label={T.serviceAreasLabel} id="service_areas" hint={T.serviceAreasHint}>
         <div style={{ display: 'flex', flexWrap: 'wrap', gap: 7 }}>
-          {DISTRICTS_EN.map(d => (
+          {DISTRICTS_EN.map((d, i) => (
             <Chip
               key={d}
-              label={d}
+              label={lang === 'si' ? DISTRICTS[i] : d}
               checked={form.service_areas.includes(d)}
               onClick={() => toggleChip('service_areas', d)}
             />
@@ -338,61 +432,40 @@ export default function JoinForm() {
       </Field>
 
       {/* Services */}
-      <Field label="Services You Offer" id="services" req error={errors.services} hint="Select all that apply — or type your own below.">
+      <Field label={T.servicesLabel} id="services" req error={errors.services} hint={T.servicesHint}>
         <div style={{ display: 'flex', flexWrap: 'wrap', gap: 8, marginBottom: 10 }}>
-          {ALL_SERVICES.map(s => (
+          {ALL_SERVICES_EN.map((sEn, i) => (
             <Chip
-              key={s}
-              label={s}
-              checked={form.services.includes(s)}
-              onClick={() => toggleChip('services', s)}
+              key={sEn}
+              label={lang === 'si' ? ALL_SERVICES_SI[i] : sEn}
+              checked={form.services.includes(sEn)}
+              onClick={() => toggleChip('services', sEn)}
             />
           ))}
         </div>
-        <ServiceTextInput
-          value={form.services}
-          onChange={v => set('services', v)}
-        />
+        <ServiceTextInput value={form.services} onChange={v => set('services', v)} T={T} />
       </Field>
 
       {/* Images */}
       <div style={{ display: 'grid', gridTemplateColumns: '1fr 2fr', gap: 14 }}>
-        <ImageUpload
-          label="Profile Photo"
-          hint="Your photo or logo"
-          aspectRatio="profile"
-          value={profileFile}
-          onChange={setProfileFile}
-        />
-        <ImageUpload
-          label="Cover Image"
-          hint="Showcase your best work"
-          aspectRatio="cover"
-          value={coverFile}
-          onChange={setCoverFile}
-        />
+        <ImageUpload label={T.profilePhotoLabel} hint={T.profilePhotoHint} aspectRatio="profile" onChange={setProfileFile} T={T} />
+        <ImageUpload label={T.coverLabel} hint={T.coverHint} aspectRatio="cover" onChange={setCoverFile} T={T} />
       </div>
 
       {/* Portfolio */}
-      <PortfolioUpload files={portfolioFiles} onChange={setPortfolioFiles} />
+      <PortfolioUpload files={portfolioFiles} onChange={setPortfolioFiles} T={T} />
 
       {/* Description */}
-      <Field label="Short Description" id="description" hint="Optional — describe your experience or what makes you stand out.">
-        <textarea
-          id="description"
-          value={form.description}
-          onChange={e => set('description', e.target.value)}
-          placeholder={DESC_PLACEHOLDER}
-          rows={3}
-          style={{ ...inputStyle(false), resize: 'vertical' }}
-        />
+      <Field label={T.descLabel} id="description" hint={T.descHint}>
+        <textarea id="description" value={form.description} onChange={e => set('description', e.target.value)}
+          placeholder={T.descPh} rows={3}
+          style={{ ...inputStyle(false), resize: 'vertical' }} />
       </Field>
 
       {/* Trust note */}
       <div style={{ padding: '13px 16px', background: '#f0fdf4', borderRadius: 12, border: '1px solid #bbf7d0', marginBottom: 22 }}>
-        <p style={{ fontSize: 12, color: '#15803d', margin: 0, lineHeight: 1.6 }}>
-          ✓ <strong>Free listing</strong> · Direct WhatsApp leads · No commission ever · TilersHub team reviews within 1–2 business days.
-        </p>
+        <p style={{ fontSize: 12, color: '#15803d', margin: 0, lineHeight: 1.6 }}
+          dangerouslySetInnerHTML={{ __html: T.trustNote }} />
       </div>
 
       {errors.submit && (
@@ -406,7 +479,7 @@ export default function JoinForm() {
         disabled={submitting}
         style={{ width: '100%', padding: 14, background: submitting ? '#94a3b8' : '#1B3A6B', color: '#fff', border: 'none', borderRadius: 12, fontSize: 15, fontWeight: 700, cursor: submitting ? 'not-allowed' : 'pointer', display: 'flex', alignItems: 'center', justifyContent: 'center', gap: 8, transition: 'background 0.2s' }}
       >
-        {submitting ? '⏳ Submitting...' : '✅ Submit Application'}
+        {submitting ? T.submittingBtn : T.submitBtn}
       </button>
     </form>
   )
