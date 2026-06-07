@@ -63,6 +63,31 @@ export default function HomeHero({ heroImg }) {
 // ─── PROVIDER HERO ────────────────────────────────────────────────
 
 function ProviderHero({ name }) {
+  const [stats, setStats] = useState({ views: '—', bids: '—' })
+
+  useEffect(() => {
+    getUser().then(async u => {
+      if (!u) return
+      const [{ data: t }, { data: p }] = await Promise.all([
+        supabase.from('tilers').select('profile_views').eq('user_id', u.id).maybeSingle(),
+        supabase.from('providers').select('profile_views').eq('user_id', u.id).maybeSingle(),
+      ])
+      const rawViews = t?.profile_views ?? p?.profile_views ?? null
+      const views = rawViews === null ? '—'
+        : rawViews >= 1000 ? `${(rawViews / 1000).toFixed(1)}k`
+        : String(rawViews)
+
+      // Count active bids submitted by this provider
+      const { count: bidCount } = await supabase
+        .from('bids')
+        .select('id', { count: 'exact', head: true })
+        .eq('bidder_whatsapp', u.phone ?? '')
+        .gte('created_at', new Date(Date.now() - 30 * 86400000).toISOString())
+
+      setStats({ views, bids: bidCount != null ? String(bidCount) : '—' })
+    })
+  }, [])
+
   return (
     <div style={{ position:'relative', overflow:'hidden', padding:'24px 20px 20px', background:'linear-gradient(135deg,#0F1E35 0%,#1A2B4A 100%)' }}>
       <div style={{ position:'absolute', inset:0, opacity:0.035, backgroundImage:'repeating-linear-gradient(0deg,transparent,transparent 39px,rgba(255,255,255,0.8) 39px,rgba(255,255,255,0.8) 40px),repeating-linear-gradient(90deg,transparent,transparent 39px,rgba(255,255,255,0.8) 39px,rgba(255,255,255,0.8) 40px)', pointerEvents:'none' }} />
@@ -70,17 +95,22 @@ function ProviderHero({ name }) {
 
       <div style={{ position:'relative', maxWidth:860, margin:'0 auto', display:'flex', alignItems:'center', justifyContent:'space-between', gap:16, flexWrap:'wrap' }}>
         <div>
-          <div style={{ display:'inline-flex', alignItems:'center', gap:6, background:'rgba(212,175,55,0.1)', border:'1px solid rgba(212,175,55,0.22)', borderRadius:20, padding:'4px 12px', marginBottom:8 }}>
-            <span style={{ fontSize:9, fontWeight:700, color:'#D4AF37', letterSpacing:'2.5px', textTransform:'uppercase' }}>👷 Provider Portal</span>
-          </div>
-          <h1 style={{ fontFamily:"'Playfair Display',serif", fontSize:'clamp(20px,4vw,30px)', fontWeight:700, color:'#fff', lineHeight:1.2, margin:'0 0 4px' }}>
-            {name
-              ? <>Welcome back, <span style={{ color:'#D4AF37' }}>{name}.</span></>
-              : <>Find Projects. <span style={{ color:'#D4AF37' }}>Win Bids.</span></>}
+          <p style={{ fontSize:11, color:'rgba(255,255,255,0.45)', margin:'0 0 4px', letterSpacing:0.5 }}>👋 Welcome back</p>
+          <h1 style={{ fontFamily:"'Playfair Display',serif", fontSize:'clamp(20px,4vw,30px)', fontWeight:700, color:'#fff', lineHeight:1.2, margin:'0 0 12px' }}>
+            Hello, <span style={{ color:'#D4AF37' }}>{name || 'there'}.</span>
           </h1>
-          <p style={{ fontSize:12, color:'rgba(255,255,255,0.45)', margin:0, lineHeight:1.5 }}>
-            Browse open tiling projects islandwide — submit your bid and get hired.
-          </p>
+
+          {/* KPI chips */}
+          <div style={{ display:'flex', gap:8, flexWrap:'wrap' }}>
+            <div style={{ background:'rgba(255,255,255,0.08)', border:'1px solid rgba(255,255,255,0.12)', borderRadius:10, padding:'6px 14px', minWidth:80 }}>
+              <div style={{ fontSize:18, fontWeight:800, color:'#D4AF37', lineHeight:1.2 }}>{stats.views}</div>
+              <div style={{ fontSize:9, color:'rgba(255,255,255,0.45)', textTransform:'uppercase', letterSpacing:1, marginTop:1 }}>Profile Views</div>
+            </div>
+            <div style={{ background:'rgba(255,255,255,0.08)', border:'1px solid rgba(255,255,255,0.12)', borderRadius:10, padding:'6px 14px', minWidth:80 }}>
+              <div style={{ fontSize:18, fontWeight:800, color:'#D4AF37', lineHeight:1.2 }}>{stats.bids}</div>
+              <div style={{ fontSize:9, color:'rgba(255,255,255,0.45)', textTransform:'uppercase', letterSpacing:1, marginTop:1 }}>Active Bids</div>
+            </div>
+          </div>
         </div>
 
         <div style={{ display:'flex', gap:8, flexWrap:'wrap' }}>
@@ -142,7 +172,6 @@ function ProviderProjectsFeed() {
   return (
     <div style={{ background:'#f8fafc', borderBottom:'1px solid #e2e8f0' }}>
 
-      {/* Section header */}
       <div style={{ maxWidth:860, margin:'0 auto', padding:'16px 16px 0', display:'flex', alignItems:'center', justifyContent:'space-between' }}>
         <div style={{ display:'flex', alignItems:'center', gap:8 }}>
           <span style={{ fontSize:14, fontWeight:700, color:'#0f172a' }}>Open Projects</span>
@@ -155,7 +184,6 @@ function ProviderProjectsFeed() {
         <a href="/jobs" style={{ fontSize:12, fontWeight:600, color:'#1B3A6B', textDecoration:'none' }}>See all →</a>
       </div>
 
-      {/* Project cards */}
       <div style={{ maxWidth:860, margin:'0 auto', padding:'10px 16px 16px', display:'flex', flexDirection:'column', gap:8 }}>
 
         {loading
@@ -183,10 +211,8 @@ function ProviderProjectsFeed() {
                   onMouseOver={e => { e.currentTarget.style.boxShadow='0 4px 14px rgba(0,0,0,0.07)'; e.currentTarget.style.borderColor='#cbd5e1' }}
                   onMouseOut={e  => { e.currentTarget.style.boxShadow=''; e.currentTarget.style.borderColor='#e2e8f0' }}
                 >
-                  {/* type icon */}
                   <div style={{ width:44, height:44, borderRadius:12, background:`${color}12`, border:`1.5px solid ${color}22`, display:'flex', alignItems:'center', justifyContent:'center', fontSize:22, flexShrink:0 }}>{icon}</div>
 
-                  {/* details */}
                   <div style={{ flex:1, minWidth:0 }}>
                     <div style={{ display:'flex', alignItems:'center', gap:6, marginBottom:2 }}>
                       <span style={{ fontSize:13, fontWeight:700, color:'#0f172a' }}>{p.project_type}</span>
@@ -207,7 +233,6 @@ function ProviderProjectsFeed() {
                     </div>
                   </div>
 
-                  {/* bid CTA */}
                   <div style={{ flexShrink:0, background:'#E05A2B', color:'#fff', borderRadius:10, padding:'8px 14px', fontSize:12, fontWeight:700 }}>
                     Bid →
                   </div>
@@ -246,10 +271,10 @@ function GuestHero({ heroImg }) {
   return (
     <div style={{ position:'relative', minHeight:360, display:'flex', alignItems:'center', justifyContent:'center', overflow:'hidden', padding:'52px 20px 48px', background:'#0a121f' }}>
       <img src={heroImg} alt="" width="1400" height="800"
-        style={{ position:'absolute', inset:0, width:'100%', height:'100%', objectFit:'cover', objectPosition:'center', opacity:0.22 }}
+        style={{ position:'absolute', inset:0, width:'100%', height:'100%', objectFit:'cover', objectPosition:'center', opacity:0.28 }}
         loading="eager" fetchpriority="high" decoding="sync"
       />
-      <div style={{ position:'absolute', inset:0, background:'linear-gradient(160deg,rgba(10,18,31,0.75) 0%,rgba(26,43,74,0.6) 100%)', pointerEvents:'none' }} />
+      <div style={{ position:'absolute', inset:0, background:'linear-gradient(160deg,rgba(10,18,31,0.78) 0%,rgba(26,43,74,0.62) 100%)', pointerEvents:'none' }} />
       <div style={{ position:'absolute', inset:0, opacity:0.035, backgroundImage:'repeating-linear-gradient(0deg,transparent,transparent 39px,rgba(255,255,255,0.8) 39px,rgba(255,255,255,0.8) 40px),repeating-linear-gradient(90deg,transparent,transparent 39px,rgba(255,255,255,0.8) 39px,rgba(255,255,255,0.8) 40px)', pointerEvents:'none' }} />
 
       <div style={{ position:'relative', textAlign:'center', maxWidth:580, width:'100%' }}>
@@ -258,11 +283,11 @@ function GuestHero({ heroImg }) {
         </div>
 
         <h1 style={{ fontFamily:"'Playfair Display',serif", fontSize:'clamp(24px,5vw,44px)', fontWeight:700, color:'#fff', lineHeight:1.15, marginBottom:12 }}>
-          Post. Get Bids.<br /><span style={{ color:'#F59E0B' }}>Build with Confidence.</span>
+          Need a Professional<br /><span style={{ color:'#F59E0B' }}>for Your Next Project?</span>
         </h1>
 
         <p style={{ fontSize:'clamp(12px,1.8vw,14px)', color:'rgba(255,255,255,0.6)', marginBottom:22, lineHeight:1.8 }}>
-          Post free — verified tilers bid, you compare and choose.
+          Get free quotes from verified tilers and contractors across Sri Lanka.
         </p>
 
         {/* Search */}
@@ -295,32 +320,26 @@ function GuestHero({ heroImg }) {
   )
 }
 
+// ─── GUEST QUICK ACTIONS (4×2 grid) ──────────────────────────────
+
 function GuestActions() {
-  const SERVICES = [
-    { label:'🚿 Bathroom Tiling',     href:'/providers?q=Bathroom+Tiling'     },
-    { label:'🪨 Floor Tiling',        href:'/providers?q=Floor+Tiling'        },
-    { label:'💧 Waterproofing',       href:'/providers?q=Waterproofing'       },
-    { label:'🛁 Bathroom Renovation', href:'/providers?q=Bathroom+Renovation' },
-    { label:'✂️ Tile Cutting',        href:'/providers?q=Tile+Cutting'        },
-    { label:'🏗️ Ipanel Ceiling',      href:'/providers?q=Ipanel+Ceiling'      },
-    { label:'🔩 Plumbing',            href:'/providers?q=Bathroom+Plumbing'   },
-    { label:'💎 Granite Works',       href:'/providers?q=Granite+Works'       },
+  const ACTIONS = [
+    { icon:'🚿', label:'Bathroom',     sub:'Tiling & Reno',     href:'/providers?q=Bathroom',     bg:'#eff6ff', ibg:'rgba(14,165,233,0.12)'  },
+    { icon:'🪨', label:'Floor Tiling', sub:'All floor types',   href:'/providers?q=Floor+Tiling', bg:'#f8fafc', ibg:'rgba(100,116,139,0.12)' },
+    { icon:'🍳', label:'Kitchen',      sub:'Tiles & splashback', href:'/providers?q=Kitchen',      bg:'#fff7ed', ibg:'rgba(245,158,11,0.12)'  },
+    { icon:'💧', label:'Waterproofing',sub:'Wet areas',         href:'/providers?q=Waterproofing', bg:'#ecfeff', ibg:'rgba(6,182,212,0.12)'   },
+    { icon:'🏪', label:'Tile Shops',   sub:'Browse locally',    href:'/providers?type=tile_shop',  bg:'#f0fdf4', ibg:'rgba(22,163,74,0.12)'   },
+    { icon:'📦', label:'Suppliers',    sub:'Wholesale tiles',   href:'/providers?type=supplier',   bg:'#fdf4ff', ibg:'rgba(168,85,247,0.12)'  },
+    { icon:'🏭', label:'Workshops',    sub:'Install & cut',     href:'/providers?type=workshop',   bg:'#fff4f0', ibg:'rgba(224,90,43,0.12)'   },
+    { icon:'☰',  label:'All Services', sub:'Browse all',        href:'/providers',                 bg:'#f8fafc', ibg:'rgba(15,23,42,0.08)'    },
   ]
   return (
-    <div style={{ background:'#fff', borderBottom:'1px solid #E5E7EB', padding:'12px 0' }}>
+    <div style={{ background:'#fff', borderBottom:'1px solid #E5E7EB', padding:'12px 0 4px' }}>
       <div style={{ padding:'0 16px 8px', display:'flex', alignItems:'center', justifyContent:'space-between' }}>
         <span style={{ fontSize:12, fontWeight:700, color:'#374151' }}>Browse by service</span>
         <a href="/providers" style={{ fontSize:11, fontWeight:600, color:'#1B3A6B', textDecoration:'none' }}>All services →</a>
       </div>
-      <div style={{ display:'flex', gap:8, overflowX:'auto', padding:'2px 16px 2px', scrollbarWidth:'none', WebkitOverflowScrolling:'touch' }}>
-        {SERVICES.map(s => (
-          <a key={s.href} href={s.href}
-            style={{ display:'inline-flex', alignItems:'center', gap:5, fontSize:12, fontWeight:600, padding:'8px 14px', borderRadius:20, background:'#f8fafc', color:'#374151', border:'1px solid #E5E7EB', whiteSpace:'nowrap', textDecoration:'none', flexShrink:0, transition:'border-color 0.15s,color 0.15s,background 0.15s' }}
-            onMouseOver={e => { e.currentTarget.style.borderColor='#1B3A6B'; e.currentTarget.style.color='#1B3A6B'; e.currentTarget.style.background='#eef2fb' }}
-            onMouseOut={e  => { e.currentTarget.style.borderColor='#E5E7EB'; e.currentTarget.style.color='#374151'; e.currentTarget.style.background='#f8fafc' }}
-          >{s.label}</a>
-        ))}
-      </div>
+      <QuickActionsGrid actions={ACTIONS} />
     </div>
   )
 }
@@ -329,7 +348,7 @@ function GuestActions() {
 
 function QuickActionsGrid({ actions }) {
   return (
-    <div style={{ background:'#fff', padding:'16px', borderBottom:'1px solid #E5E7EB' }}>
+    <div style={{ background:'#fff', padding:'4px 16px 16px', borderBottom:'1px solid #E5E7EB' }}>
       <div style={{ maxWidth:480, margin:'0 auto', display:'grid', gridTemplateColumns:'repeat(4,1fr)', gap:10 }}>
         {actions.map(a => (
           <a key={a.href + a.label} href={a.href}
