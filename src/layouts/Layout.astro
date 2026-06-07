@@ -61,10 +61,7 @@ const path = Astro.url.pathname
     <a href="/post-project" class="drawer-link highlight">📋 Post a Project — Get Bids</a>
     <a href="/join-tilershub" class="drawer-link" style="color:rgba(255,255,255,0.6);">✅ Join as Provider</a>
     <div class="drawer-divider"></div>
-    <a href="/providers?type=workshop" class="drawer-link" style="color:rgba(255,255,255,0.5);font-size:13px;">🏭 Workshops</a>
-    <a href="/providers?type=supplier" class="drawer-link" style="color:rgba(255,255,255,0.5);font-size:13px;">📦 Suppliers</a>
-    <a href="/providers?type=tile_shop" class="drawer-link" style="color:rgba(255,255,255,0.5);font-size:13px;">🪨 Tile Shops</a>
-    <a href="/providers" class="drawer-link" style="color:rgba(255,255,255,0.5);font-size:13px;">🔍 All Categories</a>
+    <a href="/providers" class="drawer-link" style="color:rgba(255,255,255,0.5);font-size:13px;">🔍 All Providers</a>
     <div class="drawer-divider"></div>
     <a href="/dashboard" class={`drawer-link${path==='/dashboard'?' active':''}`} style="color:rgba(255,255,255,0.5);font-size:13px;">👤 My Dashboard</a>
     <a href="/about" class={`drawer-link${path==='/about'?' active':''}`} style="color:rgba(255,255,255,0.5);font-size:13px;">ℹ️ About TilersHub</a>
@@ -99,9 +96,7 @@ const path = Astro.url.pathname
           <a href="/providers?type=tiler">👷 Find Tilers</a>
           <a href="/jobs">💼 Browse Projects</a>
           <a href="/estimator">📐 Cost Estimator</a>
-          <a href="/providers?type=workshop">🏭 Workshops</a>
-          <a href="/providers?type=supplier">📦 Suppliers</a>
-          <a href="/providers?type=tile_shop">🪨 Tile Shops</a>
+          <a href="/providers">🔍 All Providers</a>
         </nav>
       </div>
       <div>

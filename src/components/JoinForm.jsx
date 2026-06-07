@@ -2,6 +2,14 @@ import { useState, useRef } from 'react'
 import { supabase, DISTRICTS, DISTRICTS_EN } from '../lib/supabase.js'
 import { SERVICES } from '../lib/services.js'
 
+const PROVIDER_TYPE_OPTIONS = [
+  { value: 'tiler',             icon: '🪚', label: 'Tiler / Contractor',  sub: 'Tiling, renovation, construction' },
+  { value: 'bathware_supplier', icon: '🛁', label: 'Bathware Supplier',    sub: 'Bathtubs, shower units, sanitary ware' },
+  { value: 'tile_supplier',     icon: '🪨', label: 'Tile Supplier',        sub: 'Floor tiles, wall tiles, grout, adhesive' },
+  { value: 'tapware_supplier',  icon: '🚰', label: 'Tap-ware Supplier',    sub: 'Taps, faucets, mixers, valves' },
+  { value: 'tool_supplier',     icon: '🔧', label: 'Tool Supplier',        sub: 'Tiling tools, cutting equipment, machinery' },
+]
+
 // ─── Service names (index-aligned EN ↔ SI) ───────────────────────────────────
 const ALL_SERVICES_EN = SERVICES.map(s => s.label)
 
@@ -53,8 +61,10 @@ const TRANS = {
     successBody: 'Thank you for applying to join TilersHub. Our team will review your application and contact you on WhatsApp within 1–2 business days.',
     successReach: wa => `✓ We'll reach out to ${wa} soon.`,
     browseBtn: 'Browse Provider Directory',
+    providerTypeLabel: 'What type of provider are you?',
     errRequired: 'Required',
     errPhone: 'Enter a valid phone number',
+    errProviderType: 'Please select a provider type',
     errServices: 'Select at least one service',
     errSubmit: 'Something went wrong. Please try again.',
     alreadyAdded: 'This service is already added.',
@@ -97,6 +107,10 @@ const TRANS = {
     browseBtn: 'සේවා සපයන්නන් බ්‍රවුස් කරන්න',
     errRequired: 'අවශ්‍යයි',
     errPhone: 'වලංගු දුරකතන අංකයක් ඇතුළු කරන්න',
+    providerTypeLabel: 'ඔබ කුමන ආකාරයේ සේවා සපයන්නෙකු ද?',
+    errRequired: 'අවශ්‍ය',
+    errPhone: 'වලංගු දුරකථන අංකයක් ඇතුළු කරන්න',
+    errProviderType: 'සේවා සපයන්නා වර්ගය තෝරන්න',
     errServices: 'අවම වශයෙන් සේවාවක් එකක් තෝරන්න',
     errSubmit: 'දෝෂයක් ඇති විය. නැවත උත්සාහ කරන්න.',
     alreadyAdded: 'මෙම සේවාව දැනටමත් එකතු කර ඇත.',
@@ -326,6 +340,7 @@ export default function JoinForm() {
   const T = TRANS[lang]
 
   const [form, setForm] = useState({
+    provider_type: '',
     name: '', city: '', district: '',
     whatsapp: '',
     service_areas: [],
@@ -350,6 +365,7 @@ export default function JoinForm() {
 
   function validate() {
     const e = {}
+    if (!form.provider_type) e.provider_type = T.errProviderType
     if (!form.name.trim()) e.name = T.errRequired
     if (!form.city.trim()) e.city = T.errRequired
     if (!form.whatsapp.trim()) e.whatsapp = T.errRequired
@@ -372,7 +388,7 @@ export default function JoinForm() {
       ])
       await supabase.from('provider_submissions').insert({
         name: form.name.trim(),
-        provider_type: 'provider',
+        provider_type: form.provider_type,
         city: form.city.trim(),
         district: form.district || null,
         whatsapp: form.whatsapp.replace(/\s/g, ''),
@@ -417,6 +433,25 @@ export default function JoinForm() {
       <div style={{ display: 'flex', justifyContent: 'flex-end', marginBottom: 24 }}>
         <LangToggle lang={lang} onToggle={toggleLang} />
       </div>
+
+      {/* Provider Type */}
+      <Field label={T.providerTypeLabel} id="provider_type" req error={errors.provider_type}>
+        <div style={{ display: 'grid', gridTemplateColumns: 'repeat(2,1fr)', gap: 8 }}>
+          {PROVIDER_TYPE_OPTIONS.map(pt => {
+            const selected = form.provider_type === pt.value
+            return (
+              <button type="button" key={pt.value} onClick={() => set('provider_type', pt.value)}
+                style={{ display: 'flex', alignItems: 'center', gap: 10, padding: '10px 12px', borderRadius: 12, border: `2px solid ${selected ? '#1B3A6B' : '#e2e8f0'}`, background: selected ? '#eff6ff' : '#f8fafc', cursor: 'pointer', textAlign: 'left', transition: 'border-color 0.15s, background 0.15s' }}>
+                <span style={{ fontSize: 22, flexShrink: 0 }}>{pt.icon}</span>
+                <div style={{ minWidth: 0 }}>
+                  <div style={{ fontSize: 12, fontWeight: 700, color: selected ? '#1B3A6B' : '#111827', lineHeight: 1.3 }}>{pt.label}</div>
+                  <div style={{ fontSize: 10, color: '#94a3b8', lineHeight: 1.3, marginTop: 1 }}>{pt.sub}</div>
+                </div>
+              </button>
+            )
+          })}
+        </div>
+      </Field>
 
       {/* Name */}
       <Field label={T.nameLabel} id="name" req error={errors.name}>
