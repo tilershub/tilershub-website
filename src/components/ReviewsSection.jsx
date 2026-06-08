@@ -8,7 +8,14 @@ const JOB_TYPES = [
   'Large Format Tiling', 'Mosaic Tiling', 'Pool Tiling',
   'House Painting', 'Furniture Painting', 'Carpentry Works',
   'Debris Removal', 'Demolition Work', 'Site Cleaning',
-  'Gypsum Ceiling', 'Other',
+  'Gypsum Ceiling',
+  'Kitchen Renovation', 'Air Conditioning', 'Roofing', 'Solar Panels',
+  'Plastering & Skimming', 'Gate & Fencing', 'CCTV & Security',
+  'Epoxy Flooring', 'Parquet / Laminate Flooring', 'Partition Walls',
+  'Water Tank Installation', 'Kitchen Cabinets', 'Concrete & Masonry',
+  'Vinyl Flooring', 'Swimming Pool Construction', 'Smart Home / Automation',
+  'Paving & Driveways', 'Pergola & Shade Structures',
+  'Other',
 ]
 
 const RATING_LABELS = { 5: 'Excellent', 4: 'Very Good', 3: 'Good', 2: 'Fair', 1: 'Poor' }
