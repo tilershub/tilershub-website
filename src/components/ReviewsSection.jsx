@@ -7,7 +7,8 @@ const JOB_TYPES = [
   'Staircase Tiling', 'Waterproofing', 'Granite Works',
   'Large Format Tiling', 'Mosaic Tiling', 'Pool Tiling',
   'House Painting', 'Furniture Painting', 'Carpentry Works',
-  'Debris Removal', 'Demolition Work', 'Site Cleaning', 'Other',
+  'Debris Removal', 'Demolition Work', 'Site Cleaning',
+  'Gypsum Ceiling', 'Other',
 ]
 
 const RATING_LABELS = { 5: 'Excellent', 4: 'Very Good', 3: 'Good', 2: 'Fair', 1: 'Poor' }
