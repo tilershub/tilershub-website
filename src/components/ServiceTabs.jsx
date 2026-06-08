@@ -175,33 +175,44 @@ function ProviderCard({ p }) {
   const phone = p.whatsapp || p.phone
   const verified = p.is_verified || p.verification_status === 'verified'
   const href = p.slug ? `/${p._type === 'tiler' ? 'tilers' : 'providers'}/${p.slug}` : null
+  const chips = (p.services || (p.speciality ? [p.speciality] : [])).slice(0, 3)
 
   return (
-    <div style={{ flexShrink: 0, width: 150, background: '#fff', borderRadius: 16, border: '1px solid #e8edf5', overflow: 'hidden', boxShadow: '0 2px 8px rgba(0,0,0,0.05)' }}>
-      <div style={{ height: 68, background: color, display: 'flex', alignItems: 'center', justifyContent: 'center', position: 'relative', overflow: 'hidden' }}>
+    <div style={{ flexShrink: 0, width: 280, background: '#fff', borderRadius: 20, border: '1px solid #e8edf5', overflow: 'hidden', boxShadow: '0 2px 12px rgba(0,0,0,0.06)', display: 'flex' }}>
+      {/* Coloured avatar panel */}
+      <div style={{ width: 90, flexShrink: 0, background: color, display: 'flex', alignItems: 'center', justifyContent: 'center', minHeight: 130, overflow: 'hidden' }}>
         {img
           ? <img src={img} alt={name} style={{ width: '100%', height: '100%', objectFit: 'cover' }} loading="lazy" />
-          : <span style={{ fontSize: 26, fontWeight: 800, color: 'rgba(255,255,255,0.85)' }}>{initials(name)}</span>
+          : <span style={{ fontSize: 30, fontWeight: 800, color: 'rgba(255,255,255,0.85)' }}>{initials(name)}</span>
         }
-        {verified && (
-          <span style={{ position: 'absolute', top: 5, right: 5, fontSize: 8, fontWeight: 700, color: '#16a34a', background: '#f0fdf4', border: '1px solid #bbf7d0', borderRadius: 20, padding: '2px 5px' }}>✓ Pro</span>
-        )}
       </div>
-      <div style={{ padding: '9px 10px 10px' }}>
-        <div style={{ fontSize: 11, fontWeight: 700, color: '#0f172a', marginBottom: 2, overflow: 'hidden', textOverflow: 'ellipsis', whiteSpace: 'nowrap' }}>{name}</div>
-        {(p.city || p.district) && <div style={{ fontSize: 10, color: '#64748b', marginBottom: 5 }}>📍 {p.city || p.district}</div>}
-        {p.avg_rating > 0 && <div style={{ fontSize: 10, color: '#f59e0b', marginBottom: 5 }}>⭐ {Number(p.avg_rating).toFixed(1)}</div>}
-        {phone
-          ? <a href={waLink(phone, name)} target="_blank" rel="noopener noreferrer"
-              style={{ display: 'flex', alignItems: 'center', justifyContent: 'center', gap: 4, background: '#25D366', color: '#fff', borderRadius: 8, padding: '6px 0', fontSize: 10, fontWeight: 700, textDecoration: 'none' }}>
-              💬 WhatsApp
-            </a>
-          : href
-            ? <a href={href} style={{ display: 'flex', alignItems: 'center', justifyContent: 'center', background: '#1B3A6B', color: '#fff', borderRadius: 8, padding: '6px 0', fontSize: 10, fontWeight: 700, textDecoration: 'none' }}>
-                View Profile
+      {/* Info panel */}
+      <div style={{ flex: 1, padding: '12px 14px', display: 'flex', flexDirection: 'column', minWidth: 0 }}>
+        <div style={{ display: 'flex', alignItems: 'flex-start', gap: 6, marginBottom: 3, flexWrap: 'wrap' }}>
+          <span style={{ fontSize: 14, fontWeight: 700, color: '#0f172a', lineHeight: 1.25 }}>{name}</span>
+          {verified && <span style={{ fontSize: 8, fontWeight: 700, color: '#16a34a', background: '#f0fdf4', border: '1px solid #bbf7d0', borderRadius: 20, padding: '2px 7px', flexShrink: 0, marginTop: 2 }}>✓ Pro</span>}
+        </div>
+        {(p.city || p.district) && <div style={{ fontSize: 11, color: '#64748b', marginBottom: 5 }}>📍 {p.city || p.district}</div>}
+        {p.speciality && <div style={{ fontSize: 11, color: '#64748b', marginBottom: 6, display: '-webkit-box', WebkitLineClamp: 2, WebkitBoxOrient: 'vertical', overflow: 'hidden', lineHeight: 1.5 }}>{p.speciality}</div>}
+        {chips.length > 0 && (
+          <div style={{ display: 'flex', flexWrap: 'wrap', gap: 4, marginBottom: 8 }}>
+            {chips.map(s => <span key={s} style={{ fontSize: 9, fontWeight: 600, padding: '2px 7px', borderRadius: 20, background: '#eef3fb', color: '#1B3A6B', border: '1px solid #d5e2f5' }}>{s}</span>)}
+          </div>
+        )}
+        {p.avg_rating > 0 && <div style={{ fontSize: 11, color: '#f59e0b', marginBottom: 8 }}>⭐ {Number(p.avg_rating).toFixed(1)}</div>}
+        <div style={{ marginTop: 'auto' }}>
+          {phone
+            ? <a href={waLink(phone, name)} target="_blank" rel="noopener noreferrer"
+                style={{ display: 'inline-flex', alignItems: 'center', gap: 5, background: '#25D366', color: '#fff', borderRadius: 10, padding: '7px 14px', fontSize: 11, fontWeight: 700, textDecoration: 'none' }}>
+                💬 WhatsApp
               </a>
-            : null
-        }
+            : href
+              ? <a href={href} style={{ display: 'inline-flex', alignItems: 'center', gap: 5, background: '#1B3A6B', color: '#fff', borderRadius: 10, padding: '7px 14px', fontSize: 11, fontWeight: 700, textDecoration: 'none' }}>
+                  View Profile ›
+                </a>
+              : null
+          }
+        </div>
       </div>
     </div>
   )
@@ -351,7 +362,7 @@ export default function ServiceTabs() {
             <SubLabel label="Top Providers" href={`/providers?q=${encodeURIComponent(cat.label.replace(' Services', ''))}`} color={cat.color} />
             <HRow>
               {loading
-                ? <SkeletonCards count={4} width={150} height={140} />
+                ? <SkeletonCards count={4} width={280} height={130} />
                 : providers.length > 0
                   ? providers.map(p => <ProviderCard key={p.id} p={p} />)
                   : <div style={{ fontSize: 12, color: '#94a3b8', padding: '8px 0' }}>
