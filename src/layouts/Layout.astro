@@ -82,57 +82,51 @@ const path = Astro.url.pathname
   <!-- ═══ FOOTER ═══ -->
   <footer class="site-footer">
     <div class="footer-inner">
+      <!-- Brand -->
       <div>
-        <div style="display:flex;align-items:center;gap:8px;margin-bottom:4px;">
+        <div style="display:flex;align-items:center;gap:8px;margin-bottom:10px;">
           <div class="site-logo-grid">{[0,1,2,3,4,5,6,7,8].map(i=><div class={`site-logo-tile${i===8?' e':''}`}></div>)}</div>
           <span style="font-family:'Playfair Display',serif;font-size:16px;font-weight:700;color:rgba(255,255,255,0.88);">TILERS<strong>HUB</strong></span>
         </div>
-        <p class="footer-brand-text">Sri Lanka's bidding marketplace for tiling projects — post a job, get bids, choose your tiler. Free for homeowners.</p>
-        <div style="display:flex;gap:6px;margin-top:16px;flex-wrap:wrap;">
-          <span style="font-size:11px;color:rgba(255,255,255,0.28);background:rgba(255,255,255,0.04);border:1px solid rgba(255,255,255,0.07);padding:3px 10px;border-radius:8px;">🇱🇰 Sri Lanka</span>
-          <span style="font-size:11px;color:rgba(255,255,255,0.28);background:rgba(255,255,255,0.04);border:1px solid rgba(255,255,255,0.07);padding:3px 10px;border-radius:8px;">✓ Free Service</span>
-          <span style="font-size:11px;color:rgba(255,255,255,0.28);background:rgba(255,255,255,0.04);border:1px solid rgba(255,255,255,0.07);padding:3px 10px;border-radius:8px;">💬 Bid System</span>
+        <p class="footer-brand-text">Sri Lanka's marketplace for tiling &amp; home improvement — post a project, get bids, choose your pro. Free for homeowners.</p>
+        <div style="display:flex;gap:10px;margin-top:16px;">
+          <a href="https://chat.whatsapp.com/IR9ZWyFj7ZN15KeOHqwG3Z" target="_blank" rel="noopener" style="display:inline-flex;align-items:center;gap:5px;font-size:11px;font-weight:700;color:#25D366;text-decoration:none;">💬 WhatsApp</a>
+          <a href="https://www.facebook.com/share/g/1Dsc63BvXS/" target="_blank" rel="noopener" style="display:inline-flex;align-items:center;gap:5px;font-size:11px;font-weight:700;color:#60a5fa;text-decoration:none;">👥 Facebook</a>
         </div>
       </div>
+      <!-- Discover -->
       <div>
         <div class="footer-col-head">Discover</div>
         <nav class="footer-links">
-          <a href="/providers?type=tiler">👷 Find Tilers</a>
-          <a href="/jobs">💼 Browse Projects</a>
-          <a href="/estimator">📐 Cost Estimator</a>
-          <a href="/providers">🔍 All Providers</a>
+          <a href="/providers?type=tiler">Find Tilers</a>
+          <a href="/jobs">Browse Projects</a>
+          <a href="/estimator">Cost Estimator</a>
+          <a href="/providers">All Providers</a>
+          <a href="/services/bathroom-renovation">Bathroom Reno</a>
+          <a href="/services/floor-tiling">Floor Tiling</a>
         </nav>
       </div>
+      <!-- Get Started -->
       <div>
         <div class="footer-col-head">Get Started</div>
         <nav class="footer-links">
-          <a href="/post-project">📋 Post a Project</a>
-          <a href="/join-tilershub">✅ Join as Provider</a>
-          <a href="/dashboard">👤 Dashboard</a>
-          <a href="/about">ℹ️ About Us</a>
-          <a href="/contact">📬 Contact</a>
+          <a href="/post-project">Post a Project</a>
+          <a href="/join-tilershub">Join as Provider</a>
+          <a href="/dashboard">My Dashboard</a>
         </nav>
-        <div style="margin-top:16px;border-top:1px solid rgba(255,255,255,0.08);padding-top:14px;">
-          <div style="font-size:9px;font-weight:700;color:rgba(255,255,255,0.3);letter-spacing:1.5px;text-transform:uppercase;margin-bottom:10px;">Join the Community</div>
-          <a href="https://chat.whatsapp.com/IR9ZWyFj7ZN15KeOHqwG3Z" target="_blank" rel="noopener" style="display:flex;align-items:center;gap:10px;padding:10px 12px;background:rgba(37,211,102,0.1);border:1px solid rgba(37,211,102,0.2);border-radius:10px;text-decoration:none;margin-bottom:8px;">
-            <span style="font-size:18px;">💬</span>
-            <div>
-              <div style="font-size:12px;font-weight:700;color:#25D366;">WhatsApp Group</div>
-              <div style="font-size:10px;color:rgba(255,255,255,0.35);">Tilers &amp; homeowners</div>
-            </div>
-          </a>
-          <a href="https://www.facebook.com/share/g/1Dsc63BvXS/" target="_blank" rel="noopener" style="display:flex;align-items:center;gap:10px;padding:10px 12px;background:rgba(24,119,242,0.1);border:1px solid rgba(24,119,242,0.2);border-radius:10px;text-decoration:none;">
-            <span style="font-size:18px;">👥</span>
-            <div>
-              <div style="font-size:12px;font-weight:700;color:#60a5fa;">Facebook Group</div>
-              <div style="font-size:10px;color:rgba(255,255,255,0.35);">Share projects &amp; tips</div>
-            </div>
-          </a>
-        </div>
+      </div>
+      <!-- Company -->
+      <div>
+        <div class="footer-col-head">Company</div>
+        <nav class="footer-links">
+          <a href="/blog">Blog &amp; Tips</a>
+          <a href="/about">About TilersHub</a>
+          <a href="/contact">Contact Us</a>
+        </nav>
       </div>
     </div>
     <div class="footer-bottom">
-      <span>© 2025 <strong>TilersHub</strong> · tilershub.lk</span>
+      <span>© 2025 <strong>TilersHub</strong> · tilershub.lk · 🇱🇰 Sri Lanka</span>
       <span style="color:rgba(245,158,11,0.5);font-weight:600;">Made with ♥ in Sri Lanka</span>
     </div>
   </footer>

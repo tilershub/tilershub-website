@@ -769,7 +769,7 @@ footer.legacy-footer { background: var(--charcoal); color: rgba(245,240,232,0.35
   color: rgba(255,255,255,0.45);
   padding-bottom: 70px; /* account for bottom nav on mobile */
 }
-.footer-inner { max-width: 1140px; margin: 0 auto; padding: 52px 16px 40px; display: grid; grid-template-columns: 2fr 1fr 1fr; gap: 40px; border-bottom: 1px solid rgba(255,255,255,0.06); }
+.footer-inner { max-width: 1140px; margin: 0 auto; padding: 52px 16px 40px; display: grid; grid-template-columns: 2fr 1fr 1fr 1fr; gap: 36px; border-bottom: 1px solid rgba(255,255,255,0.06); }
 .footer-brand-text { font-size: 13px; color: rgba(255,255,255,0.38); line-height: 1.9; max-width: 260px; margin-top: 12px; }
 .footer-col-head { font-size: 10px; font-weight: 700; color: rgba(255,255,255,0.22); letter-spacing: 2px; text-transform: uppercase; margin-bottom: 14px; }
 .footer-links { display: flex; flex-direction: column; gap: 10px; }
