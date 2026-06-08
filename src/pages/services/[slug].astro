@@ -47,13 +47,24 @@ function waLink(phone, name) {
   return `https://wa.me/${intl}?text=${encodeURIComponent(`Hi, I found you on TilersHub. I'm looking for ${name}.`)}`
 }
 
-const pageTitle = `${service.label} Providers in Sri Lanka | TilersHub`
-const pageDesc  = `Find verified ${service.label} specialists across Sri Lanka. Get free quotes from multiple providers on TilersHub.`
+const pageTitle = `${service.label} in Sri Lanka — Verified Specialists | TilersHub`
+const pageDesc  = `Find verified ${service.label} professionals across Sri Lanka. Compare quotes, read reviews, and contact directly on WhatsApp. Free on TilersHub.`
 const postUrl   = `/post-project?type=${encodeURIComponent(service.label)}`
 const total     = tilers.length + matchedProviders.length
+
+const serviceSchema = JSON.stringify({
+  '@context': 'https://schema.org',
+  '@type': 'Service',
+  name: service.label,
+  description: pageDesc,
+  provider: { '@type': 'Organization', name: 'TilersHub', url: 'https://www.tilershub.lk' },
+  areaServed: { '@type': 'Country', name: 'Sri Lanka' },
+  url: `https://www.tilershub.lk/services/${service.slug}`,
+})
 ---
 
 <Layout title={pageTitle} description={pageDesc}>
+  <script slot="head" type="application/ld+json" set:html={serviceSchema} />
 
   <!-- Service header -->
   <div style="background:linear-gradient(135deg,#0F1E35 0%,#1A2B4A 100%);padding:28px 20px 24px;text-align:center;position:relative;overflow:hidden;">
