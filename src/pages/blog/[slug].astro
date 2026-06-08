@@ -11,12 +11,26 @@ const post = BLOG_POSTS.find(p => p.slug === slug)
 if (!post) return Astro.redirect('/blog')
 
 const related = BLOG_POSTS.filter(p => post.relatedSlugs.includes(p.slug))
+
+const articleSchema = JSON.stringify({
+  '@context': 'https://schema.org',
+  '@type': 'Article',
+  headline: post.title,
+  description: post.excerpt,
+  author: { '@type': 'Organization', name: 'TilersHub', url: 'https://www.tilershub.lk' },
+  publisher: { '@type': 'Organization', name: 'TilersHub', logo: { '@type': 'ImageObject', url: 'https://www.tilershub.lk/favicon.svg' } },
+  datePublished: '2025-01-01',
+  dateModified: new Date().toISOString().split('T')[0],
+  mainEntityOfPage: { '@type': 'WebPage', '@id': `https://www.tilershub.lk/blog/${post.slug}` },
+  keywords: `tiling Sri Lanka, ${post.category}, home improvement Sri Lanka`,
+})
 ---
 
 <Layout
   title={`${post.title} · TilersHub Blog`}
   description={post.excerpt}
 >
+  <script slot="head" type="application/ld+json" set:html={articleSchema} />
 
   <!-- Header -->
   <div style={`background:linear-gradient(135deg,${post.color}ee 0%,${post.color} 100%);padding:40px 20px 36px;position:relative;overflow:hidden;`}>

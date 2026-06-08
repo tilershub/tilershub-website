@@ -5,8 +5,39 @@ import DraftLinker from '../components/DraftLinker.jsx'
 const {
   title = "TilersHub · Sri Lanka's Tile & Bathroom Marketplace",
   description = "Find tilers, contractors, tile shops, brands and products for your tile and bathroom project across Sri Lanka. Free — no login required.",
+  ogImage = 'https://www.tilershub.lk/og.png',
+  noindex = false,
 } = Astro.props
 const path = Astro.url.pathname
+const SITE = 'https://www.tilershub.lk'
+const canonicalUrl = `${SITE}${path}`
+
+const orgSchema = JSON.stringify({
+  '@context': 'https://schema.org',
+  '@graph': [
+    {
+      '@type': 'Organization',
+      '@id': `${SITE}/#organization`,
+      name: 'TilersHub',
+      url: SITE,
+      logo: { '@type': 'ImageObject', url: `${SITE}/favicon.svg` },
+      sameAs: [
+        'https://chat.whatsapp.com/IR9ZWyFj7ZN15KeOHqwG3Z',
+        'https://www.facebook.com/share/g/1Dsc63BvXS/',
+      ],
+      contactPoint: { '@type': 'ContactPoint', contactType: 'customer support', areaServed: 'LK' },
+    },
+    {
+      '@type': 'WebSite',
+      '@id': `${SITE}/#website`,
+      url: SITE,
+      name: 'TilersHub',
+      description: "Sri Lanka's tiling & home improvement marketplace",
+      publisher: { '@id': `${SITE}/#organization` },
+      potentialAction: { '@type': 'SearchAction', target: `${SITE}/providers?q={search_term_string}`, 'query-input': 'required name=search_term_string' },
+    },
+  ],
+})
 ---
 <!DOCTYPE html>
 <html lang="en">
@@ -15,11 +46,25 @@ const path = Astro.url.pathname
   <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover" />
   <title>{title}</title>
   <meta name="description" content={description} />
+  <meta name="robots" content={noindex ? 'noindex, nofollow' : 'index, follow'} />
+  <meta name="theme-color" content="#1B3A6B" />
+  <link rel="canonical" href={canonicalUrl} />
+  <link rel="sitemap" href="/sitemap.xml" />
+  <!-- Open Graph -->
   <meta property="og:title" content={title} />
   <meta property="og:description" content={description} />
   <meta property="og:type" content="website" />
+  <meta property="og:url" content={canonicalUrl} />
+  <meta property="og:image" content={ogImage} />
   <meta property="og:site_name" content="TilersHub" />
+  <meta property="og:locale" content="en_LK" />
+  <!-- Twitter -->
   <meta name="twitter:card" content="summary_large_image" />
+  <meta name="twitter:title" content={title} />
+  <meta name="twitter:description" content={description} />
+  <meta name="twitter:image" content={ogImage} />
+  <!-- Structured data -->
+  <script type="application/ld+json" set:html={orgSchema} />
   <link rel="icon" type="image/svg+xml" href="/favicon.svg" />
   <link rel="preconnect" href="https://fonts.googleapis.com" />
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />

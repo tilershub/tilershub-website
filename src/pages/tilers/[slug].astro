@@ -49,12 +49,34 @@ function stars(r) {
   const empty = 5 - full - half
   return '★'.repeat(full) + (half ? '½' : '') + '☆'.repeat(empty)
 }
+
+const localBizSchema: Record<string, unknown> = {
+  '@context': 'https://schema.org',
+  '@type': 'LocalBusiness',
+  name,
+  description: `${name} is a Skill Verified tiling professional in ${city}, Sri Lanka.${services.length ? ' Services: ' + services.slice(0,3).join(', ') + '.' : ''}`,
+  url: `https://www.tilershub.lk/tilers/${tiler.slug}`,
+  address: { '@type': 'PostalAddress', addressLocality: city, addressRegion: tiler.district || city, addressCountry: 'LK' },
+  areaServed: tiler.district || city,
+  priceRange: tiler.daily_rate_min ? `Rs. ${tiler.daily_rate_min}–${tiler.daily_rate_max || '?'} per sq.ft` : 'Contact for quote',
+}
+if (rating > 0 && tiler.review_count > 0) {
+  localBizSchema.aggregateRating = {
+    '@type': 'AggregateRating',
+    ratingValue: rating.toFixed(1),
+    reviewCount: tiler.review_count,
+    bestRating: '5',
+    worstRating: '1',
+  }
+}
+const schemaStr = JSON.stringify(localBizSchema)
 ---
 
 <Layout
   title={`${name} · Skill Verified Tiler in ${city} · TilersHub`}
   description={`${name} is a Skill Verified tiler based in ${city}, Sri Lanka${tiler.experience_years > 0 ? ` with ${tiler.experience_years}+ years experience` : ''}. Contact directly on WhatsApp via TilersHub.`}
 >
+  <script slot="head" type="application/ld+json" set:html={schemaStr} />
 
   <!-- Hero -->
   <div style="background:linear-gradient(135deg,#0A1C38 0%,#1B3A6B 60%,#243F70 100%);position:relative;overflow:hidden;">
