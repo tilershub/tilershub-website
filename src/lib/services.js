@@ -28,6 +28,27 @@ export const SERVICES = [
   { slug: 'demolition-work',         icon: '⚒️', label: 'Demolition Work',            terms: ['Demolition', 'Demolition Work', 'Breaking'] },
   { slug: 'site-cleaning',           icon: '🧹', label: 'Site Cleaning',              terms: ['Site Cleaning', 'Post-construction Cleaning', 'Cleaning'] },
   { slug: 'gypsum-ceiling',          icon: '🏛️', label: 'Gypsum Ceiling',             terms: ['Gypsum Ceiling', 'Gypsum', 'False Ceiling', 'Ceiling'] },
+  // Phase 1
+  { slug: 'kitchen-renovation',      icon: '🍳', label: 'Kitchen Renovation',         terms: ['Kitchen Renovation', 'Kitchen', 'Kitchen Tiles', 'Kitchen Reno'] },
+  { slug: 'air-conditioning',        icon: '❄️', label: 'Air Conditioning',           terms: ['Air Conditioning', 'AC', 'HVAC', 'Air Con'] },
+  { slug: 'roofing',                 icon: '🏚️', label: 'Roofing',                    terms: ['Roofing', 'Roof Repair', 'Roof Tiles', 'Roof'] },
+  { slug: 'solar-panels',            icon: '☀️', label: 'Solar Panels',              terms: ['Solar Panels', 'Solar', 'Solar Power', 'Photovoltaic'] },
+  { slug: 'plastering-skimming',     icon: '🪣', label: 'Plastering & Skimming',     terms: ['Plastering', 'Skimming', 'Plastering & Skimming', 'Render'] },
+  { slug: 'gate-fencing',            icon: '🚧', label: 'Gate & Fencing',            terms: ['Gate', 'Fencing', 'Gate & Fencing', 'Fence', 'Gates'] },
+  { slug: 'cctv-security',           icon: '📷', label: 'CCTV & Security',           terms: ['CCTV', 'Security', 'CCTV & Security', 'Security Camera', 'Surveillance'] },
+  // Phase 2
+  { slug: 'epoxy-flooring',          icon: '🟤', label: 'Epoxy Flooring',            terms: ['Epoxy Flooring', 'Epoxy', 'Epoxy Coating', 'Floor Coating'] },
+  { slug: 'parquet-laminate',        icon: '🪵', label: 'Parquet / Laminate Flooring', terms: ['Parquet', 'Laminate', 'Laminate Flooring', 'Wood Flooring', 'Parquet Flooring'] },
+  { slug: 'partition-walls',         icon: '🧱', label: 'Partition Walls',           terms: ['Partition Walls', 'Partition', 'Room Divider', 'Stud Wall'] },
+  { slug: 'water-tank-installation', icon: '💦', label: 'Water Tank Installation',   terms: ['Water Tank', 'Water Tank Installation', 'Tank Installation'] },
+  { slug: 'kitchen-cabinets',        icon: '🗄️', label: 'Kitchen Cabinets',          terms: ['Kitchen Cabinets', 'Cabinets', 'Cabinet Making', 'Joinery'] },
+  { slug: 'concrete-masonry',        icon: '🏗️', label: 'Concrete & Masonry',        terms: ['Concrete', 'Masonry', 'Concrete & Masonry', 'Bricklaying', 'Blockwork'] },
+  { slug: 'vinyl-flooring',          icon: '🟦', label: 'Vinyl Flooring',            terms: ['Vinyl Flooring', 'Vinyl', 'LVT', 'SPC Flooring', 'PVC Flooring'] },
+  // Phase 3
+  { slug: 'swimming-pool-construction', icon: '🏊', label: 'Swimming Pool Construction', terms: ['Swimming Pool', 'Pool Construction', 'Swimming Pool Construction', 'Pool Building'] },
+  { slug: 'smart-home-automation',   icon: '🏠', label: 'Smart Home / Automation',   terms: ['Smart Home', 'Home Automation', 'Smart Lighting', 'Automation'] },
+  { slug: 'paving-driveways',        icon: '🛤️', label: 'Paving & Driveways',        terms: ['Paving', 'Driveways', 'Paving & Driveways', 'Driveway', 'Patio Paving'] },
+  { slug: 'pergola-shade',           icon: '⛱️', label: 'Pergola & Shade Structures', terms: ['Pergola', 'Shade Structure', 'Pergola & Shade', 'Gazebo', 'Awning'] },
 ]
 
 export const SERVICES_GROUP_1 = SERVICES.slice(0, 8)
