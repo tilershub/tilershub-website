@@ -2,12 +2,34 @@ import { useState, useRef } from 'react'
 import { supabase, DISTRICTS, DISTRICTS_EN } from '../lib/supabase.js'
 import { SERVICES } from '../lib/services.js'
 
-const PROVIDER_TYPE_OPTIONS = [
-  { value: 'tiler',             icon: '🪚', label: 'Tiler / Contractor',  sub: 'Tiling, renovation, construction' },
-  { value: 'bathware_supplier', icon: '🛁', label: 'Bathware Supplier',    sub: 'Bathtubs, shower units, sanitary ware' },
-  { value: 'tile_supplier',     icon: '🪨', label: 'Tile Supplier',        sub: 'Floor tiles, wall tiles, grout, adhesive' },
-  { value: 'tapware_supplier',  icon: '🚰', label: 'Tap-ware Supplier',    sub: 'Taps, faucets, mixers, valves' },
-  { value: 'tool_supplier',     icon: '🔧', label: 'Tool Supplier',        sub: 'Tiling tools, cutting equipment, machinery' },
+const PROVIDER_CATEGORIES = [
+  {
+    value: 'tiler',
+    icon: '🪚',
+    label: 'Professional',
+    sub: 'Tiler, tiling specialist or skilled tradesperson',
+    examples: 'Floor tiling · Bathroom tiling · Mosaic · Waterproofing',
+    color: '#1B3A6B',
+    bg: '#eef3fb',
+  },
+  {
+    value: 'contractor',
+    icon: '🏗️',
+    label: 'Contractor',
+    sub: 'Full renovation or construction contractor',
+    examples: 'Bathroom reno · Electrical · Aluminium & glass · Landscaping',
+    color: '#0f766e',
+    bg: '#f0fdfa',
+  },
+  {
+    value: 'supplier',
+    icon: '📦',
+    label: 'Supplier',
+    sub: 'Tiles, bathware, tools or materials supplier',
+    examples: 'Tile shop · Bathware · Tap-ware · Tool supplier',
+    color: '#7c3aed',
+    bg: '#f5f3ff',
+  },
 ]
 
 // ─── Service names (index-aligned EN ↔ SI) ───────────────────────────────────
@@ -22,6 +44,8 @@ const ALL_SERVICES_SI = [
   'IPanel සිවිලිම', 'ගෙදර ආලෝකය', 'ගෙදර රැහැන් කිරීම',
   'විදුලි අලුත්වැඩියා', 'දිය ආරක්ෂාකරණය', 'භූ දර්ශනය සහ උද්‍යාන',
   'ග්‍රැනයිට් කවුන්ටර්ටොප්', 'ඇලුමිනියම් දොරවල් සහ ජනේල',
+  'ගෙදර පින්තාරු කිරීම', 'ෆර්නිචර් පින්තාරු කිරීම', '大工 වැඩ',
+  'කුණු ඉවත් කිරීම', 'කඩා දැමීමේ වැඩ', 'ඉදිකිරීම් ස්ථාන පිරිසිදු කිරීම',
 ]
 
 const MAX_PORTFOLIO = 8
@@ -339,6 +363,8 @@ export default function JoinForm() {
   const [lang, toggleLang] = useLang()
   const T = TRANS[lang]
 
+  const [category, setCategory] = useState(null) // null = not chosen yet
+
   const [form, setForm] = useState({
     provider_type: '',
     name: '', city: '', district: '',
@@ -365,7 +391,6 @@ export default function JoinForm() {
 
   function validate() {
     const e = {}
-    if (!form.provider_type) e.provider_type = T.errProviderType
     if (!form.name.trim()) e.name = T.errRequired
     if (!form.city.trim()) e.city = T.errRequired
     if (!form.whatsapp.trim()) e.whatsapp = T.errRequired
@@ -388,7 +413,7 @@ export default function JoinForm() {
       ])
       await supabase.from('provider_submissions').insert({
         name: form.name.trim(),
-        provider_type: form.provider_type,
+        provider_type: category?.value || 'tiler',
         city: form.city.trim(),
         district: form.district || null,
         whatsapp: form.whatsapp.replace(/\s/g, ''),
@@ -426,32 +451,58 @@ export default function JoinForm() {
     )
   }
 
+  // ── Step 1: Category picker ───────────────────────────────────────────────────
+  if (!category) {
+    return (
+      <div style={{ maxWidth: 600, margin: '0 auto' }}>
+        <div style={{ display: 'flex', justifyContent: 'flex-end', marginBottom: 20 }}>
+          <LangToggle lang={lang} onToggle={toggleLang} />
+        </div>
+        <div style={{ textAlign: 'center', marginBottom: 28 }}>
+          <div style={{ fontSize: 13, fontWeight: 700, color: '#374151', marginBottom: 4 }}>What best describes you?</div>
+          <div style={{ fontSize: 12, color: '#94a3b8' }}>Choose your category to get started — takes 2 minutes.</div>
+        </div>
+        <div style={{ display: 'flex', flexDirection: 'column', gap: 12 }}>
+          {PROVIDER_CATEGORIES.map(cat => (
+            <button
+              key={cat.value}
+              type="button"
+              onClick={() => setCategory(cat)}
+              style={{ display: 'flex', alignItems: 'center', gap: 16, padding: '18px 20px', borderRadius: 16, border: `2px solid ${cat.color}22`, background: cat.bg, cursor: 'pointer', textAlign: 'left', transition: 'border-color 0.15s, box-shadow 0.15s', boxShadow: '0 1px 4px rgba(0,0,0,0.04)' }}
+              onMouseOver={e => { e.currentTarget.style.borderColor = cat.color; e.currentTarget.style.boxShadow = `0 4px 16px ${cat.color}22` }}
+              onMouseOut={e  => { e.currentTarget.style.borderColor = `${cat.color}22`; e.currentTarget.style.boxShadow = '0 1px 4px rgba(0,0,0,0.04)' }}
+            >
+              <div style={{ width: 56, height: 56, borderRadius: 14, background: '#fff', border: `1.5px solid ${cat.color}30`, display: 'flex', alignItems: 'center', justifyContent: 'center', fontSize: 28, flexShrink: 0, boxShadow: '0 1px 6px rgba(0,0,0,0.06)' }}>
+                {cat.icon}
+              </div>
+              <div style={{ flex: 1, minWidth: 0 }}>
+                <div style={{ fontSize: 16, fontWeight: 800, color: cat.color, marginBottom: 2 }}>{cat.label}</div>
+                <div style={{ fontSize: 12, color: '#374151', marginBottom: 4 }}>{cat.sub}</div>
+                <div style={{ fontSize: 10, color: '#94a3b8', lineHeight: 1.5 }}>{cat.examples}</div>
+              </div>
+              <div style={{ fontSize: 22, color: cat.color, flexShrink: 0, opacity: 0.5 }}>›</div>
+            </button>
+          ))}
+        </div>
+      </div>
+    )
+  }
+
+  // ── Step 2: Form ──────────────────────────────────────────────────────────────
   return (
     <form onSubmit={handleSubmit} noValidate style={{ maxWidth: 600, margin: '0 auto' }}>
 
-      {/* Language toggle */}
-      <div style={{ display: 'flex', justifyContent: 'flex-end', marginBottom: 24 }}>
+      {/* Language toggle + selected category badge */}
+      <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', marginBottom: 24, flexWrap: 'wrap', gap: 10 }}>
+        <button
+          type="button"
+          onClick={() => setCategory(null)}
+          style={{ display: 'inline-flex', alignItems: 'center', gap: 8, background: category.bg, border: `1.5px solid ${category.color}40`, borderRadius: 10, padding: '7px 14px', cursor: 'pointer', fontSize: 12, fontWeight: 700, color: category.color }}
+        >
+          {category.icon} {category.label} <span style={{ fontSize: 10, color: '#94a3b8', fontWeight: 400 }}>· change</span>
+        </button>
         <LangToggle lang={lang} onToggle={toggleLang} />
       </div>
-
-      {/* Provider Type */}
-      <Field label={T.providerTypeLabel} id="provider_type" req error={errors.provider_type}>
-        <div style={{ display: 'grid', gridTemplateColumns: 'repeat(2,1fr)', gap: 8 }}>
-          {PROVIDER_TYPE_OPTIONS.map(pt => {
-            const selected = form.provider_type === pt.value
-            return (
-              <button type="button" key={pt.value} onClick={() => set('provider_type', pt.value)}
-                style={{ display: 'flex', alignItems: 'center', gap: 10, padding: '10px 12px', borderRadius: 12, border: `2px solid ${selected ? '#1B3A6B' : '#e2e8f0'}`, background: selected ? '#eff6ff' : '#f8fafc', cursor: 'pointer', textAlign: 'left', transition: 'border-color 0.15s, background 0.15s' }}>
-                <span style={{ fontSize: 22, flexShrink: 0 }}>{pt.icon}</span>
-                <div style={{ minWidth: 0 }}>
-                  <div style={{ fontSize: 12, fontWeight: 700, color: selected ? '#1B3A6B' : '#111827', lineHeight: 1.3 }}>{pt.label}</div>
-                  <div style={{ fontSize: 10, color: '#94a3b8', lineHeight: 1.3, marginTop: 1 }}>{pt.sub}</div>
-                </div>
-              </button>
-            )
-          })}
-        </div>
-      </Field>
 
       {/* Name */}
       <Field label={T.nameLabel} id="name" req error={errors.name}>
