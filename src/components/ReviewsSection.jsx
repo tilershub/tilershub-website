@@ -5,7 +5,9 @@ const JOB_TYPES = [
   'Bathroom Renovation', 'Floor Tiling', 'Bathroom Tiling',
   'Kitchen Tiling', 'Wall Tiling', 'Outdoor Tiling',
   'Staircase Tiling', 'Waterproofing', 'Granite Works',
-  'Large Format Tiling', 'Mosaic Tiling', 'Pool Tiling', 'Other',
+  'Large Format Tiling', 'Mosaic Tiling', 'Pool Tiling',
+  'House Painting', 'Furniture Painting', 'Carpentry Works',
+  'Debris Removal', 'Demolition Work', 'Site Cleaning', 'Other',
 ]
 
 const RATING_LABELS = { 5: 'Excellent', 4: 'Very Good', 3: 'Good', 2: 'Fair', 1: 'Poor' }

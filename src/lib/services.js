@@ -21,6 +21,12 @@ export const SERVICES = [
   { slug: 'landscaping-gardening',   icon: '🌿', label: 'Landscaping & Gardening',   terms: ['Landscaping', 'Gardening', 'Garden'] },
   { slug: 'granite-countertops',     icon: '🪨', label: 'Granite Countertops',       terms: ['Granite Countertops', 'Granite Works', 'Granite'] },
   { slug: 'aluminium-doors-windows', icon: '🚪', label: 'Aluminium Doors & Windows', terms: ['Aluminium Doors', 'Aluminium Windows', 'Doors & Windows'] },
+  { slug: 'house-painting',          icon: '🎨', label: 'House Painting',             terms: ['House Painting', 'Wall Painting', 'Painting'] },
+  { slug: 'furniture-painting',      icon: '🪑', label: 'Furniture Painting',         terms: ['Furniture Painting', 'Furniture Refinishing'] },
+  { slug: 'carpentry-works',         icon: '🪵', label: 'Carpentry Works',            terms: ['Carpentry', 'Carpenter', 'Woodwork', 'Carpentry Works'] },
+  { slug: 'debris-removal',          icon: '🚛', label: 'Debris Removal',             terms: ['Debris Removal', 'Waste Removal', 'Rubble Removal'] },
+  { slug: 'demolition-work',         icon: '⚒️', label: 'Demolition Work',            terms: ['Demolition', 'Demolition Work', 'Breaking'] },
+  { slug: 'site-cleaning',           icon: '🧹', label: 'Site Cleaning',              terms: ['Site Cleaning', 'Post-construction Cleaning', 'Cleaning'] },
 ]
 
 export const SERVICES_GROUP_1 = SERVICES.slice(0, 8)
