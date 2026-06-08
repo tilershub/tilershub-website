@@ -27,6 +27,7 @@ export const SERVICES = [
   { slug: 'debris-removal',          icon: '🚛', label: 'Debris Removal',             terms: ['Debris Removal', 'Waste Removal', 'Rubble Removal'] },
   { slug: 'demolition-work',         icon: '⚒️', label: 'Demolition Work',            terms: ['Demolition', 'Demolition Work', 'Breaking'] },
   { slug: 'site-cleaning',           icon: '🧹', label: 'Site Cleaning',              terms: ['Site Cleaning', 'Post-construction Cleaning', 'Cleaning'] },
+  { slug: 'gypsum-ceiling',          icon: '🏛️', label: 'Gypsum Ceiling',             terms: ['Gypsum Ceiling', 'Gypsum', 'False Ceiling', 'Ceiling'] },
 ]
 
 export const SERVICES_GROUP_1 = SERVICES.slice(0, 8)
