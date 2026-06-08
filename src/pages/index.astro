@@ -288,53 +288,37 @@ const HERO_IMG = 'https://images.unsplash.com/photo-1552321554-5fefe8c9ef14?auto
     </div>
   </section>
 
-  <!-- WHY CHOOSE TILERSHUB -->
-  <section style="background:#fff;padding:24px 16px 28px;">
-    <div style="font-size:15px;font-weight:700;color:#111827;margin-bottom:16px;">Why Choose TILERSHUB?</div>
-    <div style="display:grid;grid-template-columns:repeat(2,1fr);gap:10px;">
+  <!-- HOW IT WORKS -->
+  <section style="background:linear-gradient(135deg,#0F1E35 0%,#1A2B4A 100%);padding:28px 16px 24px;">
+    <div style="max-width:480px;margin:0 auto;">
+      <p style="font-size:9px;font-weight:700;color:rgba(255,255,255,0.4);letter-spacing:3px;text-transform:uppercase;text-align:center;margin:0 0 18px;">How It Works</p>
       {[
-        { icon:'📋', title:'Post Projects for Free',           desc:'No cost, no account needed' },
-        { icon:'💬', title:'Multiple Bids',                    desc:'Compare quotes from pros'   },
-        { icon:'🏆', title:'Compare Best Provider',            desc:'Ratings & reviews'          },
-        { icon:'📱', title:'Contact on WhatsApp',              desc:'Direct, instant chat'       },
-        { icon:'✅', title:'Verified & Trusted Professionals', desc:'Background-checked'         },
-      ].map(f => (
-        <div style="background:#f8fafc;border-radius:14px;padding:16px 14px;border:1px solid #f1f5f9;">
-          <div style="font-size:26px;margin-bottom:8px;">{f.icon}</div>
-          <div style="font-size:12px;font-weight:700;color:#111827;margin-bottom:3px;line-height:1.35;">{f.title}</div>
-          <div style="font-size:11px;color:#94a3b8;">{f.desc}</div>
+        { num:'1', icon:'📋', title:'Post Your Project', desc:'Free — no login needed. Takes 2 minutes.' },
+        { num:'2', icon:'💬', title:'Providers Bid',     desc:'Verified tilers send quotes directly to you.' },
+        { num:'3', icon:'✅', title:'You Choose',        desc:'Compare bids, chat on WhatsApp, hire the best.' },
+      ].map((s, i) => (
+        <div style={`display:flex;align-items:flex-start;gap:14px;padding:14px 0;${i < 2 ? 'border-bottom:1px solid rgba(255,255,255,0.07);' : ''}`}>
+          <div style="width:36px;height:36px;border-radius:50%;background:#E05A2B;display:flex;align-items:center;justify-content:center;font-size:15px;font-weight:800;color:#fff;flex-shrink:0;">{s.num}</div>
+          <div>
+            <div style="font-size:13px;font-weight:700;color:#fff;margin-bottom:3px;">{s.title}</div>
+            <div style="font-size:12px;color:rgba(255,255,255,0.48);line-height:1.5;">{s.desc}</div>
+          </div>
         </div>
       ))}
     </div>
   </section>
 
-  <!-- HOW IT WORKS -->
-  <div class="hiw-strip">
-    <div class="hiw-inner">
-      {[
-        { icon:'📋', step:'1', title:'Post Your Project', desc:'Free, no login needed.' },
-        { icon:'💬', step:'2', title:'Providers Bid',     desc:'Tilers submit quotes directly.' },
-        { icon:'✅', step:'3', title:'You Choose',        desc:'Pick the best, chat on WhatsApp.' },
-      ].map((s, i, arr) => (
-        <div class={`hiw-step${i < arr.length - 1 ? ' sep' : ''}`}>
-          <div class="hiw-icon">{s.icon}</div>
-          <div class="hiw-num">Step {s.step}</div>
-          <div class="hiw-title">{s.title}</div>
-          <div class="hiw-desc">{s.desc}</div>
-        </div>
-      ))}
-    </div>
-  </div>
-
-  <!-- JOIN AS PROVIDER STRIP -->
-  <section class="join-strip">
-    <div class="join-strip-inner">
-      <div class="join-strip-text">
-        <div class="join-strip-eyebrow">For Professionals</div>
-        <div class="join-strip-title">Are you a tiler, contractor or supplier?</div>
-        <div class="join-strip-sub">Get listed on TilersHub — homeowners find and contact you directly via WhatsApp.</div>
+  <!-- JOIN AS PROVIDER CTA -->
+  <section style="background:#E05A2B;padding:24px 20px;">
+    <div style="max-width:480px;margin:0 auto;display:flex;align-items:center;justify-content:space-between;gap:16px;flex-wrap:wrap;">
+      <div>
+        <div style="font-size:9px;font-weight:700;color:rgba(255,255,255,0.65);letter-spacing:2px;text-transform:uppercase;margin-bottom:4px;">For Professionals</div>
+        <div style="font-size:15px;font-weight:800;color:#fff;line-height:1.3;margin-bottom:4px;">Are you a tiler or contractor?</div>
+        <div style="font-size:12px;color:rgba(255,255,255,0.72);line-height:1.5;">Homeowners find and contact you directly via WhatsApp.</div>
       </div>
-      <a href="/join-tilershub" class="join-strip-btn">✅ Join as Provider</a>
+      <a href="/join-tilershub" style="display:inline-flex;align-items:center;gap:7px;background:#fff;color:#E05A2B;border-radius:12px;padding:11px 20px;font-size:13px;font-weight:800;text-decoration:none;white-space:nowrap;flex-shrink:0;">
+        ✅ Join Free
+      </a>
     </div>
   </section>
 
