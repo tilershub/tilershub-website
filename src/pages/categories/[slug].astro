@@ -1,0 +1,225 @@
+---
+import Layout from '../../layouts/Layout.astro'
+import { supabase } from '../../lib/supabase.js'
+import { SERVICES } from '../../lib/services.js'
+import { BLOG_POSTS } from '../../lib/blog-posts.js'
+import { CATEGORIES } from '../../lib/categories.js'
+
+export function getStaticPaths() {
+  return CATEGORIES.map(cat => ({ params: { slug: cat.slug }, props: { cat } }))
+}
+
+const { cat } = Astro.props
+
+const catServices = SERVICES.filter(s => {
+  const text = [s.label, ...s.terms].join(' ').toLowerCase()
+  return cat.terms.some((t: string) => text.includes(t))
+})
+
+const [{ data: tilersRaw }, { data: providersRaw }] = await Promise.all([
+  supabase
+    .from('tilers')
+    .select('id,full_name,city,district,is_verified,slug,avg_rating,avatar_url,speciality,services,whatsapp,phone')
+    .eq('is_verified', true)
+    .order('avg_rating', { ascending: false })
+    .limit(100),
+  supabase
+    .from('providers')
+    .select('id,name,city,district,verification_status,slug,services,provider_type,whatsapp,phone,profile_image,description')
+    .limit(100),
+])
+
+function matchesCat(services: any[], speciality: string) {
+  const text = [...(services||[]), speciality||''].join(' ').toLowerCase()
+  return cat.terms.some((t: string) => text.includes(t))
+}
+
+const tilers    = (tilersRaw  ||[]).filter((t:any) => matchesCat(t.services, t.speciality)).slice(0, 12)
+const providers = (providersRaw||[]).filter((p:any) => matchesCat(p.services, p.description)).slice(0, 8)
+
+const blogMap  = Object.fromEntries(BLOG_POSTS.map((p:any) => [p.slug, p]))
+const blogs    = cat.blogSlugs.map((s:string) => blogMap[s]).filter(Boolean)
+
+const AVATAR_COLORS = ['#1B3A6B','#0f766e','#7c3aed','#b45309','#0369a1','#E05A2B','#15803d','#be185d']
+function avatarColor(name: string) {
+  let h = 0; for (const c of name) h = (h*31+c.charCodeAt(0))>>>0
+  return AVATAR_COLORS[h % AVATAR_COLORS.length]
+}
+function initials(name: string) {
+  return name.split(' ').slice(0,2).map((w:string) => w[0]||'').join('').toUpperCase()||'?'
+}
+function waLink(phone: string, name: string) {
+  const cl = (phone||'').replace(/\D/g,'')
+  const n  = cl.startsWith('0') ? '94'+cl.slice(1) : cl
+  return `https://wa.me/${n}?text=${encodeURIComponent(`Hi ${name}, I found you on TilersHub.`)}`
+}
+
+const pageTitle = `${cat.label} in Sri Lanka — Verified Specialists | TilersHub`
+const total     = tilers.length + providers.length
+---
+
+<Layout title={pageTitle} description={cat.desc}>
+
+  <!-- Header -->
+  <div style={`background:linear-gradient(135deg,#0F1E35,#1A2B4A);padding:24px 20px 22px;text-align:center;`}>
+    <a href="/" style="font-size:11px;color:rgba(255,255,255,0.4);text-decoration:none;display:inline-block;margin-bottom:12px;">← Home</a>
+    <div style={`width:56px;height:56px;border-radius:16px;background:${cat.bg};border:2px solid ${cat.border};display:flex;align-items:center;justify-content:center;font-size:28px;margin:0 auto 12px;`}>{cat.icon}</div>
+    <h1 style="font-family:'Playfair Display',serif;font-size:22px;font-weight:700;color:#fff;margin:0 0 8px;">{cat.label}</h1>
+    <p style="font-size:12px;color:rgba(255,255,255,0.5);margin:0 0 18px;line-height:1.6;max-width:360px;margin-left:auto;margin-right:auto;">{cat.desc}</p>
+    <a href={`/post-project`} style="display:inline-flex;align-items:center;gap:7px;background:#E05A2B;color:#fff;border-radius:22px;padding:11px 22px;font-size:13px;font-weight:700;text-decoration:none;">
+      📋 Post a {cat.label.replace(' Services','')} Project
+    </a>
+  </div>
+
+  <!-- Sub-services -->
+  <section style="background:#fff;padding:20px 0 20px;">
+    <div style="padding:0 16px 12px;display:flex;align-items:center;justify-content:space-between;">
+      <span style="font-size:13px;font-weight:700;color:#374151;">Services in this category</span>
+    </div>
+    <div style="display:grid;grid-template-columns:repeat(4,1fr);gap:8px;padding:0 16px;">
+      {catServices.map((s:any) => (
+        <a href={`/services/${s.slug}`}
+          style={`display:flex;flex-direction:column;align-items:center;gap:6px;padding:10px 4px 9px;border-radius:14px;background:${cat.bg};border:1px solid ${cat.border};text-decoration:none;`}>
+          <div style="width:42px;height:42px;border-radius:11px;background:#fff;border:1px solid rgba(0,0,0,0.06);box-shadow:0 1px 4px rgba(0,0,0,0.06);display:flex;align-items:center;justify-content:center;font-size:20px;">{s.icon}</div>
+          <span style={`font-size:9px;font-weight:600;color:${cat.color};text-align:center;line-height:1.3;`}>{s.label}</span>
+        </a>
+      ))}
+    </div>
+  </section>
+
+  <!-- Providers -->
+  <section style="background:#f8fafc;padding:20px 0 24px;">
+    <div style="padding:0 16px 14px;display:flex;align-items:center;justify-content:space-between;">
+      <div>
+        <span style="font-size:15px;font-weight:700;color:#111827;">Providers</span>
+        {total > 0 && <span style="font-size:11px;color:#94a3b8;margin-left:7px;">{total} found</span>}
+      </div>
+      <a href={`/providers?q=${encodeURIComponent(cat.label.replace(' Services',''))}`}
+        style="font-size:12px;font-weight:600;color:#E05A2B;text-decoration:none;">View All ›</a>
+    </div>
+
+    {total === 0
+      ? (
+        <div style="text-align:center;padding:32px 20px;color:#94a3b8;font-size:13px;">
+          No providers listed yet for this category. <br />
+          <a href="/join-tilershub" style="color:#E05A2B;text-decoration:none;font-weight:600;">Join TilersHub →</a>
+        </div>
+      )
+      : (
+        <div style="display:flex;flex-direction:column;gap:10px;padding:0 16px;">
+          {tilers.map((t:any) => {
+            const color = avatarColor(t.full_name)
+            const phone = t.whatsapp || t.phone
+            return (
+              <div style="display:flex;background:#fff;border-radius:20px;border:1px solid #e8edf5;overflow:hidden;box-shadow:0 2px 10px rgba(0,0,0,0.05);">
+                <div style={`width:90px;flex-shrink:0;background:${color};display:flex;align-items:center;justify-content:center;min-height:120px;overflow:hidden;`}>
+                  {t.avatar_url
+                    ? <img src={t.avatar_url} alt={t.full_name} style="width:100%;height:100%;object-fit:cover;" loading="lazy" />
+                    : <span style="font-size:28px;font-weight:800;color:rgba(255,255,255,0.85);">{initials(t.full_name)}</span>
+                  }
+                </div>
+                <div style="flex:1;padding:12px 14px;display:flex;flex-direction:column;min-width:0;">
+                  <div style="display:flex;align-items:flex-start;gap:6px;margin-bottom:3px;flex-wrap:wrap;">
+                    <span style="font-size:14px;font-weight:700;color:#0f172a;">{t.full_name}</span>
+                    {t.is_verified && <span style="font-size:8px;font-weight:700;color:#16a34a;background:#f0fdf4;border:1px solid #bbf7d0;border-radius:20px;padding:2px 7px;flex-shrink:0;margin-top:2px;">✓ Pro</span>}
+                  </div>
+                  {(t.city||t.district) && <div style="font-size:11px;color:#64748b;margin-bottom:4px;">📍 {t.city||t.district}</div>}
+                  {t.speciality && <div style="font-size:11px;color:#64748b;margin-bottom:6px;overflow:hidden;display:-webkit-box;-webkit-line-clamp:2;-webkit-box-orient:vertical;line-height:1.5;">{t.speciality}</div>}
+                  {t.avg_rating > 0 && <div style="font-size:11px;color:#f59e0b;margin-bottom:8px;">⭐ {t.avg_rating.toFixed(1)}</div>}
+                  <div style="margin-top:auto;">
+                    {phone
+                      ? <a href={waLink(phone, t.full_name)} target="_blank" rel="noopener noreferrer"
+                          style="display:inline-flex;align-items:center;gap:5px;background:#25D366;color:#fff;border-radius:10px;padding:7px 14px;font-size:11px;font-weight:700;text-decoration:none;">
+                          💬 WhatsApp
+                        </a>
+                      : t.slug
+                        ? <a href={`/tilers/${t.slug}`}
+                            style="display:inline-flex;align-items:center;gap:5px;background:#1B3A6B;color:#fff;border-radius:10px;padding:7px 14px;font-size:11px;font-weight:700;text-decoration:none;">
+                            View Profile ›
+                          </a>
+                        : null
+                    }
+                  </div>
+                </div>
+              </div>
+            )
+          })}
+
+          {providers.map((p:any) => {
+            const color = avatarColor(p.name||'P')
+            const phone = p.whatsapp || p.phone
+            return (
+              <div style="display:flex;background:#fff;border-radius:20px;border:1px solid #e8edf5;overflow:hidden;box-shadow:0 2px 10px rgba(0,0,0,0.05);">
+                <div style={`width:90px;flex-shrink:0;background:${color};display:flex;align-items:center;justify-content:center;min-height:120px;overflow:hidden;`}>
+                  {p.profile_image
+                    ? <img src={p.profile_image} alt={p.name} style="width:100%;height:100%;object-fit:cover;" loading="lazy" />
+                    : <span style="font-size:28px;font-weight:800;color:rgba(255,255,255,0.85);">{initials(p.name||'P')}</span>
+                  }
+                </div>
+                <div style="flex:1;padding:12px 14px;display:flex;flex-direction:column;min-width:0;">
+                  <div style="display:flex;align-items:flex-start;gap:6px;margin-bottom:3px;flex-wrap:wrap;">
+                    <span style="font-size:14px;font-weight:700;color:#0f172a;">{p.name}</span>
+                    {p.verification_status === 'verified' && <span style="font-size:8px;font-weight:700;color:#16a34a;background:#f0fdf4;border:1px solid #bbf7d0;border-radius:20px;padding:2px 7px;flex-shrink:0;margin-top:2px;">✓ Pro</span>}
+                  </div>
+                  {(p.city||p.district) && <div style="font-size:11px;color:#64748b;margin-bottom:4px;">📍 {p.city||p.district}</div>}
+                  {p.description && <div style="font-size:11px;color:#64748b;margin-bottom:6px;overflow:hidden;display:-webkit-box;-webkit-line-clamp:2;-webkit-box-orient:vertical;line-height:1.5;">{p.description}</div>}
+                  <div style="margin-top:auto;">
+                    {phone
+                      ? <a href={waLink(phone, p.name)} target="_blank" rel="noopener noreferrer"
+                          style="display:inline-flex;align-items:center;gap:5px;background:#25D366;color:#fff;border-radius:10px;padding:7px 14px;font-size:11px;font-weight:700;text-decoration:none;">
+                          💬 WhatsApp
+                        </a>
+                      : p.slug
+                        ? <a href={`/providers/${p.slug}`}
+                            style="display:inline-flex;align-items:center;gap:5px;background:#1B3A6B;color:#fff;border-radius:10px;padding:7px 14px;font-size:11px;font-weight:700;text-decoration:none;">
+                            View Profile ›
+                          </a>
+                        : null
+                    }
+                  </div>
+                </div>
+              </div>
+            )
+          })}
+        </div>
+      )
+    }
+  </section>
+
+  <!-- Blog posts -->
+  {blogs.length > 0 && (
+    <section style="background:#fff;padding:20px 0 24px;border-top:1px solid #f1f5f9;">
+      <div style="padding:0 16px 12px;display:flex;align-items:center;justify-content:space-between;">
+        <span style="font-size:15px;font-weight:700;color:#111827;">📰 Tips &amp; Guides</span>
+        <a href="/blog" style="font-size:12px;font-weight:600;color:#E05A2B;text-decoration:none;">View All ›</a>
+      </div>
+      <div style="display:flex;flex-direction:column;gap:8px;padding:0 16px;">
+        {blogs.map((post:any) => (
+          <a href={`/blog/${post.slug}`}
+            style="display:flex;align-items:center;gap:0;background:#f8fafc;border-radius:14px;overflow:hidden;border:1px solid #e2e8f0;text-decoration:none;color:inherit;">
+            <div style={`width:64px;height:64px;background:${post.color};flex-shrink:0;display:flex;align-items:center;justify-content:center;font-size:24px;`}>{post.icon}</div>
+            <div style="flex:1;padding:11px 13px;min-width:0;">
+              <span style="font-size:9px;font-weight:700;color:#E05A2B;background:#fff4f0;border:1px solid #fcd5c0;border-radius:20px;padding:1px 7px;">{post.category}</span>
+              <div style="font-size:12px;font-weight:700;color:#111827;line-height:1.4;margin-top:5px;overflow:hidden;display:-webkit-box;-webkit-line-clamp:2;-webkit-box-orient:vertical;">{post.title}</div>
+            </div>
+            <div style="padding:0 14px;font-size:18px;color:#cbd5e1;flex-shrink:0;">›</div>
+          </a>
+        ))}
+      </div>
+    </section>
+  )}
+
+  <!-- Post project CTA -->
+  <section style="background:#E05A2B;padding:24px 20px;">
+    <div style="max-width:480px;margin:0 auto;display:flex;align-items:center;justify-content:space-between;gap:16px;flex-wrap:wrap;">
+      <div>
+        <div style="font-size:15px;font-weight:800;color:#fff;margin-bottom:4px;">Need a {cat.label.replace(' Services','')} specialist?</div>
+        <div style="font-size:12px;color:rgba(255,255,255,0.72);">Post a project free — get bids on WhatsApp.</div>
+      </div>
+      <a href="/post-project" style="display:inline-flex;align-items:center;gap:7px;background:#fff;color:#E05A2B;border-radius:12px;padding:11px 20px;font-size:13px;font-weight:800;text-decoration:none;white-space:nowrap;flex-shrink:0;">
+        📋 Post Free
+      </a>
+    </div>
+  </section>
+
+</Layout>
