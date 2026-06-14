@@ -273,21 +273,20 @@ function GuestHero({ heroImg }) {
 
       <div style={{ position:'relative', textAlign:'center', maxWidth:520, width:'100%' }}>
         <h1 style={{ fontFamily:"'Playfair Display',serif", fontSize:'clamp(26px,5.5vw,42px)', fontWeight:700, color:'#fff', lineHeight:1.15, marginBottom:10 }}>
-          Need a Professional<br />for <span style={{ color:'#F59E0B' }}>Your Project?</span>
+          Post Your Project,<br /><span style={{ color:'#F59E0B' }}>Get Free Bids.</span>
         </h1>
 
         <p style={{ fontSize:13, color:'rgba(255,255,255,0.62)', marginBottom:22, lineHeight:1.7 }}>
-          Post your project and get multiple bids from verified professionals.
+          No login required · Verified pros bid within 24 hrs
         </p>
 
-        {/* Two primary CTAs */}
-        <div style={{ display:'flex', gap:10, justifyContent:'center', marginBottom:16, flexWrap:'wrap' }}>
-          <a href="/post-project" style={{ display:'inline-flex', alignItems:'center', gap:7, background:'#E05A2B', color:'#fff', borderRadius:24, padding:'12px 24px', fontSize:14, fontWeight:700, textDecoration:'none', boxShadow:'0 4px 20px rgba(224,90,43,0.45)' }}>
-            📋 Post Project
-          </a>
-          <a href="/providers" style={{ display:'inline-flex', alignItems:'center', gap:7, background:'rgba(255,255,255,0.1)', color:'#fff', border:'1.5px solid rgba(255,255,255,0.35)', borderRadius:24, padding:'12px 22px', fontSize:14, fontWeight:600, textDecoration:'none' }}>
-            🔍 Find Providers
-          </a>
+        {/* Single primary CTA */}
+        <a href="/post-project" style={{ display:'flex', alignItems:'center', justifyContent:'center', gap:8, background:'#E05A2B', color:'#fff', borderRadius:24, padding:'14px 28px', fontSize:15, fontWeight:800, textDecoration:'none', boxShadow:'0 4px 20px rgba(224,90,43,0.45)', marginBottom:14 }}>
+          📋 Post a Free Project
+        </a>
+
+        <div style={{ marginBottom:14 }}>
+          <a href="/providers" style={{ fontSize:12, color:'rgba(255,255,255,0.45)', textDecoration:'none', fontWeight:600 }}>or browse providers →</a>
         </div>
 
         {/* Benefit pills */}

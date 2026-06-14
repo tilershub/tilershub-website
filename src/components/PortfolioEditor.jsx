@@ -1,0 +1,149 @@
+import { useState, useRef } from 'react'
+import { supabase } from '../lib/supabase.js'
+
+const MAX_GALLERY = 8
+
+async function uploadImage(file, userId) {
+  const ext = file.name.split('.').pop()
+  const path = `portfolio/${userId}-${Date.now()}-${Math.random().toString(36).slice(2)}.${ext}`
+  const { error } = await supabase.storage.from('provider-assets').upload(path, file, { upsert: false })
+  if (error) throw error
+  const { data } = supabase.storage.from('provider-assets').getPublicUrl(path)
+  return data.publicUrl
+}
+
+export default function PortfolioEditor({ profile, profileType, userId }) {
+  const [gallery, setGallery]     = useState(profile?.gallery || [])
+  const [newFiles, setNewFiles]   = useState([])
+  const [saving, setSaving]       = useState(false)
+  const [saved, setSaved]         = useState(false)
+  const [error, setError]         = useState('')
+  const ref = useRef(null)
+
+  const table = profileType === 'tiler' ? 'tilers' : 'providers'
+  const profileHref = profile?.slug ? `/providers/${profile.slug}` : null
+
+  function addFiles(files) {
+    const slots = MAX_GALLERY - gallery.length - newFiles.length
+    const combined = [...newFiles, ...Array.from(files)].slice(0, newFiles.length + slots)
+    setNewFiles(combined)
+  }
+
+  async function save() {
+    setSaving(true); setError('')
+    try {
+      const newUrls = []
+      for (const f of newFiles) newUrls.push(await uploadImage(f, userId))
+      const updated = [...gallery, ...newUrls]
+      const { error: err } = await supabase.from(table).update({ gallery: updated }).eq('id', profile.id).eq('user_id', userId)
+      if (err) throw err
+      setGallery(updated)
+      setNewFiles([])
+      setSaved(true)
+      setTimeout(() => setSaved(false), 3000)
+    } catch (e) {
+      setError(e?.message || 'Failed to save. Please try again.')
+    } finally {
+      setSaving(false)
+    }
+  }
+
+  async function removePhoto(index) {
+    const updated = gallery.filter((_, i) => i !== index)
+    setGallery(updated)
+    const { error: err } = await supabase.from(table).update({ gallery: updated }).eq('id', profile.id).eq('user_id', userId)
+    if (err) setError(err.message)
+  }
+
+  const hasNew = newFiles.length > 0
+  const total  = gallery.length + newFiles.length
+
+  return (
+    <div>
+      {/* Prompt when empty */}
+      {total === 0 && (
+        <div style={{ background:'linear-gradient(135deg,#fff4f0,#fff7ed)', border:'1px solid #fed7aa', borderRadius:14, padding:'18px 20px', marginBottom:20, display:'flex', alignItems:'center', gap:14 }}>
+          <div style={{ fontSize:36, flexShrink:0 }}>📸</div>
+          <div>
+            <div style={{ fontSize:14, fontWeight:700, color:'#c2410c', marginBottom:4 }}>Add portfolio photos</div>
+            <div style={{ fontSize:12, color:'#78350f', lineHeight:1.6 }}>Pros with portfolios get 3× more inquiries. Showcase your best work to attract more clients.</div>
+          </div>
+        </div>
+      )}
+
+      {/* Stats bar */}
+      {gallery.length > 0 && (
+        <div style={{ display:'flex', alignItems:'center', justifyContent:'space-between', marginBottom:16 }}>
+          <span style={{ fontSize:13, fontWeight:700, color:'#374151' }}>
+            📸 {gallery.length} photo{gallery.length !== 1 ? 's' : ''}
+          </span>
+          {profileHref && (
+            <a href={profileHref} target="_blank" rel="noopener" style={{ fontSize:12, fontWeight:600, color:'#1B3A6B', textDecoration:'none' }}>
+              View public profile →
+            </a>
+          )}
+        </div>
+      )}
+
+      {/* Photo grid */}
+      <div style={{ display:'grid', gridTemplateColumns:'repeat(auto-fill,minmax(100px,1fr))', gap:10, marginBottom:12 }}>
+        {gallery.map((url, i) => (
+          <div key={url} style={{ position:'relative', aspectRatio:'1', borderRadius:12, overflow:'hidden', border:'1px solid #e2e8f0' }}>
+            <img src={url} alt="" style={{ width:'100%', height:'100%', objectFit:'cover' }} loading="lazy" />
+            <button type="button" onClick={() => removePhoto(i)}
+              style={{ position:'absolute', top:4, right:4, background:'rgba(0,0,0,0.7)', color:'#fff', border:'none', borderRadius:'50%', width:22, height:22, cursor:'pointer', fontSize:11, display:'flex', alignItems:'center', justifyContent:'center' }}>
+              ✕
+            </button>
+          </div>
+        ))}
+        {newFiles.map((f, i) => (
+          <div key={i} style={{ position:'relative', aspectRatio:'1', borderRadius:12, overflow:'hidden', border:'2px solid #86efac' }}>
+            <img src={URL.createObjectURL(f)} alt="" style={{ width:'100%', height:'100%', objectFit:'cover' }} />
+            <button type="button" onClick={() => setNewFiles(newFiles.filter((_, j) => j !== i))}
+              style={{ position:'absolute', top:4, right:4, background:'rgba(0,0,0,0.7)', color:'#fff', border:'none', borderRadius:'50%', width:22, height:22, cursor:'pointer', fontSize:11, display:'flex', alignItems:'center', justifyContent:'center' }}>
+              ✕
+            </button>
+            <div style={{ position:'absolute', bottom:4, left:4, background:'rgba(34,197,94,0.9)', color:'#fff', fontSize:9, fontWeight:700, borderRadius:6, padding:'2px 6px' }}>New</div>
+          </div>
+        ))}
+        {total < MAX_GALLERY && (
+          <div onClick={() => ref.current?.click()}
+            style={{ aspectRatio:'1', borderRadius:12, border:'2px dashed #cbd5e1', display:'flex', flexDirection:'column', alignItems:'center', justifyContent:'center', cursor:'pointer', background:'#f8fafc', gap:6, transition:'border-color 0.15s,background 0.15s' }}
+            onMouseOver={e => { e.currentTarget.style.borderColor='#1B3A6B'; e.currentTarget.style.background='#eef3fb' }}
+            onMouseOut={e  => { e.currentTarget.style.borderColor='#cbd5e1'; e.currentTarget.style.background='#f8fafc' }}
+          >
+            <span style={{ fontSize:24, color:'#94a3b8' }}>+</span>
+            <span style={{ fontSize:10, color:'#94a3b8', fontWeight:600 }}>Add Photo</span>
+          </div>
+        )}
+      </div>
+
+      <input ref={ref} type="file" accept="image/*" multiple onChange={e => addFiles(e.target.files)} style={{ display:'none' }} />
+      <p style={{ fontSize:11, color:'#94a3b8', margin:'0 0 16px' }}>JPG / PNG / WebP · Up to {MAX_GALLERY} photos · Upload your best completed work</p>
+
+      {error && (
+        <div style={{ padding:'10px 14px', background:'#fef2f2', border:'1px solid #fecaca', borderRadius:10, fontSize:13, color:'#dc2626', marginBottom:14 }}>
+          ⚠ {error}
+        </div>
+      )}
+
+      {saved && (
+        <div style={{ padding:'10px 14px', background:'#f0fdf4', border:'1px solid #bbf7d0', borderRadius:10, fontSize:13, color:'#15803d', fontWeight:600, marginBottom:14 }}>
+          ✓ Portfolio saved!
+        </div>
+      )}
+
+      {hasNew ? (
+        <button onClick={save} disabled={saving}
+          style={{ width:'100%', padding:'13px', background: saving ? '#94a3b8' : '#1B3A6B', color:'#fff', border:'none', borderRadius:12, fontSize:14, fontWeight:700, cursor: saving ? 'not-allowed' : 'pointer', transition:'background 0.2s' }}>
+          {saving ? '⏳ Saving…' : `💾 Save ${newFiles.length} New Photo${newFiles.length !== 1 ? 's' : ''}`}
+        </button>
+      ) : gallery.length > 0 && profileHref ? (
+        <a href={profileHref} target="_blank" rel="noopener"
+          style={{ display:'block', textAlign:'center', padding:'12px', background:'#f1f5f9', color:'#1B3A6B', border:'1px solid #e2e8f0', borderRadius:12, fontSize:13, fontWeight:700, textDecoration:'none' }}>
+          🔗 View Your Public Profile →
+        </a>
+      ) : null}
+    </div>
+  )
+}
