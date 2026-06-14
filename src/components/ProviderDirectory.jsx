@@ -140,42 +140,75 @@ function VerificationBadge({ status }) {
 }
 
 // ─── Provider card (horizontal) ────────────────────────────────────────────────
+const PROVIDER_TYPE_DISPLAY = {
+  tiler: { label: 'Professional', color: '#1B3A6B', bg: '#eef3fb', border: '#d5e2f5' },
+  contractor: { label: 'Contractor', color: '#374151', bg: '#f1f5f9', border: '#e2e8f0' },
+  tile_shop: { label: 'Tile Shop', color: '#7c3aed', bg: '#f5f3ff', border: '#ddd6fe' },
+  supplier: { label: 'Supplier', color: '#0f766e', bg: '#f0fdf4', border: '#a7f3d0' },
+  workshop: { label: 'Workshop', color: '#b45309', bg: '#fffbeb', border: '#fde68a' },
+  brand_dealer: { label: 'Brand Dealer', color: '#E05A2B', bg: '#fff4f0', border: '#fcd5c0' },
+  bathroom_shop: { label: 'Bathware Shop', color: '#0369a1', bg: '#e0f2fe', border: '#bae6fd' },
+  tool_supplier: { label: 'Tool Supplier', color: '#374151', bg: '#f1f5f9', border: '#e2e8f0' },
+}
+
 function ProviderCard({ provider, onClick, T }) {
   const pts = PROVIDER_TYPES.find(p => p.value === provider.provider_type)
   const isVerified = VERIFIED_STATUSES.has(provider.verification_status)
   const color = avatarColor(provider.name || 'P')
   const inits = initials(provider.name || 'P')
   const phone = provider.whatsapp || provider.phone
+  const coverSrc = provider.cover_image || provider.profile_image
+  const typeDisplay = PROVIDER_TYPE_DISPLAY[provider.provider_type] || { label: pts ? pts.label : 'Provider', color: '#64748b', bg: '#f8fafc', border: '#e2e8f0' }
   return (
     <div
       onClick={() => onClick(provider)}
-      style={{ background: '#fff', borderRadius: 14, border: '1px solid #e2e8f0', overflow: 'hidden', cursor: 'pointer', display: 'flex', alignItems: 'center', boxShadow: '0 1px 4px rgba(0,0,0,0.04)', transition: 'box-shadow 0.15s,border-color 0.15s' }}
-      onMouseOver={e => { e.currentTarget.style.boxShadow = '0 4px 16px rgba(0,0,0,0.09)'; e.currentTarget.style.borderColor = '#cbd5e1' }}
-      onMouseOut={e  => { e.currentTarget.style.boxShadow = '0 1px 4px rgba(0,0,0,0.04)'; e.currentTarget.style.borderColor = '#e2e8f0' }}
+      style={{ background: '#fff', borderRadius: 18, border: '1px solid #e2e8f0', overflow: 'hidden', cursor: 'pointer', display: 'flex', boxShadow: '0 2px 8px rgba(0,0,0,0.05)', transition: 'box-shadow 0.15s,border-color 0.15s' }}
+      onMouseOver={e => { e.currentTarget.style.boxShadow = '0 6px 20px rgba(0,0,0,0.1)'; e.currentTarget.style.borderColor = '#cbd5e1' }}
+      onMouseOut={e  => { e.currentTarget.style.boxShadow = '0 2px 8px rgba(0,0,0,0.05)'; e.currentTarget.style.borderColor = '#e2e8f0' }}
     >
-      <div style={{ width: 82, height: 82, background: color, flexShrink: 0, display: 'flex', alignItems: 'center', justifyContent: 'center', overflow: 'hidden' }}>
-        {provider.profile_image
-          ? <img src={provider.profile_image} alt={provider.name} style={{ width: '100%', height: '100%', objectFit: 'cover' }} loading="lazy" />
-          : <span style={{ fontSize: 26, fontWeight: 800, color: 'rgba(255,255,255,0.85)' }}>{inits}</span>
+      {/* Cover image left panel */}
+      <div style={{ width: 110, flexShrink: 0, position: 'relative', minHeight: 140, overflow: 'hidden' }}>
+        {coverSrc
+          ? <img src={coverSrc} alt={provider.name} style={{ width: '100%', height: '100%', objectFit: 'cover', display: 'block' }} loading="lazy" />
+          : <div style={{ width: '100%', height: '100%', background: color, display: 'flex', alignItems: 'center', justifyContent: 'center' }}>
+              <span style={{ fontSize: 28, fontWeight: 800, color: 'rgba(255,255,255,0.85)' }}>{inits}</span>
+            </div>
         }
+        {provider.is_featured && (
+          <div style={{ position: 'absolute', top: 7, left: 7, background: '#D4AF37', color: '#fff', fontSize: 8, fontWeight: 700, padding: '2px 6px', borderRadius: 20, whiteSpace: 'nowrap' }}>⭐ Top</div>
+        )}
       </div>
-      <div style={{ flex: 1, padding: '12px 12px', minWidth: 0 }}>
-        <div style={{ display: 'flex', alignItems: 'center', gap: 6, marginBottom: 2 }}>
-          <span style={{ fontSize: 13, fontWeight: 700, color: '#111827', overflow: 'hidden', whiteSpace: 'nowrap', textOverflow: 'ellipsis' }}>{provider.name}</span>
-          {isVerified && <span style={{ fontSize: 8, fontWeight: 700, color: '#16a34a', background: '#f0fdf4', border: '1px solid #bbf7d0', borderRadius: 20, padding: '1px 6px', flexShrink: 0 }}>✓ Pro</span>}
+      {/* Info */}
+      <div style={{ flex: 1, padding: '13px 15px', display: 'flex', flexDirection: 'column', minWidth: 0 }}>
+        <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', marginBottom: 5, gap: 6 }}>
+          <span style={{ fontSize: 9, fontWeight: 700, color: typeDisplay.color, background: typeDisplay.bg, border: `1px solid ${typeDisplay.border}`, borderRadius: 20, padding: '2px 8px', whiteSpace: 'nowrap' }}>{typeDisplay.label}</span>
+          {isVerified && <span style={{ fontSize: 9, fontWeight: 700, color: '#16a34a', background: '#f0fdf4', border: '1px solid #bbf7d0', borderRadius: 20, padding: '2px 7px', whiteSpace: 'nowrap' }}>✓ Verified</span>}
         </div>
-        {pts && <div style={{ fontSize: 11, color: '#64748b', marginBottom: 2, overflow: 'hidden', whiteSpace: 'nowrap', textOverflow: 'ellipsis' }}>{pts.icon} {pts.label}</div>}
-        {(provider.city || provider.district) && <div style={{ fontSize: 11, color: '#94a3b8' }}>📍 {provider.city || provider.district}</div>}
-        {provider.description && <div style={{ fontSize: 11, color: '#64748b', marginTop: 2, overflow: 'hidden', whiteSpace: 'nowrap', textOverflow: 'ellipsis' }}>{provider.description}</div>}
-      </div>
-      <div style={{ padding: '0 12px', flexShrink: 0 }}>
-        {phone
-          ? <a href={buildWhatsAppLink(phone, provider.name)} target="_blank" rel="noopener noreferrer" onClick={e => e.stopPropagation()}
-              style={{ display: 'inline-flex', alignItems: 'center', gap: 5, background: '#25D366', color: '#fff', borderRadius: 10, padding: '8px 12px', fontSize: 12, fontWeight: 700, textDecoration: 'none', whiteSpace: 'nowrap' }}>
-              💬 WhatsApp
-            </a>
-          : <span style={{ fontSize: 20, color: '#cbd5e1' }}>›</span>
-        }
+        <div style={{ fontSize: 14, fontWeight: 700, color: '#0f172a', marginBottom: 3, overflow: 'hidden', whiteSpace: 'nowrap', textOverflow: 'ellipsis' }}>{provider.name}</div>
+        {provider.avg_rating > 0 && <div style={{ fontSize: 11, color: '#f59e0b', marginBottom: 4 }}>⭐ {provider.avg_rating.toFixed(1)}</div>}
+        {provider.description && (
+          <div style={{ fontSize: 11, color: '#64748b', lineHeight: 1.5, marginBottom: 8, overflow: 'hidden', display: '-webkit-box', WebkitLineClamp: 2, WebkitBoxOrient: 'vertical' }}>
+            {provider.description}
+          </div>
+        )}
+        <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', marginTop: 'auto', gap: 6 }}>
+          <span style={{ fontSize: 10, color: '#94a3b8', overflow: 'hidden', whiteSpace: 'nowrap', textOverflow: 'ellipsis' }}>📍 {provider.city || provider.district}</span>
+          <div style={{ display: 'flex', gap: 5, flexShrink: 0 }}>
+            {phone && (
+              <a href={buildWhatsAppLink(phone, provider.name)} target="_blank" rel="noopener noreferrer" onClick={e => e.stopPropagation()}
+                style={{ display: 'inline-flex', alignItems: 'center', background: '#25D366', color: '#fff', borderRadius: 8, padding: '5px 9px', fontSize: 9, fontWeight: 700, textDecoration: 'none' }}>
+                💬
+              </a>
+            )}
+            {provider.slug
+              ? <a href={`/providers/${provider.slug}`} onClick={e => e.stopPropagation()}
+                  style={{ display: 'inline-flex', alignItems: 'center', background: '#1B3A6B', color: '#fff', borderRadius: 8, padding: '5px 10px', fontSize: 9, fontWeight: 700, textDecoration: 'none', whiteSpace: 'nowrap' }}>
+                  View ›
+                </a>
+              : <span style={{ fontSize: 20, color: '#cbd5e1' }}>›</span>
+            }
+          </div>
+        </div>
       </div>
     </div>
   )
@@ -248,45 +281,67 @@ function ShopCard({ provider, onClick, T }) {
   )
 }
 
-// ─── Tiler card (horizontal) ───────────────────────────────────────────────────
+// ─── Tiler card ────────────────────────────────────────────────────────────────
 function TilerCard({ tiler, onClick, T }) {
   const isVerified = tiler.is_verified
   const color = avatarColor(tiler.full_name)
   const inits = initials(tiler.full_name)
   const phone = tiler.whatsapp || tiler.phone
+  const coverSrc = (tiler.gallery || [])[0] || tiler.avatar_url
   return (
     <div
       onClick={() => onClick(tiler)}
-      style={{ background: '#fff', borderRadius: 14, border: '1px solid #e2e8f0', overflow: 'hidden', cursor: 'pointer', display: 'flex', alignItems: 'center', boxShadow: '0 1px 4px rgba(0,0,0,0.04)', transition: 'box-shadow 0.15s,border-color 0.15s' }}
-      onMouseOver={e => { e.currentTarget.style.boxShadow = '0 4px 16px rgba(0,0,0,0.09)'; e.currentTarget.style.borderColor = '#cbd5e1' }}
-      onMouseOut={e  => { e.currentTarget.style.boxShadow = '0 1px 4px rgba(0,0,0,0.04)'; e.currentTarget.style.borderColor = '#e2e8f0' }}
+      style={{ background: '#fff', borderRadius: 18, border: '1px solid #e2e8f0', overflow: 'hidden', cursor: 'pointer', display: 'flex', boxShadow: '0 2px 8px rgba(0,0,0,0.05)', transition: 'box-shadow 0.15s,border-color 0.15s' }}
+      onMouseOver={e => { e.currentTarget.style.boxShadow = '0 6px 20px rgba(0,0,0,0.1)'; e.currentTarget.style.borderColor = '#cbd5e1' }}
+      onMouseOut={e  => { e.currentTarget.style.boxShadow = '0 2px 8px rgba(0,0,0,0.05)'; e.currentTarget.style.borderColor = '#e2e8f0' }}
     >
-      <div style={{ width: 82, height: 82, background: color, flexShrink: 0, display: 'flex', alignItems: 'center', justifyContent: 'center', overflow: 'hidden' }}>
-        {tiler.avatar_url
-          ? <img src={tiler.avatar_url} alt={tiler.full_name} style={{ width: '100%', height: '100%', objectFit: 'cover' }} loading="lazy" />
-          : <span style={{ fontSize: 26, fontWeight: 800, color: 'rgba(255,255,255,0.85)' }}>{inits}</span>
+      {/* Cover image left panel */}
+      <div style={{ width: 110, flexShrink: 0, position: 'relative', minHeight: 140, overflow: 'hidden' }}>
+        {coverSrc
+          ? <img src={coverSrc} alt={tiler.full_name} style={{ width: '100%', height: '100%', objectFit: 'cover', display: 'block' }} loading="lazy" />
+          : <div style={{ width: '100%', height: '100%', background: color, display: 'flex', alignItems: 'center', justifyContent: 'center' }}>
+              <span style={{ fontSize: 32, fontWeight: 800, color: 'rgba(255,255,255,0.85)' }}>{inits}</span>
+            </div>
         }
+        {isVerified && (
+          <div style={{ position: 'absolute', top: 7, left: 7, background: 'rgba(22,163,74,0.92)', color: '#fff', fontSize: 8, fontWeight: 700, padding: '2px 7px', borderRadius: 20, whiteSpace: 'nowrap' }}>✓ Verified</div>
+        )}
       </div>
-      <div style={{ flex: 1, padding: '12px 12px', minWidth: 0 }}>
-        <div style={{ display: 'flex', alignItems: 'center', gap: 6, marginBottom: 2 }}>
-          <span style={{ fontSize: 13, fontWeight: 700, color: '#111827', overflow: 'hidden', whiteSpace: 'nowrap', textOverflow: 'ellipsis' }}>{tiler.full_name}</span>
-          {isVerified
-            ? <span style={{ fontSize: 8, fontWeight: 700, color: '#16a34a', background: '#f0fdf4', border: '1px solid #bbf7d0', borderRadius: 20, padding: '1px 6px', flexShrink: 0 }}>✓ Pro</span>
-            : <span style={{ fontSize: 8, color: '#94a3b8', background: '#f8fafc', border: '1px solid #e2e8f0', borderRadius: 20, padding: '1px 6px', flexShrink: 0 }}>{T.community}</span>
-          }
+      {/* Info */}
+      <div style={{ flex: 1, padding: '13px 15px', display: 'flex', flexDirection: 'column', minWidth: 0 }}>
+        <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', marginBottom: 5, gap: 6 }}>
+          <span style={{ fontSize: 9, fontWeight: 700, color: '#1B3A6B', background: '#eef3fb', border: '1px solid #d5e2f5', borderRadius: 20, padding: '2px 8px', whiteSpace: 'nowrap' }}>Professional</span>
+          {tiler.daily_rate_min > 0 && <span style={{ fontSize: 9, color: '#64748b', whiteSpace: 'nowrap' }}>Rs.{tiler.daily_rate_min}/day</span>}
         </div>
-        {tiler.speciality && <div style={{ fontSize: 11, color: '#64748b', marginBottom: 2, overflow: 'hidden', whiteSpace: 'nowrap', textOverflow: 'ellipsis' }}>{tiler.speciality}</div>}
-        {(tiler.city || tiler.district) && <div style={{ fontSize: 11, color: '#94a3b8' }}>📍 {tiler.city || tiler.district}</div>}
-        {tiler.avg_rating > 0 && <div style={{ fontSize: 11, color: '#f59e0b', marginTop: 2 }}>⭐ {tiler.avg_rating.toFixed(1)}{tiler.experience_years > 0 ? ` · ${tiler.experience_years}+ yrs` : ''}</div>}
-      </div>
-      <div style={{ padding: '0 12px', flexShrink: 0 }}>
-        {phone
-          ? <a href={buildWhatsAppLink(phone, tiler.full_name)} target="_blank" rel="noopener noreferrer" onClick={e => e.stopPropagation()}
-              style={{ display: 'inline-flex', alignItems: 'center', gap: 5, background: '#25D366', color: '#fff', borderRadius: 10, padding: '8px 12px', fontSize: 12, fontWeight: 700, textDecoration: 'none', whiteSpace: 'nowrap' }}>
-              💬 WhatsApp
-            </a>
-          : <span style={{ fontSize: 20, color: '#cbd5e1' }}>›</span>
-        }
+        <div style={{ fontSize: 14, fontWeight: 700, color: '#0f172a', marginBottom: 3, overflow: 'hidden', whiteSpace: 'nowrap', textOverflow: 'ellipsis' }}>{tiler.full_name}</div>
+        {tiler.avg_rating > 0 && (
+          <div style={{ fontSize: 11, color: '#f59e0b', marginBottom: 4 }}>
+            ⭐ {tiler.avg_rating.toFixed(1)}{tiler.experience_years > 0 ? ` · ${tiler.experience_years}+ yrs` : ''}
+          </div>
+        )}
+        {tiler.speciality && (
+          <div style={{ fontSize: 11, color: '#64748b', lineHeight: 1.5, marginBottom: 8, overflow: 'hidden', display: '-webkit-box', WebkitLineClamp: 2, WebkitBoxOrient: 'vertical' }}>
+            {tiler.speciality}
+          </div>
+        )}
+        <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', marginTop: 'auto', gap: 6 }}>
+          <span style={{ fontSize: 10, color: '#94a3b8', overflow: 'hidden', whiteSpace: 'nowrap', textOverflow: 'ellipsis' }}>📍 {tiler.city || tiler.district}</span>
+          <div style={{ display: 'flex', gap: 5, flexShrink: 0 }}>
+            {phone && (
+              <a href={buildWhatsAppLink(phone, tiler.full_name)} target="_blank" rel="noopener noreferrer" onClick={e => e.stopPropagation()}
+                style={{ display: 'inline-flex', alignItems: 'center', background: '#25D366', color: '#fff', borderRadius: 8, padding: '5px 9px', fontSize: 9, fontWeight: 700, textDecoration: 'none' }}>
+                💬
+              </a>
+            )}
+            {tiler.slug
+              ? <a href={`/tilers/${tiler.slug}`} onClick={e => e.stopPropagation()}
+                  style={{ display: 'inline-flex', alignItems: 'center', background: '#1B3A6B', color: '#fff', borderRadius: 8, padding: '5px 10px', fontSize: 9, fontWeight: 700, textDecoration: 'none', whiteSpace: 'nowrap' }}>
+                  View ›
+                </a>
+              : <span style={{ fontSize: 20, color: '#cbd5e1' }}>›</span>
+            }
+          </div>
+        </div>
       </div>
     </div>
   )
