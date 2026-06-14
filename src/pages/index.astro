@@ -53,10 +53,30 @@ function waLink(phone: string, name: string) {
   <!-- ══ HERO ══ -->
   <HomeHero client:load heroImg={HERO_IMG} />
 
+  <!-- ══ HOW IT WORKS ══ -->
+  <section style="background:linear-gradient(135deg,#0F1E35,#1A2B4A);padding:28px 16px 24px;">
+    <div style="max-width:480px;margin:0 auto;">
+      <p style="font-size:9px;font-weight:700;color:rgba(255,255,255,0.4);letter-spacing:3px;text-transform:uppercase;text-align:center;margin:0 0 18px;">How It Works</p>
+      {[
+        { n:'1', icon:'📋', title:'Post Your Project',  desc:'Free — no login needed. Takes 2 minutes.',      c:'#E05A2B' },
+        { n:'2', icon:'💬', title:'Providers Bid',      desc:'Verified tilers send quotes to your WhatsApp.', c:'#D4AF37' },
+        { n:'3', icon:'✅', title:'You Choose',         desc:'Compare, chat directly, hire the best.',        c:'#25D366' },
+      ].map((s, i) => (
+        <div style={`display:flex;align-items:flex-start;gap:16px;padding:13px 0;${i<2?'border-bottom:1px solid rgba(255,255,255,0.07);':''}`}>
+          <div style={`width:38px;height:38px;border-radius:50%;background:${s.c};display:flex;align-items:center;justify-content:center;font-size:14px;font-weight:800;color:#fff;flex-shrink:0;`}>{s.n}</div>
+          <div style="padding-top:2px;">
+            <div style="font-size:14px;font-weight:700;color:#fff;margin-bottom:2px;">{s.title}</div>
+            <div style="font-size:12px;color:rgba(255,255,255,0.45);line-height:1.6;">{s.desc}</div>
+          </div>
+        </div>
+      ))}
+    </div>
+  </section>
+
   <!-- ══ CATEGORIES ══ -->
   <section style="background:#fff;padding:22px 0 24px;border-bottom:1px solid #f1f5f9;">
     <div style="padding:0 16px 14px;display:flex;align-items:center;justify-content:space-between;">
-      <span style="font-size:15px;font-weight:700;color:#111827;">Our Services</span>
+      <span style="font-size:15px;font-weight:700;color:#111827;">What do you need done?</span>
       <a href="/providers" style="font-size:12px;font-weight:600;color:#E05A2B;text-decoration:none;">All Providers ›</a>
     </div>
     <div style="display:grid;grid-template-columns:repeat(2,1fr);gap:10px;padding:0 16px;">
@@ -74,20 +94,6 @@ function waLink(phone: string, name: string) {
       ))}
     </div>
   </section>
-
-  <!-- ══ POST PROJECT BANNER ══ -->
-  <div style="padding:14px 16px;background:#f8fafc;">
-    <a href="/post-project"
-      style="display:flex;align-items:center;justify-content:space-between;gap:12px;background:linear-gradient(120deg,#1B3A6B,#2B4A8A);border-radius:18px;padding:16px 20px;text-decoration:none;box-shadow:0 4px 20px rgba(27,58,107,0.28);">
-      <div>
-        <div style="font-size:14px;font-weight:800;color:#fff;margin-bottom:3px;">Post your project — it's free</div>
-        <div style="font-size:11px;color:rgba(255,255,255,0.6);">Get bids from verified pros · No login needed</div>
-      </div>
-      <div style="background:#E05A2B;color:#fff;border-radius:12px;padding:10px 18px;font-size:12px;font-weight:800;white-space:nowrap;flex-shrink:0;">
-        📋 Post Free
-      </div>
-    </a>
-  </div>
 
   <!-- ══ TOP PROVIDERS ══ -->
   <section style="background:#f8fafc;padding:16px 0 20px;">
@@ -157,16 +163,33 @@ function waLink(phone: string, name: string) {
     </div>
   </section>
 
+  <!-- ══ ESTIMATOR TEASER ══ -->
+  <div style="padding:14px 16px;background:#fff;border-top:1px solid #f1f5f9;">
+    <a href="/estimator"
+      style="display:flex;align-items:center;justify-content:space-between;gap:12px;background:linear-gradient(120deg,#1B3A6B,#2B4A8A);border-radius:18px;padding:16px 20px;text-decoration:none;">
+      <div style="display:flex;align-items:center;gap:14px;">
+        <div style="font-size:28px;flex-shrink:0;">📐</div>
+        <div>
+          <div style="font-size:14px;font-weight:800;color:#fff;margin-bottom:2px;">Calculate Your Project Cost</div>
+          <div style="font-size:11px;color:rgba(255,255,255,0.55);">Tiles needed · Labour · Materials — free estimator</div>
+        </div>
+      </div>
+      <div style="background:#fff;color:#1B3A6B;border-radius:12px;padding:9px 16px;font-size:12px;font-weight:800;white-space:nowrap;flex-shrink:0;">
+        Try Free →
+      </div>
+    </a>
+  </div>
+
   <!-- ══ BLOG / TIPS ══ -->
-  <section style="background:#fff;padding:20px 0 24px;border-top:1px solid #f1f5f9;">
+  <section style="background:#f8fafc;padding:20px 0 24px;border-top:1px solid #f1f5f9;">
     <div style="padding:0 16px 12px;display:flex;align-items:center;justify-content:space-between;">
       <span style="font-size:15px;font-weight:700;color:#111827;">📰 Tips &amp; Guides</span>
       <a href="/blog" style="font-size:12px;font-weight:600;color:#E05A2B;text-decoration:none;">View All ›</a>
     </div>
     <div style="display:flex;flex-direction:column;gap:8px;padding:0 16px;">
-      {BLOG_POSTS.map(post => (
+      {BLOG_POSTS.slice(0,2).map(post => (
         <a href={`/blog/${post.slug}`}
-          style="display:flex;align-items:center;gap:0;background:#f8fafc;border-radius:14px;overflow:hidden;border:1px solid #e2e8f0;text-decoration:none;color:inherit;">
+          style="display:flex;align-items:center;gap:0;background:#fff;border-radius:14px;overflow:hidden;border:1px solid #e2e8f0;text-decoration:none;color:inherit;">
           <div style={`width:64px;height:64px;background:${post.color};flex-shrink:0;display:flex;align-items:center;justify-content:center;font-size:24px;`}>{post.icon}</div>
           <div style="flex:1;padding:11px 13px;min-width:0;">
             <span style="font-size:9px;font-weight:700;color:#E05A2B;background:#fff4f0;border:1px solid #fcd5c0;border-radius:20px;padding:1px 7px;">{post.category}</span>
@@ -175,31 +198,19 @@ function waLink(phone: string, name: string) {
           <div style="padding:0 14px;font-size:18px;color:#cbd5e1;flex-shrink:0;">›</div>
         </a>
       ))}
-    </div>
-  </section>
 
-  <!-- ══ HOW IT WORKS ══ -->
-  <section style="background:linear-gradient(135deg,#0F1E35,#1A2B4A);padding:30px 16px 26px;">
-    <div style="max-width:480px;margin:0 auto;">
-      <p style="font-size:9px;font-weight:700;color:rgba(255,255,255,0.4);letter-spacing:3px;text-transform:uppercase;text-align:center;margin:0 0 20px;">How It Works</p>
-      {[
-        { n:'1', icon:'📋', title:'Post Your Project',  desc:'Free — no login needed. Takes 2 minutes.',       c:'#E05A2B' },
-        { n:'2', icon:'💬', title:'Providers Bid',      desc:'Verified tilers send quotes to your WhatsApp.',  c:'#D4AF37' },
-        { n:'3', icon:'✅', title:'You Choose',         desc:'Compare, chat directly, hire the best.',         c:'#25D366' },
-      ].map((s, i) => (
-        <div style={`display:flex;align-items:flex-start;gap:16px;padding:15px 0;${i<2?'border-bottom:1px solid rgba(255,255,255,0.07);':''}`}>
-          <div style={`width:40px;height:40px;border-radius:50%;background:${s.c};display:flex;align-items:center;justify-content:center;font-size:16px;font-weight:800;color:#fff;flex-shrink:0;`}>{s.n}</div>
-          <div style="padding-top:3px;">
-            <div style="font-size:14px;font-weight:700;color:#fff;margin-bottom:3px;">{s.title}</div>
-            <div style="font-size:12px;color:rgba(255,255,255,0.45);line-height:1.6;">{s.desc}</div>
-          </div>
+      <!-- Post project CTA card -->
+      <a href="/post-project"
+        style="display:flex;align-items:center;gap:16px;background:#E05A2B;border-radius:14px;padding:16px 20px;text-decoration:none;">
+        <div style="font-size:28px;flex-shrink:0;">🏠</div>
+        <div style="flex:1;">
+          <div style="font-size:13px;font-weight:800;color:#fff;margin-bottom:2px;">Ready to Start Your Project?</div>
+          <div style="font-size:11px;color:rgba(255,255,255,0.75);">Post free — get bids from verified pros on WhatsApp.</div>
         </div>
-      ))}
-      <div style="text-align:center;margin-top:20px;">
-        <a href="/post-project" style="display:inline-flex;align-items:center;gap:7px;background:#E05A2B;color:#fff;border-radius:24px;padding:13px 28px;font-size:14px;font-weight:700;text-decoration:none;">
-          📋 Post a Project Free
-        </a>
-      </div>
+        <div style="font-size:13px;font-weight:800;color:#fff;flex-shrink:0;background:rgba(255,255,255,0.15);border-radius:10px;padding:8px 14px;">
+          Post →
+        </div>
+      </a>
     </div>
   </section>
 

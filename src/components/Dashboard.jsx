@@ -1,6 +1,7 @@
 import { useState, useEffect } from 'react'
 import { supabase, getUser, signOut, onAuthStateChange } from '../lib/supabase.js'
 import ProfileEditor from './ProfileEditor.jsx'
+import PortfolioEditor from './PortfolioEditor.jsx'
 
 const TYPE_ICON = {
   'Floor Tiling':'🪨','Bathroom Tiling':'🚿','Bathroom Renovation':'🛁',
@@ -101,9 +102,10 @@ function ProviderDashboard({ user, claimedProfile, claimedProfileType, submissio
     : null
 
   const TABS = [
-    { key:'jobs',    label:'💼 Browse Jobs'  },
-    ...(claimedProfile ? [{ key:'profile', label:'✏️ My Profile' }] : []),
-    { key:'listing', label:'📋 My Listing'   },
+    { key:'jobs',      label:'💼 Browse Jobs'  },
+    ...(claimedProfile ? [{ key:'portfolio', label:'📸 Portfolio'  }] : []),
+    ...(claimedProfile ? [{ key:'profile',   label:'✏️ My Profile' }] : []),
+    { key:'listing',   label:'📋 My Listing'   },
   ]
 
   return (
@@ -168,11 +170,14 @@ function ProviderDashboard({ user, claimedProfile, claimedProfileType, submissio
 
       {/* ── Tab content ── */}
       <div style={{ maxWidth:860, margin:'0 auto', padding:'24px 16px' }}>
-        {tab === 'jobs'    && <BrowseJobsTab openJobs={openJobs} loading={jobsLoading} />}
-        {tab === 'profile' && claimedProfile && (
+        {tab === 'jobs'      && <BrowseJobsTab openJobs={openJobs} loading={jobsLoading} />}
+        {tab === 'portfolio' && claimedProfile && (
+          <PortfolioEditor profile={claimedProfile} profileType={claimedProfileType} userId={user.id} />
+        )}
+        {tab === 'profile'   && claimedProfile && (
           <ProfileEditor profile={claimedProfile} profileType={claimedProfileType} userId={user.id} />
         )}
-        {tab === 'listing' && <ListingTab submission={submission} />}
+        {tab === 'listing'   && <ListingTab submission={submission} />}
       </div>
     </div>
   )
