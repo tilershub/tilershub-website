@@ -195,7 +195,7 @@ export default function ProfileEditor({ profile, profileType, userId }) {
   const displayName  = isTiler ? (profile.full_name || 'Profile') : (profile.name || 'Profile')
   const displayImg   = isTiler ? profile.avatar_url : profile.profile_image
   const profilePath  = profile.slug
-    ? (isTiler ? `/providers/${profile.slug}` : `/providers/${profile.slug}`)
+    ? (isTiler ? `/tilers/${profile.slug}` : `/providers/${profile.slug}`)
     : null
 
   async function save() {
