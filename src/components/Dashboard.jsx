@@ -80,9 +80,21 @@ export default function Dashboard() {
 // ═══════════════════════════════════════════════════════════════════
 
 function ProviderDashboard({ user, claimedProfile, claimedProfileType, submission, showClaimedBanner }) {
-  const [tab, setTab]         = useState('jobs')
+  const initialTab = typeof window !== 'undefined'
+    ? (new URLSearchParams(window.location.search).get('tab') || 'jobs')
+    : 'jobs'
+  const [tab, setTab]         = useState(initialTab)
   const [openJobs, setOpenJobs] = useState([])
   const [jobsLoading, setJobsLoading] = useState(false)
+
+  useEffect(() => {
+    const params = new URLSearchParams(window.location.search)
+    if (params.has('tab')) {
+      const t = params.get('tab')
+      setTab(t)
+      window.history.replaceState({}, '', window.location.pathname)
+    }
+  }, [])
 
   useEffect(() => { if (tab === 'jobs') loadOpenJobs() }, [tab])
 

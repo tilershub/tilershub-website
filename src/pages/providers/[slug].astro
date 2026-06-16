@@ -3,10 +3,11 @@ import Layout from '../../layouts/Layout.astro'
 import { supabase } from '../../lib/supabase.js'
 import ReviewsSection from '../../components/ReviewsSection.jsx'
 import ClaimProfile from '../../components/ClaimProfile.jsx'
+import EditProfileButton from '../../components/EditProfileButton.jsx'
 
 export async function getStaticPaths() {
   const [{ data: providers }, { data: tilers }] = await Promise.all([
-    supabase.from('providers').select('slug,id').eq('status', 'active'),
+    supabase.from('providers').select('slug,id').not('slug', 'is', null),
     supabase.from('tilers').select('id,slug'),
   ])
   const paths = []
@@ -33,7 +34,7 @@ let provider = null
 let tiler = null
 
 if (type === 'provider') {
-  const { data } = await supabase.from('providers').select('*').eq('slug', lookupKey).eq('status', 'active').single()
+  const { data } = await supabase.from('providers').select('*').eq('slug', lookupKey).single()
   provider = data
 } else {
   const isUuid = /^[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}$/.test(lookupKey)
@@ -238,6 +239,13 @@ const metaDesc = isUnverified
           style="display:flex;align-items:center;justify-content:center;gap:6px;width:100%;background:#f1f5f9;color:#374151;border:1px solid #e2e8f0;border-radius:12px;padding:10px;font-size:12px;font-weight:700;cursor:pointer;margin-top:10px;">
           🔗 Share Profile
         </button>
+
+        <EditProfileButton
+          client:load
+          ownerId={isTiler ? tiler.user_id : provider.user_id}
+          profileType={isTiler ? 'tiler' : 'provider'}
+          profileSlug={item.slug}
+        />
 
         <ClaimProfile
           client:load
