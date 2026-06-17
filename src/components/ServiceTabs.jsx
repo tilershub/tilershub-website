@@ -323,7 +323,6 @@ export default function ServiceTabs() {
       </div>
 
       {CATEGORIES.map(cat => {
-        const services = ALL_SERVICES.filter(s => s.cat === cat.id).slice(0, 8)
         const providers = allProviders.filter(p => providerMatchesCat(p, cat)).slice(0, 4)
         const projects  = allProjects.filter(p => projectMatchesCat(p, cat)).slice(0, 4)
         const blogs     = cat.blogSlugs.map(s => blogMap[s]).filter(Boolean)
@@ -343,19 +342,6 @@ export default function ServiceTabs() {
                 style={{ fontSize: 11, fontWeight: 600, color: '#94a3b8', textDecoration: 'none' }}>
                 View All ›
               </a>
-            </div>
-
-            {/* ── 8 service tiles — 4×2 grid, no scroll ── */}
-            <div style={{ display: 'grid', gridTemplateColumns: 'repeat(4,1fr)', gap: 7, padding: '0 16px 14px' }}>
-              {services.map(s => (
-                <a key={s.slug} href={`/services/${s.slug}`}
-                  style={{ display: 'flex', flexDirection: 'column', alignItems: 'center', gap: 5, padding: '9px 4px 8px', borderRadius: 13, background: cat.bg, textDecoration: 'none', border: `1px solid ${cat.border}` }}>
-                  <div style={{ width: 42, height: 42, borderRadius: 11, background: '#fff', border: '1px solid rgba(0,0,0,0.06)', boxShadow: '0 1px 4px rgba(0,0,0,0.06)', display: 'flex', alignItems: 'center', justifyContent: 'center', fontSize: 20 }}>
-                    {s.icon}
-                  </div>
-                  <span style={{ fontSize: 9, fontWeight: 600, color: cat.color, textAlign: 'center', lineHeight: 1.3 }}>{s.label}</span>
-                </a>
-              ))}
             </div>
 
             {/* ── Top Providers ── */}
