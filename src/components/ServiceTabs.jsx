@@ -1,6 +1,5 @@
 import { useState, useEffect } from 'react'
 import { supabase } from '../lib/supabase.js'
-import { BLOG_POSTS } from '../lib/blog-posts.js'
 
 const ALL_SERVICES = [
   { slug: 'floor-tiling',               icon: '⬜', label: 'Floor Tiling',              cat: 'flooring' },
@@ -286,7 +285,6 @@ function SubLabel({ label, href, color }) {
 
 export default function ServiceTabs() {
   const [allProviders, setAllProviders] = useState([])
-  const [allProjects, setAllProjects] = useState([])
   const [loading, setLoading] = useState(true)
 
   useEffect(() => {
@@ -297,22 +295,14 @@ export default function ServiceTabs() {
       supabase.from('providers')
         .select('id,name,city,district,slug,services,provider_type,whatsapp,phone,profile_image,verification_status')
         .limit(200),
-      supabase.from('projects')
-        .select('id,project_type,city,district,budget,created_at')
-        .eq('status', 'active')
-        .order('created_at', { ascending: false })
-        .limit(100),
-    ]).then(([{ data: tilers }, { data: prov }, { data: proj }]) => {
+    ]).then(([{ data: tilers }, { data: prov }]) => {
       setAllProviders([
         ...(tilers || []).map(t => ({ ...t, _type: 'tiler' })),
         ...(prov  || []).map(p => ({ ...p, _type: 'provider' })),
       ])
-      setAllProjects(proj || [])
       setLoading(false)
     })
   }, [])
-
-  const blogMap = Object.fromEntries(BLOG_POSTS.map(p => [p.slug, p]))
 
   return (
     <section style={{ background: '#f1f5f9' }}>
@@ -323,9 +313,12 @@ export default function ServiceTabs() {
       </div>
 
       {CATEGORIES.map(cat => {
-        const providers = allProviders.filter(p => providerMatchesCat(p, cat)).slice(0, 4)
-        const projects  = allProjects.filter(p => projectMatchesCat(p, cat)).slice(0, 4)
-        const blogs     = cat.blogSlugs.map(s => blogMap[s]).filter(Boolean)
+        const BADGE_ORDER = { th_master: 0, th_certified_pro: 1, th_verified: 2, verified: 2, listed: 3 }
+        const badgeRank = p => BADGE_ORDER[p.verification_status] ?? (p.is_verified ? 2 : 4)
+        const providers = allProviders
+          .filter(p => providerMatchesCat(p, cat))
+          .sort((a, b) => badgeRank(a) - badgeRank(b))
+          .slice(0, 4)
 
         return (
           <div key={cat.id} style={{ background: '#fff', marginBottom: 8, paddingBottom: 4 }}>
@@ -344,8 +337,7 @@ export default function ServiceTabs() {
               </a>
             </div>
 
-            {/* ── Top Providers ── */}
-            <SubLabel label="Top Providers" href={`/providers?q=${encodeURIComponent(cat.label.replace(' Services', ''))}`} color={cat.color} />
+            {/* ── Providers ── */}
             <HRow>
               {loading
                 ? <SkeletonCards count={4} width={280} height={130} />
@@ -353,27 +345,6 @@ export default function ServiceTabs() {
                   ? providers.map(p => <ProviderCard key={p.id} p={p} />)
                   : <div style={{ fontSize: 12, color: '#94a3b8', padding: '8px 0' }}>
                       No providers yet — <a href="/join-tilershub" style={{ color: '#E05A2B', textDecoration: 'none', fontWeight: 600 }}>Join TilersHub</a>
-                    </div>
-              }
-            </HRow>
-
-            {/* ── Tips & Guides ── */}
-            {blogs.length > 0 && <>
-              <SubLabel label="Tips & Guides" href="/blog" />
-              <HRow>
-                {blogs.map(post => <BlogCard key={post.slug} post={post} />)}
-              </HRow>
-            </>}
-
-            {/* ── Recent Projects ── */}
-            <SubLabel label="Recent Projects" href="/jobs" />
-            <HRow>
-              {loading
-                ? <SkeletonCards count={4} width={172} height={120} />
-                : projects.length > 0
-                  ? projects.map(p => <ProjectCard key={p.id} proj={p} />)
-                  : <div style={{ fontSize: 12, color: '#94a3b8', padding: '8px 0' }}>
-                      No active projects — <a href="/post-project" style={{ color: '#E05A2B', textDecoration: 'none', fontWeight: 600 }}>Post one free</a>
                     </div>
               }
             </HRow>
