@@ -61,7 +61,7 @@ const ALL_SERVICES = [
 const CATEGORIES = [
   {
     id: 'flooring',
-    label: 'Flooring Services',
+    label: 'Tiling Services',
     icon: '⬜',
     color: '#0f766e',
     bg: '#f0fdfa',
