@@ -138,9 +138,15 @@ function verBadge(vs: string) {
   <section style="background:#f8fafc;padding:16px 0 20px;">
     <div style="padding:0 16px 12px;display:flex;align-items:center;justify-content:space-between;">
       <span style="font-size:15px;font-weight:700;color:#111827;">Top Professionals</span>
-      <a href="/providers?type=tiler" style="font-size:12px;font-weight:600;color:#E05A2B;text-decoration:none;">View All ›</a>
+      <div style="display:flex;align-items:center;gap:6px;">
+        <button onclick="document.getElementById('prof-scroll').scrollBy({left:-192,behavior:'smooth'})"
+          style="width:30px;height:30px;border-radius:50%;background:#fff;border:1.5px solid #e2e8f0;box-shadow:0 1px 4px rgba(0,0,0,0.08);font-size:14px;cursor:pointer;display:flex;align-items:center;justify-content:center;color:#374151;flex-shrink:0;">‹</button>
+        <button onclick="document.getElementById('prof-scroll').scrollBy({left:192,behavior:'smooth'})"
+          style="width:30px;height:30px;border-radius:50%;background:#fff;border:1.5px solid #e2e8f0;box-shadow:0 1px 4px rgba(0,0,0,0.08);font-size:14px;cursor:pointer;display:flex;align-items:center;justify-content:center;color:#374151;flex-shrink:0;">›</button>
+        <a href="/providers?type=tiler" style="font-size:12px;font-weight:600;color:#E05A2B;text-decoration:none;margin-left:4px;">View All ›</a>
+      </div>
     </div>
-    <div style="display:flex;gap:12px;overflow-x:auto;padding:0 16px 8px;scrollbar-width:none;-webkit-overflow-scrolling:touch;">
+    <div id="prof-scroll" style="display:flex;gap:12px;overflow-x:auto;padding:0 16px 8px;scrollbar-width:none;-ms-overflow-style:none;-webkit-overflow-scrolling:touch;scroll-snap-type:x mandatory;">
 
       {tilers.length === 0 && homeContractors.length === 0 && (
         <div style="padding:20px 0;font-size:13px;color:#94a3b8;">
@@ -151,7 +157,7 @@ function verBadge(vs: string) {
 
       <!-- LUXEhome featured portrait card -->
       <a href="/sponsor/luxehome"
-        style="flex-shrink:0;width:168px;background:#fff;border-radius:18px;overflow:hidden;border:1.5px solid #D4AF37;text-decoration:none;color:inherit;box-shadow:0 4px 18px rgba(212,175,55,0.2);display:block;">
+        style="flex-shrink:0;width:168px;scroll-snap-align:start;background:#fff;border-radius:18px;overflow:hidden;border:1.5px solid #D4AF37;text-decoration:none;color:inherit;box-shadow:0 4px 18px rgba(212,175,55,0.2);display:block;">
         <div style="height:130px;position:relative;overflow:hidden;background:linear-gradient(160deg,#0c0804,#1a120a);display:flex;flex-direction:column;align-items:center;justify-content:center;gap:4px;">
           <div style="position:absolute;inset:0;background:radial-gradient(ellipse at top,rgba(212,175,55,0.18),transparent 65%);"></div>
           <span style="font-family:'Playfair Display',serif;font-size:18px;font-weight:800;color:#D4AF37;position:relative;">LUXE</span>
@@ -172,14 +178,14 @@ function verBadge(vs: string) {
         </div>
       </a>
 
-      <!-- Verified contractor portrait cards (same design as tiler) -->
-      {homeContractors.map((p: any) => {
+      <!-- Verified contractor portrait cards (show only 1) -->
+      {homeContractors.slice(0,1).map((p: any) => {
         const color = avatarColor(p.name)
         const coverSrc = (p.gallery||[])[0] || p.cover_image || p.profile_image
         const badge = verBadge(p.verification_status)
         return (
           <a href={p.slug ? `/providers/${p.slug}` : '/providers'}
-            style="flex-shrink:0;width:168px;background:#fff;border-radius:18px;overflow:hidden;border:1px solid #e2e8f0;text-decoration:none;color:inherit;box-shadow:0 2px 10px rgba(0,0,0,0.05);display:block;">
+            style="flex-shrink:0;width:168px;scroll-snap-align:start;background:#fff;border-radius:18px;overflow:hidden;border:1px solid #e2e8f0;text-decoration:none;color:inherit;box-shadow:0 2px 10px rgba(0,0,0,0.05);display:block;">
             <div style="height:130px;position:relative;overflow:hidden;">
               {coverSrc
                 ? <img src={coverSrc} alt={p.name} style="width:100%;height:100%;object-fit:cover;" loading="lazy" />
@@ -207,13 +213,13 @@ function verBadge(vs: string) {
         )
       })}
 
-      <!-- Verified tiler portrait cards -->
-      {tilers.map((t: any) => {
+      <!-- Verified tiler portrait cards (show only 1) -->
+      {tilers.slice(0,1).map((t: any) => {
         const color = avatarColor(t.full_name)
         const coverSrc = (t.gallery||[])[0] || t.avatar_url
         return (
           <a href={t.slug ? `/tilers/${t.slug}` : '/providers'}
-            style="flex-shrink:0;width:168px;background:#fff;border-radius:18px;overflow:hidden;border:1px solid #e2e8f0;text-decoration:none;color:inherit;box-shadow:0 2px 10px rgba(0,0,0,0.05);display:block;">
+            style="flex-shrink:0;width:168px;scroll-snap-align:start;background:#fff;border-radius:18px;overflow:hidden;border:1px solid #e2e8f0;text-decoration:none;color:inherit;box-shadow:0 2px 10px rgba(0,0,0,0.05);display:block;">
             <div style="height:130px;position:relative;overflow:hidden;">
               {coverSrc
                 ? <img src={coverSrc} alt={t.full_name} style="width:100%;height:100%;object-fit:cover;" loading="lazy" />
