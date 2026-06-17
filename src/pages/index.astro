@@ -172,39 +172,6 @@ function verBadge(vs: string) {
         </div>
       </a>
 
-      <!-- Verified tiler portrait cards -->
-      {tilers.map((t: any) => {
-        const color = avatarColor(t.full_name)
-        const coverSrc = (t.gallery||[])[0] || t.avatar_url
-        return (
-          <a href={t.slug ? `/tilers/${t.slug}` : '/providers'}
-            style="flex-shrink:0;width:168px;background:#fff;border-radius:18px;overflow:hidden;border:1px solid #e2e8f0;text-decoration:none;color:inherit;box-shadow:0 2px 10px rgba(0,0,0,0.05);display:block;">
-            <div style="height:130px;position:relative;overflow:hidden;">
-              {coverSrc
-                ? <img src={coverSrc} alt={t.full_name} style="width:100%;height:100%;object-fit:cover;" loading="lazy" />
-                : <div style={`width:100%;height:100%;background:${color};display:flex;align-items:center;justify-content:center;`}>
-                    <span style="font-size:36px;font-weight:800;color:rgba(255,255,255,0.85);">{initials(t.full_name)}</span>
-                  </div>
-              }
-              <div style="position:absolute;top:7px;right:7px;background:rgba(22,163,74,0.92);backdrop-filter:blur(4px);color:#fff;font-size:8px;font-weight:700;padding:2px 7px;border-radius:20px;white-space:nowrap;">✓ Verified</div>
-            </div>
-            <div style="padding:10px 12px 11px;">
-              <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:5px;gap:4px;">
-                <span style="font-size:8px;font-weight:700;color:#1B3A6B;background:#eef3fb;border:1px solid #d5e2f5;border-radius:20px;padding:2px 7px;white-space:nowrap;">Professional</span>
-                {t.daily_rate_min && <span style="font-size:8px;color:#64748b;white-space:nowrap;">Rs.{t.daily_rate_min}</span>}
-              </div>
-              <div style="font-size:12px;font-weight:700;color:#0f172a;margin-bottom:2px;overflow:hidden;white-space:nowrap;text-overflow:ellipsis;">{t.full_name}</div>
-              {t.avg_rating > 0 && <div style="font-size:10px;color:#f59e0b;margin-bottom:3px;">⭐ {t.avg_rating.toFixed(1)}</div>}
-              {t.speciality && <div style="font-size:10px;color:#64748b;line-height:1.35;margin-bottom:7px;overflow:hidden;display:-webkit-box;-webkit-line-clamp:2;-webkit-box-orient:vertical;">{t.speciality}</div>}
-              <div style="display:flex;align-items:center;justify-content:space-between;gap:4px;">
-                <span style="font-size:9px;color:#94a3b8;overflow:hidden;white-space:nowrap;text-overflow:ellipsis;">📍 {t.city||t.district}</span>
-                <span style="background:#1B3A6B;color:#fff;border-radius:8px;padding:4px 9px;font-size:9px;font-weight:700;white-space:nowrap;flex-shrink:0;">View ›</span>
-              </div>
-            </div>
-          </a>
-        )
-      })}
-
       <!-- Verified contractor portrait cards (same design as tiler) -->
       {homeContractors.map((p: any) => {
         const color = avatarColor(p.name)
@@ -233,6 +200,39 @@ function verBadge(vs: string) {
               {p.description && <div style="font-size:10px;color:#64748b;line-height:1.35;margin-bottom:7px;overflow:hidden;display:-webkit-box;-webkit-line-clamp:2;-webkit-box-orient:vertical;">{p.description}</div>}
               <div style="display:flex;align-items:center;justify-content:space-between;gap:4px;">
                 <span style="font-size:9px;color:#94a3b8;overflow:hidden;white-space:nowrap;text-overflow:ellipsis;">📍 {p.city||p.district}</span>
+                <span style="background:#1B3A6B;color:#fff;border-radius:8px;padding:4px 9px;font-size:9px;font-weight:700;white-space:nowrap;flex-shrink:0;">View ›</span>
+              </div>
+            </div>
+          </a>
+        )
+      })}
+
+      <!-- Verified tiler portrait cards -->
+      {tilers.map((t: any) => {
+        const color = avatarColor(t.full_name)
+        const coverSrc = (t.gallery||[])[0] || t.avatar_url
+        return (
+          <a href={t.slug ? `/tilers/${t.slug}` : '/providers'}
+            style="flex-shrink:0;width:168px;background:#fff;border-radius:18px;overflow:hidden;border:1px solid #e2e8f0;text-decoration:none;color:inherit;box-shadow:0 2px 10px rgba(0,0,0,0.05);display:block;">
+            <div style="height:130px;position:relative;overflow:hidden;">
+              {coverSrc
+                ? <img src={coverSrc} alt={t.full_name} style="width:100%;height:100%;object-fit:cover;" loading="lazy" />
+                : <div style={`width:100%;height:100%;background:${color};display:flex;align-items:center;justify-content:center;`}>
+                    <span style="font-size:36px;font-weight:800;color:rgba(255,255,255,0.85);">{initials(t.full_name)}</span>
+                  </div>
+              }
+              <div style="position:absolute;top:7px;right:7px;background:rgba(22,163,74,0.92);backdrop-filter:blur(4px);color:#fff;font-size:8px;font-weight:700;padding:2px 7px;border-radius:20px;white-space:nowrap;">✓ Verified</div>
+            </div>
+            <div style="padding:10px 12px 11px;">
+              <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:5px;gap:4px;">
+                <span style="font-size:8px;font-weight:700;color:#1B3A6B;background:#eef3fb;border:1px solid #d5e2f5;border-radius:20px;padding:2px 7px;white-space:nowrap;">Professional</span>
+                {t.daily_rate_min && <span style="font-size:8px;color:#64748b;white-space:nowrap;">Rs.{t.daily_rate_min}</span>}
+              </div>
+              <div style="font-size:12px;font-weight:700;color:#0f172a;margin-bottom:2px;overflow:hidden;white-space:nowrap;text-overflow:ellipsis;">{t.full_name}</div>
+              {t.avg_rating > 0 && <div style="font-size:10px;color:#f59e0b;margin-bottom:3px;">⭐ {t.avg_rating.toFixed(1)}</div>}
+              {t.speciality && <div style="font-size:10px;color:#64748b;line-height:1.35;margin-bottom:7px;overflow:hidden;display:-webkit-box;-webkit-line-clamp:2;-webkit-box-orient:vertical;">{t.speciality}</div>}
+              <div style="display:flex;align-items:center;justify-content:space-between;gap:4px;">
+                <span style="font-size:9px;color:#94a3b8;overflow:hidden;white-space:nowrap;text-overflow:ellipsis;">📍 {t.city||t.district}</span>
                 <span style="background:#1B3A6B;color:#fff;border-radius:8px;padding:4px 9px;font-size:9px;font-weight:700;white-space:nowrap;flex-shrink:0;">View ›</span>
               </div>
             </div>
