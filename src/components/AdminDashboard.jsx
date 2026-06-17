@@ -1,5 +1,6 @@
 import { useState, useEffect, useCallback, useRef } from 'react'
 import { supabase, signInWithOtp, DISTRICTS_EN } from '../lib/supabase.js'
+import SocialHub from '../modules/social/SocialHub.jsx'
 
 // ─── Design tokens ────────────────────────────────────────────────────────────
 const NAVY  = '#1B3A6B'
@@ -1061,7 +1062,10 @@ const TABS = [
   { key: 'projects',     label: '📋 Projects' },
   { key: 'bids',         label: '💬 Bids' },
   { key: 'reviews',      label: '⭐ Reviews' },
+  { key: 'social_hub',  label: '📣 Social Hub', badge: 'NEW' },
 ]
+
+const GOLD = '#E8B341'
 
 export default function AdminDashboard() {
   const [loading,   setLoading]   = useState(true)
@@ -1136,13 +1140,19 @@ export default function AdminDashboard() {
           {TABS.map(t => (
             <button key={t.key} onClick={() => setTab(t.key)}
               style={{
-                display: 'block', width: '100%', textAlign: 'left',
+                display: 'flex', alignItems: 'center', justifyContent: 'space-between',
+                width: '100%', textAlign: 'left',
                 padding: '10px 14px', borderRadius: 10, marginBottom: 3,
                 fontSize: 13, fontWeight: 600, cursor: 'pointer', border: 'none',
                 background: tab === t.key ? 'rgba(255,255,255,0.12)' : 'transparent',
                 color: tab === t.key ? '#fff' : 'rgba(255,255,255,0.55)',
               }}>
-              {t.label}
+              <span>{t.label}</span>
+              {t.badge && (
+                <span style={{ fontSize: 9, fontWeight: 800, background: GOLD, color: '#0f172a', padding: '2px 7px', borderRadius: 20, flexShrink: 0 }}>
+                  {t.badge}
+                </span>
+              )}
             </button>
           ))}
         </nav>
@@ -1164,6 +1174,7 @@ export default function AdminDashboard() {
         {tab === 'projects'    && <ProjectsTab />}
         {tab === 'bids'        && <BidsTab />}
         {tab === 'reviews'     && <ReviewsTab />}
+        {tab === 'social_hub'  && <SocialHub />}
       </main>
     </div>
   )
