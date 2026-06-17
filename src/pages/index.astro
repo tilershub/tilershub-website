@@ -39,13 +39,7 @@ const [{ data: featuredTilersRaw }, { data: featuredContractorsRaw }, { data: fe
     .limit(6),
 ])
 
-const FALLBACK_TILERS = [
-  { id:'p1', full_name:'Lakmal Perera',  city:'Colombo 7',  is_verified:true, avg_rating:4.9, slug:'lakmal', avatar_url:null, speciality:'Bathroom Tiling & Reno', whatsapp:null, phone:null, gallery:[], experience_years:8, daily_rate_min:null },
-  { id:'p2', full_name:'Chamara Silva',  city:'Kandy',      is_verified:true, avg_rating:4.7, slug:null,     avatar_url:null, speciality:'Floor Tiling Specialist', whatsapp:null, phone:null, gallery:[], experience_years:5, daily_rate_min:null },
-  { id:'p3', full_name:'Kelum Prasad',   city:'Negombo',    is_verified:true, avg_rating:4.8, slug:'kelum',  avatar_url:null, speciality:'Waterproofing & Tiling',  whatsapp:null, phone:null, gallery:[], experience_years:6, daily_rate_min:null },
-]
-
-const tilers = (featuredTilersRaw || []).length > 0 ? (featuredTilersRaw || []) : FALLBACK_TILERS
+const tilers = featuredTilersRaw || []
 const homeContractors = featuredContractorsRaw || []
 const homeShops = featuredShopsRaw || []
 
@@ -147,6 +141,13 @@ function verBadge(vs: string) {
       <a href="/providers?type=tiler" style="font-size:12px;font-weight:600;color:#E05A2B;text-decoration:none;">View All ›</a>
     </div>
     <div style="display:flex;gap:12px;overflow-x:auto;padding:0 16px 8px;scrollbar-width:none;-webkit-overflow-scrolling:touch;">
+
+      {tilers.length === 0 && homeContractors.length === 0 && (
+        <div style="padding:20px 0;font-size:13px;color:#94a3b8;">
+          No verified professionals listed yet —{' '}
+          <a href="/join-tilershub" style="color:#E05A2B;font-weight:600;text-decoration:none;">Join TilersHub →</a>
+        </div>
+      )}
 
       <!-- LUXEhome featured portrait card -->
       <a href="/sponsor/luxehome"
