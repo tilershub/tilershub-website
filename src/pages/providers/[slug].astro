@@ -76,12 +76,42 @@ const isUnverified = isTiler && !item.is_verified
 const metaDesc = isUnverified
   ? `${name} is a tiling professional based in ${city}, Sri Lanka. Find contact details on TilersHub.`
   : `Contact ${name}, a verified ${typeLabel.toLowerCase()} based in ${city}, Sri Lanka. Direct WhatsApp contact on TilersHub.`
+
+const schemaType = item.provider_type === 'tile_shop' || item.provider_type === 'bathroom_shop'
+  ? 'HomeGoodsStore'
+  : 'LocalBusiness'
+
+const bizSchema: Record<string, unknown> = {
+  '@context': 'https://schema.org',
+  '@type': schemaType,
+  name,
+  description: metaDesc,
+  url: `https://www.tilershub.lk/providers/${slug}`,
+  address: {
+    '@type': 'PostalAddress',
+    addressLocality: city,
+    addressRegion: item.district || city,
+    addressCountry: 'LK',
+  },
+  areaServed: item.district || city,
+}
+if (item.avg_rating > 0 && item.review_count > 0) {
+  bizSchema.aggregateRating = {
+    '@type': 'AggregateRating',
+    ratingValue: parseFloat(item.avg_rating).toFixed(1),
+    reviewCount: item.review_count,
+    bestRating: '5',
+    worstRating: '1',
+  }
+}
+const bizSchemaStr = JSON.stringify(bizSchema)
 ---
 
 <Layout
   title={`${name} · ${typeLabel} in ${city} · TilersHub`}
   description={metaDesc}
 >
+  <script slot="head" type="application/ld+json" set:html={bizSchemaStr} />
 
   <!-- Hero -->
   <div style={`background:${coverBg};padding:48px 20px 40px;position:relative;overflow:hidden;`}>

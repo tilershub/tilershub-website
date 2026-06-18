@@ -86,7 +86,16 @@ function verBadge(vs: string) {
   title="TilersHub · Sri Lanka's Tile & Bathroom Marketplace"
   description="Post your tiling project free, get bids from verified tilers and contractors across Sri Lanka."
 >
-  <meta slot="head" name="keywords" content="tilers Sri Lanka, tiling services, bathroom renovation, floor tiling, tile contractor Colombo, TilersHub" />
+  <meta slot="head" name="keywords" content="tilers Sri Lanka, tiling services, bathroom renovation, floor tiling, tile contractor Colombo, tile shop Sri Lanka, waterproofing Sri Lanka, TilersHub" />
+  <script slot="head" type="application/ld+json" set:html={JSON.stringify({
+    '@context': 'https://schema.org',
+    '@type': 'WebPage',
+    name: "TilersHub · Sri Lanka's Tile & Bathroom Marketplace",
+    description: 'Post your tiling project free, get bids from verified tilers and contractors across Sri Lanka.',
+    url: 'https://www.tilershub.lk',
+    isPartOf: { '@id': 'https://www.tilershub.lk/#website' },
+    about: { '@type': 'Thing', name: 'Tiling and bathroom renovation services in Sri Lanka' },
+  })} />
   <link slot="head" rel="preload" as="image" href={HERO_IMG} fetchpriority="high" />
 
   <!-- ══ HERO ══ -->

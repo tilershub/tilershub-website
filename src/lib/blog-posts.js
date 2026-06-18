@@ -1,6 +1,7 @@
 export const BLOG_POSTS = [
   {
     slug: 'how-to-choose-a-tiler',
+    datePublished: '2025-03-15',
     title: 'How to Choose the Right Tiler for Your Project',
     excerpt: 'Not all tilers are equal. Learn what to look for — experience, references, waterproofing knowledge — before hiring.',
     category: 'Hiring Tips',
@@ -48,6 +49,7 @@ export const BLOG_POSTS = [
   },
   {
     slug: 'bathroom-renovation-cost-sri-lanka',
+    datePublished: '2025-04-01',
     title: 'Bathroom Renovation Costs in Sri Lanka (2025 Guide)',
     excerpt: 'A realistic breakdown of what a full bathroom renovation costs — tiles, labour, plumbing, fittings — across different budgets.',
     category: 'Cost Guide',
@@ -95,6 +97,7 @@ export const BLOG_POSTS = [
   },
   {
     slug: 'best-tiles-for-bathroom-floor',
+    datePublished: '2025-04-20',
     title: 'Best Tiles for Bathroom Floors in Sri Lanka',
     excerpt: "Porcelain vs ceramic vs natural stone — which tile works best in Sri Lanka's climate and which holds up over time.",
     category: 'Tile Guide',
@@ -138,6 +141,7 @@ export const BLOG_POSTS = [
   },
   {
     slug: 'waterproofing-bathroom-guide',
+    datePublished: '2025-05-10',
     title: 'Why Waterproofing Is the Most Important Step in Any Bathroom Reno',
     excerpt: "Skipping or cutting corners on waterproofing is the #1 reason bathrooms fail within 2–3 years. Here's how to do it right.",
     category: 'How-To',
@@ -181,6 +185,7 @@ export const BLOG_POSTS = [
   },
   {
     slug: 'large-format-tiles-guide',
+    datePublished: '2025-06-01',
     title: 'Large Format Tiles: Pros, Cons & Installation Tips',
     excerpt: "Big tiles are trending in Sri Lanka — but they need specialist installers and thicker adhesive. What to know before you buy.",
     category: 'Tile Guide',
@@ -224,6 +229,7 @@ export const BLOG_POSTS = [
   },
   {
     slug: 'post-tiling-project-tilershub',
+    datePublished: '2025-06-20',
     title: 'How to Post a Tiling Project on TilersHub and Get the Best Bids',
     excerpt: 'Step-by-step guide to writing a project description that attracts the right tilers and gets you accurate quotes.',
     category: 'TilersHub Guide',
