@@ -93,11 +93,13 @@ export default function Dashboard() {
 
 function ProviderDashboard({ user, claimedProfile, claimedProfileType, submission, showClaimedBanner }) {
   const initialTab = typeof window !== 'undefined'
-    ? (new URLSearchParams(window.location.search).get('tab') || 'jobs')
-    : 'jobs'
-  const [tab, setTab]         = useState(initialTab)
-  const [openJobs, setOpenJobs] = useState([])
-  const [jobsLoading, setJobsLoading] = useState(false)
+    ? (new URLSearchParams(window.location.search).get('tab') || 'projects')
+    : 'projects'
+  const [tab, setTab]           = useState(initialTab)
+  const [myProjects, setMyProjects] = useState([])
+  const [myBids, setMyBids]     = useState({})
+  const [dataLoading, setDataLoading] = useState(false)
+  const [dataLoaded, setDataLoaded]   = useState(false)
 
   useEffect(() => {
     const params = new URLSearchParams(window.location.search)
@@ -108,15 +110,25 @@ function ProviderDashboard({ user, claimedProfile, claimedProfileType, submissio
     }
   }, [])
 
-  useEffect(() => { if (tab === 'jobs') loadOpenJobs() }, [tab])
+  useEffect(() => {
+    if ((tab === 'projects' || tab === 'bids') && !dataLoaded) loadMyData()
+  }, [tab])
 
-  async function loadOpenJobs() {
-    setJobsLoading(true)
-    const { data } = await supabase
-      .from('projects').select('*').eq('status', 'active')
-      .order('created_at', { ascending: false }).limit(30)
-    setOpenJobs(data || [])
-    setJobsLoading(false)
+  async function loadMyData() {
+    setDataLoading(true)
+    const { data: proj } = await supabase
+      .from('projects').select('*').eq('user_id', user.id).order('created_at', { ascending: false })
+    const userProjects = proj || []
+    setMyProjects(userProjects)
+    if (userProjects.length > 0) {
+      const { data: bidData } = await supabase
+        .from('bids').select('*').in('job_id', userProjects.map(p => p.id)).order('created_at', { ascending: false })
+      const byJob = {}
+      for (const b of bidData || []) { if (!byJob[b.job_id]) byJob[b.job_id] = []; byJob[b.job_id].push(b) }
+      setMyBids(byJob)
+    }
+    setDataLoaded(true)
+    setDataLoading(false)
   }
 
   const profileName = claimedProfile?.full_name || claimedProfile?.name || user.email.split('@')[0]
@@ -125,8 +137,12 @@ function ProviderDashboard({ user, claimedProfile, claimedProfileType, submissio
     ? `/${claimedProfileType === 'tiler' ? 'tilers' : 'providers'}/${claimedProfile.slug}`
     : null
 
+  const totalBids = Object.values(myBids).reduce((s, arr) => s + arr.length, 0)
+  const newBids   = Object.values(myBids).flat().filter(b => b.status === 'new').length
+
   const TABS = [
-    { key:'jobs',      label:'💼 Browse Jobs'  },
+    { key:'projects',  label:'📋 My Projects'  },
+    { key:'bids',      label:`💰 Bids${newBids > 0 ? ` (${newBids})` : ''}` },
     ...(claimedProfile ? [{ key:'portfolio', label:'📸 Portfolio'  }] : []),
     ...(claimedProfile ? [{ key:'profile',   label:'✏️ My Profile' }] : []),
     { key:'listing',   label:'📋 My Listing'   },
@@ -197,7 +213,8 @@ function ProviderDashboard({ user, claimedProfile, claimedProfileType, submissio
 
       {/* ── Tab content ── */}
       <div className="db-content-pad" style={{ maxWidth:860, margin:'0 auto', padding:'20px 16px' }}>
-        {tab === 'jobs'      && <BrowseJobsTab openJobs={openJobs} loading={jobsLoading} />}
+        {tab === 'projects'  && (dataLoading ? <Spinner /> : <ProjectsTab projects={myProjects} bids={myBids} isProvider />)}
+        {tab === 'bids'      && (dataLoading ? <Spinner /> : <ProviderBidsTab projects={myProjects} bids={myBids} />)}
         {tab === 'portfolio' && claimedProfile && (
           <PortfolioEditor profile={claimedProfile} profileType={claimedProfileType} userId={user.id} />
         )}
@@ -210,58 +227,79 @@ function ProviderDashboard({ user, claimedProfile, claimedProfileType, submissio
   )
 }
 
-function BrowseJobsTab({ openJobs, loading }) {
-  if (loading) return <Spinner />
+function ProviderBidsTab({ projects, bids }) {
+  const allBids = projects.flatMap(p =>
+    (bids[p.id] || []).map(b => ({ ...b, project: p }))
+  ).sort((a, b) => new Date(b.created_at) - new Date(a.created_at))
 
-  if (openJobs.length === 0) return (
+  if (allBids.length === 0) return (
     <div style={{ textAlign:'center', padding:'48px 20px', background:'#fff', borderRadius:16, border:'1px solid var(--border)' }}>
-      <div style={{ fontSize:40, marginBottom:12 }}>💼</div>
-      <div style={{ fontSize:15, fontWeight:700, color:'var(--text)', marginBottom:8 }}>No open projects right now</div>
-      <p style={{ fontSize:13, color:'var(--text-3)', lineHeight:1.7 }}>New projects are posted daily — check back soon.</p>
+      <div style={{ fontSize:40, marginBottom:12 }}>💰</div>
+      <div style={{ fontSize:15, fontWeight:700, color:'var(--text)', marginBottom:8 }}>No bids yet</div>
+      <p style={{ fontSize:13, color:'var(--text-3)', lineHeight:1.7 }}>
+        {projects.length === 0
+          ? 'Post a project first — providers will bid and you can contact them here.'
+          : 'Your project is live. Providers will bid soon — check back here for updates.'}
+      </p>
+      {projects.length === 0 && (
+        <a href="/post-project" style={{ display:'inline-flex', alignItems:'center', gap:6, marginTop:12, padding:'11px 22px', background:'var(--terra)', color:'#fff', borderRadius:10, fontSize:13, fontWeight:700, textDecoration:'none' }}>
+          📋 Post a Project
+        </a>
+      )}
     </div>
   )
+
+  const newCount = allBids.filter(b => b.status === 'new').length
 
   return (
     <div>
       <div style={{ display:'flex', alignItems:'center', justifyContent:'space-between', marginBottom:16, flexWrap:'wrap', gap:8 }}>
         <div>
-          <div style={{ fontSize:16, fontWeight:700, color:'var(--text)', marginBottom:2 }}>Open Projects</div>
-          <div style={{ fontSize:12, color:'var(--text-3)' }}>{openJobs.length} active · tap a project to view details and submit your bid</div>
+          <div style={{ fontSize:16, fontWeight:700, color:'var(--text)', marginBottom:2 }}>Bid History & Updates</div>
+          <div style={{ fontSize:12, color:'var(--text-3)' }}>
+            {allBids.length} bid{allBids.length !== 1 ? 's' : ''} across {projects.length} project{projects.length !== 1 ? 's' : ''}
+            {newCount > 0 && <span style={{ marginLeft:6, fontWeight:700, color:'#f59e0b' }}>· {newCount} new</span>}
+          </div>
         </div>
-        <a href="/jobs" style={{ fontSize:12, fontWeight:600, color:'var(--navy)', textDecoration:'none' }}>Browse all →</a>
       </div>
 
       <div style={{ display:'flex', flexDirection:'column', gap:10 }}>
-        {openJobs.map(job => (
-          <a key={job.id} href={`/job?id=${job.id}`} style={{ display:'flex', alignItems:'center', gap:12, padding:'14px 16px', background:'#fff', border:'1px solid var(--border)', borderRadius:14, textDecoration:'none', color:'inherit', boxShadow:'var(--shadow-sm)', transition:'box-shadow 0.15s, border-color 0.15s' }}
-            onMouseOver={e => { e.currentTarget.style.borderColor='var(--navy)'; e.currentTarget.style.boxShadow='var(--shadow)' }}
-            onMouseOut={e  => { e.currentTarget.style.borderColor='var(--border)'; e.currentTarget.style.boxShadow='var(--shadow-sm)' }}
-          >
-            <div style={{ width:40, height:40, borderRadius:11, background:'var(--navy-50)', display:'flex', alignItems:'center', justifyContent:'center', fontSize:20, flexShrink:0 }}>
-              {TYPE_ICON[job.project_type] || '🏠'}
-            </div>
-            <div style={{ flex:1, minWidth:0 }}>
-              <div style={{ fontSize:13, fontWeight:700, color:'var(--text)', marginBottom:2, overflow:'hidden', textOverflow:'ellipsis', whiteSpace:'nowrap' }}>{job.project_type}</div>
-              <div style={{ fontSize:11, color:'var(--text-3)', overflow:'hidden', textOverflow:'ellipsis', whiteSpace:'nowrap' }}>
-                📍 {job.city || job.district}
-                {job.budget_range && <span style={{ marginLeft:6, color:'var(--green)', fontWeight:600 }}>· {job.budget_range}</span>}
-                <span style={{ marginLeft:6, color:'var(--text-4)' }}>· {timeAgo(job.created_at)}</span>
+        {allBids.map(bid => {
+          const wa   = bid.bidder_whatsapp?.replace(/\D/g,'')
+          const norm = wa?.startsWith('94') ? wa : '94' + (wa?.replace(/^0/,'') || '')
+          const waLink = `https://wa.me/${norm}?text=${encodeURIComponent('ආයුබෝවන්! 🙏\n\nTilersHub හරහා ඔබේ bid දැක්කා. ඔබගේ quote / message ගැන කතා කරමු.\n\nස්තූතියි!')}`
+          const isNew = bid.status === 'new'
+          return (
+            <div key={bid.id} style={{ padding:'16px 18px', background:'#fff', borderRadius:14, border:`1.5px solid ${isNew ? '#fde68a' : 'var(--border)'}`, borderLeft:`4px solid ${isNew ? '#f59e0b' : '#e2e8f0'}`, boxShadow:'var(--shadow-sm)' }}>
+              {/* project context */}
+              <div style={{ fontSize:10, fontWeight:700, color:'var(--text-4)', textTransform:'uppercase', letterSpacing:1, marginBottom:6 }}>
+                {TYPE_ICON[bid.project?.project_type] || '🏠'} {bid.project?.project_type} · 📍 {bid.project?.city || bid.project?.district}
               </div>
-              {job.description && (
-                <div style={{ fontSize:11, color:'var(--text-4)', marginTop:3, overflow:'hidden', textOverflow:'ellipsis', whiteSpace:'nowrap' }}>
-                  {job.description}
+              <div style={{ display:'flex', alignItems:'flex-start', justifyContent:'space-between', gap:10, marginBottom:8 }}>
+                <div>
+                  <div style={{ fontSize:14, fontWeight:700, color:'var(--text)' }}>{bid.bidder_name}</div>
+                  <div style={{ fontSize:12, color:'var(--text-3)', marginTop:2 }}>
+                    <span style={{ textTransform:'capitalize' }}>{bid.bidder_type}</span>
+                    {bid.quote_amount && <span style={{ marginLeft:8, color:'#166534', fontWeight:700 }}>· Rs. {Number(bid.quote_amount).toLocaleString()}</span>}
+                    {bid.timeline     && <span style={{ marginLeft:8 }}>· {bid.timeline}</span>}
+                    <span style={{ marginLeft:8, color:'var(--text-4)' }}>· {timeAgo(bid.created_at)}</span>
+                  </div>
                 </div>
+                {isNew && <span style={{ fontSize:10, fontWeight:700, padding:'2px 8px', borderRadius:20, background:'#fef3c7', color:'#92400e', whiteSpace:'nowrap', flexShrink:0 }}>New</span>}
+              </div>
+              {bid.message && (
+                <p style={{ fontSize:13, color:'#475569', lineHeight:1.65, margin:'0 0 12px' }}>
+                  {bid.message.length > 220 ? bid.message.slice(0,220) + '…' : bid.message}
+                </p>
+              )}
+              {wa && (
+                <a href={waLink} target="_blank" rel="noopener noreferrer" style={{ display:'inline-flex', alignItems:'center', gap:6, fontSize:12, fontWeight:700, background:'#25D366', color:'#fff', borderRadius:8, padding:'7px 14px', textDecoration:'none' }}>
+                  💬 Contact on WhatsApp
+                </a>
               )}
             </div>
-            <div style={{ flexShrink:0, padding:'7px 13px', background:'var(--navy)', color:'#fff', borderRadius:9, fontSize:12, fontWeight:700, whiteSpace:'nowrap' }}>
-              Bid →
-            </div>
-          </a>
-        ))}
-      </div>
-
-      <div style={{ textAlign:'center', marginTop:16 }}>
-        <a href="/jobs" style={{ fontSize:13, color:'var(--navy)', fontWeight:700, textDecoration:'none' }}>Browse all open projects →</a>
+          )
+        })}
       </div>
     </div>
   )
@@ -486,7 +524,7 @@ function BidsPanel({ projectBids }) {
   )
 }
 
-function ProjectsTab({ projects, bids }) {
+function ProjectsTab({ projects, bids, isProvider }) {
   const STATUS_COLOR = {
     pending_review: { bg:'#FEF3C7', color:'#92400E', label:'Under Review' },
     active:         { bg:'#F0FDF4', color:'#166534', label:'Active'        },
@@ -499,7 +537,9 @@ function ProjectsTab({ projects, bids }) {
       <div style={{ fontSize:40, marginBottom:12 }}>📋</div>
       <div style={{ fontSize:15, fontWeight:700, color:'var(--text)', marginBottom:8 }}>No projects yet</div>
       <p style={{ fontSize:13, color:'var(--text-3)', marginBottom:20, lineHeight:1.7 }}>
-        Post a tiling project and providers will bid. You choose who to contact.
+        {isProvider
+          ? "You haven't posted any projects. You can still post a tiling project and get bids."
+          : 'Post a tiling project and providers will bid. You choose who to contact.'}
       </p>
       <a href="/post-project" style={{ display:'inline-flex', alignItems:'center', gap:6, padding:'11px 22px', background:'var(--terra)', color:'#fff', borderRadius:10, fontSize:13, fontWeight:700, textDecoration:'none' }}>
         📋 Post a Project
