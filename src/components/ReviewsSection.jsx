@@ -281,6 +281,16 @@ export default function ReviewsSection({ tilerId, providerId }) {
     q.then(({ data }) => { setReviews(data || []); setLoading(false) })
   }, [tilerId, providerId])
 
+  useEffect(() => {
+    function openForm() {
+      setShowForm(true)
+      document.getElementById('reviews-section')?.scrollIntoView({ behavior: 'smooth', block: 'start' })
+    }
+    window.addEventListener('tilershub:openreview', openForm)
+    if (window.location.hash === '#write-review') setTimeout(openForm, 600)
+    return () => window.removeEventListener('tilershub:openreview', openForm)
+  }, [])
+
   function onSubmitted() {
     setSubmitted(true)
     setShowForm(false)
@@ -294,7 +304,7 @@ export default function ReviewsSection({ tilerId, providerId }) {
   const avg = reviews.length > 0 ? reviews.reduce((s, r) => s + r.rating, 0) / reviews.length : 0
 
   return (
-    <div style={{ background: '#fff', border: '1px solid #e2e8f0', borderRadius: 16, padding: '24px 20px', marginBottom: 20 }}>
+    <div id="reviews-section" style={{ background: '#fff', border: '1px solid #e2e8f0', borderRadius: 16, padding: '24px 20px', marginBottom: 20 }}>
 
       {/* Section header */}
       <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', marginBottom: 18 }}>
