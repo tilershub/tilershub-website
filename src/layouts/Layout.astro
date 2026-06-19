@@ -2,6 +2,13 @@
 import '../index.css'
 import AuthButton from '../components/AuthButton.jsx'
 import DraftLinker from '../components/DraftLinker.jsx'
+import { supabase } from '../lib/supabase.js'
+
+const { count: activeProjectCount } = await supabase
+  .from('projects')
+  .select('id', { count: 'exact', head: true })
+  .eq('status', 'active')
+
 const {
   title = "TilersHub · Sri Lanka's Tile & Bathroom Marketplace",
   description = "Find tilers, contractors, tile shops, brands and products for your tile and bathroom project across Sri Lanka. Free — no login required.",
@@ -191,7 +198,12 @@ const orgSchema = JSON.stringify({
         +
       </a>
       <a href="/jobs" class={`bottom-nav-item${path==='/jobs'?' active':''}`}>
-        <span class="bottom-nav-icon">📋</span>
+        <span class="bottom-nav-icon" style="position:relative;display:inline-block;">
+          📋
+          {activeProjectCount != null && activeProjectCount > 0 && (
+            <span style="position:absolute;top:-5px;right:-8px;background:#E05A2B;color:#fff;font-size:8px;font-weight:800;border-radius:20px;padding:1px 4px;min-width:14px;text-align:center;line-height:14px;border:1.5px solid #fff;">{activeProjectCount > 99 ? '99+' : activeProjectCount}</span>
+          )}
+        </span>
         Projects
       </a>
       <a href="/dashboard" class={`bottom-nav-item${path==='/dashboard'?' active':''}`}>
