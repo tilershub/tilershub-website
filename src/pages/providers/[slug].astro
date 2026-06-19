@@ -68,9 +68,17 @@ const PROVIDER_TYPE_LABELS = {
 
 const typeLabel = isTiler ? 'Tiler' : (PROVIDER_TYPE_LABELS[item.provider_type] || 'Provider')
 
-const coverBg = isTiler
-  ? 'linear-gradient(135deg,#0F2444 0%,#1B3A6B 100%)'
-  : 'linear-gradient(135deg,#0f2444 0%,#1B3A6B 100%)'
+const coverBg = 'linear-gradient(135deg,#0F2444 0%,#1B3A6B 100%)'
+const heroCoverSrc = isTiler
+  ? ((item.gallery || [])[0] || item.avatar_url || null)
+  : (item.cover_image || item.profile_image || null)
+
+function verBadge(vs: string | null) {
+  if (vs === 'th_master')         return { label: 'TH Master ★',  bg: '#92400e', color: '#fef3c7' }
+  if (vs === 'th_certified_pro')  return { label: 'Certified Pro ✦', bg: '#1B3A6B', color: '#bfdbfe' }
+  if (vs === 'th_verified' || vs === 'verified') return { label: 'Verified', bg: 'rgba(22,163,74,0.9)', color: '#fff' }
+  return null
+}
 
 const isUnverified = isTiler && !item.is_verified
 const metaDesc = isUnverified
@@ -114,12 +122,24 @@ const bizSchemaStr = JSON.stringify(bizSchema)
   <script slot="head" type="application/ld+json" set:html={bizSchemaStr} />
 
   <!-- Hero -->
-  <div style={`background:${coverBg};padding:48px 20px 40px;position:relative;overflow:hidden;`}>
-    <div style="position:absolute;inset:0;opacity:0.05;background-image:repeating-linear-gradient(45deg,transparent,transparent 20px,rgba(255,255,255,0.8) 20px,rgba(255,255,255,0.8) 21px);pointer-events:none;"></div>
+  <div style={`background:${coverBg};padding:48px 20px 40px;position:relative;overflow:hidden;min-height:220px;`}>
+    {/* Gold accent bar */}
+    <div style="position:absolute;top:0;left:0;right:0;height:3px;background:linear-gradient(90deg,#D4AF37,#f0c94d);"></div>
+    {/* Cover image background */}
+    {heroCoverSrc && (
+      <img src={heroCoverSrc} alt="" aria-hidden="true"
+        style="position:absolute;inset:0;width:100%;height:100%;object-fit:cover;opacity:0.22;pointer-events:none;" />
+    )}
+    {/* Tile grid texture */}
+    <div style="position:absolute;inset:0;opacity:0.04;background-image:repeating-linear-gradient(0deg,transparent,transparent 29px,rgba(255,255,255,0.8) 29px,rgba(255,255,255,0.8) 30px),repeating-linear-gradient(90deg,transparent,transparent 29px,rgba(255,255,255,0.8) 29px,rgba(255,255,255,0.8) 30px);pointer-events:none;"></div>
+    {/* Dark overlay gradient on top of image */}
+    <div style="position:absolute;inset:0;background:linear-gradient(to bottom,rgba(10,28,56,0.55) 0%,rgba(10,28,56,0.75) 100%);pointer-events:none;"></div>
+
     <div style="max-width:800px;margin:0 auto;position:relative;">
       <a href="/providers" style="display:inline-flex;align-items:center;gap:5px;font-size:11px;color:rgba(255,255,255,0.45);letter-spacing:1px;font-weight:600;margin-bottom:24px;text-decoration:none;">← All Providers</a>
       <div style="display:flex;align-items:flex-start;gap:20px;flex-wrap:wrap;">
-        <div style="width:72px;height:72px;border-radius:18px;background:rgba(255,255,255,0.15);border:1px solid rgba(255,255,255,0.2);display:flex;align-items:center;justify-content:center;font-size:28px;font-weight:700;color:#fff;flex-shrink:0;overflow:hidden;">
+        {/* Avatar */}
+        <div style="width:96px;height:96px;border-radius:50%;background:rgba(255,255,255,0.15);border:2px solid rgba(212,175,55,0.6);display:flex;align-items:center;justify-content:center;font-size:32px;font-weight:800;color:#fff;flex-shrink:0;overflow:hidden;box-shadow:0 4px 20px rgba(0,0,0,0.35);">
           {(isTiler ? item.avatar_url : item.profile_image)
             ? <img src={isTiler ? item.avatar_url : item.profile_image} alt={name} style="width:100%;height:100%;object-fit:cover;" />
             : name.split(' ').map((w: string) => w[0]).join('').slice(0,2).toUpperCase()
@@ -128,17 +148,28 @@ const bizSchemaStr = JSON.stringify(bizSchema)
         <div style="flex:1;min-width:0;">
           <div style="font-size:11px;font-weight:700;color:rgba(255,255,255,0.5);letter-spacing:2px;text-transform:uppercase;margin-bottom:6px;">{typeLabel}</div>
           <h1 style="font-family:'Playfair Display',serif;font-size:clamp(22px,4vw,36px);font-weight:700;color:#fff;margin-bottom:6px;line-height:1.2;">{name}</h1>
-          <div style="font-size:14px;color:rgba(255,255,255,0.6);">📍 {city}</div>
+          <div style="font-size:14px;color:rgba(255,255,255,0.6);margin-bottom:10px;">📍 {city}</div>
+          {/* Verification badges */}
           {isTiler && item.is_verified && (
-            <span style="display:inline-flex;align-items:center;gap:4px;font-size:11px;font-weight:700;padding:3px 10px;border-radius:20px;background:rgba(22,163,74,0.2);color:#4ade80;border:1px solid rgba(74,222,128,0.3);margin-top:8px;">✓ Skilled</span>
+            <span style="display:inline-flex;align-items:center;gap:4px;font-size:11px;font-weight:700;padding:3px 10px;border-radius:20px;background:rgba(22,163,74,0.2);color:#4ade80;border:1px solid rgba(74,222,128,0.3);">✓ Skilled</span>
           )}
           {isTiler && !item.is_verified && (
-            <span style="display:inline-flex;align-items:center;gap:4px;font-size:11px;font-weight:700;padding:3px 10px;border-radius:20px;background:rgba(0,0,0,0.3);color:rgba(255,255,255,0.65);border:1px solid rgba(255,255,255,0.2);margin-top:8px;">Unverified</span>
+            <span style="display:inline-flex;align-items:center;gap:4px;font-size:11px;font-weight:700;padding:3px 10px;border-radius:20px;background:rgba(0,0,0,0.3);color:rgba(255,255,255,0.65);border:1px solid rgba(255,255,255,0.2);">Unverified</span>
           )}
-          {!isTiler && item.verification_status === 'th_verified' && (
-            <span style="display:inline-flex;align-items:center;gap:4px;font-size:11px;font-weight:700;padding:3px 10px;border-radius:20px;background:rgba(22,163,74,0.2);color:#4ade80;border:1px solid rgba(74,222,128,0.3);margin-top:8px;">✓ TH Verified</span>
-          )}
-          <div style="margin-top:16px;">
+          {!isTiler && (() => {
+            const badge = verBadge(item.verification_status)
+            return badge
+              ? <span style={`display:inline-flex;align-items:center;gap:4px;font-size:11px;font-weight:700;padding:4px 12px;border-radius:20px;background:${badge.bg};color:${badge.color};backdrop-filter:blur(4px);`}>{badge.label}</span>
+              : null
+          })()}
+          {/* CTA buttons */}
+          <div style="display:flex;gap:10px;flex-wrap:wrap;margin-top:16px;">
+            {phone && (
+              <a href={waLink(phone, name)} target="_blank" rel="noopener noreferrer"
+                style="display:inline-flex;align-items:center;gap:8px;background:#25D366;color:#fff;border-radius:14px;padding:11px 20px;font-size:13px;font-weight:700;text-decoration:none;box-shadow:0 4px 14px rgba(37,211,102,0.3);">
+                💬 WhatsApp
+              </a>
+            )}
             <button id="hero-review-btn"
               style="display:inline-flex;align-items:center;gap:8px;background:rgba(255,255,255,0.12);color:#fff;border:1.5px solid rgba(255,255,255,0.3);border-radius:14px;padding:11px 20px;font-size:13px;font-weight:700;cursor:pointer;backdrop-filter:blur(6px);">
               ⭐ Rate &amp; Review
