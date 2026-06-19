@@ -20,6 +20,18 @@ function timeAgo(d) {
 
 // ─── ROOT COMPONENT ────────────────────────────────────────────────
 
+const MOBILE_STYLES = `
+  .db-tab-bar::-webkit-scrollbar { display: none; }
+  .db-tab-bar { -ms-overflow-style: none; scrollbar-width: none; }
+  @media (max-width: 480px) {
+    .db-identity-actions { width: 100%; justify-content: flex-start !important; }
+    .db-header-pad { padding: 16px 14px 0 !important; }
+    .db-content-pad { padding: 16px 14px 64px !important; }
+    .db-avatar { width: 44px !important; height: 44px !important; font-size: 15px !important; }
+    .db-profile-name { font-size: 14px !important; }
+  }
+`
+
 export default function Dashboard() {
   const [user, setUser]               = useState(null)
   const [loading, setLoading]         = useState(true)
@@ -122,10 +134,11 @@ function ProviderDashboard({ user, claimedProfile, claimedProfileType, submissio
 
   return (
     <div style={{ minHeight:'100dvh', background:'#f8fafc', paddingBottom:80 }}>
+      <style>{MOBILE_STYLES}</style>
 
       {/* ── Provider header ── */}
       <div style={{ background:'linear-gradient(135deg,#0F1E35 0%,#1A2B4A 100%)', paddingBottom:0 }}>
-        <div style={{ maxWidth:860, margin:'0 auto', padding:'20px 16px 0' }}>
+        <div className="db-header-pad" style={{ maxWidth:860, margin:'0 auto', padding:'20px 16px 0' }}>
 
           {showClaimedBanner && (
             <div style={{ padding:'10px 14px', background:'rgba(22,163,74,0.15)', border:'1px solid rgba(22,163,74,0.3)', borderRadius:10, marginBottom:14 }}>
@@ -134,14 +147,14 @@ function ProviderDashboard({ user, claimedProfile, claimedProfileType, submissio
           )}
 
           {/* Identity row */}
-          <div style={{ display:'flex', alignItems:'center', justifyContent:'space-between', marginBottom:20, flexWrap:'wrap', gap:12 }}>
-            <div style={{ display:'flex', alignItems:'center', gap:14 }}>
-              <div style={{ width:52, height:52, borderRadius:14, background:'rgba(212,175,55,0.14)', border:'2px solid rgba(212,175,55,0.3)', color:'#D4AF37', display:'flex', alignItems:'center', justifyContent:'center', fontSize:18, fontWeight:700, flexShrink:0 }}>
+          <div style={{ display:'flex', alignItems:'center', justifyContent:'space-between', marginBottom:16, flexWrap:'wrap', gap:10 }}>
+            <div style={{ display:'flex', alignItems:'center', gap:12 }}>
+              <div className="db-avatar" style={{ width:52, height:52, borderRadius:14, background:'rgba(212,175,55,0.14)', border:'2px solid rgba(212,175,55,0.3)', color:'#D4AF37', display:'flex', alignItems:'center', justifyContent:'center', fontSize:18, fontWeight:700, flexShrink:0 }}>
                 {initials}
               </div>
               <div>
-                <div style={{ fontSize:10, fontWeight:700, color:'rgba(255,255,255,0.38)', letterSpacing:2, textTransform:'uppercase', marginBottom:2 }}>Provider Dashboard</div>
-                <div style={{ fontSize:16, fontWeight:700, color:'#fff' }}>{profileName}</div>
+                <div style={{ fontSize:10, fontWeight:700, color:'rgba(255,255,255,0.38)', letterSpacing:2, textTransform:'uppercase', marginBottom:2 }}>Provider</div>
+                <div className="db-profile-name" style={{ fontSize:16, fontWeight:700, color:'#fff', lineHeight:1.2 }}>{profileName}</div>
                 {claimedProfile && (
                   <div style={{ fontSize:11, color:'rgba(255,255,255,0.38)', marginTop:1 }}>
                     {claimedProfile.city || claimedProfile.district || ''}
@@ -152,36 +165,38 @@ function ProviderDashboard({ user, claimedProfile, claimedProfileType, submissio
               </div>
             </div>
 
-            <div style={{ display:'flex', gap:8, flexWrap:'wrap' }}>
+            <div className="db-identity-actions" style={{ display:'flex', gap:8, flexWrap:'wrap' }}>
               {profileHref && (
-                <a href={profileHref} style={{ fontSize:12, fontWeight:600, color:'rgba(255,255,255,0.55)', background:'rgba(255,255,255,0.07)', border:'1px solid rgba(255,255,255,0.12)', borderRadius:8, padding:'7px 13px', textDecoration:'none' }}>
+                <a href={profileHref} style={{ fontSize:12, fontWeight:600, color:'rgba(255,255,255,0.55)', background:'rgba(255,255,255,0.07)', border:'1px solid rgba(255,255,255,0.12)', borderRadius:8, padding:'6px 12px', textDecoration:'none', whiteSpace:'nowrap' }}>
                   🔗 View Listing
                 </a>
               )}
               <button
                 onClick={async () => { await signOut(); window.location.href = '/' }}
-                style={{ fontSize:12, color:'rgba(255,255,255,0.45)', background:'rgba(255,255,255,0.07)', border:'1px solid rgba(255,255,255,0.12)', borderRadius:8, padding:'7px 14px', cursor:'pointer', fontWeight:600 }}
+                style={{ fontSize:12, color:'rgba(255,255,255,0.45)', background:'rgba(255,255,255,0.07)', border:'1px solid rgba(255,255,255,0.12)', borderRadius:8, padding:'6px 12px', cursor:'pointer', fontWeight:600, whiteSpace:'nowrap' }}
               >Sign Out</button>
             </div>
           </div>
 
-          {/* Tab bar */}
-          <div style={{ display:'flex' }}>
+          {/* Tab bar — scrollable on mobile */}
+          <div className="db-tab-bar" style={{ display:'flex', overflowX:'auto', WebkitOverflowScrolling:'touch', marginLeft:-14, marginRight:-14, paddingLeft:14 }}>
             {TABS.map(t => (
               <button key={t.key} onClick={() => setTab(t.key)} style={{
-                padding:'10px 18px', fontSize:13, fontWeight:600, border:'none', cursor:'pointer',
-                background:'transparent',
+                padding:'10px 14px', fontSize:13, fontWeight:600, border:'none', cursor:'pointer',
+                background:'transparent', flexShrink:0,
                 color: tab === t.key ? '#fff' : 'rgba(255,255,255,0.4)',
                 borderBottom: tab === t.key ? '2.5px solid #D4AF37' : '2.5px solid transparent',
                 transition:'all 0.15s', whiteSpace:'nowrap',
               }}>{t.label}</button>
             ))}
+            {/* Trailing spacer so last tab isn't flush against edge */}
+            <div style={{ flexShrink:0, width:14 }} />
           </div>
         </div>
       </div>
 
       {/* ── Tab content ── */}
-      <div style={{ maxWidth:860, margin:'0 auto', padding:'24px 16px' }}>
+      <div className="db-content-pad" style={{ maxWidth:860, margin:'0 auto', padding:'20px 16px' }}>
         {tab === 'jobs'      && <BrowseJobsTab openJobs={openJobs} loading={jobsLoading} />}
         {tab === 'portfolio' && claimedProfile && (
           <PortfolioEditor profile={claimedProfile} profileType={claimedProfileType} userId={user.id} />
@@ -218,27 +233,27 @@ function BrowseJobsTab({ openJobs, loading }) {
 
       <div style={{ display:'flex', flexDirection:'column', gap:10 }}>
         {openJobs.map(job => (
-          <a key={job.id} href={`/job?id=${job.id}`} style={{ display:'flex', alignItems:'center', gap:14, padding:'16px 18px', background:'#fff', border:'1px solid var(--border)', borderRadius:14, textDecoration:'none', color:'inherit', boxShadow:'var(--shadow-sm)', transition:'box-shadow 0.15s, border-color 0.15s' }}
+          <a key={job.id} href={`/job?id=${job.id}`} style={{ display:'flex', alignItems:'center', gap:12, padding:'14px 16px', background:'#fff', border:'1px solid var(--border)', borderRadius:14, textDecoration:'none', color:'inherit', boxShadow:'var(--shadow-sm)', transition:'box-shadow 0.15s, border-color 0.15s' }}
             onMouseOver={e => { e.currentTarget.style.borderColor='var(--navy)'; e.currentTarget.style.boxShadow='var(--shadow)' }}
             onMouseOut={e  => { e.currentTarget.style.borderColor='var(--border)'; e.currentTarget.style.boxShadow='var(--shadow-sm)' }}
           >
-            <div style={{ width:44, height:44, borderRadius:12, background:'var(--navy-50)', display:'flex', alignItems:'center', justifyContent:'center', fontSize:22, flexShrink:0 }}>
+            <div style={{ width:40, height:40, borderRadius:11, background:'var(--navy-50)', display:'flex', alignItems:'center', justifyContent:'center', fontSize:20, flexShrink:0 }}>
               {TYPE_ICON[job.project_type] || '🏠'}
             </div>
             <div style={{ flex:1, minWidth:0 }}>
-              <div style={{ fontSize:14, fontWeight:700, color:'var(--text)', marginBottom:2 }}>{job.project_type}</div>
-              <div style={{ fontSize:12, color:'var(--text-3)' }}>
+              <div style={{ fontSize:13, fontWeight:700, color:'var(--text)', marginBottom:2, overflow:'hidden', textOverflow:'ellipsis', whiteSpace:'nowrap' }}>{job.project_type}</div>
+              <div style={{ fontSize:11, color:'var(--text-3)', overflow:'hidden', textOverflow:'ellipsis', whiteSpace:'nowrap' }}>
                 📍 {job.city || job.district}
-                {job.budget_range && <span style={{ marginLeft:8, color:'var(--green)', fontWeight:600 }}>· {job.budget_range}</span>}
-                <span style={{ marginLeft:8, color:'var(--text-4)' }}>· {timeAgo(job.created_at)}</span>
+                {job.budget_range && <span style={{ marginLeft:6, color:'var(--green)', fontWeight:600 }}>· {job.budget_range}</span>}
+                <span style={{ marginLeft:6, color:'var(--text-4)' }}>· {timeAgo(job.created_at)}</span>
               </div>
               {job.description && (
-                <div style={{ fontSize:12, color:'var(--text-4)', marginTop:4, overflow:'hidden', textOverflow:'ellipsis', whiteSpace:'nowrap' }}>
+                <div style={{ fontSize:11, color:'var(--text-4)', marginTop:3, overflow:'hidden', textOverflow:'ellipsis', whiteSpace:'nowrap' }}>
                   {job.description}
                 </div>
               )}
             </div>
-            <div style={{ flexShrink:0, padding:'8px 16px', background:'var(--navy)', color:'#fff', borderRadius:9, fontSize:12, fontWeight:700, whiteSpace:'nowrap' }}>
+            <div style={{ flexShrink:0, padding:'7px 13px', background:'var(--navy)', color:'#fff', borderRadius:9, fontSize:12, fontWeight:700, whiteSpace:'nowrap' }}>
               Bid →
             </div>
           </a>
@@ -267,10 +282,11 @@ function ConsumerDashboard({ user, projects, bids, submission, dataLoading, show
 
   return (
     <div style={{ minHeight:'100dvh', background:'#f8fafc', paddingBottom:80 }}>
+      <style>{MOBILE_STYLES}</style>
 
       {/* ── Consumer header ── */}
       <div style={{ background:'#fff', borderBottom:'1px solid var(--border)' }}>
-        <div style={{ maxWidth:800, margin:'0 auto', padding:'20px 16px 0' }}>
+        <div className="db-header-pad" style={{ maxWidth:800, margin:'0 auto', padding:'20px 16px 0' }}>
 
           {showClaimedBanner && (
             <div style={{ padding:'10px 14px', background:'#f0fdf4', border:'1px solid #bbf7d0', borderRadius:10, marginBottom:14 }}>
@@ -279,46 +295,47 @@ function ConsumerDashboard({ user, projects, bids, submission, dataLoading, show
           )}
 
           {/* Identity row */}
-          <div style={{ display:'flex', alignItems:'center', justifyContent:'space-between', marginBottom:20, flexWrap:'wrap', gap:12 }}>
-            <div style={{ display:'flex', alignItems:'center', gap:14 }}>
-              <div style={{ width:52, height:52, borderRadius:14, background:'var(--terra-50)', border:'2px solid rgba(224,90,43,0.2)', color:'var(--terra)', display:'flex', alignItems:'center', justifyContent:'center', fontSize:18, fontWeight:700, flexShrink:0 }}>
+          <div style={{ display:'flex', alignItems:'center', justifyContent:'space-between', marginBottom:16, flexWrap:'wrap', gap:10 }}>
+            <div style={{ display:'flex', alignItems:'center', gap:12 }}>
+              <div className="db-avatar" style={{ width:52, height:52, borderRadius:14, background:'var(--terra-50)', border:'2px solid rgba(224,90,43,0.2)', color:'var(--terra)', display:'flex', alignItems:'center', justifyContent:'center', fontSize:18, fontWeight:700, flexShrink:0 }}>
                 {initials}
               </div>
               <div>
                 <div style={{ fontSize:10, fontWeight:700, color:'var(--text-4)', letterSpacing:2, textTransform:'uppercase', marginBottom:2 }}>My Dashboard</div>
-                <div style={{ fontSize:16, fontWeight:700, color:'var(--text)' }}>Welcome back</div>
-                <div style={{ fontSize:11, color:'var(--text-3)', marginTop:1 }}>{user.email}</div>
+                <div className="db-profile-name" style={{ fontSize:16, fontWeight:700, color:'var(--text)', lineHeight:1.2 }}>Welcome back</div>
+                <div style={{ fontSize:11, color:'var(--text-3)', marginTop:1, overflow:'hidden', textOverflow:'ellipsis', whiteSpace:'nowrap', maxWidth:'180px' }}>{user.email}</div>
               </div>
             </div>
 
-            <div style={{ display:'flex', gap:8, flexWrap:'wrap', alignItems:'center' }}>
-              <a href="/post-project" style={{ display:'inline-flex', alignItems:'center', gap:5, fontSize:13, fontWeight:700, color:'#fff', background:'var(--terra)', borderRadius:9, padding:'8px 16px', textDecoration:'none' }}>
+            <div className="db-identity-actions" style={{ display:'flex', gap:8, flexWrap:'wrap', alignItems:'center' }}>
+              <a href="/post-project" style={{ display:'inline-flex', alignItems:'center', gap:5, fontSize:12, fontWeight:700, color:'#fff', background:'var(--terra)', borderRadius:9, padding:'7px 14px', textDecoration:'none', whiteSpace:'nowrap' }}>
                 📋 Post Project
               </a>
               <button
                 onClick={async () => { await signOut(); window.location.href = '/' }}
-                style={{ fontSize:12, color:'var(--text-3)', background:'var(--surface-2)', border:'1px solid var(--border)', borderRadius:8, padding:'7px 14px', cursor:'pointer', fontWeight:600 }}
+                style={{ fontSize:12, color:'var(--text-3)', background:'var(--surface-2)', border:'1px solid var(--border)', borderRadius:8, padding:'6px 12px', cursor:'pointer', fontWeight:600, whiteSpace:'nowrap' }}
               >Sign Out</button>
             </div>
           </div>
 
-          {/* Tab bar */}
-          <div style={{ display:'flex' }}>
+          {/* Tab bar — scrollable on mobile */}
+          <div className="db-tab-bar" style={{ display:'flex', overflowX:'auto', WebkitOverflowScrolling:'touch', marginLeft:-14, marginRight:-14, paddingLeft:14 }}>
             {TABS.map(t => (
               <button key={t.key} onClick={() => setTab(t.key)} style={{
-                padding:'10px 18px', fontSize:13, fontWeight:600, border:'none', cursor:'pointer',
-                background:'transparent',
+                padding:'10px 16px', fontSize:13, fontWeight:600, border:'none', cursor:'pointer',
+                background:'transparent', flexShrink:0,
                 color: tab === t.key ? 'var(--navy)' : 'var(--text-3)',
                 borderBottom: tab === t.key ? '2.5px solid var(--terra)' : '2.5px solid transparent',
                 transition:'all 0.15s', whiteSpace:'nowrap',
               }}>{t.label}</button>
             ))}
+            <div style={{ flexShrink:0, width:14 }} />
           </div>
         </div>
       </div>
 
       {/* ── Tab content ── */}
-      <div style={{ maxWidth:800, margin:'0 auto', padding:'24px 16px' }}>
+      <div className="db-content-pad" style={{ maxWidth:800, margin:'0 auto', padding:'20px 16px' }}>
         {dataLoading ? <Spinner /> : tab === 'projects' ? (
           <ProjectsTab projects={projects} bids={bids} />
         ) : (
@@ -359,16 +376,16 @@ function FindTilersTab() {
         <div style={{ fontSize:13, color:'var(--text-3)' }}>Browse verified providers across Sri Lanka</div>
       </div>
 
-      <div style={{ display:'grid', gridTemplateColumns:'repeat(2,1fr)', gap:10 }}>
+      <div style={{ display:'grid', gridTemplateColumns:'repeat(auto-fill,minmax(160px,1fr))', gap:10 }}>
         {QUICK.map(q => (
-          <a key={q.href} href={q.href} style={{ display:'flex', alignItems:'center', gap:12, padding:'14px 16px', background:'#fff', border:'1.5px solid var(--border)', borderRadius:12, textDecoration:'none', color:'var(--text)', transition:'border-color 0.15s, box-shadow 0.15s' }}
+          <a key={q.href} href={q.href} style={{ display:'flex', alignItems:'center', gap:10, padding:'12px 14px', background:'#fff', border:'1.5px solid var(--border)', borderRadius:12, textDecoration:'none', color:'var(--text)', transition:'border-color 0.15s, box-shadow 0.15s' }}
             onMouseOver={e => { e.currentTarget.style.borderColor='var(--navy)'; e.currentTarget.style.boxShadow='var(--shadow-sm)' }}
             onMouseOut={e  => { e.currentTarget.style.borderColor='var(--border)'; e.currentTarget.style.boxShadow='none' }}
           >
-            <div style={{ width:40, height:40, borderRadius:10, background:'var(--navy-50)', display:'flex', alignItems:'center', justifyContent:'center', fontSize:19, flexShrink:0 }}>{q.icon}</div>
-            <div>
-              <div style={{ fontSize:13, fontWeight:700, color:'var(--text)' }}>{q.label}</div>
-              <div style={{ fontSize:11, color:'var(--text-3)', marginTop:1 }}>{q.desc}</div>
+            <div style={{ width:36, height:36, borderRadius:10, background:'var(--navy-50)', display:'flex', alignItems:'center', justifyContent:'center', fontSize:17, flexShrink:0 }}>{q.icon}</div>
+            <div style={{ minWidth:0 }}>
+              <div style={{ fontSize:12, fontWeight:700, color:'var(--text)', lineHeight:1.3 }}>{q.label}</div>
+              <div style={{ fontSize:10, color:'var(--text-3)', marginTop:1, overflow:'hidden', textOverflow:'ellipsis', whiteSpace:'nowrap' }}>{q.desc}</div>
             </div>
           </a>
         ))}
