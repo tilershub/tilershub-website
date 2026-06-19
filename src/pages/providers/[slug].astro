@@ -138,6 +138,12 @@ const bizSchemaStr = JSON.stringify(bizSchema)
           {!isTiler && item.verification_status === 'th_verified' && (
             <span style="display:inline-flex;align-items:center;gap:4px;font-size:11px;font-weight:700;padding:3px 10px;border-radius:20px;background:rgba(22,163,74,0.2);color:#4ade80;border:1px solid rgba(74,222,128,0.3);margin-top:8px;">✓ TH Verified</span>
           )}
+          <div style="margin-top:16px;">
+            <button id="hero-review-btn"
+              style="display:inline-flex;align-items:center;gap:8px;background:rgba(255,255,255,0.12);color:#fff;border:1.5px solid rgba(255,255,255,0.3);border-radius:14px;padding:11px 20px;font-size:13px;font-weight:700;cursor:pointer;backdrop-filter:blur(6px);">
+              ⭐ Rate &amp; Review
+            </button>
+          </div>
         </div>
       </div>
     </div>
@@ -260,7 +266,12 @@ const bizSchemaStr = JSON.stringify(bizSchema)
           )}
         </div>
 
-        <a href="/post-project" style="display:flex;align-items:center;justify-content:center;gap:6px;background:var(--terra);color:#fff;border-radius:12px;padding:12px;margin-top:12px;font-size:13px;font-weight:700;text-decoration:none;text-align:center;">
+        <button id="sidebar-review-btn"
+          style="display:flex;align-items:center;justify-content:center;gap:7px;width:100%;background:#fff;color:#1B3A6B;border:2px solid #1B3A6B;border-radius:12px;padding:12px;margin-top:12px;font-size:13px;font-weight:700;cursor:pointer;">
+          ⭐ Rate &amp; Review
+        </button>
+
+        <a href="/post-project" style="display:flex;align-items:center;justify-content:center;gap:6px;background:var(--terra);color:#fff;border-radius:12px;padding:12px;margin-top:10px;font-size:13px;font-weight:700;text-decoration:none;text-align:center;">
           📋 Post Your Project Free
         </a>
 
@@ -296,6 +307,12 @@ const bizSchemaStr = JSON.stringify(bizSchema)
   </style>
 
   <script define:vars={{ profileName: name, profileUrl: Astro.url.href }}>
+    function openReview() {
+      window.dispatchEvent(new CustomEvent('tilershub:openreview'))
+    }
+    document.getElementById('hero-review-btn')?.addEventListener('click', openReview)
+    document.getElementById('sidebar-review-btn')?.addEventListener('click', openReview)
+
     const btn = document.getElementById('share-profile-btn')
     if (btn) {
       btn.addEventListener('click', async () => {
