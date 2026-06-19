@@ -2,7 +2,6 @@
 import Layout from '../layouts/Layout.astro'
 import { supabase } from '../lib/supabase.js'
 import HomeHero from '../components/HomeHero.jsx'
-import { CATEGORIES } from '../lib/categories.js'
 
 const HERO_IMG = 'https://images.unsplash.com/photo-1552321554-5fefe8c9ef14?auto=format&fit=crop&w=1400&q=75'
 
@@ -13,7 +12,7 @@ const BLOG_POSTS = [
   { slug: 'large-format-tiles-guide',           icon: '📏', color: '#b45309', category: 'Tile Guide',       title: 'Large Format Tiles: Pros, Cons & Installation Tips'       },
 ]
 
-const [{ data: featuredTilersRaw }, { data: featuredContractorsRaw }, { data: featuredShopsRaw }] = await Promise.all([
+const [{ data: featuredTilersRaw }, { data: featuredShopsRaw }, { data: recentProjectsRaw }] = await Promise.all([
   supabase
     .from('tilers')
     .select('id,full_name,city,district,is_verified,slug,avg_rating,avatar_url,speciality,whatsapp,phone,gallery,experience_years,daily_rate_min')
@@ -22,29 +21,42 @@ const [{ data: featuredTilersRaw }, { data: featuredContractorsRaw }, { data: fe
     .limit(5),
   supabase
     .from('providers')
-    .select('id,name,city,district,slug,provider_type,verification_status,profile_image,cover_image,description,whatsapp,phone,avg_rating,is_featured,gallery')
-    .eq('status', 'active')
-    .eq('provider_type', 'contractor')
-    .in('verification_status', ['th_master', 'th_certified_pro', 'th_verified', 'verified'])
-    .not('slug', 'is', null)
-    .order('is_featured', { ascending: false })
-    .limit(4),
-  supabase
-    .from('providers')
     .select('id,name,city,district,slug,provider_type,verification_status,profile_image,cover_image,description,whatsapp,phone,avg_rating,is_featured,services')
     .eq('status', 'active')
     .in('provider_type', ['tile_shop', 'supplier', 'workshop', 'brand_dealer', 'bathroom_shop', 'tool_supplier'])
     .not('slug', 'is', null)
     .order('is_featured', { ascending: false })
     .limit(6),
+  supabase
+    .from('projects')
+    .select('id,project_type,city,district,description,budget_range,created_at')
+    .eq('status', 'active')
+    .order('created_at', { ascending: false })
+    .limit(3),
 ])
 
 const tilers = featuredTilersRaw || []
-const homeContractors = featuredContractorsRaw || []
 const homeShops = featuredShopsRaw || []
+const recentProjects = recentProjectsRaw || []
 
-const VERIFIED_STATUSES_HOME = new Set(['th_master', 'th_certified_pro', 'th_verified', 'verified'])
-const SHOP_TYPES_HOME = new Set(['tile_shop', 'supplier', 'workshop', 'brand_dealer', 'bathroom_shop', 'tool_supplier'])
+const PROJECT_TYPE_ICONS: Record<string,string> = {
+  'Floor Tiling':'🪨','Bathroom Tiling':'🚿','Bathroom Renovation':'🛁',
+  'Granite Works':'💎','Tile Cutting':'✂️','Routering':'🔧',
+  'Waterproofing':'💧','Tile Shop Inquiry':'🏪',
+}
+const PROJECT_TYPE_COLORS: Record<string,string> = {
+  'Floor Tiling':'#1B3A6B','Bathroom Tiling':'#0f766e','Bathroom Renovation':'#0f766e',
+  'Granite Works':'#7c3aed','Tile Cutting':'#b45309','Routering':'#b45309',
+  'Waterproofing':'#0369a1','Tile Shop Inquiry':'#E05A2B',
+}
+function projectTimeAgo(ts: string) {
+  const diff = Math.floor((Date.now() - new Date(ts).getTime()) / 1000)
+  if (diff < 60)     return 'just now'
+  if (diff < 3600)   return `${Math.floor(diff / 60)}m ago`
+  if (diff < 86400)  return `${Math.floor(diff / 3600)}h ago`
+  if (diff < 604800) return `${Math.floor(diff / 86400)}d ago`
+  return new Date(ts).toLocaleDateString('en-GB', { day:'numeric', month:'short' })
+}
 
 function shopTaglineHome(type: string, services: string[]) {
   const s = (services||[]).join(' ').toLowerCase()
@@ -56,11 +68,6 @@ function shopTaglineHome(type: string, services: string[]) {
   return hasBath ? 'Tiles & Bathware' : 'Tile Showroom'
 }
 
-const PROVIDER_TYPE_LABELS: Record<string,string> = {
-  tiler: 'Professional', contractor: 'Contractor', tile_shop: 'Tile Shop',
-  supplier: 'Supplier', workshop: 'Workshop', brand_dealer: 'Brand Dealer', bathroom_shop: 'Bathware Shop',
-}
-
 function initials(name: string) {
   return name.split(' ').slice(0,2).map((w:string) => w[0]||'').join('').toUpperCase() || '?'
 }
@@ -68,11 +75,6 @@ const AVATAR_COLORS = ['#1B3A6B','#0f766e','#7c3aed','#b45309','#0369a1','#E05A2
 function avatarColor(name: string) {
   let h = 0; for (const c of name) h = (h*31+c.charCodeAt(0))>>>0
   return AVATAR_COLORS[h % AVATAR_COLORS.length]
-}
-function waLink(phone: string, name: string) {
-  const cl = (phone||'').replace(/\D/g,'')
-  const n  = cl.startsWith('0') ? '94'+cl.slice(1) : cl
-  return `https://wa.me/${n}?text=${encodeURIComponent(`Hi ${name}, I found you on TilersHub.`)}`
 }
 function verBadge(vs: string) {
   if (vs === 'th_master')         return { label: 'TH Master',     bg: '#92400e', color: '#fef3c7' }
@@ -121,24 +123,39 @@ function verBadge(vs: string) {
     </div>
   </section>
 
-  <!-- ══ CATEGORIES ══ -->
+  <!-- ══ RECENT PROJECTS ══ -->
   <section style="background:#fff;padding:22px 0 24px;border-bottom:1px solid #f1f5f9;">
     <div style="padding:0 16px 14px;display:flex;align-items:center;justify-content:space-between;">
-      <span style="font-size:15px;font-weight:700;color:#111827;">What do you need done?</span>
-      <a href="/providers" style="font-size:12px;font-weight:600;color:#E05A2B;text-decoration:none;">All Providers ›</a>
+      <span style="font-size:15px;font-weight:700;color:#111827;">Recent Projects</span>
+      <a href="/jobs" style="font-size:12px;font-weight:600;color:#E05A2B;text-decoration:none;">View All ›</a>
     </div>
-    <div style="display:grid;grid-template-columns:repeat(2,1fr);gap:10px;padding:0 16px;">
-      {CATEGORIES.map((cat, i) => (
-        <a href={`/categories/${cat.slug}`}
-          style={`display:flex;align-items:center;gap:12px;padding:16px 14px;border-radius:18px;background:${cat.bg};border:1px solid ${cat.border};text-decoration:none;${CATEGORIES.length % 2 !== 0 && i === CATEGORIES.length - 1 ? 'grid-column:1/-1;' : ''}`}>
-          <div style={`width:50px;height:50px;border-radius:14px;background:${cat.color}20;border:1px solid ${cat.border};display:flex;align-items:center;justify-content:center;font-size:24px;flex-shrink:0;`}>
-            {cat.icon}
-          </div>
-          <div>
-            <div style={`font-size:13px;font-weight:700;color:${cat.color};`}>{cat.label}</div>
-          </div>
-        </a>
-      ))}
+    <div style="display:flex;flex-direction:column;gap:10px;padding:0 16px;">
+      {recentProjects.length === 0
+        ? (
+          <div style="padding:20px 0;font-size:13px;color:#94a3b8;text-align:center;">No active projects right now — <a href="/post-project" style="color:#E05A2B;font-weight:600;text-decoration:none;">Post one free →</a></div>
+        )
+        : recentProjects.map((p: any) => {
+          const icon  = PROJECT_TYPE_ICONS[p.project_type]  || '🏠'
+          const color = PROJECT_TYPE_COLORS[p.project_type] || '#1B3A6B'
+          const excerpt = p.description?.length > 90 ? p.description.slice(0, 90) + '…' : p.description
+          return (
+            <a href={`/job?id=${p.id}`}
+              style="display:flex;align-items:center;gap:12px;background:#f8fafc;border-radius:16px;border:1px solid #e2e8f0;padding:14px 16px;text-decoration:none;color:inherit;">
+              <div style={`width:48px;height:48px;border-radius:14px;background:${color}12;border:1.5px solid ${color}22;display:flex;align-items:center;justify-content:center;font-size:24px;flex-shrink:0;`}>{icon}</div>
+              <div style="flex:1;min-width:0;">
+                <div style="display:flex;align-items:center;gap:6px;margin-bottom:3px;">
+                  <span style="font-size:13px;font-weight:700;color:#0f172a;">{p.project_type}</span>
+                  <span style="font-size:11px;color:#94a3b8;margin-left:auto;white-space:nowrap;">{projectTimeAgo(p.created_at)}</span>
+                </div>
+                {(p.city || p.district) && <div style="font-size:11px;color:#64748b;margin-bottom:4px;">📍 {p.city}{p.district && p.district !== p.city ? `, ${p.district}` : ''}</div>}
+                {excerpt && <p style="font-size:12px;color:#64748b;margin:0 0 6px;line-height:1.5;overflow:hidden;white-space:nowrap;text-overflow:ellipsis;">{excerpt}</p>}
+                {p.budget_range && <span style="font-size:10px;padding:2px 8px;border-radius:20px;background:#f0fdf4;color:#15803d;font-weight:600;border:1px solid #bbf7d0;">💰 {p.budget_range}</span>}
+              </div>
+              <div style={`flex-shrink:0;background:${color};color:#fff;border-radius:10px;padding:9px 16px;font-size:12px;font-weight:700;white-space:nowrap;`}>Bid →</div>
+            </a>
+          )
+        })
+      }
     </div>
   </section>
 
@@ -151,86 +168,12 @@ function verBadge(vs: string) {
 
     <div style="display:flex;flex-direction:column;gap:12px;padding:0 16px;">
 
-      {tilers.length === 0 && homeContractors.length === 0 && (
+      {tilers.length === 0 && (
         <div style="padding:20px 0;font-size:13px;color:#94a3b8;">
           No verified professionals listed yet —{' '}
           <a href="/join-tilershub" style="color:#E05A2B;font-weight:600;text-decoration:none;">Join TilersHub →</a>
         </div>
       )}
-
-      <!-- LUXEhome featured card -->
-      <a href="/sponsor/luxehome"
-        style="display:block;background:#fff;border-radius:16px;overflow:hidden;border:1px solid #e8edf5;text-decoration:none;color:inherit;box-shadow:0 2px 12px rgba(0,0,0,0.07);">
-        <div style="height:180px;position:relative;overflow:hidden;background:linear-gradient(160deg,#0c0804,#1a120a);display:flex;flex-direction:column;align-items:center;justify-content:center;gap:6px;">
-          <div style="position:absolute;inset:0;background:radial-gradient(ellipse at top,rgba(212,175,55,0.22),transparent 65%);"></div>
-          <span style="font-family:'Playfair Display',serif;font-size:32px;font-weight:800;color:#D4AF37;position:relative;letter-spacing:2px;">LUXE<span style="font-weight:400;color:rgba(255,255,255,0.75);">home</span></span>
-          <div style="position:absolute;top:10px;right:10px;background:rgba(22,163,74,0.88);color:#fff;font-size:11px;font-weight:700;padding:4px 12px;border-radius:20px;display:flex;align-items:center;gap:4px;">✓ Verified</div>
-        </div>
-        <div style="padding:16px;">
-          <div style="display:flex;align-items:flex-start;justify-content:space-between;gap:8px;margin-bottom:6px;">
-            <div>
-              <div style="font-size:17px;font-weight:700;color:#0f172a;line-height:1.2;">Contractor</div>
-              <div style="font-size:13px;color:#64748b;margin-top:1px;">LUXEhome</div>
-            </div>
-            <div style="text-align:right;flex-shrink:0;">
-              <div style="display:inline-flex;align-items:center;gap:4px;background:#92400e;color:#fef3c7;font-size:10px;font-weight:700;padding:4px 10px;border-radius:20px;">🛡️ TH Master</div>
-            </div>
-          </div>
-          <div style="display:flex;align-items:center;gap:5px;margin-bottom:8px;">
-            <span style="color:#f59e0b;font-size:14px;">⭐</span>
-            <span style="font-size:14px;font-weight:700;color:#0f172a;">4.9</span>
-            <span style="font-size:12px;color:#94a3b8;">(47 reviews)</span>
-          </div>
-          <p style="font-size:13px;color:#64748b;line-height:1.6;margin:0 0 14px;display:-webkit-box;-webkit-line-clamp:2;-webkit-box-orient:vertical;overflow:hidden;">Bathroom renovation, tiles & waterproofing specialists. High-quality finish guaranteed.</p>
-          <div style="display:flex;align-items:center;gap:10px;border-top:1px solid #f1f5f9;padding-top:12px;flex-wrap:wrap;">
-            <span style="font-size:12px;color:#475569;display:flex;align-items:center;gap:4px;"><span style="color:#16a34a;font-weight:700;">✓</span> 12+ Years Experience</span>
-            <span style="font-size:12px;color:#64748b;display:flex;align-items:center;gap:3px;">📍 Colombo</span>
-            <a href="/sponsor/luxehome" onclick="event.stopPropagation()" style="margin-left:auto;background:#1B3A6B;color:#fff;border-radius:10px;padding:8px 18px;font-size:13px;font-weight:700;text-decoration:none;white-space:nowrap;display:inline-flex;align-items:center;gap:4px;">View Profile ›</a>
-          </div>
-        </div>
-      </a>
-
-      <!-- Verified contractor card -->
-      {homeContractors.slice(0,1).map((p: any) => {
-        const color = avatarColor(p.name)
-        const coverSrc = (p.gallery||[])[0] || p.cover_image || p.profile_image
-        const isVerified = VERIFIED_STATUSES_HOME.has(p.verification_status)
-        return (
-          <a href={p.slug ? `/providers/${p.slug}` : '/providers'}
-            style="display:block;background:#fff;border-radius:16px;overflow:hidden;border:1px solid #e8edf5;text-decoration:none;color:inherit;box-shadow:0 2px 12px rgba(0,0,0,0.07);">
-            <div style="height:180px;position:relative;overflow:hidden;">
-              {coverSrc
-                ? <img src={coverSrc} alt={p.name} style="width:100%;height:100%;object-fit:cover;" loading="lazy" />
-                : <div style={`width:100%;height:100%;background:${color};display:flex;align-items:center;justify-content:center;`}>
-                    <span style="font-size:52px;font-weight:800;color:rgba(255,255,255,0.75);">{initials(p.name)}</span>
-                  </div>
-              }
-              <div style="position:absolute;inset:0;background:linear-gradient(to bottom,rgba(0,0,0,0.01) 55%,rgba(0,0,0,0.15) 100%);"></div>
-              {isVerified && <div style="position:absolute;top:10px;right:10px;background:rgba(22,163,74,0.88);color:#fff;font-size:11px;font-weight:700;padding:4px 12px;border-radius:20px;display:flex;align-items:center;gap:4px;backdrop-filter:blur(4px);">✓ Verified</div>}
-            </div>
-            <div style="padding:16px;">
-              <div style="display:flex;align-items:flex-start;justify-content:space-between;gap:8px;margin-bottom:6px;">
-                <div>
-                  <div style="font-size:17px;font-weight:700;color:#0f172a;line-height:1.2;">Contractor</div>
-                  <div style="font-size:13px;color:#64748b;margin-top:1px;overflow:hidden;white-space:nowrap;text-overflow:ellipsis;max-width:200px;">{p.name}</div>
-                </div>
-              </div>
-              {p.avg_rating > 0 && (
-                <div style="display:flex;align-items:center;gap:5px;margin-bottom:8px;">
-                  <span style="color:#f59e0b;font-size:14px;">⭐</span>
-                  <span style="font-size:14px;font-weight:700;color:#0f172a;">{p.avg_rating.toFixed(1)}</span>
-                  {p.review_count > 0 && <span style="font-size:12px;color:#94a3b8;">({p.review_count} reviews)</span>}
-                </div>
-              )}
-              {p.description && <p style="font-size:13px;color:#64748b;line-height:1.6;margin:0 0 14px;display:-webkit-box;-webkit-line-clamp:2;-webkit-box-orient:vertical;overflow:hidden;">{p.description}</p>}
-              <div style="display:flex;align-items:center;gap:10px;border-top:1px solid #f1f5f9;padding-top:12px;flex-wrap:wrap;">
-                {(p.city||p.district) && <span style="font-size:12px;color:#64748b;display:flex;align-items:center;gap:3px;">📍 Serves {p.city||p.district}</span>}
-                <span style="margin-left:auto;background:#1B3A6B;color:#fff;border-radius:10px;padding:8px 18px;font-size:13px;font-weight:700;white-space:nowrap;">View Profile ›</span>
-              </div>
-            </div>
-          </a>
-        )
-      })}
 
       <!-- Verified tiler card -->
       {tilers.slice(0,1).map((t: any) => {
