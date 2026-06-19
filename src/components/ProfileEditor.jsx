@@ -230,7 +230,8 @@ export default function ProfileEditor({ profile, profileType, userId }) {
         if (expYears) payload.experience_years = parseInt(expYears, 10)
         if (rateMin)  payload.daily_rate_min   = parseInt(rateMin, 10)
         if (rateMax)  payload.daily_rate_max   = parseInt(rateMax, 10)
-        if (profileImageUrl !== undefined) payload.avatar_url = profileImageUrl
+        if (profileImageUrl !== undefined) payload.avatar_url   = profileImageUrl
+        if (coverImageUrl   !== undefined) payload.cover_image  = coverImageUrl
       } else {
         if (website) payload.website_url = website.trim()
         if (profileImageUrl !== undefined) payload.profile_image = profileImageUrl
@@ -316,8 +317,12 @@ export default function ProfileEditor({ profile, profileType, userId }) {
             value={profile.cover_image} onChange={setCoverImageFile} />
         </div>
       ) : (
-        <ImageUploadBox label="Profile Photo" hint="Your photo shown on your profile and listing cards" aspect="profile"
-          value={profile.avatar_url} onChange={setProfileImageFile} />
+        <div style={{ display: 'grid', gridTemplateColumns: '1fr 2fr', gap: 14 }}>
+          <ImageUploadBox label="Profile Photo" hint="Your photo shown on cards" aspect="profile"
+            value={profile.avatar_url} onChange={setProfileImageFile} />
+          <ImageUploadBox label="Cover Image" hint="Banner shown at the top of your card and profile page" aspect="cover"
+            value={profile.cover_image} onChange={setCoverImageFile} />
+        </div>
       )}
 
       {/* Name */}
