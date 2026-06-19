@@ -188,7 +188,7 @@ function ShopCard({ provider, onClick, T }) {
 
   return (
     <div
-      onClick={() => onClick(provider)}
+      onClick={() => provider.slug ? (window.location.href = `/providers/${provider.slug}`) : onClick(provider)}
       style={{ background: '#fff', border: '1px solid #e8edf5', borderRadius: 20, overflow: 'hidden', cursor: 'pointer', display: 'flex', boxShadow: '0 2px 12px rgba(0,0,0,0.06)', transition: 'all 0.2s', minHeight: 160 }}
       onMouseOver={e => { e.currentTarget.style.transform = 'translateY(-3px)'; e.currentTarget.style.boxShadow = '0 12px 32px rgba(0,0,0,0.12)' }}
       onMouseOut={e => { e.currentTarget.style.transform = ''; e.currentTarget.style.boxShadow = '0 2px 12px rgba(0,0,0,0.06)' }}
@@ -270,7 +270,7 @@ function TilerCard({ tiler, onClick, T }) {
 
   return (
     <div
-      onClick={() => onClick(tiler)}
+      onClick={() => tiler.slug ? (window.location.href = `/tilers/${tiler.slug}`) : onClick(tiler)}
       style={{ background: '#fff', borderRadius: 20, border: '1px solid #e8edf5', overflow: 'hidden', cursor: 'pointer', boxShadow: '0 2px 12px rgba(0,0,0,0.06)', transition: 'box-shadow 0.2s,transform 0.2s' }}
       onMouseOver={e => { e.currentTarget.style.transform = 'translateY(-3px)'; e.currentTarget.style.boxShadow = '0 10px 28px rgba(0,0,0,0.12)' }}
       onMouseOut={e  => { e.currentTarget.style.transform = ''; e.currentTarget.style.boxShadow = '0 2px 12px rgba(0,0,0,0.06)' }}
@@ -350,7 +350,7 @@ function ContractorCard({ provider, onClick, T }) {
 
   return (
     <div
-      onClick={() => onClick(provider)}
+      onClick={() => provider.slug ? (window.location.href = `/providers/${provider.slug}`) : onClick(provider)}
       style={{ background: '#fff', borderRadius: 20, border: '1px solid #e8edf5', overflow: 'hidden', cursor: 'pointer', boxShadow: '0 2px 12px rgba(0,0,0,0.06)', transition: 'box-shadow 0.2s,transform 0.2s' }}
       onMouseOver={e => { e.currentTarget.style.transform = 'translateY(-3px)'; e.currentTarget.style.boxShadow = '0 10px 28px rgba(0,0,0,0.12)' }}
       onMouseOut={e  => { e.currentTarget.style.transform = ''; e.currentTarget.style.boxShadow = '0 2px 12px rgba(0,0,0,0.06)' }}
