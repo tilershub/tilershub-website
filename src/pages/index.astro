@@ -175,8 +175,8 @@ function verBadge(vs: string) {
         </div>
       )}
 
-      <!-- Verified tiler card -->
-      {tilers.slice(0,1).map((t: any) => {
+      <!-- Verified tiler cards -->
+      {tilers.slice(0,2).map((t: any) => {
         const color = avatarColor(t.full_name)
         const coverSrc = (t.gallery||[])[0] || t.avatar_url
         return (

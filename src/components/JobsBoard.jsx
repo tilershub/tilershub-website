@@ -162,10 +162,9 @@ export default function JobsBoard() {
   const [filters, setFilters]     = useState({ type: '', district: '' })
   const [bidCounts, setBidCounts] = useState({})
   const [user, setUser]           = useState(null)
-  const [authReady, setAuthReady] = useState(false)
 
   useEffect(() => {
-    supabase.auth.getUser().then(({ data: { user: u } }) => { setUser(u); setAuthReady(true) })
+    supabase.auth.getUser().then(({ data: { user: u } }) => setUser(u))
     const { data: { subscription } } = supabase.auth.onAuthStateChange((_, s) => setUser(s?.user ?? null))
     return () => subscription.unsubscribe()
   }, [])
@@ -223,7 +222,7 @@ export default function JobsBoard() {
 
       {/* Content */}
       <div style={{ maxWidth: 1100, margin: '0 auto', padding: '32px 20px 64px' }}>
-        {loading || !authReady ? (
+        {loading ? (
           <div style={{ textAlign: 'center', padding: '64px 20px', color: '#94a3b8', fontSize: 14 }}>Loading projects…</div>
         ) : filtered.length === 0 ? (
           <div style={{ textAlign: 'center', padding: '64px 20px', background: '#fff', borderRadius: 16, border: '1px solid #e2e8f0' }}>
@@ -234,8 +233,6 @@ export default function JobsBoard() {
               📋 Post a Project
             </a>
           </div>
-        ) : !user ? (
-          <ProviderGate previewProjects={filtered} bidCounts={bidCounts} />
         ) : (
           <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fill, minmax(300px, 1fr))', gap: 18 }}>
             {filtered.map(p => (
