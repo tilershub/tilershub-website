@@ -241,7 +241,7 @@ export default function JobsBoard() {
           </div>
         )}
 
-        {!loading && authReady && user && filtered.length > 0 && (
+        {!loading && user && filtered.length > 0 && (
           <div style={{ marginTop: 48, padding: '28px 32px', background: 'linear-gradient(135deg, #1B3A6B, #0F2444)', borderRadius: 16, display: 'flex', alignItems: 'center', justifyContent: 'space-between', flexWrap: 'wrap', gap: 16 }}>
             <div>
               <div style={{ fontSize: 16, fontWeight: 700, color: '#fff', marginBottom: 4 }}>Have a tiling project?</div>
