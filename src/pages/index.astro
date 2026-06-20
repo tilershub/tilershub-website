@@ -17,6 +17,7 @@ const [{ data: featuredTilersRaw }, { data: featuredShopsRaw }, { data: recentPr
     .from('tilers')
     .select('id,full_name,city,district,is_verified,slug,avg_rating,avatar_url,bio,whatsapp,phone,gallery,cover_image,experience_years,daily_rate_min,review_count')
     .eq('is_verified', true)
+    .eq('featured', true)
     .order('avg_rating', { ascending: false })
     .limit(5),
   supabase
