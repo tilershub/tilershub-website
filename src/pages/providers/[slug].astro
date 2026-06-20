@@ -16,9 +16,7 @@ export async function getStaticPaths() {
   }
   for (const t of tilers || []) {
     if (t.slug) {
-      // SEO-friendly slug path (primary)
       paths.push({ params: { slug: t.slug }, props: { type: 'tiler', lookupKey: t.slug } })
-      // UUID path for backward compat
       paths.push({ params: { slug: String(t.id) }, props: { type: 'tiler', lookupKey: t.slug } })
     } else {
       paths.push({ params: { slug: String(t.id) }, props: { type: 'tiler', lookupKey: String(t.id) } })
@@ -52,35 +50,171 @@ const name = isTiler ? item.full_name : item.name
 const phone = item.whatsapp || item.phone
 const altPhone = (isTiler && item.whatsapp && item.phone && item.whatsapp !== item.phone) ? item.phone : null
 const city = item.city || item.district
+const gallery: string[] = item.gallery || []
+const services: string[] = item.services || []
+const serviceAreas: string[] = item.service_areas || []
+const firstName = (name || '').split(' ')[0]
 
-function waLink(p, n) {
+function waLink(p: string, n: string, intent?: string) {
   const digits = (p || '').replace(/\D/g, '')
   const normalized = digits.startsWith('94') ? digits : '94' + digits.replace(/^0/, '')
   const who = n ? `*${n}*` : 'ඔබව'
-  const msg = encodeURIComponent(`ආයුබෝවන්! 🙏\n\nමම *TilersHub* (www.tilershub.lk) හරහා ${who} සොයාගතිමි.\n\nඔබගේ සේවාව ගැන දැනගැනීමට කැමැත්තෙමි.\n\n📌 *TilersHub.lk* Lead\nස්තූතියි! 🏠`)
+  const msg = intent === 'visit'
+    ? encodeURIComponent(`ආයුබෝවන්! 🙏\n\nමම *TilersHub* (www.tilershub.lk) හරහා ${who} සොයාගතිමි.\n\nSite visit / consultation එකක් book කිරීමට කැමැත්තෙමි.\n\n📌 *TilersHub.lk* Lead\nස්තූතියි! 🏠`)
+    : encodeURIComponent(`ආයුබෝවන්! 🙏\n\nමම *TilersHub* (www.tilershub.lk) හරහා ${who} සොයාගතිමි.\n\nඔබගේ සේවාව ගැන දැනගැනීමට කැමැත්තෙමි.\n\n📌 *TilersHub.lk* Lead\nස්තූතියි! 🏠`)
   return `https://wa.me/${normalized}?text=${msg}`
 }
 
-const PROVIDER_TYPE_LABELS = {
+const PROVIDER_TYPE_LABELS: Record<string,string> = {
   tiler: 'ටයිලර්', workshop: 'වැඩ පොළ', supplier: 'සැපයුම්කරු',
-  contractor: 'කොන්ත්‍රාත්කරු', tile_shop: 'ටයිල් සාප්පුව', brand_dealer: 'බ්‍රෑන්ඩ් නියෝජිතයා'
+  contractor: 'කොන්ත්‍රාත්කරු', tile_shop: 'ටයිල් සාප්පුව',
+  brand_dealer: 'බ්‍රෑන්ඩ් නියෝජිතයා', bathroom_shop: 'නාන කාමර සාප්පුව',
+  tool_supplier: 'මෙවලම් සැපයුම්කරු',
 }
-
 const typeLabel = isTiler ? 'ටයිලර්' : (PROVIDER_TYPE_LABELS[item.provider_type] || 'සේවා සපයන්නා')
 
-const coverBg = 'linear-gradient(135deg,#0F2444 0%,#1B3A6B 100%)'
-const heroCoverSrc = isTiler
-  ? ((item.gallery || [])[0] || item.avatar_url || null)
-  : (item.cover_image || item.profile_image || null)
+// Tagline: short descriptor below the name
+function getTagline(): string {
+  const pt = item.provider_type || ''
+  const svc = services.join(' ').toLowerCase()
+  if (pt === 'contractor') {
+    if (svc.includes('bathroom') || svc.includes('renovation')) return 'Bathroom Renovation & Construction'
+    return 'Building & Construction'
+  }
+  if (pt === 'tile_shop' || pt === 'bathroom_shop') return 'ටයිල් සහ නාන කාමර'
+  if (pt === 'workshop') return 'Tile Cutting & Workshop'
+  if (pt === 'supplier') return 'Tile & Material Supplier'
+  if (pt === 'brand_dealer') return 'Authorized Brand Dealer'
+  if (isTiler) return 'ටයිලිං සේවා'
+  return typeLabel
+}
+const tagline = getTagline()
 
+// Cover image: use cover_image, else profile_image, else gallery[0], else avatar
+const heroCoverSrc = isTiler
+  ? (item.avatar_url || gallery[0] || null)
+  : (item.cover_image || item.profile_image || gallery[0] || null)
+
+// Verification
 function verBadge(vs: string | null) {
-  if (vs === 'th_master')         return { label: 'TH ප්‍රධාන ★',  bg: '#92400e', color: '#fef3c7' }
-  if (vs === 'th_certified_pro')  return { label: 'සහතිකලත් ✦', bg: '#1B3A6B', color: '#bfdbfe' }
-  if (vs === 'th_verified' || vs === 'verified') return { label: '✓ සත්‍යාපිත', bg: 'rgba(22,163,74,0.9)', color: '#fff' }
+  if (vs === 'th_master')         return { label: 'TH Master ★',            bg: '#92400e', color: '#fef3c7' }
+  if (vs === 'th_certified_pro')  return { label: 'Certified Pro ✦',        bg: '#1B3A6B', color: '#bfdbfe' }
+  if (vs === 'th_verified' || vs === 'verified') return { label: '✓ Verified Contractor', bg: 'rgba(22,163,74,0.92)', color: '#fff' }
   return null
 }
+const badge = isTiler
+  ? (item.is_verified ? { label: '✓ Verified Tiler', bg: 'rgba(22,163,74,0.92)', color: '#fff' } : null)
+  : verBadge(item.verification_status)
+
+const isVerified = badge !== null
+const verificationLabel = badge?.label || 'Listed'
+
+// Serving area string
+const servingText = serviceAreas.length > 0
+  ? `Serving ${serviceAreas[0]}${serviceAreas.length > 1 ? ' & Surrounding Areas' : ''}`
+  : (city ? `Serving ${city}` : null)
+
+// Service icons map
+const SERVICE_ICONS: Record<string,string> = {
+  'Bathroom Renovation': '🛁',
+  'Full Bathroom Design & Build': '📐',
+  'New Bathroom Construction': '🏗️',
+  'Shower Cubicle': '🚿',
+  'Vanity Cupboard': '🪵',
+  'Vanity & Cabinets': '🪵',
+  'Waterproofing': '💧',
+  'Bathroom Tiling': '🔲',
+  'Floor Tiling': '🪨',
+  'Wall Tiling': '🧱',
+  'Bathroom Plumbing': '🔩',
+  'Plumbing Works': '🔩',
+  'Bathroom Lighting': '💡',
+  'Ceiling & Lighting': '💡',
+  'Bathroom Wiring': '⚡',
+  'Electrical Works': '⚡',
+  'Ipanel Ceiling': '🏗️',
+  'Hand Railing': '🚧',
+  'Tile Supply & Installation': '🪨',
+  'Tile Cutting': '✂️',
+  'Tile Routing': '🔧',
+  'Granite Works': '💎',
+  'Glass Works': '🪟',
+  'Shower Cubicles': '🚿',
+  'Bathroom Accessories': '🔲',
+  'Bathroom Renovation Service': '🛁',
+  'Kitchen Tiling': '🍳',
+  'Staircase Tiling': '🪜',
+  'Outdoor Tiling': '🌿',
+  'Large Tile Installation': '📐',
+  'Grouting & Finishing': '✨',
+}
+
+// Why Choose bullets
+const WHY_BULLETS: Record<string,string[]> = {
+  contractor: [
+    'Specialized Bathroom Experts',
+    'Full Design & Build Service',
+    'Premium Quality Materials',
+    'Transparent Quotations',
+  ],
+  tiler: [
+    'Verified Tiling Professional',
+    'Years of On-Site Experience',
+    'Direct WhatsApp Contact',
+    'Competitive Day Rates',
+  ],
+  tile_shop: [
+    'Wide Selection of Tile Brands',
+    'Trade & Retail Pricing',
+    'Expert Product Guidance',
+    'Island-Wide Delivery',
+  ],
+  bathroom_shop: [
+    'Complete Bathroom Solutions',
+    'Premium Sanitary Fittings',
+    'Expert Product Guidance',
+    'Residential & Commercial',
+  ],
+  workshop: [
+    'Precision Cutting Equipment',
+    'Fast Turnaround',
+    'Custom Tile Work',
+    'Trade & Retail Orders',
+  ],
+  supplier: [
+    'Bulk & Retail Supply',
+    'Trade Pricing Available',
+    'Island-Wide Delivery',
+    'Quality Assured Products',
+  ],
+  default: [
+    'TH Verified Professional',
+    'Direct Contact — No Middlemen',
+    'Serving Across Sri Lanka',
+  ],
+}
+const whyBullets = isVerified
+  ? (WHY_BULLETS[isTiler ? 'tiler' : (item.provider_type || 'default')] || WHY_BULLETS.default)
+  : []
+
+// Initials for avatar fallback
+function initials(n: string) {
+  return n.split(' ').slice(0,2).map((w:string) => w[0]||'').join('').toUpperCase() || '?'
+}
+const AVATAR_COLORS = ['#1B3A6B','#0f766e','#7c3aed','#b45309','#0369a1','#E05A2B','#15803d']
+function avatarColor(n: string) {
+  let h = 0; for (const c of n) h = (h*31+c.charCodeAt(0))>>>0
+  return AVATAR_COLORS[h % AVATAR_COLORS.length]
+}
+const avatarBg = avatarColor(name || 'T')
+const avatarSrc = isTiler ? item.avatar_url : item.profile_image
+
+const avgRating = Number(item.avg_rating || 0)
+const reviewCount = Number(item.review_count || 0)
+const expYears = Number(item.experience_years || 0)
 
 const isUnverified = isTiler && !item.is_verified
+
 const metaDesc = isUnverified
   ? `${name} is a tiling professional based in ${city}, Sri Lanka. Find contact details on TilersHub.`
   : `Contact ${name}, a verified ${typeLabel.toLowerCase()} based in ${city}, Sri Lanka. Direct WhatsApp contact on TilersHub.`
@@ -103,261 +237,309 @@ const bizSchema: Record<string, unknown> = {
   },
   areaServed: item.district || city,
 }
-if (item.avg_rating > 0 && item.review_count > 0) {
+if (avgRating > 0 && reviewCount > 0) {
   bizSchema.aggregateRating = {
     '@type': 'AggregateRating',
-    ratingValue: parseFloat(item.avg_rating).toFixed(1),
-    reviewCount: item.review_count,
+    ratingValue: avgRating.toFixed(1),
+    reviewCount,
     bestRating: '5',
     worstRating: '1',
   }
 }
-const bizSchemaStr = JSON.stringify(bizSchema)
 ---
 
 <Layout
   title={`${name} · ${typeLabel} in ${city} · TilersHub`}
   description={metaDesc}
 >
-  <script slot="head" type="application/ld+json" set:html={bizSchemaStr} />
+  <script slot="head" type="application/ld+json" set:html={JSON.stringify(bizSchema)} />
 
-  <!-- Hero -->
-  <div style={`background:${coverBg};padding:48px 20px 40px;position:relative;overflow:hidden;min-height:220px;`}>
-    {/* Gold accent bar */}
+  <!-- ══ HERO ══ -->
+  <div style="position:relative;height:300px;overflow:hidden;background:#0F2444;">
+    {/* Cover image */}
+    {heroCoverSrc
+      ? <img src={heroCoverSrc} alt={name} style="position:absolute;inset:0;width:100%;height:100%;object-fit:cover;" />
+      : <div style="position:absolute;inset:0;background:linear-gradient(135deg,#0F2444,#1B3A6B);opacity:0.04;background-image:repeating-linear-gradient(0deg,transparent,transparent 29px,rgba(255,255,255,0.8) 29px,rgba(255,255,255,0.8) 30px),repeating-linear-gradient(90deg,transparent,transparent 29px,rgba(255,255,255,0.8) 29px,rgba(255,255,255,0.8) 30px);pointer-events:none;"></div>
+    }
+    {/* Dark gradient overlay — stronger at bottom */}
+    <div style="position:absolute;inset:0;background:linear-gradient(to top,rgba(0,0,0,0.92) 0%,rgba(0,0,0,0.5) 50%,rgba(0,0,0,0.15) 100%);"></div>
+    {/* Gold accent bar at top */}
     <div style="position:absolute;top:0;left:0;right:0;height:3px;background:linear-gradient(90deg,#D4AF37,#f0c94d);"></div>
-    {/* Cover image background */}
-    {heroCoverSrc && (
-      <img src={heroCoverSrc} alt="" aria-hidden="true"
-        style="position:absolute;inset:0;width:100%;height:100%;object-fit:cover;opacity:0.22;pointer-events:none;" />
-    )}
-    {/* Tile grid texture */}
-    <div style="position:absolute;inset:0;opacity:0.04;background-image:repeating-linear-gradient(0deg,transparent,transparent 29px,rgba(255,255,255,0.8) 29px,rgba(255,255,255,0.8) 30px),repeating-linear-gradient(90deg,transparent,transparent 29px,rgba(255,255,255,0.8) 29px,rgba(255,255,255,0.8) 30px);pointer-events:none;"></div>
-    {/* Dark overlay gradient on top of image */}
-    <div style="position:absolute;inset:0;background:linear-gradient(to bottom,rgba(10,28,56,0.55) 0%,rgba(10,28,56,0.75) 100%);pointer-events:none;"></div>
 
-    <div style="max-width:800px;margin:0 auto;position:relative;">
-      <a href="/providers" style="display:inline-flex;align-items:center;gap:5px;font-size:11px;color:rgba(255,255,255,0.45);letter-spacing:1px;font-weight:600;margin-bottom:24px;text-decoration:none;">← සියලු සේවා සපයන්නන්</a>
-      <div style="display:flex;align-items:flex-start;gap:20px;flex-wrap:wrap;">
+    {/* Top nav row */}
+    <div style="position:absolute;top:16px;left:0;right:0;display:flex;align-items:center;justify-content:space-between;padding:0 16px;">
+      <a href="/providers" style="display:inline-flex;align-items:center;gap:5px;font-size:11px;color:rgba(255,255,255,0.75);font-weight:600;text-decoration:none;background:rgba(0,0,0,0.3);padding:5px 10px;border-radius:20px;backdrop-filter:blur(6px);">
+        ← සියලු සේවා සපයන්නන්
+      </a>
+      {gallery.length > 0 && (
+        <button id="view-photos-btn"
+          style="display:inline-flex;align-items:center;gap:5px;font-size:11px;color:#fff;font-weight:600;background:rgba(0,0,0,0.35);padding:5px 10px;border-radius:20px;border:none;cursor:pointer;backdrop-filter:blur(6px);">
+          📷 View Photos ({gallery.length})
+        </button>
+      )}
+    </div>
+
+    {/* Bottom content overlay */}
+    <div style="position:absolute;bottom:0;left:0;right:0;padding:16px 16px 20px;">
+      {/* Verification badge */}
+      {badge && (
+        <div style="margin-bottom:10px;">
+          <span style={`display:inline-flex;align-items:center;gap:5px;font-size:10px;font-weight:700;padding:4px 10px;border-radius:20px;background:${badge.bg};color:${badge.color};letter-spacing:0.3px;`}>
+            {badge.label}
+          </span>
+        </div>
+      )}
+
+      <div style="display:flex;align-items:flex-end;gap:14px;">
         {/* Avatar */}
-        <div style="width:96px;height:96px;border-radius:50%;background:rgba(255,255,255,0.15);border:2px solid rgba(212,175,55,0.6);display:flex;align-items:center;justify-content:center;font-size:32px;font-weight:800;color:#fff;flex-shrink:0;overflow:hidden;box-shadow:0 4px 20px rgba(0,0,0,0.35);">
-          {(isTiler ? item.avatar_url : item.profile_image)
-            ? <img src={isTiler ? item.avatar_url : item.profile_image} alt={name} style="width:100%;height:100%;object-fit:cover;" />
-            : name.split(' ').map((w: string) => w[0]).join('').slice(0,2).toUpperCase()
+        <div style={`width:72px;height:72px;border-radius:50%;background:${avatarBg};border:2.5px solid rgba(212,175,55,0.7);display:flex;align-items:center;justify-content:center;font-size:24px;font-weight:800;color:#fff;flex-shrink:0;overflow:hidden;box-shadow:0 4px 16px rgba(0,0,0,0.4);`}>
+          {avatarSrc
+            ? <img src={avatarSrc} alt={name} style="width:100%;height:100%;object-fit:cover;" />
+            : initials(name)
           }
         </div>
+
+        {/* Name + tagline + meta */}
         <div style="flex:1;min-width:0;">
-          <div style="font-size:11px;font-weight:700;color:rgba(255,255,255,0.5);letter-spacing:2px;text-transform:uppercase;margin-bottom:6px;">{typeLabel}</div>
-          <h1 style="font-family:'Playfair Display',serif;font-size:clamp(22px,4vw,36px);font-weight:700;color:#fff;margin-bottom:6px;line-height:1.2;">{name}</h1>
-          <div style="font-size:14px;color:rgba(255,255,255,0.6);margin-bottom:10px;">📍 {city}</div>
-          {/* Verification badges */}
-          {isTiler && item.is_verified && (
-            <span style="display:inline-flex;align-items:center;gap:4px;font-size:11px;font-weight:700;padding:3px 10px;border-radius:20px;background:rgba(22,163,74,0.2);color:#4ade80;border:1px solid rgba(74,222,128,0.3);">✓ දක්ෂ</span>
+          <h1 style="font-family:'Playfair Display',serif;font-size:clamp(20px,5vw,28px);font-weight:700;color:#fff;margin:0 0 3px;line-height:1.2;overflow:hidden;white-space:nowrap;text-overflow:ellipsis;">{name}</h1>
+          <div style="font-size:12px;color:rgba(255,255,255,0.7);margin-bottom:5px;font-weight:500;">{tagline}</div>
+          {servingText && (
+            <div style="font-size:11px;color:rgba(255,255,255,0.6);margin-bottom:5px;">📍 {servingText}</div>
           )}
-          {isTiler && !item.is_verified && (
-            <span style="display:inline-flex;align-items:center;gap:4px;font-size:11px;font-weight:700;padding:3px 10px;border-radius:20px;background:rgba(0,0,0,0.3);color:rgba(255,255,255,0.65);border:1px solid rgba(255,255,255,0.2);">සත්‍යාපිත නොවේ</span>
-          )}
-          {!isTiler && (() => {
-            const badge = verBadge(item.verification_status)
-            return badge
-              ? <span style={`display:inline-flex;align-items:center;gap:4px;font-size:11px;font-weight:700;padding:4px 12px;border-radius:20px;background:${badge.bg};color:${badge.color};backdrop-filter:blur(4px);`}>{badge.label}</span>
-              : null
-          })()}
-          {/* CTA buttons */}
-          <div style="display:flex;gap:10px;flex-wrap:wrap;margin-top:16px;">
-            {phone && (
-              <a href={waLink(phone, name)} target="_blank" rel="noopener noreferrer"
-                style="display:inline-flex;align-items:center;gap:8px;background:#25D366;color:#fff;border-radius:14px;padding:11px 20px;font-size:13px;font-weight:700;text-decoration:none;box-shadow:0 4px 14px rgba(37,211,102,0.3);">
-                💬 WhatsApp
-              </a>
+          <div style="display:flex;align-items:center;gap:10px;flex-wrap:wrap;">
+            {avgRating > 0 && (
+              <span style="font-size:11px;color:rgba(255,255,255,0.85);font-weight:600;">⭐ {avgRating.toFixed(1)}{reviewCount > 0 ? ` (${reviewCount} reviews)` : ''}</span>
             )}
-            <button id="hero-review-btn"
-              style="display:inline-flex;align-items:center;gap:8px;background:rgba(255,255,255,0.12);color:#fff;border:1.5px solid rgba(255,255,255,0.3);border-radius:14px;padding:11px 20px;font-size:13px;font-weight:700;cursor:pointer;backdrop-filter:blur(6px);">
-              ⭐ ශ්‍රේණිය දෙන්න
-            </button>
+            {expYears > 0 && (
+              <span style="font-size:11px;color:rgba(255,255,255,0.65);">· {expYears}+ Years Experience</span>
+            )}
           </div>
         </div>
       </div>
     </div>
   </div>
 
-  <!-- Content -->
-  <section style="background:var(--surface);padding:36px 20px 64px;">
-    <div style="max-width:800px;margin:0 auto;display:grid;grid-template-columns:1fr min(280px,100%);gap:24px;align-items:start;flex-wrap:wrap;">
-
-      <!-- Left: details -->
-      <div>
-
-        {isUnverified && (
-          <div style="background:#fef9f0;border:1px solid #fde68a;border-radius:12px;padding:14px 18px;margin-bottom:20px;font-size:13px;color:#78716c;line-height:1.7;">
-            ℹ️ මෙම ගොනුව ප්‍රජාව ඉදිරිපත් කළ තොරතුරු ආශ්‍රිතව TILERSHUB විසින් තවම සත්‍යාපනය කර නොමැත.
-          </div>
-        )}
-
-        {(isTiler ? item.bio : item.description) && (
-          <div style="background:var(--surface-2);border:1px solid var(--border);border-radius:16px;padding:22px;margin-bottom:20px;">
-            <h2 style="font-size:13px;font-weight:700;color:var(--text-3);text-transform:uppercase;letter-spacing:1px;margin-bottom:10px;">ගැන</h2>
-            <p style="font-size:14px;color:var(--text-2);line-height:1.8;">{isTiler ? item.bio : item.description}</p>
-          </div>
-        )}
-
-        {(item.services || []).length > 0 && (
-          <div style="background:var(--surface-2);border:1px solid var(--border);border-radius:16px;padding:22px;margin-bottom:20px;">
-            <h2 style="font-size:13px;font-weight:700;color:var(--text-3);text-transform:uppercase;letter-spacing:1px;margin-bottom:12px;">සේවාවන්</h2>
-            <div style="display:flex;flex-wrap:wrap;gap:8px;">
-              {(item.services || []).map((s: string) => (
-                <span class="chip chip-navy">{s}</span>
-              ))}
-            </div>
-          </div>
-        )}
-
-        {isTiler && item.experience_years > 0 && (item.total_jobs > 0 || item.daily_rate_min) && (
-          <div style="background:var(--surface-2);border:1px solid var(--border);border-radius:16px;padding:22px;margin-bottom:20px;">
-            <h2 style="font-size:13px;font-weight:700;color:var(--text-3);text-transform:uppercase;letter-spacing:1px;margin-bottom:12px;">අත්දැකීම</h2>
-            <div style="display:flex;gap:12px;flex-wrap:wrap;">
-              {item.experience_years > 0 && (
-                <div style="padding:12px 20px;background:#fff;border-radius:12px;border:1px solid var(--border);text-align:center;min-width:80px;">
-                  <div style="font-size:20px;font-weight:700;color:var(--navy);">{item.experience_years}+</div>
-                  <div style="font-size:10px;color:var(--text-4);margin-top:2px;">අත්දැකීම් (වසර)</div>
-                </div>
-              )}
-              {item.total_jobs > 0 && (
-                <div style="padding:12px 20px;background:#fff;border-radius:12px;border:1px solid var(--border);text-align:center;min-width:80px;">
-                  <div style="font-size:20px;font-weight:700;color:var(--navy);">{item.total_jobs}</div>
-                  <div style="font-size:10px;color:var(--text-4);margin-top:2px;">සේවා ගණන</div>
-                </div>
-              )}
-              {item.daily_rate_min && (
-                <div style="padding:12px 20px;background:#fff;border-radius:12px;border:1px solid var(--border);text-align:center;">
-                  <div style="font-size:16px;font-weight:700;color:var(--navy);">Rs.{item.daily_rate_min}–{item.daily_rate_max}/sqft</div>
-                  <div style="font-size:10px;color:var(--text-4);margin-top:2px;">ගාස්තු (sq.ft ට)</div>
-                </div>
-              )}
-            </div>
-          </div>
-        )}
-
-        {(item.gallery || []).length > 0 && (
-          <div style="background:var(--surface-2);border:1px solid var(--border);border-radius:16px;padding:22px;margin-bottom:20px;">
-            <h2 style="font-size:13px;font-weight:700;color:var(--text-3);text-transform:uppercase;letter-spacing:1px;margin-bottom:14px;">📸 ගැලරිය</h2>
-            <div style="display:grid;grid-template-columns:repeat(auto-fill,minmax(110px,1fr));gap:8px;">
-              {(item.gallery || []).map((img: string, i: number) => (
-                <img src={img} alt={`Work photo ${i + 1}`}
-                  style="width:100%;aspect-ratio:1;object-fit:cover;border-radius:10px;border:1px solid var(--border);" />
-              ))}
-            </div>
-          </div>
-        )}
-
-        {!isTiler && (item.service_areas || []).length > 0 && (
-          <div style="background:var(--surface-2);border:1px solid var(--border);border-radius:16px;padding:22px;margin-bottom:20px;">
-            <h2 style="font-size:13px;font-weight:700;color:var(--text-3);text-transform:uppercase;letter-spacing:1px;margin-bottom:12px;">සේවා ප්‍රදේශ</h2>
-            <div style="display:flex;flex-wrap:wrap;gap:8px;">
-              {(item.service_areas || []).map((area: string) => (
-                <span class="chip chip-gray">📍 {area}</span>
-              ))}
-            </div>
-          </div>
-        )}
-
-        <!-- Reviews -->
-        {isTiler
-          ? <ReviewsSection client:load tilerId={tiler.id} />
-          : <ReviewsSection client:load providerId={provider.id} />
-        }
-
-      </div>
-
-      <!-- Right: contact card -->
-      <div style="position:sticky;top:80px;">
-        <div style="background:#fff;border:1.5px solid var(--border);border-radius:20px;padding:24px;box-shadow:var(--shadow);">
-          <div style="font-size:12px;font-weight:700;color:var(--text-4);text-transform:uppercase;letter-spacing:1px;margin-bottom:16px;">සම්බන්ධ වන්න — {isTiler ? 'ටයිලර්' : typeLabel}</div>
-
-          {phone && (
-            <a href={waLink(phone, name)} target="_blank" rel="noopener noreferrer" style="display:flex;align-items:center;justify-content:center;gap:8px;width:100%;background:#25D366;color:#fff;border-radius:12px;padding:14px;font-size:14px;font-weight:700;text-decoration:none;margin-bottom:10px;box-shadow:0 4px 14px rgba(37,211,102,0.25);">
-              <svg width="18" height="18" viewBox="0 0 24 24" fill="currentColor"><path d="M17.472 14.382c-.297-.149-1.758-.867-2.03-.967-.273-.099-.471-.148-.67.15-.197.297-.767.966-.94 1.164-.173.199-.347.223-.644.075-.297-.15-1.255-.463-2.39-1.475-.883-.788-1.48-1.761-1.653-2.059-.173-.297-.018-.458.13-.606.134-.133.298-.347.446-.52.149-.174.198-.298.298-.497.099-.198.05-.371-.025-.52-.075-.149-.669-1.612-.916-2.207-.242-.579-.487-.5-.669-.51-.173-.008-.371-.01-.57-.01-.198 0-.52.074-.792.372-.272.297-1.04 1.016-1.04 2.479 0 1.462 1.065 2.875 1.213 3.074.149.198 2.096 3.2 5.077 4.487.709.306 1.262.489 1.694.625.712.227 1.36.195 1.871.118.571-.085 1.758-.719 2.006-1.413.248-.694.248-1.289.173-1.413-.074-.124-.272-.198-.57-.347m-5.421 7.403h-.004a9.87 9.87 0 01-5.031-1.378l-.361-.214-3.741.982.998-3.648-.235-.374a9.86 9.86 0 01-1.51-5.26c.001-5.45 4.436-9.884 9.888-9.884 2.64 0 5.122 1.03 6.988 2.898a9.825 9.825 0 012.893 6.994c-.003 5.45-4.437 9.884-9.885 9.884m8.413-18.297A11.815 11.815 0 0012.05 0C5.495 0 .16 5.335.157 11.892c0 2.096.547 4.142 1.588 5.945L.057 24l6.305-1.654a11.882 11.882 0 005.683 1.448h.005c6.554 0 11.89-5.335 11.893-11.893a11.821 11.821 0 00-3.48-8.413z"/></svg>
-              WhatsApp
-            </a>
-          )}
-
-          {altPhone && (
-            <a href={waLink(altPhone, name)} target="_blank" rel="noopener noreferrer" style="display:flex;align-items:center;justify-content:center;gap:8px;width:100%;background:#f0fdf4;color:#16a34a;border:1.5px solid #bbf7d0;border-radius:12px;padding:12px;font-size:13px;font-weight:700;text-decoration:none;margin-bottom:10px;">
-              💬 වෙනත් අංකය
-            </a>
-          )}
-          <div style="height:1px;background:var(--border);margin-bottom:16px;"></div>
-          <div style="font-size:12px;color:var(--text-3);line-height:1.7;">
-            📍 පිහිටා ඇත: <strong style="color:var(--text-2);">{city}</strong>
-          </div>
-          {item.district && item.district !== item.city && (
-            <div style="font-size:12px;color:var(--text-3);margin-top:4px;">🗺️ {item.district} දිස්ත්‍රික්කය</div>
-          )}
-          {!isTiler && item.website_url && (
-            <a href={item.website_url} target="_blank" rel="noopener" style="display:flex;align-items:center;gap:6px;font-size:12px;font-weight:600;color:var(--navy);margin-top:12px;text-decoration:none;">🌐 වෙබ් අඩවිය →</a>
-          )}
-        </div>
-
-        <button id="sidebar-review-btn"
-          style="display:flex;align-items:center;justify-content:center;gap:7px;width:100%;background:#fff;color:#1B3A6B;border:2px solid #1B3A6B;border-radius:12px;padding:12px;margin-top:12px;font-size:13px;font-weight:700;cursor:pointer;">
-          ⭐ ශ්‍රේණිය දෙන්න
-        </button>
-
-        <a href="/post-project" style="display:flex;align-items:center;justify-content:center;gap:6px;background:var(--terra);color:#fff;border-radius:12px;padding:12px;margin-top:10px;font-size:13px;font-weight:700;text-decoration:none;text-align:center;">
-          📋 නොමිලේ ව්‍යාපෘතිය පල කරන්න
-        </a>
-
-        <button
-          id="share-profile-btn"
-          style="display:flex;align-items:center;justify-content:center;gap:6px;width:100%;background:#f1f5f9;color:#374151;border:1px solid #e2e8f0;border-radius:12px;padding:10px;font-size:12px;font-weight:700;cursor:pointer;margin-top:10px;">
-          🔗 පැතිකඩ බෙදාගන්න
-        </button>
-
-        <EditProfileButton
-          client:load
-          ownerId={isTiler ? tiler.user_id : provider.user_id}
-          profileType={isTiler ? 'tiler' : 'provider'}
-          profileSlug={item.slug}
-        />
-
-        <ClaimProfile
-          client:load
-          profileId={isTiler ? tiler.id : provider.id}
-          profileType={isTiler ? 'tiler' : 'provider'}
-          profileName={name}
-          isClaimed={!!(isTiler ? tiler.user_id : provider.user_id)}
-        />
-      </div>
-
+  <!-- ══ CTA BUTTONS ══ -->
+  {phone && (
+    <div style="background:#fff;padding:14px 16px;display:flex;gap:10px;border-bottom:1px solid #e2e8f0;">
+      <a href={waLink(phone, name)} target="_blank" rel="noopener noreferrer"
+        style="flex:1;display:flex;align-items:center;justify-content:center;gap:7px;background:#25D366;color:#fff;border-radius:14px;padding:13px 10px;font-size:13px;font-weight:700;text-decoration:none;box-shadow:0 4px 12px rgba(37,211,102,0.3);">
+        <svg width="16" height="16" viewBox="0 0 24 24" fill="currentColor"><path d="M17.472 14.382c-.297-.149-1.758-.867-2.03-.967-.273-.099-.471-.148-.67.15-.197.297-.767.966-.94 1.164-.173.199-.347.223-.644.075-.297-.15-1.255-.463-2.39-1.475-.883-.788-1.48-1.761-1.653-2.059-.173-.297-.018-.458.13-.606.134-.133.298-.347.446-.52.149-.174.198-.298.298-.497.099-.198.05-.371-.025-.52-.075-.149-.669-1.612-.916-2.207-.242-.579-.487-.5-.669-.51-.173-.008-.371-.01-.57-.01-.198 0-.52.074-.792.372-.272.297-1.04 1.016-1.04 2.479 0 1.462 1.065 2.875 1.213 3.074.149.198 2.096 3.2 5.077 4.487.709.306 1.262.489 1.694.625.712.227 1.36.195 1.871.118.571-.085 1.758-.719 2.006-1.413.248-.694.248-1.289.173-1.413-.074-.124-.272-.198-.57-.347m-5.421 7.403h-.004a9.87 9.87 0 01-5.031-1.378l-.361-.214-3.741.982.998-3.648-.235-.374a9.86 9.86 0 01-1.51-5.26c.001-5.45 4.436-9.884 9.888-9.884 2.64 0 5.122 1.03 6.988 2.898a9.825 9.825 0 012.893 6.994c-.003 5.45-4.437 9.884-9.885 9.884m8.413-18.297A11.815 11.815 0 0012.05 0C5.495 0 .16 5.335.157 11.892c0 2.096.547 4.142 1.588 5.945L.057 24l6.305-1.654a11.882 11.882 0 005.683 1.448h.005c6.554 0 11.89-5.335 11.893-11.893a11.821 11.821 0 00-3.48-8.413z"/></svg>
+        WhatsApp {firstName}
+      </a>
+      <a href={waLink(phone, name, 'visit')} target="_blank" rel="noopener noreferrer"
+        style="flex:1;display:flex;align-items:center;justify-content:center;gap:7px;background:#1A2B4A;color:#fff;border-radius:14px;padding:13px 10px;font-size:13px;font-weight:700;text-decoration:none;">
+        📅 Book a Site Visit
+      </a>
     </div>
+  )}
+
+  <!-- ══ STATS BAR ══ -->
+  {(expYears > 0 || avgRating > 0 || reviewCount > 0 || badge) && (
+    <div style="background:#f8fafc;border-bottom:1px solid #e2e8f0;padding:14px 16px;display:grid;grid-template-columns:repeat(auto-fit,minmax(72px,1fr));gap:4px;text-align:center;">
+      {expYears > 0 && (
+        <div style="padding:8px 4px;">
+          <div style="font-size:18px;font-weight:800;color:#1A2B4A;font-family:'Playfair Display',serif;line-height:1;">{expYears}+</div>
+          <div style="font-size:9px;color:#64748b;margin-top:3px;line-height:1.3;">Years<br/>Experience</div>
+        </div>
+      )}
+      {avgRating > 0 && (
+        <div style="padding:8px 4px;">
+          <div style="font-size:18px;font-weight:800;color:#1A2B4A;font-family:'Playfair Display',serif;line-height:1;">{avgRating.toFixed(1)}</div>
+          <div style="font-size:9px;color:#64748b;margin-top:3px;line-height:1.3;">Rating<br/>{reviewCount > 0 ? `${reviewCount} reviews` : ''}</div>
+        </div>
+      )}
+      {badge && (
+        <div style="padding:8px 4px;">
+          <div style="font-size:14px;line-height:1;margin-bottom:2px;">✓</div>
+          <div style="font-size:9px;color:#064e3b;font-weight:700;margin-top:3px;line-height:1.3;">{verificationLabel.replace('✓ ','').replace(' ★','').replace(' ✦','')}</div>
+        </div>
+      )}
+      {!phone && (
+        <div style="padding:8px 4px;">
+          <div style="font-size:14px;line-height:1;margin-bottom:2px;">🔗</div>
+          <div style="font-size:9px;color:#64748b;margin-top:3px;line-height:1.3;">TilersHub<br/>Listed</div>
+        </div>
+      )}
+    </div>
+  )}
+
+  <!-- ══ UNVERIFIED NOTICE ══ -->
+  {isUnverified && (
+    <div style="background:#fef9f0;border-bottom:1px solid #fde68a;padding:12px 16px;font-size:12px;color:#78716c;line-height:1.7;">
+      ℹ️ මෙම ගොනුව ප්‍රජාව ඉදිරිපත් කළ තොරතුරු ආශ්‍රිතව TilersHub විසින් තවම සත්‍යාපනය කර නොමැත.
+    </div>
+  )}
+
+  <!-- ══ FEATURED PROJECTS (GALLERY) ══ -->
+  {gallery.length > 0 && (
+    <section id="gallery-section" style="background:#fff;padding:20px 0 24px;border-bottom:1px solid #f1f5f9;">
+      <div style="display:flex;align-items:center;justify-content:space-between;padding:0 16px 12px;">
+        <span style="font-size:15px;font-weight:700;color:#0f172a;">Featured Projects</span>
+        <button id="all-photos-btn" style="font-size:12px;font-weight:600;color:#E05A2B;background:none;border:none;cursor:pointer;padding:0;">View All →</button>
+      </div>
+      <div style="display:flex;gap:12px;overflow-x:auto;padding:0 16px 4px;scrollbar-width:none;-webkit-overflow-scrolling:touch;">
+        {gallery.map((img: string, i: number) => (
+          <div style="flex-shrink:0;width:160px;height:200px;border-radius:16px;overflow:hidden;position:relative;box-shadow:0 4px 14px rgba(0,0,0,0.12);">
+            <img src={img} alt={`${name} project ${i + 1}`} style="width:100%;height:100%;object-fit:cover;" loading="lazy" />
+            <div style="position:absolute;inset:0;background:linear-gradient(to top,rgba(0,0,0,0.55) 0%,transparent 50%);"></div>
+            <span style="position:absolute;bottom:8px;left:10px;font-size:9px;color:#fff;font-weight:600;text-shadow:0 1px 3px rgba(0,0,0,0.8);">📍 {city}</span>
+          </div>
+        ))}
+      </div>
+    </section>
+  )}
+
+  <!-- ══ OUR SERVICES ══ -->
+  {services.length > 0 && (
+    <section style="background:#f8fafc;padding:20px 16px 24px;border-bottom:1px solid #f1f5f9;">
+      <h2 style="font-size:15px;font-weight:700;color:#0f172a;margin:0 0 14px;">Our Services</h2>
+      <div style="display:grid;grid-template-columns:1fr 1fr;gap:8px;">
+        {services.map((s: string) => (
+          <div style="display:flex;align-items:center;gap:10px;background:#fff;border:1px solid #e2e8f0;border-radius:12px;padding:11px 12px;">
+            <span style="font-size:20px;flex-shrink:0;">{SERVICE_ICONS[s] || '🔧'}</span>
+            <span style="font-size:11px;font-weight:600;color:#374151;line-height:1.3;">{s}</span>
+          </div>
+        ))}
+      </div>
+    </section>
+  )}
+
+  <!-- ══ ABOUT ══ -->
+  {(isTiler ? item.bio : item.description) && (
+    <section style="background:#fff;padding:20px 16px 24px;border-bottom:1px solid #f1f5f9;">
+      <h2 style="font-size:15px;font-weight:700;color:#0f172a;margin:0 0 10px;">About {name}</h2>
+      <p style="font-size:13px;color:#64748b;line-height:1.8;margin:0 0 12px;">{isTiler ? item.bio : item.description}</p>
+      {serviceAreas.length > 0 && (
+        <div style="display:flex;flex-wrap:wrap;gap:6px;margin-top:10px;">
+          {serviceAreas.map((area: string) => (
+            <span style="font-size:11px;padding:3px 9px;border-radius:20px;background:#f1f5f9;color:#475569;font-weight:600;border:1px solid #e2e8f0;">📍 {area}</span>
+          ))}
+        </div>
+      )}
+      {!isTiler && item.website_url && (
+        <a href={item.website_url} target="_blank" rel="noopener" style="display:inline-flex;align-items:center;gap:5px;font-size:12px;font-weight:700;color:#1A2B4A;margin-top:12px;text-decoration:none;">🌐 {item.website_url.replace(/^https?:\/\//, '')} →</a>
+      )}
+    </section>
+  )}
+
+  <!-- ══ WHY CHOOSE ══ -->
+  {whyBullets.length > 0 && (
+    <section style="background:#f8fafc;padding:20px 16px 24px;border-bottom:1px solid #f1f5f9;">
+      <h2 style="font-size:15px;font-weight:700;color:#0f172a;margin:0 0 14px;">Why Homeowners Choose {firstName}</h2>
+      <div style="display:flex;flex-direction:column;gap:10px;">
+        {whyBullets.map((b: string) => (
+          <div style="display:flex;align-items:center;gap:10px;background:#fff;border:1px solid #e2e8f0;border-radius:12px;padding:12px 14px;">
+            <span style="width:22px;height:22px;border-radius:50%;background:#dcfce7;display:flex;align-items:center;justify-content:center;font-size:12px;flex-shrink:0;">✅</span>
+            <span style="font-size:13px;color:#374151;font-weight:500;">{b}</span>
+          </div>
+        ))}
+      </div>
+    </section>
+  )}
+
+  <!-- ══ EXPERIENCE STATS (tilers) ══ -->
+  {isTiler && (item.total_jobs > 0 || item.daily_rate_min) && (
+    <section style="background:#fff;padding:20px 16px 24px;border-bottom:1px solid #f1f5f9;">
+      <h2 style="font-size:15px;font-weight:700;color:#0f172a;margin:0 0 12px;">අත්දැකීම</h2>
+      <div style="display:flex;gap:10px;flex-wrap:wrap;">
+        {item.total_jobs > 0 && (
+          <div style="flex:1;min-width:80px;padding:14px;background:#f8fafc;border:1px solid #e2e8f0;border-radius:14px;text-align:center;">
+            <div style="font-size:22px;font-weight:800;color:#1A2B4A;font-family:'Playfair Display',serif;">{item.total_jobs}</div>
+            <div style="font-size:10px;color:#64748b;margin-top:3px;">සේවා ගණන</div>
+          </div>
+        )}
+        {item.daily_rate_min && (
+          <div style="flex:1;min-width:80px;padding:14px;background:#f8fafc;border:1px solid #e2e8f0;border-radius:14px;text-align:center;">
+            <div style="font-size:14px;font-weight:800;color:#1A2B4A;font-family:'Playfair Display',serif;">Rs.{item.daily_rate_min}–{item.daily_rate_max}/sqft</div>
+            <div style="font-size:10px;color:#64748b;margin-top:3px;">ගාස්තු (sq.ft ට)</div>
+          </div>
+        )}
+      </div>
+    </section>
+  )}
+
+  <!-- ══ REVIEWS ══ -->
+  <section style="background:#fff;padding:20px 0 8px;">
+    {isTiler
+      ? <ReviewsSection client:load tilerId={tiler.id} />
+      : <ReviewsSection client:load providerId={provider.id} />
+    }
   </section>
 
-  <style>
-    @media (max-width: 600px) {
-      section > div { grid-template-columns: 1fr !important; }
-    }
-  </style>
+  <!-- ══ BOTTOM CTA ROW ══ -->
+  {phone && (
+    <section style="background:#f8fafc;border-top:1px solid #e2e8f0;padding:16px;display:flex;gap:8px;flex-wrap:wrap;">
+      <a href={waLink(phone, name)} target="_blank" rel="noopener noreferrer"
+        style="flex:1;min-width:120px;display:flex;align-items:center;justify-content:center;gap:6px;background:#25D366;color:#fff;border-radius:12px;padding:12px 10px;font-size:12px;font-weight:700;text-decoration:none;">
+        💬 WhatsApp
+      </a>
+      <a href={waLink(phone, name, 'visit')} target="_blank" rel="noopener noreferrer"
+        style="flex:1;min-width:120px;display:flex;align-items:center;justify-content:center;gap:6px;background:#E05A2B;color:#fff;border-radius:12px;padding:12px 10px;font-size:12px;font-weight:700;text-decoration:none;">
+        📅 Book a Site Visit
+      </a>
+      {gallery.length > 0 && (
+        <a href="#gallery-section"
+          style="flex:1;min-width:100px;display:flex;align-items:center;justify-content:center;gap:6px;background:#0f172a;color:#fff;border-radius:12px;padding:12px 10px;font-size:12px;font-weight:700;text-decoration:none;">
+          📷 View Portfolio
+        </a>
+      )}
+    </section>
+  )}
+
+  <!-- ══ ADMIN / UTILITY ══ -->
+  <div style="padding:12px 16px 32px;display:flex;gap:8px;flex-wrap:wrap;justify-content:center;">
+    <button id="share-profile-btn"
+      style="display:flex;align-items:center;gap:5px;background:#f1f5f9;color:#374151;border:1px solid #e2e8f0;border-radius:10px;padding:9px 14px;font-size:11px;font-weight:700;cursor:pointer;">
+      🔗 Share Profile
+    </button>
+    <button id="hero-review-btn"
+      style="display:flex;align-items:center;gap:5px;background:#f1f5f9;color:#374151;border:1px solid #e2e8f0;border-radius:10px;padding:9px 14px;font-size:11px;font-weight:700;cursor:pointer;">
+      ⭐ Rate & Review
+    </button>
+    <EditProfileButton
+      client:load
+      ownerId={isTiler ? tiler.user_id : provider.user_id}
+      profileType={isTiler ? 'tiler' : 'provider'}
+      profileSlug={item.slug}
+    />
+    <ClaimProfile
+      client:load
+      profileId={isTiler ? tiler.id : provider.id}
+      profileType={isTiler ? 'tiler' : 'provider'}
+      profileName={name}
+      isClaimed={!!(isTiler ? tiler.user_id : provider.user_id)}
+    />
+  </div>
 
   <script define:vars={{ profileName: name, profileUrl: Astro.url.href }}>
     function openReview() {
       window.dispatchEvent(new CustomEvent('tilershub:openreview'))
     }
     document.getElementById('hero-review-btn')?.addEventListener('click', openReview)
-    document.getElementById('sidebar-review-btn')?.addEventListener('click', openReview)
 
-    const btn = document.getElementById('share-profile-btn')
-    if (btn) {
-      btn.addEventListener('click', async () => {
+    const shareBtn = document.getElementById('share-profile-btn')
+    if (shareBtn) {
+      shareBtn.addEventListener('click', async () => {
         const title = `${profileName} on TilersHub`
-        const url = profileUrl
         if (navigator.share) {
-          try { await navigator.share({ title, url }) } catch (_) {}
+          try { await navigator.share({ title, url: profileUrl }) } catch (_) {}
         } else {
-          await navigator.clipboard.writeText(url)
-          btn.textContent = '✓ සබැඳිය පිටපත් විය!'
-          setTimeout(() => { btn.textContent = '🔗 පැතිකඩ බෙදාගන්න' }, 2000)
+          await navigator.clipboard.writeText(profileUrl)
+          shareBtn.textContent = '✓ Copied!'
+          setTimeout(() => { shareBtn.textContent = '🔗 Share Profile' }, 2000)
         }
       })
     }
+
+    const viewPhotosBtn = document.getElementById('view-photos-btn')
+    const allPhotosBtn = document.getElementById('all-photos-btn')
+    const gallerySection = document.getElementById('gallery-section')
+    function scrollToGallery() {
+      gallerySection?.scrollIntoView({ behavior: 'smooth', block: 'start' })
+    }
+    viewPhotosBtn?.addEventListener('click', scrollToGallery)
+    allPhotosBtn?.addEventListener('click', scrollToGallery)
   </script>
 
 </Layout>
