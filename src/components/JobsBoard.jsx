@@ -15,11 +15,11 @@ const TYPE_COLORS = {
 
 function timeAgo(ts) {
   const diff = Math.floor((Date.now() - new Date(ts)) / 1000)
-  if (diff < 60) return 'just now'
-  if (diff < 3600) return `${Math.floor(diff / 60)}m ago`
-  if (diff < 86400) return `${Math.floor(diff / 3600)}h ago`
-  if (diff < 604800) return `${Math.floor(diff / 86400)}d ago`
-  return new Date(ts).toLocaleDateString('en-GB', { day: 'numeric', month: 'short' })
+  if (diff < 60) return 'දැන්ම'
+  if (diff < 3600) return `${Math.floor(diff / 60)} මිනි`
+  if (diff < 86400) return `${Math.floor(diff / 3600)} පැය`
+  if (diff < 604800) return `${Math.floor(diff / 86400)} දින`
+  return new Date(ts).toLocaleDateString('si-LK', { day: 'numeric', month: 'short' })
 }
 
 function selectStyle() {
@@ -54,12 +54,12 @@ function JobCard({ project, bidCount, blurred }) {
           <span style={{ fontSize: 11, padding: '3px 10px', borderRadius: 20, background: '#f0fdf4', color: '#15803d', fontWeight: 600, border: '1px solid #bbf7d0' }}>💰 {project.budget_range}</span>
         )}
         {bidCount > 0 && (
-          <span style={{ fontSize: 11, padding: '3px 10px', borderRadius: 20, background: '#eff6ff', color: '#1d4ed8', fontWeight: 600, border: '1px solid #bfdbfe' }}>💬 {bidCount} bid{bidCount !== 1 ? 's' : ''}</span>
+          <span style={{ fontSize: 11, padding: '3px 10px', borderRadius: 20, background: '#eff6ff', color: '#1d4ed8', fontWeight: 600, border: '1px solid #bfdbfe' }}>💬 {bidCount} ලංසු</span>
         )}
       </div>
       <div style={{ borderTop: '1px solid #f1f5f9', paddingTop: 12, marginTop: 2 }}>
         <a href={`/job?id=${project.id}`} style={{ display: 'inline-flex', alignItems: 'center', gap: 7, background: '#E05A2B', color: '#fff', borderRadius: 10, padding: '9px 18px', fontSize: 13, fontWeight: 700, textDecoration: 'none' }}>
-          View &amp; Bid →
+          බලන්න සහ ලංසු →
         </a>
       </div>
     </div>
@@ -75,7 +75,7 @@ function ProviderGate({ previewProjects, bidCounts }) {
 
   async function send(e) {
     e.preventDefault()
-    if (!email.trim() || !email.includes('@')) { setErr('Enter a valid email address'); return }
+    if (!email.trim() || !email.includes('@')) { setErr('වලංගු විද්‍යුත් ලිපිනයක් ඇතුළු කරන්න'); return }
     setLoading(true); setErr('')
     const { error } = await supabase.auth.signInWithOtp({ email: email.trim(), options: { emailRedirectTo: window.location.href } })
     setLoading(false)
@@ -100,54 +100,54 @@ function ProviderGate({ previewProjects, bidCounts }) {
         <div style={{ background: 'linear-gradient(135deg, #1B3A6B, #0F2444)', padding: '24px 28px' }}>
           <div style={{ fontSize: 28, marginBottom: 10 }}>🔒</div>
           <div style={{ fontFamily: "'Playfair Display', serif", fontSize: 18, fontWeight: 700, color: '#fff', marginBottom: 6 }}>
-            Sign in to View &amp; Bid on Projects
+            ව්‍යාපෘති බැලීමට සහ ලංසු දැමීමට ලොගිනය
           </div>
           <p style={{ fontSize: 13, color: 'rgba(255,255,255,0.65)', lineHeight: 1.7, margin: 0 }}>
-            Registered providers can browse all open projects and submit bids directly to homeowners.
+            ලියාපදිංචි සේවා සපයන්නන්ට සියලු විවෘත ව්‍යාපෘති බලා, ගෘහ හිමියන්ට ලංසු ඉදිරිපත් කළ හැකිය.
           </p>
         </div>
         <div style={{ padding: '24px 28px' }}>
           {!showAuth ? (
             <div>
               <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: 8, marginBottom: 20 }}>
-                {['📊 See all open projects', '💬 Submit bids with quotes', '✅ Win jobs directly', '🔔 Get new project alerts'].map(b => (
+                {['📊 සියලු විවෘත ව්‍යාපෘති බලන්න', '💬 මිල ගණන් සහිත ලංසු ඉදිරිපත් කරන්න', '✅ කෙළින්ම රැකියා ජය ගන්න', '🔔 නව ව්‍යාපෘති දැනුම් ලබන්න'].map(b => (
                   <div key={b} style={{ fontSize: 12, color: '#475569' }}>{b}</div>
                 ))}
               </div>
               <div style={{ display: 'flex', gap: 10, flexWrap: 'wrap' }}>
                 <button onClick={() => setShowAuth(true)} style={{ flex: 1, padding: '12px', background: '#E05A2B', color: '#fff', border: 'none', borderRadius: 12, fontSize: 14, fontWeight: 700, cursor: 'pointer', minWidth: 140 }}>
-                  Sign In →
+                  ලොගිනය →
                 </button>
                 <a href="/join-tilershub" style={{ flex: 1, display: 'flex', alignItems: 'center', justifyContent: 'center', padding: '12px', background: '#f1f5f9', color: '#1B3A6B', border: '1.5px solid #d5e2f5', borderRadius: 12, fontSize: 13, fontWeight: 700, textDecoration: 'none', minWidth: 140 }}>
-                  Join as Provider
+                  සේවා සපයන්නෙකු ලෙස එකතු වන්න
                 </a>
               </div>
             </div>
           ) : sent ? (
             <div style={{ textAlign: 'center', padding: '8px 0' }}>
               <div style={{ fontSize: 36, marginBottom: 10 }}>📬</div>
-              <div style={{ fontSize: 15, fontWeight: 700, color: '#0f172a', marginBottom: 6 }}>Check your inbox</div>
+              <div style={{ fontSize: 15, fontWeight: 700, color: '#0f172a', marginBottom: 6 }}>ඔබේ ඊමේල් බලන්න</div>
               <p style={{ fontSize: 13, color: '#64748b', lineHeight: 1.7 }}>
-                We sent a sign-in link to <strong>{email}</strong>. Click it to access all projects.
+                <strong>{email}</strong> වෙත ලොගිනය සබැඳියක් යවා ඇත. සියලු ව්‍යාපෘති ප්‍රවේශ වීමට ක්ලික් කරන්න.
               </p>
             </div>
           ) : (
             <form onSubmit={send}>
-              <div style={{ fontSize: 13, fontWeight: 600, color: '#334155', marginBottom: 10 }}>Enter your email to sign in</div>
+              <div style={{ fontSize: 13, fontWeight: 600, color: '#334155', marginBottom: 10 }}>ලොගිනය සඳහා ඊමේල් ඇතුළු කරන්න</div>
               <input type="email" value={email} onChange={e => { setEmail(e.target.value); setErr('') }} placeholder="your@email.com" autoFocus
                 style={{ width: '100%', padding: '11px 14px', border: `1.5px solid ${err ? '#fca5a5' : '#e2e8f0'}`, borderRadius: 10, fontSize: 13, outline: 'none', fontFamily: 'inherit', background: err ? '#fef2f2' : '#fff', boxSizing: 'border-box', marginBottom: 10 }} />
               {err && <p style={{ fontSize: 11, color: '#dc2626', marginBottom: 8 }}>⚠ {err}</p>}
               <div style={{ display: 'flex', gap: 8 }}>
                 <button type="submit" disabled={loading}
                   style={{ flex: 1, padding: '11px', background: loading ? '#94a3b8' : '#1B3A6B', color: '#fff', border: 'none', borderRadius: 10, fontSize: 13, fontWeight: 700, cursor: loading ? 'not-allowed' : 'pointer' }}>
-                  {loading ? '⏳ Sending…' : '✉️ Send Magic Link'}
+                  {loading ? '⏳ යවමින්…' : '✉️ Magic Link යවන්න'}
                 </button>
                 <button type="button" onClick={() => setShowAuth(false)}
                   style={{ padding: '11px 14px', background: '#f1f5f9', color: '#64748b', border: 'none', borderRadius: 10, fontSize: 12, cursor: 'pointer' }}>
-                  Back
+                  ආපසු
                 </button>
               </div>
-              <p style={{ fontSize: 11, color: '#94a3b8', textAlign: 'center', marginTop: 8 }}>No password needed — secure one-click sign-in.</p>
+              <p style={{ fontSize: 11, color: '#94a3b8', textAlign: 'center', marginTop: 8 }}>මුරපදයක් අවශ්‍ය නැත — ආරක්ෂිත එකවර ලොගිනය.</p>
             </form>
           )}
         </div>
@@ -202,20 +202,20 @@ export default function JobsBoard() {
       <div style={{ background: '#fff', borderBottom: '1px solid #e2e8f0', padding: '14px 20px', position: 'sticky', top: 0, zIndex: 10 }}>
         <div style={{ maxWidth: 1100, margin: '0 auto', display: 'flex', alignItems: 'center', gap: 10, flexWrap: 'wrap' }}>
           <select value={filters.type} onChange={e => setFilters(f => ({ ...f, type: e.target.value }))} style={selectStyle()}>
-            <option value="">All Project Types</option>
+            <option value="">සියලු ව්‍යාපෘති වර්ග</option>
             {PROJECT_TYPES.map(t => <option key={t} value={t}>{TYPE_ICONS[t]} {t}</option>)}
           </select>
           <select value={filters.district} onChange={e => setFilters(f => ({ ...f, district: e.target.value }))} style={selectStyle()}>
-            <option value="">All Districts</option>
+            <option value="">සියලු දිස්ත්‍රික්ක</option>
             {DISTRICTS_EN.map(d => <option key={d} value={d}>{d}</option>)}
           </select>
           {(filters.type || filters.district) && (
             <button onClick={() => setFilters({ type: '', district: '' })} style={{ fontSize: 12, color: '#64748b', background: '#f1f5f9', border: 'none', borderRadius: 8, padding: '8px 12px', cursor: 'pointer', fontWeight: 600 }}>
-              ✕ Clear
+              ✕ ඉවත් කරන්න
             </button>
           )}
           <span style={{ fontSize: 12, color: '#94a3b8', marginLeft: 'auto' }}>
-            {loading ? 'Loading…' : `${filtered.length} open project${filtered.length !== 1 ? 's' : ''}`}
+            {loading ? 'පූරණය…' : `විවෘත ව්‍යාපෘති ${filtered.length}ක්`}
           </span>
         </div>
       </div>
@@ -223,14 +223,14 @@ export default function JobsBoard() {
       {/* Content */}
       <div style={{ maxWidth: 1100, margin: '0 auto', padding: '32px 20px 64px' }}>
         {loading ? (
-          <div style={{ textAlign: 'center', padding: '64px 20px', color: '#94a3b8', fontSize: 14 }}>Loading projects…</div>
+          <div style={{ textAlign: 'center', padding: '64px 20px', color: '#94a3b8', fontSize: 14 }}>ව්‍යාපෘති පූරණය…</div>
         ) : filtered.length === 0 ? (
           <div style={{ textAlign: 'center', padding: '64px 20px', background: '#fff', borderRadius: 16, border: '1px solid #e2e8f0' }}>
             <div style={{ fontSize: 48, marginBottom: 16 }}>🏗️</div>
-            <h3 style={{ fontSize: 18, fontWeight: 700, color: '#0f172a', marginBottom: 8 }}>No open projects right now</h3>
-            <p style={{ fontSize: 14, color: '#64748b', marginBottom: 24 }}>Be the first to post a project and get bids from verified tilers.</p>
+            <h3 style={{ fontSize: 18, fontWeight: 700, color: '#0f172a', marginBottom: 8 }}>දැනට විවෘත ව්‍යාපෘති නොමැත</h3>
+            <p style={{ fontSize: 14, color: '#64748b', marginBottom: 24 }}>ප්‍රථමයෙන් ව්‍යාපෘතිය ලිය කරන්න — සත්‍යාපිත ටයිලර්ලා ලංසු ඉදිරිපත් කරනු ඇත.</p>
             <a href="/post-project" style={{ display: 'inline-flex', alignItems: 'center', gap: 8, background: '#E05A2B', color: '#fff', borderRadius: 12, padding: '11px 24px', fontSize: 14, fontWeight: 700, textDecoration: 'none' }}>
-              📋 Post a Project
+              📋 ව්‍යාපෘතිය ලිය කරන්න
             </a>
           </div>
         ) : (
@@ -244,11 +244,11 @@ export default function JobsBoard() {
         {!loading && user && filtered.length > 0 && (
           <div style={{ marginTop: 48, padding: '28px 32px', background: 'linear-gradient(135deg, #1B3A6B, #0F2444)', borderRadius: 16, display: 'flex', alignItems: 'center', justifyContent: 'space-between', flexWrap: 'wrap', gap: 16 }}>
             <div>
-              <div style={{ fontSize: 16, fontWeight: 700, color: '#fff', marginBottom: 4 }}>Have a tiling project?</div>
-              <div style={{ fontSize: 13, color: 'rgba(255,255,255,0.6)' }}>Post it free — providers will bid and you choose who to contact.</div>
+              <div style={{ fontSize: 16, fontWeight: 700, color: '#fff', marginBottom: 4 }}>ටයිලිං ව්‍යාපෘතියක් තිබේද?</div>
+              <div style={{ fontSize: 13, color: 'rgba(255,255,255,0.6)' }}>නොමිලේ ලිය කරන්න — සේවා සපයන්නන් ලංසු ඉදිරිපත් කරති, ඔබ තෝරා ගන්න.</div>
             </div>
             <a href="/post-project" style={{ display: 'inline-flex', alignItems: 'center', gap: 8, background: '#E05A2B', color: '#fff', borderRadius: 12, padding: '11px 22px', fontSize: 13, fontWeight: 700, textDecoration: 'none', whiteSpace: 'nowrap' }}>
-              📋 Post My Project
+              📋 මගේ ව්‍යාපෘතිය ලිය කරන්න
             </a>
           </div>
         )}

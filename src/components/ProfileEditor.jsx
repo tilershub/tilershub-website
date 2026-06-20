@@ -64,9 +64,9 @@ function ServiceTextInput({ value, onChange }) {
     <div style={{ display: 'flex', gap: 8 }}>
       <input value={text} onChange={e => setText(e.target.value)}
         onKeyDown={e => { if (e.key === 'Enter') { e.preventDefault(); add() } }}
-        placeholder="Add custom service…"
+        placeholder="සේවාවක් එකතු කරන්න…"
         style={{ flex: 1, padding: '8px 12px', border: '1.5px solid #e2e8f0', borderRadius: 10, fontSize: 12, outline: 'none', fontFamily: 'inherit' }} />
-      <button type="button" onClick={add} style={{ padding: '8px 14px', background: '#eef3fb', color: '#1B3A6B', border: '1.5px solid #d5e2f5', borderRadius: 10, fontSize: 12, fontWeight: 700, cursor: 'pointer' }}>+ Add</button>
+      <button type="button" onClick={add} style={{ padding: '8px 14px', background: '#eef3fb', color: '#1B3A6B', border: '1.5px solid #d5e2f5', borderRadius: 10, fontSize: 12, fontWeight: 700, cursor: 'pointer' }}>+ එකතු</button>
     </div>
   )
 }
@@ -95,13 +95,13 @@ function ImageUploadBox({ label, hint, value, onChange, aspect }) {
         {preview ? (
           <>
             <img src={preview} alt="" style={{ position: 'absolute', inset: 0, width: '100%', height: '100%', objectFit: 'cover', opacity: 0.85 }} />
-            <div style={{ position: 'relative', zIndex: 1, background: 'rgba(0,0,0,0.55)', color: '#fff', borderRadius: 8, padding: '4px 12px', fontSize: 11, fontWeight: 600 }}>Click to change</div>
+            <div style={{ position: 'relative', zIndex: 1, background: 'rgba(0,0,0,0.55)', color: '#fff', borderRadius: 8, padding: '4px 12px', fontSize: 11, fontWeight: 600 }}>වෙනස් කිරීමට ක්ලික් කරන්න</div>
           </>
         ) : (
           <div style={{ textAlign: 'center', color: '#94a3b8', pointerEvents: 'none' }}>
             <div style={{ fontSize: 22, marginBottom: 4 }}>{aspect === 'cover' ? '🖼️' : '👤'}</div>
-            <div style={{ fontSize: 12, fontWeight: 600 }}>Click or drag to upload</div>
-            <div style={{ fontSize: 10, marginTop: 2 }}>JPG, PNG, WebP · Max 5 MB</div>
+            <div style={{ fontSize: 12, fontWeight: 600 }}>ක්ලික් කරන්න හෝ ඇද දමන්න</div>
+            <div style={{ fontSize: 10, marginTop: 2 }}>JPG, PNG, WebP · උපරිම 5 MB</div>
           </div>
         )}
       </div>
@@ -123,7 +123,7 @@ function GalleryEditor({ existing, newFiles, onNewFiles, onRemoveExisting }) {
 
   return (
     <div style={{ marginBottom: 18 }}>
-      <div style={lbl('Portfolio / Gallery')}> Portfolio / Gallery <span style={{ fontSize: 10, color: '#94a3b8', textTransform: 'none', fontWeight: 400 }}>(up to {MAX_GALLERY} photos)</span></div>
+      <div style={lbl('ව්‍යාපෘති ගැලරිය')}> ව්‍යාපෘති ගැලරිය <span style={{ fontSize: 10, color: '#94a3b8', textTransform: 'none', fontWeight: 400 }}>(ඡායාරූප {MAX_GALLERY}ක් දක්වා)</span></div>
       <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fill,minmax(90px,1fr))', gap: 8, marginBottom: 8 }}>
         {existing.map((url, i) => (
           <div key={url} style={{ position: 'relative', aspectRatio: '1', borderRadius: 10, overflow: 'hidden', border: '1px solid #e2e8f0' }}>
@@ -140,12 +140,12 @@ function GalleryEditor({ existing, newFiles, onNewFiles, onRemoveExisting }) {
         {(existing.length + newFiles.length) < MAX_GALLERY && (
           <div onClick={() => ref.current?.click()} style={{ aspectRatio: '1', borderRadius: 10, border: '2px dashed #cbd5e1', display: 'flex', flexDirection: 'column', alignItems: 'center', justifyContent: 'center', cursor: 'pointer', background: '#f8fafc', gap: 4 }}>
             <span style={{ fontSize: 20, color: '#94a3b8' }}>+</span>
-            <span style={{ fontSize: 10, color: '#94a3b8' }}>Add</span>
+            <span style={{ fontSize: 10, color: '#94a3b8' }}>එකතු</span>
           </div>
         )}
       </div>
       <input ref={ref} type="file" accept="image/*" multiple onChange={e => addFiles(e.target.files)} style={{ display: 'none' }} />
-      <p style={{ fontSize: 11, color: '#94a3b8', margin: 0 }}>JPG/PNG/WebP. Showcase your best work.</p>
+      <p style={{ fontSize: 11, color: '#94a3b8', margin: 0 }}>JPG/PNG/WebP. ඔබේ හොඳම කාර්ය ඉදිරිපත් කරන්න.</p>
     </div>
   )
 }
@@ -245,7 +245,7 @@ export default function ProfileEditor({ profile, profileType, userId }) {
       setEditing(false)
       setNewGalleryFiles([])
     } catch (e) {
-      setSaveErr(e?.message || 'Something went wrong. Please try again.')
+      setSaveErr(e?.message || 'ගැටළුවක් ඇති විය. නැවත උත්සාහ කරන්න.')
     } finally {
       setSaving(false)
     }
@@ -257,9 +257,9 @@ export default function ProfileEditor({ profile, profileType, userId }) {
       <div style={{ background: '#fff', border: '1px solid #e2e8f0', borderRadius: 16, padding: 24 }}>
         {saved && (
           <div style={{ padding: '10px 14px', background: '#f0fdf4', border: '1px solid #bbf7d0', borderRadius: 10, marginBottom: 20, display: 'flex', alignItems: 'center', justifyContent: 'space-between', gap: 10 }}>
-            <span style={{ fontSize: 13, color: '#15803d', fontWeight: 600 }}>✓ Profile updated!</span>
+            <span style={{ fontSize: 13, color: '#15803d', fontWeight: 600 }}>✓ පැතිකඩ යාවත්කාලීන විය!</span>
             {profilePath && (
-              <a href={profilePath} target="_blank" rel="noopener" style={{ fontSize: 12, color: '#1B3A6B', fontWeight: 700, textDecoration: 'none' }}>View Profile →</a>
+              <a href={profilePath} target="_blank" rel="noopener" style={{ fontSize: 12, color: '#1B3A6B', fontWeight: 700, textDecoration: 'none' }}>පැතිකඩ →</a>
             )}
           </div>
         )}
@@ -273,11 +273,11 @@ export default function ProfileEditor({ profile, profileType, userId }) {
           <div>
             <div style={{ fontSize: 16, fontWeight: 700, color: '#0f172a' }}>{displayName}</div>
             <div style={{ fontSize: 12, color: '#64748b', marginTop: 2 }}>
-              {isTiler ? 'Tiler' : 'Provider'} · {profile.city || '—'}
+              {isTiler ? 'ටයිලර්' : 'සේවා සපයන්නා'} · {profile.city || '—'}
             </div>
             {profilePath && (
               <a href={profilePath} target="_blank" rel="noopener" style={{ fontSize: 11, color: '#1B3A6B', fontWeight: 600, textDecoration: 'none' }}>
-                View public profile →
+                පොදු පැතිකඩ →
               </a>
             )}
           </div>
@@ -286,12 +286,12 @@ export default function ProfileEditor({ profile, profileType, userId }) {
         <div style={{ display: 'flex', gap: 10, flexWrap: 'wrap' }}>
           <button onClick={() => { setEditing(true); setSaved(false) }}
             style={{ padding: '10px 22px', background: '#1B3A6B', color: '#fff', border: 'none', borderRadius: 10, fontSize: 13, fontWeight: 700, cursor: 'pointer' }}>
-            ✏️ Edit Profile
+            ✏️ පැතිකඩ සංස්කරණය
           </button>
           {profilePath && (
             <a href={profilePath} target="_blank" rel="noopener"
               style={{ padding: '10px 18px', background: '#f1f5f9', color: '#334155', border: '1px solid #e2e8f0', borderRadius: 10, fontSize: 13, fontWeight: 600, textDecoration: 'none', display: 'inline-flex', alignItems: 'center' }}>
-              🔗 View Profile
+              🔗 පැතිකඩ
             </a>
           )}
         </div>
@@ -303,82 +303,82 @@ export default function ProfileEditor({ profile, profileType, userId }) {
   return (
     <div style={{ background: '#fff', border: '1px solid #e2e8f0', borderRadius: 16, padding: 24 }}>
       <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', marginBottom: 24 }}>
-        <h3 style={{ fontFamily: "'Playfair Display',serif", fontSize: 18, fontWeight: 700, color: '#0f172a', margin: 0 }}>Edit Profile</h3>
+        <h3 style={{ fontFamily: "'Playfair Display',serif", fontSize: 18, fontWeight: 700, color: '#0f172a', margin: 0 }}>පැතිකඩ සංස්කරණය</h3>
         <button onClick={() => setEditing(false)} style={{ background: 'none', border: 'none', color: '#94a3b8', fontSize: 20, cursor: 'pointer', padding: 4 }}>✕</button>
       </div>
 
       {/* Images */}
       {!isTiler ? (
         <div style={{ display: 'grid', gridTemplateColumns: '1fr 2fr', gap: 14 }}>
-          <ImageUploadBox label="Profile Photo" hint="Your photo or logo" aspect="profile"
+          <ImageUploadBox label="පැතිකඩ ඡායාරූපය" hint="ඔබේ ඡායාරූපය හෝ ලාංඡනය" aspect="profile"
             value={isTiler ? profile.avatar_url : profile.profile_image}
             onChange={setProfileImageFile} />
-          <ImageUploadBox label="Cover Image" hint="Banner shown at the top of your profile" aspect="cover"
+          <ImageUploadBox label="කවර රූපය" hint="ඔබේ පැතිකඩ ඉහලින් පෙන්වන රූපය" aspect="cover"
             value={profile.cover_image} onChange={setCoverImageFile} />
         </div>
       ) : (
         <div style={{ display: 'grid', gridTemplateColumns: '1fr 2fr', gap: 14 }}>
-          <ImageUploadBox label="Profile Photo" hint="Your photo shown on cards" aspect="profile"
+          <ImageUploadBox label="පැතිකඩ ඡායාරූපය" hint="කාඩ් මත පෙන්වන ඔබේ ඡායාරූපය" aspect="profile"
             value={profile.avatar_url} onChange={setProfileImageFile} />
-          <ImageUploadBox label="Cover Image" hint="Banner shown at the top of your card and profile page" aspect="cover"
+          <ImageUploadBox label="කවර රූපය" hint="ඔබේ කාඩ් සහ පැතිකඩ ඉහලින් පෙන්වන රූපය" aspect="cover"
             value={profile.cover_image} onChange={setCoverImageFile} />
         </div>
       )}
 
       {/* Name */}
-      <Field label={isTiler ? 'Full Name' : 'Name / Company'}>
-        <input value={name} onChange={e => setName(e.target.value)} style={inp(false)} placeholder={isTiler ? 'Your full name' : 'Your name or company name'} />
+      <Field label={isTiler ? 'සම්පූර්ණ නම' : 'නම / ව්‍යාපාරය'}>
+        <input value={name} onChange={e => setName(e.target.value)} style={inp(false)} placeholder={isTiler ? 'ඔබේ සම්පූර්ණ නම' : 'ඔබේ නම හෝ ව්‍යාපාර නාමය'} />
       </Field>
 
       {/* City + District */}
       <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: 14 }}>
-        <Field label="City / Town">
-          <input value={city} onChange={e => setCity(e.target.value)} style={inp(false)} placeholder="e.g. Nugegoda" />
+        <Field label="නගරය / ගම">
+          <input value={city} onChange={e => setCity(e.target.value)} style={inp(false)} placeholder="නිදා: නුගේගොඩ" />
         </Field>
-        <Field label="District">
+        <Field label="දිස්ත්‍රික්කය">
           <select value={district} onChange={e => setDistrict(e.target.value)} style={{ ...inp(false), WebkitAppearance: 'none', cursor: 'pointer' }}>
-            <option value="">Select district…</option>
+            <option value="">දිස්ත්‍රික්කය තෝරන්න…</option>
             {DISTRICTS_EN.map(d => <option key={d} value={d}>{d}</option>)}
           </select>
         </Field>
       </div>
 
       {/* WhatsApp */}
-      <Field label="WhatsApp Number" hint="Customers contact you here">
+      <Field label="WhatsApp අංකය" hint="ගනුදෙනුකරුවන් ඔබ හා සම්බන්ධ වේ">
         <input value={whatsapp} onChange={e => setWhatsapp(e.target.value)} style={inp(false)} placeholder="+94771234567" type="tel" />
       </Field>
 
       {/* Bio / Description */}
-      <Field label={isTiler ? 'Bio' : 'Description'} hint="Describe your experience and what makes you stand out">
+      <Field label={isTiler ? 'ජීව කතාව' : 'විස්තරය'} hint="ඔබේ අත්දැකීම් සහ විශේෂත්වය විස්තර කරන්න">
         <textarea value={bio} onChange={e => setBio(e.target.value)} rows={3}
-          placeholder={isTiler ? 'Years of experience, specialisations, area coverage…' : 'Your services, team, and what makes you stand out…'}
+          placeholder={isTiler ? 'ව්‍යාපෘති, විශේෂීකරණ, ප්‍රදේශ...' : 'සේවාවන්, කණ්ඩායම සහ ඔබේ විශේෂත්වය...'}
           style={{ ...inp(false), resize: 'vertical' }} />
       </Field>
 
       {/* Tiler-specific */}
       {isTiler && (
         <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr 1fr', gap: 14 }}>
-          <Field label="Experience (years)">
-            <input value={expYears} onChange={e => setExpYears(e.target.value)} style={inp(false)} placeholder="e.g. 8" type="number" min="0" />
+          <Field label="අත්දැකීම් (වසර)">
+            <input value={expYears} onChange={e => setExpYears(e.target.value)} style={inp(false)} placeholder="නිදා: 8" type="number" min="0" />
           </Field>
-          <Field label="Rate Min (Rs/sqft)">
-            <input value={rateMin} onChange={e => setRateMin(e.target.value)} style={inp(false)} placeholder="e.g. 180" type="number" min="0" />
+          <Field label="අඩු ගාස්තු (රු/sqft)">
+            <input value={rateMin} onChange={e => setRateMin(e.target.value)} style={inp(false)} placeholder="නිදා: 180" type="number" min="0" />
           </Field>
-          <Field label="Rate Max (Rs/sqft)">
-            <input value={rateMax} onChange={e => setRateMax(e.target.value)} style={inp(false)} placeholder="e.g. 300" type="number" min="0" />
+          <Field label="වැඩි ගාස්තු (රු/sqft)">
+            <input value={rateMax} onChange={e => setRateMax(e.target.value)} style={inp(false)} placeholder="නිදා: 300" type="number" min="0" />
           </Field>
         </div>
       )}
 
       {/* Website (providers only) */}
       {!isTiler && (
-        <Field label="Website URL" hint="Optional">
+        <Field label="වෙබ් URL" hint="අවශ්‍ය නම">
           <input value={website} onChange={e => setWebsite(e.target.value)} style={inp(false)} placeholder="https://yoursite.lk" type="url" />
         </Field>
       )}
 
       {/* Services */}
-      <Field label="Services You Offer" hint="Select all that apply — or type your own below">
+      <Field label="ඔබ සපයන සේවාවන්" hint="අදාළ ඒවා සියල්ල තෝරන්න — හෝ ඔබේම සේවාව ලියන්න">
         <div style={{ display: 'flex', flexWrap: 'wrap', gap: 7, marginBottom: 10 }}>
           {ALL_SERVICES.map(s => (
             <Chip key={s} label={s} checked={services.includes(s)} onClick={() => toggleArr(services, setServices, s)} />
@@ -388,7 +388,7 @@ export default function ProfileEditor({ profile, profileType, userId }) {
       </Field>
 
       {/* Service Areas */}
-      <Field label="Service Areas" hint="Districts you cover">
+      <Field label="සේවා ප්‍රදේශ" hint="ඔබ ආවරණය කරන දිස්ත්‍රික්ක">
         <div style={{ display: 'flex', flexWrap: 'wrap', gap: 7 }}>
           {DISTRICTS_EN.map(d => (
             <Chip key={d} label={d} checked={serviceAreas.includes(d)} onClick={() => toggleArr(serviceAreas, setServiceAreas, d)} />
@@ -413,11 +413,11 @@ export default function ProfileEditor({ profile, profileType, userId }) {
       <div style={{ display: 'flex', gap: 10 }}>
         <button onClick={save} disabled={saving}
           style={{ flex: 1, padding: '13px', background: saving ? '#94a3b8' : '#1B3A6B', color: '#fff', border: 'none', borderRadius: 12, fontSize: 14, fontWeight: 700, cursor: saving ? 'not-allowed' : 'pointer', transition: 'background 0.2s' }}>
-          {saving ? '⏳ Saving…' : '💾 Save Changes'}
+          {saving ? '⏳ සුරකිමින්…' : '💾 වෙනස්කම් සුරකින්න'}
         </button>
         <button onClick={() => setEditing(false)} disabled={saving}
           style={{ padding: '13px 20px', background: '#f1f5f9', color: '#334155', border: '1px solid #e2e8f0', borderRadius: 12, fontSize: 14, fontWeight: 600, cursor: 'pointer' }}>
-          Cancel
+          අවලංගු කරන්න
         </button>
       </div>
     </div>

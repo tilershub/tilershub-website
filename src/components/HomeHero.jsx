@@ -17,11 +17,11 @@ const TYPE_COLORS = {
 
 function timeAgo(ts) {
   const diff = Math.floor((Date.now() - new Date(ts)) / 1000)
-  if (diff < 60)     return 'just now'
-  if (diff < 3600)   return `${Math.floor(diff / 60)}m ago`
-  if (diff < 86400)  return `${Math.floor(diff / 3600)}h ago`
-  if (diff < 604800) return `${Math.floor(diff / 86400)}d ago`
-  return new Date(ts).toLocaleDateString('en-GB', { day:'numeric', month:'short' })
+  if (diff < 60)     return 'දැන්ම'
+  if (diff < 3600)   return `${Math.floor(diff / 60)}මිනි`
+  if (diff < 86400)  return `${Math.floor(diff / 3600)}පැය`
+  if (diff < 604800) return `${Math.floor(diff / 86400)}දින`
+  return new Date(ts).toLocaleDateString('si-LK', { day:'numeric', month:'short' })
 }
 
 export default function HomeHero({ heroImg }) {
@@ -95,30 +95,30 @@ function ProviderHero({ name }) {
 
       <div style={{ position:'relative', maxWidth:860, margin:'0 auto', display:'flex', alignItems:'center', justifyContent:'space-between', gap:16, flexWrap:'wrap' }}>
         <div>
-          <p style={{ fontSize:11, color:'rgba(255,255,255,0.45)', margin:'0 0 4px', letterSpacing:0.5 }}>👋 Welcome back</p>
+          <p style={{ fontSize:11, color:'rgba(255,255,255,0.45)', margin:'0 0 4px', letterSpacing:0.5 }}>👋 නැවත සාදරයෙන් පිළිගනිමු</p>
           <h1 style={{ fontFamily:"'Playfair Display',serif", fontSize:'clamp(20px,4vw,30px)', fontWeight:700, color:'#fff', lineHeight:1.2, margin:'0 0 12px' }}>
-            Hello, <span style={{ color:'#D4AF37' }}>{name || 'there'}.</span>
+            හෙලෝ, <span style={{ color:'#D4AF37' }}>{name || 'ඔබ'}.</span>
           </h1>
 
           {/* KPI chips */}
           <div style={{ display:'flex', gap:8, flexWrap:'wrap' }}>
             <div style={{ background:'rgba(255,255,255,0.08)', border:'1px solid rgba(255,255,255,0.12)', borderRadius:10, padding:'6px 14px', minWidth:80 }}>
               <div style={{ fontSize:18, fontWeight:800, color:'#D4AF37', lineHeight:1.2 }}>{stats.views}</div>
-              <div style={{ fontSize:9, color:'rgba(255,255,255,0.45)', textTransform:'uppercase', letterSpacing:1, marginTop:1 }}>Profile Views</div>
+              <div style={{ fontSize:9, color:'rgba(255,255,255,0.45)', textTransform:'uppercase', letterSpacing:1, marginTop:1 }}>පැතිකඩ නරඹූ</div>
             </div>
             <div style={{ background:'rgba(255,255,255,0.08)', border:'1px solid rgba(255,255,255,0.12)', borderRadius:10, padding:'6px 14px', minWidth:80 }}>
               <div style={{ fontSize:18, fontWeight:800, color:'#D4AF37', lineHeight:1.2 }}>{stats.bids}</div>
-              <div style={{ fontSize:9, color:'rgba(255,255,255,0.45)', textTransform:'uppercase', letterSpacing:1, marginTop:1 }}>Active Bids</div>
+              <div style={{ fontSize:9, color:'rgba(255,255,255,0.45)', textTransform:'uppercase', letterSpacing:1, marginTop:1 }}>ක්‍රි. ලංසු</div>
             </div>
           </div>
         </div>
 
         <div style={{ display:'flex', gap:8, flexWrap:'wrap' }}>
           <a href="/jobs" style={{ display:'inline-flex', alignItems:'center', gap:6, background:'#D4AF37', color:'#0c0804', borderRadius:10, padding:'10px 20px', fontSize:13, fontWeight:800, textDecoration:'none', boxShadow:'0 4px 16px rgba(212,175,55,0.35)' }}>
-            💼 All Open Jobs
+            💼 විවෘත ව්‍යාපෘති
           </a>
           <a href="/dashboard" style={{ display:'inline-flex', alignItems:'center', gap:6, background:'rgba(255,255,255,0.1)', color:'#fff', border:'1.5px solid rgba(255,255,255,0.2)', borderRadius:10, padding:'10px 16px', fontSize:13, fontWeight:600, textDecoration:'none' }}>
-            📊 Dashboard
+            📊 උපකරණ පුවරුව
           </a>
         </div>
       </div>
@@ -128,10 +128,10 @@ function ProviderHero({ name }) {
 
 function ProviderActions() {
   const ACTIONS = [
-    { icon:'✏️', label:'My Profile',  sub:'Edit listing',      href:'/dashboard',  bg:'#eef2fb', ibg:'rgba(26,43,74,0.12)'   },
-    { icon:'📋', label:'My Listing',  sub:'Status & bids',     href:'/dashboard',  bg:'#fffbeb', ibg:'rgba(245,158,11,0.14)' },
-    { icon:'📐', label:'Estimator',   sub:'Cost calculator',   href:'/estimator',  bg:'#fff4f0', ibg:'rgba(224,90,43,0.12)'  },
-    { icon:'💼', label:'All Jobs',    sub:'Full project board', href:'/jobs',       bg:'#f0fdf4', ibg:'rgba(22,163,74,0.14)'  },
+    { icon:'✏️', label:'මගේ පැතිකඩ',  sub:'ලිස්ටිං සංස්කරණය',      href:'/dashboard',  bg:'#eef2fb', ibg:'rgba(26,43,74,0.12)'   },
+    { icon:'📋', label:'මගේ ලිස්ටිං',  sub:'තත්ත්වය සහ ලංසු',     href:'/dashboard',  bg:'#fffbeb', ibg:'rgba(245,158,11,0.14)' },
+    { icon:'📐', label:'ගණනය',   sub:'පිරිවැය ගණනය',   href:'/estimator',  bg:'#fff4f0', ibg:'rgba(224,90,43,0.12)'  },
+    { icon:'💼', label:'සියලු ව්‍යාපෘති',    sub:'සම්පූර්ණ ව්‍යාපෘති', href:'/jobs',       bg:'#f0fdf4', ibg:'rgba(22,163,74,0.14)'  },
   ]
   return <QuickActionsGrid actions={ACTIONS} />
 }
@@ -174,14 +174,14 @@ function ProviderProjectsFeed() {
 
       <div style={{ maxWidth:860, margin:'0 auto', padding:'16px 16px 0', display:'flex', alignItems:'center', justifyContent:'space-between' }}>
         <div style={{ display:'flex', alignItems:'center', gap:8 }}>
-          <span style={{ fontSize:14, fontWeight:700, color:'#0f172a' }}>Open Projects</span>
+          <span style={{ fontSize:14, fontWeight:700, color:'#0f172a' }}>විවෘත ව්‍යාපෘති</span>
           {total > 0 && (
             <span style={{ fontSize:11, fontWeight:700, color:'#D4AF37', background:'rgba(212,175,55,0.12)', border:'1px solid rgba(212,175,55,0.25)', borderRadius:20, padding:'2px 8px' }}>
-              {total} active
+              {total} ක්‍රියාකාරී
             </span>
           )}
         </div>
-        <a href="/jobs" style={{ fontSize:12, fontWeight:600, color:'#1B3A6B', textDecoration:'none' }}>See all →</a>
+        <a href="/jobs" style={{ fontSize:12, fontWeight:600, color:'#1B3A6B', textDecoration:'none' }}>සියල්ල බලන්න →</a>
       </div>
 
       <div style={{ maxWidth:860, margin:'0 auto', padding:'10px 16px 16px', display:'flex', flexDirection:'column', gap:8 }}>
@@ -228,13 +228,13 @@ function ProviderProjectsFeed() {
                         <span style={{ fontSize:10, padding:'2px 8px', borderRadius:20, background:'#f0fdf4', color:'#15803d', fontWeight:600, border:'1px solid #bbf7d0' }}>💰 {p.budget_range}</span>
                       )}
                       {bids > 0 && (
-                        <span style={{ fontSize:10, padding:'2px 8px', borderRadius:20, background:'#eff6ff', color:'#1d4ed8', fontWeight:600, border:'1px solid #bfdbfe' }}>💬 {bids} bid{bids !== 1 ? 's' : ''}</span>
+                        <span style={{ fontSize:10, padding:'2px 8px', borderRadius:20, background:'#eff6ff', color:'#1d4ed8', fontWeight:600, border:'1px solid #bfdbfe' }}>💬 {bids} ලංසු</span>
                       )}
                     </div>
                   </div>
 
                   <div style={{ flexShrink:0, background:'#E05A2B', color:'#fff', borderRadius:10, padding:'8px 14px', fontSize:12, fontWeight:700 }}>
-                    Bid →
+                    ලංසු →
                   </div>
                 </a>
               )
@@ -243,7 +243,7 @@ function ProviderProjectsFeed() {
 
         {!loading && projects.length === 0 && (
           <div style={{ textAlign:'center', padding:'28px 16px', color:'#94a3b8', fontSize:13 }}>
-            No active projects right now — check back soon.
+            දැනට ක්‍රියාකාරී ව්‍යාපෘති නොමැත — ශීඝ්‍රයෙන් නැවත පරීක්ෂා කරන්න.
           </div>
         )}
 
@@ -252,7 +252,7 @@ function ProviderProjectsFeed() {
             onMouseOver={e => { e.currentTarget.style.borderColor='#1B3A6B'; e.currentTarget.style.color='#1B3A6B' }}
             onMouseOut={e  => { e.currentTarget.style.borderColor='#cbd5e1'; e.currentTarget.style.color='#64748b' }}
           >
-            💼 View all {total} open jobs →
+            💼 සියලු {total} ව්‍යාපෘති බලන්න →
           </a>
         )}
       </div>
@@ -273,25 +273,25 @@ function GuestHero({ heroImg }) {
 
       <div style={{ position:'relative', textAlign:'center', maxWidth:520, width:'100%' }}>
         <h1 style={{ fontFamily:"'Playfair Display',serif", fontSize:'clamp(26px,5.5vw,42px)', fontWeight:700, color:'#fff', lineHeight:1.15, marginBottom:10 }}>
-          Post Your Project,<br /><span style={{ color:'#F59E0B' }}>Get Free Bids.</span>
+          ඔබේ ව්‍යාපෘතිය ලිය කරන්න,<br /><span style={{ color:'#F59E0B' }}>නොමිලේ ලංසු ලබා ගන්න.</span>
         </h1>
 
         <p style={{ fontSize:13, color:'rgba(255,255,255,0.62)', marginBottom:22, lineHeight:1.7 }}>
-          No login required · Verified pros bid within 24 hrs
+          ලොගිනය අවශ්‍ය නැත · සත්‍යාපිත ප්‍රවීණයන් පැය 24 ක් ඇතුළත ලංසු දෙති
         </p>
 
         {/* Single primary CTA */}
         <a href="/post-project" style={{ display:'flex', alignItems:'center', justifyContent:'center', gap:8, background:'#E05A2B', color:'#fff', borderRadius:24, padding:'14px 28px', fontSize:15, fontWeight:800, textDecoration:'none', boxShadow:'0 4px 20px rgba(224,90,43,0.45)', marginBottom:14 }}>
-          📋 Post a Free Project
+          📋 නොමිලේ ව්‍යාපෘතිය ලිය කරන්න
         </a>
 
         <div style={{ marginBottom:14 }}>
-          <a href="/providers" style={{ fontSize:12, color:'rgba(255,255,255,0.45)', textDecoration:'none', fontWeight:600 }}>or browse providers →</a>
+          <a href="/providers" style={{ fontSize:12, color:'rgba(255,255,255,0.45)', textDecoration:'none', fontWeight:600 }}>හෝ සේවා සපයන්නන් බලන්න →</a>
         </div>
 
         {/* Benefit pills */}
         <div style={{ display:'flex', gap:8, justifyContent:'center', flexWrap:'wrap' }}>
-          {['✓ Free to post','✓ Multiple Bids','✓ No obligation'].map(t => (
+          {['✓ ලිය කිරීම නොමිලේ','✓ බහු ලංසු','✓ බැඳීමක් නැත'].map(t => (
             <span key={t} style={{ background:'rgba(255,255,255,0.1)', color:'rgba(255,255,255,0.78)', borderRadius:20, padding:'5px 13px', fontSize:11, fontWeight:600, border:'1px solid rgba(255,255,255,0.15)' }}>{t}</span>
           ))}
         </div>
@@ -304,20 +304,20 @@ function GuestHero({ heroImg }) {
 
 function GuestActions() {
   const SERVICES = [
-    { icon:'🚿', label:'Bathroom\nPlumbing',   href:'/providers?q=Bathroom+Plumbing'   },
-    { icon:'🪨', label:'Floor\nTiling',         href:'/providers?q=Floor+Tiling'         },
-    { icon:'🏗️', label:'Large\nTiling',          href:'/providers?q=Large+Tiling'          },
-    { icon:'🔷', label:'Mosaic\nTiling',         href:'/providers?q=Mosaic+Tiling'         },
-    { icon:'🚿', label:'Shower\nRepair',         href:'/providers?q=Shower+Repair'         },
-    { icon:'🪟', label:'Glass\nTiling',          href:'/providers?q=Glass+Tiling'          },
-    { icon:'🛁', label:'Bathroom\nRenovation',   href:'/providers?q=Bathroom+Renovation'   },
-    { icon:'🪞', label:'Vanity\nCupboard',       href:'/providers?q=Vanity+Cupboard'       },
+    { icon:'🚿', label:'නාන කාමර\nනල කාර්ය',   href:'/providers?q=Bathroom+Plumbing'   },
+    { icon:'🪨', label:'බිම්\nටයිල්',         href:'/providers?q=Floor+Tiling'         },
+    { icon:'🏗️', label:'විශාල\nටයිල්',          href:'/providers?q=Large+Tiling'          },
+    { icon:'🔷', label:'මොසෙයික්\nටයිල්',         href:'/providers?q=Mosaic+Tiling'         },
+    { icon:'🚿', label:'ෂවර්\nඅළු.',         href:'/providers?q=Shower+Repair'         },
+    { icon:'🪟', label:'වීදුරු\nටයිල්',          href:'/providers?q=Glass+Tiling'          },
+    { icon:'🛁', label:'නාන කාමර\nප්‍රතිසංස්.',   href:'/providers?q=Bathroom+Renovation'   },
+    { icon:'🪞', label:'වැනිටි\nකබඩ්',       href:'/providers?q=Vanity+Cupboard'       },
   ]
   return (
     <div style={{ background:'#fff', borderBottom:'1px solid #f1f5f9', padding:'16px 16px 12px' }}>
       <div style={{ display:'flex', alignItems:'center', justifyContent:'space-between', marginBottom:14 }}>
-        <span style={{ fontSize:15, fontWeight:700, color:'#111827' }}>Popular Services</span>
-        <a href="/providers" style={{ fontSize:12, fontWeight:600, color:'#E05A2B', textDecoration:'none' }}>View All &rsaquo;</a>
+        <span style={{ fontSize:15, fontWeight:700, color:'#111827' }}>ජනප්‍රිය සේවාවන්</span>
+        <a href="/providers" style={{ fontSize:12, fontWeight:600, color:'#E05A2B', textDecoration:'none' }}>සියල්ල &rsaquo;</a>
       </div>
       <div style={{ display:'grid', gridTemplateColumns:'repeat(4,1fr)', gap:10 }}>
         {SERVICES.map(s => (

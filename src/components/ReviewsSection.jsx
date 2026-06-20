@@ -18,7 +18,7 @@ const JOB_TYPES = [
   'Other',
 ]
 
-const RATING_LABELS = { 5: 'Excellent', 4: 'Very Good', 3: 'Good', 2: 'Fair', 1: 'Poor' }
+const RATING_LABELS = { 5: 'ඉතා හොඳ', 4: 'හොඳ', 3: 'සාධාරණ', 2: 'යෝග්‍ය', 1: 'දුර්වල' }
 const RATING_COLORS = { 5: '#16a34a', 4: '#65a30d', 3: '#d97706', 2: '#ea580c', 1: '#dc2626' }
 
 const AVATAR_COLORS = ['#1B3A6B','#0f766e','#7c3aed','#b45309','#0369a1','#E05A2B','#15803d','#be185d']
@@ -32,11 +32,11 @@ function initials(name) {
 }
 function timeAgo(ts) {
   const days = Math.floor((Date.now() - new Date(ts)) / 86400000)
-  if (days === 0) return 'Today'
-  if (days === 1) return 'Yesterday'
-  if (days < 30)  return `${days}d ago`
-  if (days < 365) return `${Math.floor(days / 30)}mo ago`
-  return `${Math.floor(days / 365)}y ago`
+  if (days === 0) return 'අද'
+  if (days === 1) return 'ඊයේ'
+  if (days < 30)  return `${days}දින`
+  if (days < 365) return `${Math.floor(days / 30)}මාස`
+  return `${Math.floor(days / 365)}වසර`
 }
 
 // ─── Stars display ─────────────────────────────────────────────────────────────
@@ -86,10 +86,10 @@ function ReviewForm({ tilerId, providerId, onSubmitted }) {
 
   async function submit(e) {
     e.preventDefault()
-    if (!form.rating)                           { setError('Please select a star rating'); return }
-    if (!form.reviewer_name.trim())             { setError('Please enter your name'); return }
-    if (!form.job_type)                         { setError('Please select the job type'); return }
-    if (form.comment.trim().length < 20)        { setError('Review must be at least 20 characters'); return }
+    if (!form.rating)                           { setError('ශ්‍රේණිගත කිරීම තෝරන්න'); return }
+    if (!form.reviewer_name.trim())             { setError('ඔබේ නම ඇතුළු කරන්න'); return }
+    if (!form.job_type)                         { setError('කාර්ය වර්ගය තෝරන්න'); return }
+    if (form.comment.trim().length < 20)        { setError('සමාලෝචනය අවම වශයෙන් අකුරු 20ක් විය යුතුය'); return }
     setLoading(true); setError('')
     const payload = {
       reviewer_name: form.reviewer_name.trim(),
@@ -101,7 +101,7 @@ function ReviewForm({ tilerId, providerId, onSubmitted }) {
     if (providerId) payload.provider_id = providerId
     const { error: err } = await supabase.from('reviews').insert(payload)
     setLoading(false)
-    if (err) { setError(err.message || 'Failed to submit — please try again.'); return }
+    if (err) { setError(err.message || 'ඉදිරිපත් කිරීම අසාර්ථකයි — නැවත උත්සාහ කරන්න.'); return }
     onSubmitted()
   }
 
@@ -119,22 +119,22 @@ function ReviewForm({ tilerId, providerId, onSubmitted }) {
 
   return (
     <form onSubmit={submit} style={{ display: 'flex', flexDirection: 'column', gap: 16, background: '#f8fafc', borderRadius: 14, padding: '20px 18px', border: '1.5px solid #e2e8f0' }}>
-      <div style={{ fontSize: 15, fontWeight: 700, color: '#0f172a' }}>Write a Review</div>
+      <div style={{ fontSize: 15, fontWeight: 700, color: '#0f172a' }}>සමාලෝචනයක් ලියන්න</div>
 
       {/* Stars */}
       <div>
-        <label style={labelStyle}>Your Rating *</label>
+        <label style={labelStyle}>ඔබේ ශ්‍රේණිය *</label>
         <StarPicker value={form.rating} onChange={v => set('rating', v)} />
       </div>
 
       {/* Name + Job type */}
       <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: 12 }}>
         <div>
-          <label style={labelStyle}>Your Name *</label>
+          <label style={labelStyle}>ඔබේ නම *</label>
           <input
             value={form.reviewer_name}
             onChange={e => set('reviewer_name', e.target.value)}
-            placeholder="e.g. Nimal Silva"
+            placeholder="නිදසුන: නිමල් සිල්වා"
             maxLength={60}
             style={inp}
             onFocus={e => e.target.style.borderColor = '#1B3A6B'}
@@ -142,7 +142,7 @@ function ReviewForm({ tilerId, providerId, onSubmitted }) {
           />
         </div>
         <div>
-          <label style={labelStyle}>Job Type *</label>
+          <label style={labelStyle}>කාර්ය වර්ගය *</label>
           <select
             value={form.job_type}
             onChange={e => set('job_type', e.target.value)}
@@ -150,7 +150,7 @@ function ReviewForm({ tilerId, providerId, onSubmitted }) {
             onFocus={e => e.target.style.borderColor = '#1B3A6B'}
             onBlur={e  => e.target.style.borderColor = '#e2e8f0'}
           >
-            <option value="">Select…</option>
+            <option value="">තෝරන්න…</option>
             {JOB_TYPES.map(t => <option key={t} value={t}>{t}</option>)}
           </select>
         </div>
@@ -159,20 +159,20 @@ function ReviewForm({ tilerId, providerId, onSubmitted }) {
       {/* Comment */}
       <div>
         <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'baseline', marginBottom: 6 }}>
-          <label style={labelStyle}>Your Review *</label>
+          <label style={labelStyle}>ඔබේ සමාලෝචනය *</label>
           <span style={{ fontSize: 10, color: charOk ? '#16a34a' : '#94a3b8' }}>{charCount}/500</span>
         </div>
         <textarea
           value={form.comment}
           onChange={e => set('comment', e.target.value.slice(0, 500))}
-          placeholder="How was the work quality, punctuality, cleanliness and value for money?"
+          placeholder="කාර්යයේ ගුණාත්මකභාවය, කාලානුරූපභාවය, පිරිසිදුකම සහ මුදල් වටිනාකම ගැන ලියන්න"
           rows={4}
           style={{ ...inp, resize: 'vertical', lineHeight: 1.65 }}
           onFocus={e => e.target.style.borderColor = '#1B3A6B'}
           onBlur={e  => e.target.style.borderColor = '#e2e8f0'}
         />
         {charCount > 0 && !charOk && (
-          <div style={{ fontSize: 10, color: '#94a3b8', marginTop: 4 }}>{20 - charCount} more characters needed</div>
+          <div style={{ fontSize: 10, color: '#94a3b8', marginTop: 4 }}>තවත් අකුරු {20 - charCount}ක් අවශ්‍යයි</div>
         )}
       </div>
 
@@ -187,7 +187,7 @@ function ReviewForm({ tilerId, providerId, onSubmitted }) {
         disabled={loading}
         style={{ padding: '12px', background: loading ? '#94a3b8' : '#1B3A6B', color: '#fff', border: 'none', borderRadius: 10, fontSize: 13, fontWeight: 700, cursor: loading ? 'not-allowed' : 'pointer', transition: 'background 0.15s' }}
       >
-        {loading ? '⏳ Submitting…' : '⭐ Submit Review'}
+        {loading ? '⏳ ඉදිරිපත් කෙරෙමින්…' : '⭐ සමාලෝචනය ඉදිරිපත් කරන්න'}
       </button>
     </form>
   )
@@ -245,7 +245,7 @@ function RatingSummary({ avg, reviews }) {
         <div style={{ fontSize: 42, fontWeight: 800, color: '#0f172a', lineHeight: 1 }}>{avg.toFixed(1)}</div>
         <Stars rating={Math.round(avg)} size={16} />
         <div style={{ fontSize: 11, color: '#94a3b8', marginTop: 5 }}>
-          {reviews.length} review{reviews.length !== 1 ? 's' : ''}
+          සමාලෝචන {reviews.length}ක්
         </div>
       </div>
       <div style={{ flex: 1, minWidth: 160 }}>
@@ -316,13 +316,13 @@ export default function ReviewsSection({ tilerId, providerId }) {
             onClick={() => setShowForm(true)}
             style={{ fontSize: 12, fontWeight: 700, color: '#1B3A6B', background: '#eef3fb', border: '1.5px solid #d5e2f5', borderRadius: 8, padding: '7px 14px', cursor: 'pointer' }}
           >
-            + Write a Review
+            + සමාලෝචනයක් ලියන්න
           </button>
         )}
       </div>
 
       {loading ? (
-        <div style={{ textAlign: 'center', padding: '32px 0', color: '#94a3b8', fontSize: 13 }}>Loading reviews…</div>
+        <div style={{ textAlign: 'center', padding: '32px 0', color: '#94a3b8', fontSize: 13 }}>සමාලෝචන පූරණය වෙමින්…</div>
       ) : (
         <>
           {/* Rating summary — only if reviews exist */}
@@ -332,13 +332,13 @@ export default function ReviewsSection({ tilerId, providerId }) {
           {reviews.length === 0 && !showForm && (
             <div style={{ textAlign: 'center', padding: '28px 0' }}>
               <div style={{ fontSize: 36, marginBottom: 10 }}>💬</div>
-              <p style={{ fontSize: 14, fontWeight: 600, color: '#374151', marginBottom: 4 }}>No reviews yet</p>
-              <p style={{ fontSize: 12, color: '#94a3b8', marginBottom: 20 }}>Be the first to share your experience.</p>
+              <p style={{ fontSize: 14, fontWeight: 600, color: '#374151', marginBottom: 4 }}>සමාලෝචන නොමැත</p>
+              <p style={{ fontSize: 12, color: '#94a3b8', marginBottom: 20 }}>ඔබේ අත්දැකීම පළමුව බෙදා ගන්න.</p>
               <button
                 onClick={() => setShowForm(true)}
                 style={{ fontSize: 13, fontWeight: 700, color: '#fff', background: '#1B3A6B', border: 'none', borderRadius: 10, padding: '10px 24px', cursor: 'pointer' }}
               >
-                ⭐ Write a Review
+                ⭐ සමාලෝචනයක් ලියන්න
               </button>
             </div>
           )}
@@ -356,7 +356,7 @@ export default function ReviewsSection({ tilerId, providerId }) {
               onClick={() => setVisible(v => v + PAGE)}
               style={{ width: '100%', padding: '10px', background: '#f8fafc', color: '#374151', border: '1.5px solid #e2e8f0', borderRadius: 10, fontSize: 12, fontWeight: 600, cursor: 'pointer', marginBottom: 14 }}
             >
-              Show more ({reviews.length - visible} remaining)
+              තවත් බලන්න ({reviews.length - visible})
             </button>
           )}
 
@@ -370,7 +370,7 @@ export default function ReviewsSection({ tilerId, providerId }) {
           {/* Success message */}
           {submitted && (
             <div style={{ display: 'flex', alignItems: 'center', gap: 8, fontSize: 13, color: '#16a34a', fontWeight: 600, background: '#f0fdf4', border: '1px solid #bbf7d0', borderRadius: 10, padding: '10px 16px', marginTop: 8 }}>
-              ✅ Thank you — your review has been posted!
+              ✅ ස්තූතියි — ඔබේ සමාලෝචනය ප්‍රකාශිත විය!
             </div>
           )}
         </>

@@ -9,20 +9,20 @@ import Layout from '../layouts/Layout.astro'
 
   <div style="background:var(--navy);padding:44px 20px 40px;text-align:center;position:relative;overflow:hidden;">
     <div style="position:relative;max-width:560px;margin:0 auto;">
-      <span class="section-label" style="border-color:rgba(255,255,255,0.15);color:rgba(255,255,255,0.5);background:rgba(255,255,255,0.06);">📐 Estimator</span>
+      <span class="section-label" style="border-color:rgba(255,255,255,0.15);color:rgba(255,255,255,0.5);background:rgba(255,255,255,0.06);">📐 ගාස්තු ගණනය</span>
       <h1 style="font-family:'Playfair Display',serif;font-size:clamp(26px,4vw,40px);font-weight:700;color:#fff;margin:12px 0 10px;">
-        Tiling Cost <span style="color:var(--terra);">Estimator</span>
+        ටයිලිං ගාස්තු <span style="color:var(--terra);">ගණනය කිරීම</span>
       </h1>
-      <p style="font-size:14px;color:rgba(255,255,255,0.5);">Calculate tiles needed and estimate your full project cost</p>
+      <p style="font-size:14px;color:rgba(255,255,255,0.5);">අවශ්‍ය ටයිල් ගණන සහ සම්පූර්ණ ව්‍යාපෘති ගාස්තු ගණනය කරන්න</p>
     </div>
   </div>
 
   <!-- Top CTA strip -->
   <div style="background:#f8fafc;padding:12px 20px;border-bottom:1px solid #e2e8f0;">
     <div style="max-width:580px;margin:0 auto;display:flex;align-items:center;justify-content:space-between;gap:12px;flex-wrap:wrap;">
-      <span style="font-size:13px;color:#64748b;">Already know your budget? Skip the estimate.</span>
+      <span style="font-size:13px;color:#64748b;">අයවැය දැනටමත් දන්නවාද? ගණනය ඉක්මවා යන්න.</span>
       <a href="/post-project" style="display:inline-flex;align-items:center;gap:6px;background:#E05A2B;color:#fff;border-radius:10px;padding:8px 16px;font-size:12px;font-weight:700;text-decoration:none;white-space:nowrap;">
-        📋 Post a Free Project →
+        📋 නොමිලේ ව්‍යාපෘතිය ලිය කරන්න →
       </a>
     </div>
   </div>
@@ -32,21 +32,21 @@ import Layout from '../layouts/Layout.astro'
 
       <!-- ── Form Card ── -->
       <div style="background:#fff;border:1px solid var(--border);border-radius:20px;padding:28px 28px 24px;">
-        <h2 style="font-size:17px;font-weight:700;color:var(--text);margin-bottom:24px;">Project Details</h2>
+        <h2 style="font-size:17px;font-weight:700;color:var(--text);margin-bottom:24px;">ව්‍යාපෘති විස්තර</h2>
 
         <!-- Area in sq.ft -->
         <div class="form-group">
-          <label class="form-label">Room / Area Size <span style="color:var(--terra);">*</span></label>
+          <label class="form-label">කාමර / ප්‍රදේශ ප්‍රමාණය <span style="color:var(--terra);">*</span></label>
           <div style="display:flex;gap:8px;align-items:center;">
-            <input type="number" id="area" min="1" step="1" placeholder="e.g. 120" class="form-input" style="flex:1;" />
+            <input type="number" id="area" min="1" step="1" placeholder="උදා: 120" class="form-input" style="flex:1;" />
             <span style="font-size:13px;font-weight:600;color:var(--text-3);white-space:nowrap;background:var(--surface);padding:9px 12px;border:1.5px solid var(--border);border-radius:8px;">sq.ft</span>
           </div>
-          <p class="form-hint">Enter the total area you want to tile in square feet</p>
+          <p class="form-hint">ටයිල් කිරීමට අවශ්‍ය සම්පූර්ණ ප්‍රදේශය sq.ft වලින් ඇතුළු කරන්න</p>
         </div>
 
         <!-- Tile Size -->
         <div class="form-group">
-          <label class="form-label">Tile Size</label>
+          <label class="form-label">ටයිල් ප්‍රමාණය</label>
           <select id="tile-size" class="form-select">
             <option value="0.969">30×30 cm &nbsp;·&nbsp; 1×1 ft</option>
             <option value="1.938">60×30 cm &nbsp;·&nbsp; 2×1 ft</option>
@@ -62,33 +62,33 @@ import Layout from '../layouts/Layout.astro'
             <option value="23.250">180×120 cm &nbsp;·&nbsp; 6×4 ft</option>
             <option value="31.000">240×120 cm &nbsp;·&nbsp; 8×4 ft</option>
           </select>
-          <p class="form-hint" id="adhesive-hint" style="color:var(--navy);font-weight:600;">✓ C1 Adhesive applies — up to 60×60 cm</p>
+          <p class="form-hint" id="adhesive-hint" style="color:var(--navy);font-weight:600;">✓ C1 Adhesive අදාළ වේ — 60×60 cm දක්වා</p>
         </div>
 
         <!-- Tile Price per tile -->
         <div class="form-group">
-          <label class="form-label">Tile Price <span style="font-size:11px;font-weight:400;color:var(--text-3);">(per tile)</span></label>
+          <label class="form-label">ටයිල් මිල <span style="font-size:11px;font-weight:400;color:var(--text-3);">(ටයිලයකට)</span></label>
           <div style="display:flex;gap:8px;align-items:center;">
-            <span style="font-size:13px;color:var(--text-3);white-space:nowrap;">Rs.</span>
-            <input type="number" id="price-per-tile" min="0" placeholder="e.g. 450" class="form-input" style="flex:1;" />
+            <span style="font-size:13px;color:var(--text-3);white-space:nowrap;">රු.</span>
+            <input type="number" id="price-per-tile" min="0" placeholder="උදා: 450" class="form-input" style="flex:1;" />
           </div>
-          <p class="form-hint">Price per individual tile — not per box</p>
+          <p class="form-hint">තනි ටයිලයකට මිල — box එකකට නොවේ</p>
         </div>
 
         <!-- Labour Rate -->
         <div class="form-group">
-          <label class="form-label">Labour Rate</label>
+          <label class="form-label">කම්කරු ගාස්තු</label>
           <div style="display:flex;gap:8px;align-items:center;">
-            <span style="font-size:13px;color:var(--text-3);white-space:nowrap;">Rs.</span>
+            <span style="font-size:13px;color:var(--text-3);white-space:nowrap;">රු.</span>
             <input type="number" id="labour-rate" min="0" value="150" class="form-input" style="flex:1;" />
             <span style="font-size:13px;color:var(--text-3);white-space:nowrap;">/ sq.ft</span>
           </div>
-          <p class="form-hint">Typical range: Rs. 100–250 per sq.ft depending on tile size and pattern complexity</p>
+          <p class="form-hint">සාමාන්‍ය පරාසය: රු. 100–250 sq.ft ට — ටයිල් ප්‍රමාණය සහ රටාව අනුව</p>
         </div>
 
         <!-- Additional Costs -->
         <div class="form-group" style="margin-bottom:0;">
-          <label class="form-label" style="margin-bottom:10px;">Include Additional Costs</label>
+          <label class="form-label" style="margin-bottom:10px;">අතිරේක ගාස්තු ඇතුළත් කරන්න</label>
           <div style="display:flex;flex-direction:column;gap:8px;">
 
             <!-- Adhesive (auto C1/C2) -->
@@ -97,9 +97,9 @@ import Layout from '../layouts/Layout.astro'
               <div style="flex:1;min-width:0;">
                 <div style="display:flex;justify-content:space-between;align-items:center;gap:8px;">
                   <span style="font-size:13px;font-weight:600;color:var(--text);" id="adhesive-label">Adhesive (C1)</span>
-                  <span style="font-size:12px;font-weight:700;color:var(--navy);white-space:nowrap;" id="adhesive-rate-lbl">Rs. 50 / sq.ft</span>
+                  <span style="font-size:12px;font-weight:700;color:var(--navy);white-space:nowrap;" id="adhesive-rate-lbl">රු. 50 / sq.ft</span>
                 </div>
-                <div style="font-size:11px;color:var(--text-3);margin-top:2px;" id="adhesive-sub">C1 adhesive — tiles up to 60×60 cm</div>
+                <div style="font-size:11px;color:var(--text-3);margin-top:2px;" id="adhesive-sub">C1 adhesive — 60×60 cm දක්වා ටයිල්</div>
               </div>
             </label>
 
@@ -108,10 +108,10 @@ import Layout from '../layouts/Layout.astro'
               <input type="checkbox" id="inc-clips" checked style="margin-top:2px;flex-shrink:0;accent-color:var(--navy);width:15px;height:15px;" />
               <div style="flex:1;">
                 <div style="display:flex;justify-content:space-between;align-items:center;gap:8px;">
-                  <span style="font-size:13px;font-weight:600;color:var(--text);">Level Clip System</span>
-                  <span style="font-size:12px;font-weight:700;color:var(--navy);white-space:nowrap;">Rs. 20 / sq.ft</span>
+                  <span style="font-size:13px;font-weight:600;color:var(--text);">Level Clip පද්ධතිය</span>
+                  <span style="font-size:12px;font-weight:700;color:var(--navy);white-space:nowrap;">රු. 20 / sq.ft</span>
                 </div>
-                <div style="font-size:11px;color:var(--text-3);margin-top:2px;">Tile leveling clips &amp; wedges for a lippage-free finish</div>
+                <div style="font-size:11px;color:var(--text-3);margin-top:2px;">ටයිල් leveling clips සහ wedges — සමතල finish සඳහා</div>
               </div>
             </label>
 
@@ -121,9 +121,9 @@ import Layout from '../layouts/Layout.astro'
               <div style="flex:1;">
                 <div style="display:flex;justify-content:space-between;align-items:center;gap:8px;">
                   <span style="font-size:13px;font-weight:600;color:var(--text);">Grout</span>
-                  <span style="font-size:12px;font-weight:700;color:var(--navy);white-space:nowrap;">Rs. 10 / sq.ft</span>
+                  <span style="font-size:12px;font-weight:700;color:var(--navy);white-space:nowrap;">රු. 10 / sq.ft</span>
                 </div>
-                <div style="font-size:11px;color:var(--text-3);margin-top:2px;">Grout material for all tile joints</div>
+                <div style="font-size:11px;color:var(--text-3);margin-top:2px;">සියලු ටයිල් සන්ධි සඳහා grout ද්‍රව්‍ය</div>
               </div>
             </label>
 
@@ -132,13 +132,13 @@ import Layout from '../layouts/Layout.astro'
               <input type="checkbox" id="inc-screed" style="margin-top:2px;flex-shrink:0;accent-color:var(--navy);width:15px;height:15px;" />
               <div style="flex:1;">
                 <div style="display:flex;justify-content:space-between;align-items:center;gap:8px;">
-                  <span style="font-size:13px;font-weight:600;color:var(--text);">Screed (Cement &amp; Sand)</span>
-                  <span style="font-size:12px;font-weight:700;color:var(--navy);white-space:nowrap;">Rs. 100–120 / sq.ft</span>
+                  <span style="font-size:13px;font-weight:600;color:var(--text);">Screed (සිමෙන්ති සහ වැලි)</span>
+                  <span style="font-size:12px;font-weight:700;color:var(--navy);white-space:nowrap;">රු. 100–120 / sq.ft</span>
                 </div>
-                <div style="font-size:11px;color:var(--text-3);margin-top:2px;">Base screed layer to level floor before tiling</div>
+                <div style="font-size:11px;color:var(--text-3);margin-top:2px;">ටයිල් කිරීමට පෙර බිම සමතල කිරීම සඳහා base screed ස්තරය</div>
                 <div id="screed-rate-row" style="display:none;margin-top:8px;display:none;">
                   <div style="display:flex;align-items:center;gap:6px;">
-                    <span style="font-size:11px;color:var(--text-3);">Rate:</span>
+                    <span style="font-size:11px;color:var(--text-3);">ගාස්තු:</span>
                     <span style="font-size:11px;color:var(--text-3);">Rs.</span>
                     <input type="number" id="screed-rate" value="110" min="100" max="120" step="5"
                       class="form-input" style="width:80px;padding:5px 8px;font-size:12px;"
@@ -152,37 +152,37 @@ import Layout from '../layouts/Layout.astro'
           </div>
         </div>
 
-        <button id="calc-btn" class="btn btn-navy btn-full" style="margin-top:20px;font-size:15px;padding:13px;">📐 Calculate Estimate</button>
+        <button id="calc-btn" class="btn btn-navy btn-full" style="margin-top:20px;font-size:15px;padding:13px;">📐 ගාස්තු ගණනය කරන්න</button>
       </div>
 
       <!-- ── Result Card ── -->
       <div id="result" style="display:none;background:var(--navy);border-radius:20px;padding:28px;margin-top:20px;color:#fff;">
-        <h3 style="font-size:13px;font-weight:700;color:rgba(255,255,255,0.5);margin-bottom:20px;letter-spacing:1.5px;text-transform:uppercase;">Your Estimate</h3>
+        <h3 style="font-size:13px;font-weight:700;color:rgba(255,255,255,0.5);margin-bottom:20px;letter-spacing:1.5px;text-transform:uppercase;">ඔබේ ගාස්තු ගණනය</h3>
 
         <!-- Area + tiles row -->
         <div style="display:grid;grid-template-columns:1fr 1fr;gap:10px;margin-bottom:10px;">
           <div style="background:rgba(255,255,255,0.06);border-radius:12px;padding:14px 16px;border:1px solid rgba(255,255,255,0.08);">
             <div id="res-area" style="font-size:20px;font-weight:700;color:var(--terra);">—</div>
-            <div style="font-size:10px;color:rgba(255,255,255,0.4);margin-top:2px;">Area</div>
+            <div style="font-size:10px;color:rgba(255,255,255,0.4);margin-top:2px;">ප්‍රදේශය</div>
           </div>
           <div style="background:rgba(255,255,255,0.06);border-radius:12px;padding:14px 16px;border:1px solid rgba(255,255,255,0.08);">
             <div id="res-tiles" style="font-size:20px;font-weight:700;color:var(--terra);">—</div>
-            <div style="font-size:10px;color:rgba(255,255,255,0.4);margin-top:2px;">Tiles Required (+12% waste)</div>
+            <div style="font-size:10px;color:rgba(255,255,255,0.4);margin-top:2px;">අවශ්‍ය ටයිල් (+12% waste)</div>
           </div>
         </div>
 
         <!-- Breakdown list -->
         <div style="background:rgba(255,255,255,0.04);border-radius:12px;border:1px solid rgba(255,255,255,0.07);overflow:hidden;margin-bottom:12px;">
           <div id="row-tiles" style="display:flex;justify-content:space-between;align-items:center;padding:11px 16px;border-bottom:1px solid rgba(255,255,255,0.06);">
-            <span style="font-size:13px;color:rgba(255,255,255,0.6);">🪨 Tile Material</span>
+            <span style="font-size:13px;color:rgba(255,255,255,0.6);">🪨 ටයිල් ද්‍රව්‍ය</span>
             <span id="res-tile-cost" style="font-size:13px;font-weight:700;color:#fff;">—</span>
           </div>
           <div style="display:flex;justify-content:space-between;align-items:center;padding:11px 16px;border-bottom:1px solid rgba(255,255,255,0.06);">
-            <span style="font-size:13px;color:rgba(255,255,255,0.6);">👷 Labour</span>
+            <span style="font-size:13px;color:rgba(255,255,255,0.6);">👷 කම්කරු</span>
             <span id="res-labour" style="font-size:13px;font-weight:700;color:#fff;">—</span>
           </div>
           <div id="row-adhesive" style="display:flex;justify-content:space-between;align-items:center;padding:11px 16px;border-bottom:1px solid rgba(255,255,255,0.06);">
-            <span id="res-adhesive-label" style="font-size:13px;color:rgba(255,255,255,0.6);">🧱 Adhesive (C1)</span>
+            <span id="res-adhesive-label" style="font-size:13px;color:rgba(255,255,255,0.6);">🧱 ඇලවුම (C1)</span>
             <span id="res-adhesive" style="font-size:13px;font-weight:700;color:#fff;">—</span>
           </div>
           <div id="row-clips" style="display:flex;justify-content:space-between;align-items:center;padding:11px 16px;border-bottom:1px solid rgba(255,255,255,0.06);">
@@ -194,34 +194,34 @@ import Layout from '../layouts/Layout.astro'
             <span id="res-grout" style="font-size:13px;font-weight:700;color:#fff;">—</span>
           </div>
           <div id="row-screed" style="display:flex;justify-content:space-between;align-items:center;padding:11px 16px;">
-            <span style="font-size:13px;color:rgba(255,255,255,0.6);">🏗️ Screed</span>
+            <span style="font-size:13px;color:rgba(255,255,255,0.6);">🏗️ Screed ස්තරය</span>
             <span id="res-screed" style="font-size:13px;font-weight:700;color:#fff;">—</span>
           </div>
         </div>
 
         <!-- Grand Total -->
         <div style="background:rgba(224,90,43,0.15);border:1px solid rgba(224,90,43,0.3);border-radius:12px;padding:18px;text-align:center;">
-          <div style="font-size:11px;color:rgba(255,255,255,0.45);margin-bottom:4px;letter-spacing:1px;text-transform:uppercase;">Estimated Total</div>
+          <div style="font-size:11px;color:rgba(255,255,255,0.45);margin-bottom:4px;letter-spacing:1px;text-transform:uppercase;">ඇස්තමේන්තු සම්පූර්ණය</div>
           <div id="res-total" style="font-size:30px;font-weight:700;color:var(--terra);">—</div>
-          <div id="res-total-note" style="font-size:10px;color:rgba(255,255,255,0.3);margin-top:4px;">All selected items included</div>
+          <div id="res-total-note" style="font-size:10px;color:rgba(255,255,255,0.3);margin-top:4px;">තෝරාගත් සියලු අයිතම ඇතුළත්</div>
         </div>
 
         <p style="font-size:11px;color:rgba(255,255,255,0.28);text-align:center;margin-top:14px;line-height:1.7;">
-          This is an estimate only. Actual costs depend on tile brand, pattern complexity, and site conditions.
+          මෙය ඇස්තමේන්තුවක් පමණි. සත්‍ය ගාස්තු ටයිල් brand, රටා සංකීර්ණතාව සහ ස්ථාන තත්ත්ව අනුව වෙනස් වේ.
         </p>
 
         <!-- Post project CTA -->
         <div style="margin-top:18px;background:rgba(255,255,255,0.06);border:1px solid rgba(255,255,255,0.12);border-radius:14px;padding:18px 20px;">
-          <div style="font-size:13px;font-weight:700;color:#fff;margin-bottom:4px;">📋 Ready to get started?</div>
+          <div style="font-size:13px;font-weight:700;color:#fff;margin-bottom:4px;">📋 ආරම්භ කිරීමට සූදානම්ද?</div>
           <p style="font-size:12px;color:rgba(255,255,255,0.55);margin:0 0 14px;line-height:1.7;">
-            Post your project free — tilers in your area will bid and send you quotes.
+            ව්‍යාපෘතිය නොමිලේ ලිය කරන්න — ඔබේ ප්‍රදේශයේ ටයිලර්ලා ලංසු ඉදිරිපත් කරනු ඇත.
           </p>
           <div style="display:flex;gap:10px;flex-wrap:wrap;">
             <a href="/post-project" style="display:inline-flex;align-items:center;gap:7px;background:var(--terra);color:#fff;border-radius:10px;padding:10px 20px;font-size:13px;font-weight:700;text-decoration:none;flex:1;justify-content:center;">
-              Post a Project →
+              ව්‍යාපෘතිය ලිය කරන්න →
             </a>
             <button id="share-estimate-btn" style="display:inline-flex;align-items:center;gap:7px;background:rgba(255,255,255,0.1);color:rgba(255,255,255,0.8);border:1px solid rgba(255,255,255,0.2);border-radius:10px;padding:10px 20px;font-size:13px;font-weight:700;cursor:pointer;flex:1;justify-content:center;">
-              🔗 Share Estimate
+              🔗 ගාස්තු බෙදාගන්න
             </button>
           </div>
         </div>
@@ -249,9 +249,9 @@ import Layout from '../layouts/Layout.astro'
     }
 
     const ADHESIVE = {
-      c1:   { label: 'Adhesive (C1)',       rate: 50,  rateLabel: 'Rs. 50 / sq.ft',  sub: 'C1 adhesive — tiles up to 60×60 cm',              hint: '✓ C1 Adhesive applies — up to 60×60 cm' },
-      c2:   { label: 'Adhesive (C2)',       rate: 80,  rateLabel: 'Rs. 80 / sq.ft',  sub: 'C2 adhesive — tiles 90×45 cm up to 120×80 cm',     hint: '✓ C2 Adhesive applies — 90×45 cm to 120×80 cm' },
-      c2te: { label: 'Adhesive (C2TE S1)', rate: 120, rateLabel: 'Rs. 120 / sq.ft', sub: 'C2TE S1 adhesive — large format tiles above 120×80 cm', hint: '✓ C2TE S1 Adhesive applies — large format above 120×80 cm' },
+      c1:   { label: 'Adhesive (C1)',       rate: 50,  rateLabel: 'රු. 50 / sq.ft',  sub: 'C1 adhesive — 60×60 cm දක්වා ටයිල්',              hint: '✓ C1 Adhesive අදාළ වේ — 60×60 cm දක්වා' },
+      c2:   { label: 'Adhesive (C2)',       rate: 80,  rateLabel: 'රු. 80 / sq.ft',  sub: 'C2 adhesive — 90×45 cm සිට 120×80 cm දක්වා ටයිල්', hint: '✓ C2 Adhesive අදාළ වේ — 90×45 cm සිට 120×80 cm දක්වා' },
+      c2te: { label: 'Adhesive (C2TE S1)', rate: 120, rateLabel: 'රු. 120 / sq.ft', sub: 'C2TE S1 adhesive — 120×80 cm ඉක්මවූ විශාල ටයිල්', hint: '✓ C2TE S1 Adhesive අදාළ වේ — 120×80 cm ඉක්මවූ විශාල ටයිල්' },
     }
 
     function updateAdhesive() {
@@ -281,7 +281,7 @@ import Layout from '../layouts/Layout.astro'
       const incScreed    = screedCb.checked
       const screedRate   = parseFloat(document.getElementById('screed-rate').value) || 110
 
-      if (!area || area <= 0) { alert('Please enter a valid area in sq.ft.'); return }
+      if (!area || area <= 0) { alert('කරුණාකර sq.ft වලින් ඵල ප්‍රදේශය ඇතුළු කරන්න.'); return }
 
       const tilesNeeded   = Math.ceil((area / tileSqft) * 1.12)
       const tileCost      = pricePerTile > 0 ? tilesNeeded * pricePerTile : null
@@ -295,11 +295,11 @@ import Layout from '../layouts/Layout.astro'
       const extrasCost    = labourCost + adhesiveCost + clipsCost + groutCost + screedCost
       const total         = (tileCost || 0) + extrasCost
 
-      const fmt = n => 'Rs. ' + Math.round(n).toLocaleString()
+      const fmt = n => 'රු. ' + Math.round(n).toLocaleString('si-LK')
 
-      document.getElementById('res-area').textContent      = area.toLocaleString() + ' sq.ft'
-      document.getElementById('res-tiles').textContent     = tilesNeeded + ' tiles'
-      document.getElementById('res-tile-cost').textContent = tileCost ? fmt(tileCost) : '— (enter tile price)'
+      document.getElementById('res-area').textContent      = area.toLocaleString('si-LK') + ' sq.ft'
+      document.getElementById('res-tiles').textContent     = tilesNeeded + ' ටයිල්'
+      document.getElementById('res-tile-cost').textContent = tileCost ? fmt(tileCost) : '— (ටයිල් මිල ඇතුළු කරන්න)'
       document.getElementById('res-labour').textContent    = fmt(labourCost)
 
       document.getElementById('row-adhesive').style.display = incAdhesive ? 'flex' : 'none'
@@ -316,8 +316,8 @@ import Layout from '../layouts/Layout.astro'
 
       document.getElementById('res-total').textContent     = tileCost ? fmt(total) : fmt(extrasCost)
       document.getElementById('res-total-note').textContent = tileCost
-        ? 'Tiles + Labour + Selected extras'
-        : 'Labour + Selected extras (tile price not entered)'
+        ? 'ටයිල් + කම්කරු + තෝරාගත් අතිරේකය'
+        : 'කම්කරු + අතිරේකය (ටයිල් මිල නොමැත)'
 
       document.getElementById('result').style.display = 'block'
       document.getElementById('result').scrollIntoView({ behavior: 'smooth', block: 'nearest' })
@@ -325,13 +325,13 @@ import Layout from '../layouts/Layout.astro'
 
     document.getElementById('share-estimate-btn').addEventListener('click', async function () {
       const url = window.location.href
-      const title = 'Tiling Cost Estimate — TilersHub'
+      const title = 'ටයිලිං ගාස්තු ගාස්තු ගණනය — TilersHub'
       if (navigator.share) {
         try { await navigator.share({ title, url }) } catch (_) {}
       } else {
         await navigator.clipboard.writeText(url)
-        this.textContent = '✓ Copied!'
-        setTimeout(() => { this.textContent = '🔗 Share Estimate' }, 2000)
+        this.textContent = '✓ පිටපත් විය!'
+        setTimeout(() => { this.textContent = '🔗 ගාස්තු බෙදාගන්න' }, 2000)
       }
     })
   </script>

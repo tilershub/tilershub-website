@@ -42,7 +42,7 @@ export default function PortfolioEditor({ profile, profileType, userId }) {
       setSaved(true)
       setTimeout(() => setSaved(false), 3000)
     } catch (e) {
-      setError(e?.message || 'Failed to save. Please try again.')
+      setError(e?.message || 'සුරැකීම අසාර්ථකයි. නැවත උත්සාහ කරන්න.')
     } finally {
       setSaving(false)
     }
@@ -65,8 +65,8 @@ export default function PortfolioEditor({ profile, profileType, userId }) {
         <div style={{ background:'linear-gradient(135deg,#fff4f0,#fff7ed)', border:'1px solid #fed7aa', borderRadius:14, padding:'18px 20px', marginBottom:20, display:'flex', alignItems:'center', gap:14 }}>
           <div style={{ fontSize:36, flexShrink:0 }}>📸</div>
           <div>
-            <div style={{ fontSize:14, fontWeight:700, color:'#c2410c', marginBottom:4 }}>Add portfolio photos</div>
-            <div style={{ fontSize:12, color:'#78350f', lineHeight:1.6 }}>Pros with portfolios get 3× more inquiries. Showcase your best work to attract more clients.</div>
+            <div style={{ fontSize:14, fontWeight:700, color:'#c2410c', marginBottom:4 }}>ව්‍යාපෘති ඡායාරූප එකතු කරන්න</div>
+            <div style={{ fontSize:12, color:'#78350f', lineHeight:1.6 }}>ගැලරිය ඇති ප්‍රවීණයන්ට 3× වැඩි විමසීම් ලැබේ. සේවාලාභීන් ආකර්ෂණය කිරීමට හොඳම කාර්ය ඉදිරිපත් කරන්න.</div>
           </div>
         </div>
       )}
@@ -75,11 +75,11 @@ export default function PortfolioEditor({ profile, profileType, userId }) {
       {gallery.length > 0 && (
         <div style={{ display:'flex', alignItems:'center', justifyContent:'space-between', marginBottom:16 }}>
           <span style={{ fontSize:13, fontWeight:700, color:'#374151' }}>
-            📸 {gallery.length} photo{gallery.length !== 1 ? 's' : ''}
+            📸 ඡායාරූප {gallery.length}ක්
           </span>
           {profileHref && (
             <a href={profileHref} target="_blank" rel="noopener" style={{ fontSize:12, fontWeight:600, color:'#1B3A6B', textDecoration:'none' }}>
-              View public profile →
+              පොදු පැතිකඩ →
             </a>
           )}
         </div>
@@ -103,7 +103,7 @@ export default function PortfolioEditor({ profile, profileType, userId }) {
               style={{ position:'absolute', top:4, right:4, background:'rgba(0,0,0,0.7)', color:'#fff', border:'none', borderRadius:'50%', width:22, height:22, cursor:'pointer', fontSize:11, display:'flex', alignItems:'center', justifyContent:'center' }}>
               ✕
             </button>
-            <div style={{ position:'absolute', bottom:4, left:4, background:'rgba(34,197,94,0.9)', color:'#fff', fontSize:9, fontWeight:700, borderRadius:6, padding:'2px 6px' }}>New</div>
+            <div style={{ position:'absolute', bottom:4, left:4, background:'rgba(34,197,94,0.9)', color:'#fff', fontSize:9, fontWeight:700, borderRadius:6, padding:'2px 6px' }}>නව</div>
           </div>
         ))}
         {total < MAX_GALLERY && (
@@ -113,13 +113,13 @@ export default function PortfolioEditor({ profile, profileType, userId }) {
             onMouseOut={e  => { e.currentTarget.style.borderColor='#cbd5e1'; e.currentTarget.style.background='#f8fafc' }}
           >
             <span style={{ fontSize:24, color:'#94a3b8' }}>+</span>
-            <span style={{ fontSize:10, color:'#94a3b8', fontWeight:600 }}>Add Photo</span>
+            <span style={{ fontSize:10, color:'#94a3b8', fontWeight:600 }}>ඡායාරූප</span>
           </div>
         )}
       </div>
 
       <input ref={ref} type="file" accept="image/*" multiple onChange={e => addFiles(e.target.files)} style={{ display:'none' }} />
-      <p style={{ fontSize:11, color:'#94a3b8', margin:'0 0 16px' }}>JPG / PNG / WebP · Up to {MAX_GALLERY} photos · Upload your best completed work</p>
+      <p style={{ fontSize:11, color:'#94a3b8', margin:'0 0 16px' }}>JPG / PNG / WebP · ඡායාරූප {MAX_GALLERY}ක් දක්වා · ඔබේ හොඳම නිමි කාර්ය</p>
 
       {error && (
         <div style={{ padding:'10px 14px', background:'#fef2f2', border:'1px solid #fecaca', borderRadius:10, fontSize:13, color:'#dc2626', marginBottom:14 }}>
@@ -129,19 +129,19 @@ export default function PortfolioEditor({ profile, profileType, userId }) {
 
       {saved && (
         <div style={{ padding:'10px 14px', background:'#f0fdf4', border:'1px solid #bbf7d0', borderRadius:10, fontSize:13, color:'#15803d', fontWeight:600, marginBottom:14 }}>
-          ✓ Portfolio saved!
+          ✓ ගැලරිය සුරකිනු ලැබිණ!
         </div>
       )}
 
       {hasNew ? (
         <button onClick={save} disabled={saving}
           style={{ width:'100%', padding:'13px', background: saving ? '#94a3b8' : '#1B3A6B', color:'#fff', border:'none', borderRadius:12, fontSize:14, fontWeight:700, cursor: saving ? 'not-allowed' : 'pointer', transition:'background 0.2s' }}>
-          {saving ? '⏳ Saving…' : `💾 Save ${newFiles.length} New Photo${newFiles.length !== 1 ? 's' : ''}`}
+          {saving ? '⏳ සුරකිමින්…' : `💾 නව ඡායාරූප ${newFiles.length}ක් සුරකින්න`}
         </button>
       ) : gallery.length > 0 && profileHref ? (
         <a href={profileHref} target="_blank" rel="noopener"
           style={{ display:'block', textAlign:'center', padding:'12px', background:'#f1f5f9', color:'#1B3A6B', border:'1px solid #e2e8f0', borderRadius:12, fontSize:13, fontWeight:700, textDecoration:'none' }}>
-          🔗 View Your Public Profile →
+          🔗 පොදු පැතිකඩ බලන්න →
         </a>
       ) : null}
     </div>
