@@ -291,7 +291,7 @@ function GuestHero({ heroImg }) {
 
         {/* Benefit pills */}
         <div style={{ display:'flex', gap:8, justifyContent:'center', flexWrap:'wrap' }}>
-          {['✓ ලිය කිරීම නොමිලේ','✓ බහු ලංසු','✓ බැඳීමක් නැත'].map(t => (
+          {['✓ පල කිරීම නොමිලේ','✓ බහු ලංසු','✓ බැඳීමක් නැත'].map(t => (
             <span key={t} style={{ background:'rgba(255,255,255,0.1)', color:'rgba(255,255,255,0.78)', borderRadius:20, padding:'5px 13px', fontSize:11, fontWeight:600, border:'1px solid rgba(255,255,255,0.15)' }}>{t}</span>
           ))}
         </div>
