@@ -13,12 +13,12 @@ import JoinForm from '../components/JoinForm.jsx'
     <div style="position:absolute;inset:0;opacity:0.04;background-image:repeating-linear-gradient(0deg,transparent,transparent 39px,rgba(255,255,255,0.8) 39px,rgba(255,255,255,0.8) 40px),repeating-linear-gradient(90deg,transparent,transparent 39px,rgba(255,255,255,0.8) 39px,rgba(255,255,255,0.8) 40px);pointer-events:none;"></div>
     <div style="position:relative;max-width:600px;margin:0 auto;">
       <a href="/" style="display:inline-flex;align-items:center;gap:5px;font-size:11px;color:rgba(255,255,255,0.4);letter-spacing:1px;text-transform:uppercase;font-weight:600;margin-bottom:24px;text-decoration:none;">← TilersHub</a>
-      <div style="font-size:9px;font-weight:700;color:rgba(37,211,102,0.7);letter-spacing:3px;text-transform:uppercase;margin-bottom:14px;">Free · No Commission</div>
+      <div style="font-size:9px;font-weight:700;color:rgba(37,211,102,0.7);letter-spacing:3px;text-transform:uppercase;margin-bottom:14px;">නොමිලේ · කොමිෂන් නැත</div>
       <h1 style="font-family:'Playfair Display',serif;font-size:clamp(26px,4vw,42px);font-weight:700;color:#fff;margin-bottom:12px;line-height:1.2;">
-        Join <span style="color:var(--terra);">TilersHub</span>
+        <span style="color:var(--terra);">TilersHub</span> හා එකතු වන්න
       </h1>
       <p style="font-size:14px;color:rgba(255,255,255,0.5);max-width:440px;margin:0 auto;line-height:1.9;">
-        List your business free and get discovered by homeowners across Sri Lanka. Direct WhatsApp leads, no middlemen.
+        නොමිලේ ලැයිස්තු ගත කරන්න — ශ්‍රී ලංකාව පුරා ගෙදර හිමිකරුවන් ඔබව සොයනු ඇත. WhatsApp leads, කිසිදු මැදිහත්කරුවෙකු නොමැතිව.
       </p>
     </div>
   </div>
@@ -27,10 +27,10 @@ import JoinForm from '../components/JoinForm.jsx'
   <div style="background:var(--surface-2);border-bottom:1px solid var(--border);padding:24px 20px;">
     <div style="max-width:780px;margin:0 auto;display:grid;grid-template-columns:repeat(auto-fit,minmax(170px,1fr));gap:16px;text-align:center;">
       {[
-        { icon: '✓', title: 'Free Listing', text: 'Always free to join and list' },
-        { icon: '💬', title: 'Direct Leads', text: 'Customers contact you on WhatsApp' },
-        { icon: '🚫', title: 'No Commission', text: 'Keep 100% of your earnings' },
-        { icon: '🏷️', title: 'Get Verified', text: 'Earn TH Verified badge' },
+        { icon: '✓', title: 'නොමිලේ ලැයිස්තුව', text: 'සෑම විටම නොමිලේ' },
+        { icon: '💬', title: 'සෘජු Leads', text: 'ගනුදෙනුකරුවන් WhatsApp හරහා සම්බන්ධ වෙති' },
+        { icon: '🚫', title: 'කොමිෂන් නැත', text: 'ඔබේ ආදායම 100% ඔබටම' },
+        { icon: '🏷️', title: 'සත්‍යාපිත වන්න', text: 'TH Verified badge ලබාගන්න' },
       ].map(b => (
         <div style="padding:14px 10px;">
           <div style="font-size:20px;margin-bottom:6px;">{b.icon}</div>
@@ -49,13 +49,13 @@ import JoinForm from '../components/JoinForm.jsx'
   <!-- Verification info -->
   <section style="background:var(--surface-2);padding:40px 20px;border-top:1px solid var(--border);">
     <div style="max-width:700px;margin:0 auto;">
-      <h3 style="font-family:'Playfair Display',serif;font-size:20px;font-weight:700;color:var(--text);text-align:center;margin-bottom:24px;">Verification Levels</h3>
+      <h3 style="font-family:'Playfair Display',serif;font-size:20px;font-weight:700;color:var(--text);text-align:center;margin-bottom:24px;">සත්‍යාපන මට්ටම්</h3>
       <div style="display:grid;grid-template-columns:repeat(auto-fit,minmax(160px,1fr));gap:12px;">
         {[
-          { badge: '· Listed', color: '#64748b', bg: '#f1f5f9', desc: 'Basic listing — applied and pending review' },
-          { badge: '✓ TH Verified', color: '#0f766e', bg: '#f0fdfa', desc: 'Identity verified by TilersHub team' },
-          { badge: '✦ Certified Pro', color: '#1d4ed8', bg: '#eff6ff', desc: 'Skills + work quality verified' },
-          { badge: '★ TH Master', color: '#7c3aed', bg: '#f5f3ff', desc: 'Top-tier professionals, premium badge' },
+          { badge: '· ලැයිස්තු ගත', color: '#64748b', bg: '#f1f5f9', desc: 'මූලික ලැයිස්තුව — සමාලෝචනය බලාපොරොත්තු වෙමින්' },
+          { badge: '✓ TH Verified', color: '#0f766e', bg: '#f0fdfa', desc: 'TilersHub කණ්ඩායම විසින් හැඳුනුම්පත සත්‍යාපිත' },
+          { badge: '✦ Certified Pro', color: '#1d4ed8', bg: '#eff6ff', desc: 'කුසලතා + කාර්ය ගුණාත්මකභාවය සත්‍යාපිත' },
+          { badge: '★ TH Master', color: '#7c3aed', bg: '#f5f3ff', desc: 'ඉහළ මට්ටමේ වෘත්තිකයන්, ප්‍රිමියම් badge' },
         ].map(v => (
           <div style="padding:14px;background:var(--surface);border-radius:12px;border:1px solid var(--border);">
             <span style={`display:inline-flex;align-items:center;font-size:11px;font-weight:700;padding:3px 10px;border-radius:20px;background:${v.bg};color:${v.color};margin-bottom:8px;`}>{v.badge}</span>

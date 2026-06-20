@@ -6,27 +6,27 @@ const PROVIDER_CATEGORIES = [
   {
     value: 'tiler',
     icon: '🪚',
-    label: 'Professional',
-    sub: 'Tiler, tiling specialist or skilled tradesperson',
-    examples: 'Floor tiling · Bathroom tiling · Mosaic · Waterproofing',
+    label: 'වෘත්තිකයා',
+    sub: 'ටයිලර්, ටයිලිං විශේෂඥ හෝ දක්ෂ කම්කරුවා',
+    examples: 'බිම ටයිලිං · නාන කාමර ටයිලිං · Mosaic · ජල නිරෝධ',
     color: '#1B3A6B',
     bg: '#eef3fb',
   },
   {
     value: 'contractor',
     icon: '🏗️',
-    label: 'Contractor',
-    sub: 'Full renovation or construction contractor',
-    examples: 'Bathroom reno · Electrical · Aluminium & glass · Landscaping',
+    label: 'කොන්ත්‍රාත්කරු',
+    sub: 'සම්පූර්ණ ප්‍රතිසංස්කරණ හෝ ඉදිකිරීම් කොන්ත්‍රාත්කරු',
+    examples: 'නාන කාමර ප්‍රතිසංස්කරණ · විදුලිය · ඇලුමිනියම් සහ ග්ලාස් · භූ දර්ශනය',
     color: '#0f766e',
     bg: '#f0fdfa',
   },
   {
     value: 'supplier',
     icon: '📦',
-    label: 'Supplier',
-    sub: 'Tiles, bathware, tools or materials supplier',
-    examples: 'Tile shop · Bathware · Tap-ware · Tool supplier',
+    label: 'සැපයුම්කරු',
+    sub: 'ටයිල්, නාන කාමර, මෙවලම් හෝ ද්‍රව්‍ය සැපයුම්කරු',
+    examples: 'ටයිල් සාප්පු · නාන කාමර · Tap-ware · මෙවලම් සැපයුම',
     color: '#7c3aed',
     bg: '#f5f3ff',
   },
@@ -155,7 +155,7 @@ const TRANS = {
 // ─── Shared helpers ───────────────────────────────────────────────────────────
 function useLang() {
   const [lang, setLangState] = useState(() => {
-    try { return localStorage.getItem('tilershub_lang') || 'en' } catch { return 'en' }
+    try { return localStorage.getItem('tilershub_lang') || 'si' } catch { return 'si' }
   })
   function toggle() {
     const next = lang === 'en' ? 'si' : 'en'
@@ -467,8 +467,8 @@ export default function JoinForm() {
           <LangToggle lang={lang} onToggle={toggleLang} />
         </div>
         <div style={{ textAlign: 'center', marginBottom: 28 }}>
-          <div style={{ fontSize: 13, fontWeight: 700, color: '#374151', marginBottom: 4 }}>What best describes you?</div>
-          <div style={{ fontSize: 12, color: '#94a3b8' }}>Choose your category to get started — takes 2 minutes.</div>
+          <div style={{ fontSize: 13, fontWeight: 700, color: '#374151', marginBottom: 4 }}>ඔබව හොඳින් විස්තර කරන්නේ කුමක්ද?</div>
+          <div style={{ fontSize: 12, color: '#94a3b8' }}>ඔබේ වර්ගය තෝරන්න — මිනිත්තු 2ක් ගත වේ.</div>
         </div>
         <div style={{ display: 'flex', flexDirection: 'column', gap: 12 }}>
           {PROVIDER_CATEGORIES.map(cat => (
@@ -507,7 +507,7 @@ export default function JoinForm() {
           onClick={() => setCategory(null)}
           style={{ display: 'inline-flex', alignItems: 'center', gap: 8, background: category.bg, border: `1.5px solid ${category.color}40`, borderRadius: 10, padding: '7px 14px', cursor: 'pointer', fontSize: 12, fontWeight: 700, color: category.color }}
         >
-          {category.icon} {category.label} <span style={{ fontSize: 10, color: '#94a3b8', fontWeight: 400 }}>· change</span>
+          {category.icon} {category.label} <span style={{ fontSize: 10, color: '#94a3b8', fontWeight: 400 }}>· වෙනස් කරන්න</span>
         </button>
         <LangToggle lang={lang} onToggle={toggleLang} />
       </div>

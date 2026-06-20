@@ -43,6 +43,7 @@ const TRANS = {
     otherProviders: '🏪 Other Providers',
     seeAll: 'See all →',
     topRated: '⭐ Top Rated',
+    dayLabel: '/day',
   },
   si: {
     searchPh: 'නමින්, සේවාවෙන් සොයන්න...',
@@ -66,10 +67,10 @@ const TRANS = {
     perSqftLabel: 'sq.ft. ට',
     reviewsLabel: n => `සමාලෝචන ${n}`,
     servicesLabel: 'සේවාවන්',
-    portfolioLabel: 'Portfolio',
+    portfolioLabel: 'ගැලරිය',
     serviceAreasLabel: 'සේවා ප්‍රදේශ',
-    viewProfile: 'පූර්ණ විස්තරය',
-    viewShop: 'Shop බලන්න ›',
+    viewProfile: 'පැතිකඩ බලන්න',
+    viewShop: 'සාප්පුව බලන්න ›',
     whatsapp: '💬 WhatsApp',
     call: '📞 ඇමතීම',
     altNumber: '💬 වෙනත් අංකය',
@@ -83,7 +84,8 @@ const TRANS = {
     whatTheyDo: type => `${type} කරන දේ`,
     otherProviders: '🏪 වෙනත් සේවා සපයන්නන්',
     seeAll: 'සියල්ල →',
-    topRated: '⭐ Top Rated',
+    topRated: '⭐ ඉහළ ශ්‍රේණිය',
+    dayLabel: 'දිනකට',
   },
 }
 
@@ -93,7 +95,7 @@ const TYPE_LABELS_SI = { tiler: 'ටයිල් ශිල්පීන්', prov
 // ─── Language hook ─────────────────────────────────────────────────────────────
 function useLang() {
   const [lang, setLangState] = useState(() => {
-    try { return localStorage.getItem('tilershub_lang') || 'en' } catch { return 'en' }
+    try { return localStorage.getItem('tilershub_lang') || 'si' } catch { return 'si' }
   })
   function toggle() {
     const next = lang === 'en' ? 'si' : 'en'
@@ -141,14 +143,14 @@ function VerificationBadge({ status }) {
 
 // ─── Provider type config ───────────────────────────────────────────────────────
 const PROVIDER_TYPE_DISPLAY = {
-  tiler:        { label: 'Professional' },
-  contractor:   { label: 'Contractor'   },
-  tile_shop:    { label: 'Tile Shop'    },
-  supplier:     { label: 'Supplier'     },
-  workshop:     { label: 'Workshop'     },
-  brand_dealer: { label: 'Brand Dealer' },
-  bathroom_shop:{ label: 'Bathware Shop'},
-  tool_supplier:{ label: 'Tool Supplier'},
+  tiler:        { label: 'වෘත්තිකයා'        },
+  contractor:   { label: 'කොන්ත්‍රාත්කරු'    },
+  tile_shop:    { label: 'ටයිල් සාප්පුව'     },
+  supplier:     { label: 'සැපයුම්කරු'        },
+  workshop:     { label: 'වැඩ පොළ'           },
+  brand_dealer: { label: 'බ්‍රෑන්ඩ් නියෝජිතයා' },
+  bathroom_shop:{ label: 'නාන කාමර සාප්පුව'  },
+  tool_supplier:{ label: 'මෙවලම් සැපයුම්කරු' },
 }
 
 // Shop types use Card 2 (landscape); all others use Card 1 (portrait)
@@ -170,10 +172,10 @@ function shopTagline(type, services) {
   const s = (services || []).join(' ').toLowerCase()
   const hasTile = TILE_KWS.some(k => s.includes(k))
   const hasBath = BATH_KWS.some(k => s.includes(k))
-  if (hasTile && hasBath) return 'Tiles & Bathware'
-  if (type === 'bathroom_shop') return hasTile ? 'Tiles & Bathware' : 'Bathware Specialist'
-  if (type === 'brand_dealer') return 'Authorised Brand Dealer'
-  return hasBath ? 'Tiles & Bathware' : 'Tile Showroom'
+  if (hasTile && hasBath) return 'ටයිල් සහ නාන කාමර'
+  if (type === 'bathroom_shop') return hasTile ? 'ටයිල් සහ නාන කාමර' : 'නාන කාමර විශේෂඥ'
+  if (type === 'brand_dealer') return 'බ්‍රෑන්ඩ් නිළ නියෝජිතයා'
+  return hasBath ? 'ටයිල් සහ නාන කාමර' : 'ටයිල් ප්‍රදර්ශනාගාරය'
 }
 
 function ShopCard({ provider, onClick, T }) {
@@ -212,7 +214,7 @@ function ShopCard({ provider, onClick, T }) {
         )}
         {!provider.is_featured && VERIFIED_STATUSES.has(provider.verification_status) && (
           <div style={{ position: 'absolute', top: 9, left: 9, background: 'rgba(22,163,74,0.9)', color: '#fff', fontSize: 9, fontWeight: 700, padding: '4px 8px', borderRadius: 20, boxShadow: '0 2px 8px rgba(0,0,0,0.25)', whiteSpace: 'nowrap' }}>
-            ✓ Verified
+            ✓ සත්‍යාපිත
           </div>
         )}
         {/* City overlaid bottom-left */}
@@ -231,7 +233,7 @@ function ShopCard({ provider, onClick, T }) {
           <div style={{ display: 'flex', alignItems: 'center', gap: 4, marginBottom: 7 }}>
             <span style={{ fontSize: 12 }}>⭐</span>
             <span style={{ fontSize: 13, fontWeight: 700, color: '#92400e' }}>{rating.toFixed(1)}</span>
-            {reviewCount > 0 && <span style={{ fontSize: 11, color: '#94a3b8' }}>({reviewCount} reviews)</span>}
+            {reviewCount > 0 && <span style={{ fontSize: 11, color: '#94a3b8' }}>({T.reviewsLabel(reviewCount)})</span>}
           </div>
         )}
         {provider.description && (
@@ -286,7 +288,7 @@ function TilerCard({ tiler, onClick, T }) {
         <div style={{ position: 'absolute', inset: 0, background: 'linear-gradient(to bottom, rgba(0,0,0,0.02) 60%, rgba(0,0,0,0.2) 100%)' }} />
         {isVerified && (
           <div style={{ position: 'absolute', top: 10, right: 10, background: '#16a34a', color: '#fff', fontSize: 11, fontWeight: 700, padding: '4px 11px', borderRadius: 20, boxShadow: '0 2px 8px rgba(0,0,0,0.22)' }}>
-            ✓ Verified
+            ✓ සත්‍යාපිත
           </div>
         )}
       </div>
@@ -294,9 +296,9 @@ function TilerCard({ tiler, onClick, T }) {
       {/* Content below image */}
       <div style={{ padding: '14px 16px 16px' }}>
         <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', marginBottom: 6 }}>
-          <span style={{ fontSize: 12, color: '#64748b', fontWeight: 600 }}>Tiler</span>
+          <span style={{ fontSize: 12, color: '#64748b', fontWeight: 600 }}>ටයිලර්</span>
           {tiler.daily_rate_min > 0 && (
-            <span style={{ fontSize: 12, color: '#64748b' }}>From <span style={{ fontSize: 15, fontWeight: 800, color: '#0f172a' }}>Rs.{tiler.daily_rate_min}</span>/day</span>
+            <span style={{ fontSize: 12, color: '#64748b' }}>{T.from} <span style={{ fontSize: 15, fontWeight: 800, color: '#0f172a' }}>Rs.{tiler.daily_rate_min}</span>/{T.dayLabel}</span>
           )}
         </div>
         <div style={{ fontSize: 16, fontWeight: 700, color: '#0f172a', marginBottom: 5, overflow: 'hidden', whiteSpace: 'nowrap', textOverflow: 'ellipsis' }}>{tiler.full_name}</div>
@@ -304,7 +306,7 @@ function TilerCard({ tiler, onClick, T }) {
           <div style={{ display: 'flex', alignItems: 'center', gap: 5, marginBottom: 8 }}>
             <span>⭐</span>
             <span style={{ fontSize: 13, fontWeight: 700, color: '#92400e' }}>{tiler.avg_rating.toFixed(1)}</span>
-            {tiler.review_count > 0 && <span style={{ fontSize: 12, color: '#94a3b8' }}>({tiler.review_count} reviews)</span>}
+            {tiler.review_count > 0 && <span style={{ fontSize: 12, color: '#94a3b8' }}>({T.reviewsLabel(tiler.review_count)})</span>}
           </div>
         )}
         {tiler.speciality && (
@@ -314,7 +316,7 @@ function TilerCard({ tiler, onClick, T }) {
         )}
         <div style={{ display: 'flex', alignItems: 'center', gap: 8, borderTop: '1px solid #f1f5f9', paddingTop: 12, flexWrap: 'wrap' }}>
           {tiler.experience_years > 0 && (
-            <span style={{ fontSize: 11, color: '#475569', flexShrink: 0 }}><span style={{ color: '#22c55e', fontWeight: 700 }}>✓</span> {tiler.experience_years}+ Yrs Experience</span>
+            <span style={{ fontSize: 11, color: '#475569', flexShrink: 0 }}><span style={{ color: '#22c55e', fontWeight: 700 }}>✓</span> {tiler.experience_years}+ {T.yrsExp}</span>
           )}
           {(tiler.city || tiler.district) && (
             <span style={{ fontSize: 11, color: '#475569', overflow: 'hidden', whiteSpace: 'nowrap', textOverflow: 'ellipsis' }}>📍 {tiler.city || tiler.district}</span>
@@ -329,7 +331,7 @@ function TilerCard({ tiler, onClick, T }) {
             {tiler.slug && (
               <a href={`/tilers/${tiler.slug}`} onClick={e => e.stopPropagation()}
                 style={{ display: 'inline-flex', alignItems: 'center', gap: 4, background: '#1B3A6B', color: '#fff', borderRadius: 10, padding: '7px 14px', fontSize: 12, fontWeight: 700, textDecoration: 'none', whiteSpace: 'nowrap' }}>
-                View Profile ›
+                {T.viewProfile} ›
               </a>
             )}
           </div>
@@ -366,7 +368,7 @@ function ContractorCard({ provider, onClick, T }) {
         <div style={{ position: 'absolute', inset: 0, background: 'linear-gradient(to bottom, rgba(0,0,0,0.02) 60%, rgba(0,0,0,0.2) 100%)' }} />
         {isVerified && (
           <div style={{ position: 'absolute', top: 10, right: 10, background: '#16a34a', color: '#fff', fontSize: 11, fontWeight: 700, padding: '4px 11px', borderRadius: 20, boxShadow: '0 2px 8px rgba(0,0,0,0.22)' }}>
-            ✓ Verified
+            ✓ සත්‍යාපිත
           </div>
         )}
       </div>
@@ -381,7 +383,7 @@ function ContractorCard({ provider, onClick, T }) {
           <div style={{ display: 'flex', alignItems: 'center', gap: 5, marginBottom: 8 }}>
             <span>⭐</span>
             <span style={{ fontSize: 13, fontWeight: 700, color: '#92400e' }}>{provider.avg_rating.toFixed(1)}</span>
-            {provider.review_count > 0 && <span style={{ fontSize: 12, color: '#94a3b8' }}>({provider.review_count} reviews)</span>}
+            {provider.review_count > 0 && <span style={{ fontSize: 12, color: '#94a3b8' }}>({T.reviewsLabel(provider.review_count)})</span>}
           </div>
         )}
         {provider.description && (
@@ -403,7 +405,7 @@ function ContractorCard({ provider, onClick, T }) {
             {provider.slug && (
               <a href={`/providers/${provider.slug}`} onClick={e => e.stopPropagation()}
                 style={{ display: 'inline-flex', alignItems: 'center', gap: 4, background: '#1B3A6B', color: '#fff', borderRadius: 10, padding: '7px 14px', fontSize: 12, fontWeight: 700, textDecoration: 'none', whiteSpace: 'nowrap' }}>
-                View Profile ›
+                {T.viewProfile} ›
               </a>
             )}
           </div>
@@ -556,39 +558,39 @@ function ProviderModal({ item, isTiler, onClose, T }) {
 // ─── Suggested content (empty state) ──────────────────────────────────────────
 const TYPE_INFO_CARDS = {
   workshop: [
-    { icon: '🔪', title: 'Tile Cutting', body: 'Straight cuts, bevel edges and L-shapes for perfect fits on any site.' },
-    { icon: '🌀', title: 'Routing & Profiling', body: 'Rounded edges, grooves and custom profiles for a premium finish.' },
-    { icon: '💧', title: 'Waterjet Cutting', body: 'Precision curves, mosaic shapes and outlet holes without chipping.' },
+    { icon: '🔪', title: 'ටයිල් කැපීම', body: '똑straight කැපීම්, බෙවල් ද්වාර සහ L-හැඩ — ඕනෑම ස්ථානයකට නිවැරදිව ගැලෙනු ඇත.' },
+    { icon: '🌀', title: 'රවුටිං සහ ප්‍රොෆයිලිං', body: 'රවුන්ඩ් දාර, ස්ලොට් සහ විශේෂ ප්‍රොෆයිල් — හොඳම නිමාව සඳහා.' },
+    { icon: '💧', title: 'වෝටර්ජෙට් කැපීම', body: 'නිශ්චිත වක්‍ර, මොසෙයික් හැඩ හා සිදුරු — ඉරිතැලීමකින් තොරව.' },
   ],
   supplier: [
-    { icon: '📦', title: 'Bulk Supply', body: 'Floor, wall and outdoor tiles supplied wholesale to contractors and homeowners.' },
-    { icon: '🏷️', title: 'Competitive Pricing', body: 'Direct-from-importer pricing on porcelain, ceramic and natural stone.' },
-    { icon: '🚚', title: 'Island-wide Delivery', body: 'Most suppliers deliver island-wide. Ask for minimum order quantities.' },
+    { icon: '📦', title: 'තොග සැපයීම', body: 'බිම, බිත්ති සහ බාහිර ටයිල් — කොන්ත්‍රාත්කරුවන්ට හා නිවාස හිමියන්ට තොගයෙන්.' },
+    { icon: '🏷️', title: 'තරඟකාරී මිල', body: 'පෝසිලේන්, සෙරමික් සහ ස්වාභාවික ගල් — ආනයනකරු සිටම.' },
+    { icon: '🚚', title: 'දිවයිනෙ පුරා බෙදාහැරීම', body: 'බොහෝ සැපයුම්කරුවන් දිවයිනෙ පුරා ලබා දේ. අවම ඇණවුම ගැන විමසන්න.' },
   ],
   contractor: [
-    { icon: '🏗️', title: 'Full Renovation', body: 'End-to-end bathroom and kitchen renovation — design to handover.' },
-    { icon: '💧', title: 'Waterproofing', body: 'Certified membrane waterproofing for wet areas and flat roofs.' },
-    { icon: '📋', title: 'Project Management', body: 'Single point of contact managing tilers, plumbers and finishers.' },
+    { icon: '🏗️', title: 'සම්පූර්ණ ප්‍රතිසංස්කරණය', body: 'නාන කාමර හා කුස්සිය — සැලසුමේ සිට බාර දීම දක්වා.' },
+    { icon: '💧', title: 'ජලනිරෝධය', body: 'තෙත් ප්‍රදේශ හා පැතලි වහළ සඳහා සහතිකලත් මෙම්බ්‍රේන් ජලනිරෝධය.' },
+    { icon: '📋', title: 'ව්‍යාපෘති කළමනාකරණය', body: 'ටයිලර්, සනීපාරක්ෂක ශිල්පීන් හා නිමාවන් — එක් ලිපිනයකින් කළමනාකරණය.' },
   ],
   tile_shop: [
-    { icon: '🏪', title: 'Showroom Experience', body: 'See tiles at full scale before buying — patterns, textures and grout combos.' },
-    { icon: '🪨', title: 'Wide Range', body: 'Budget to premium ranges in porcelain, ceramic, marble and mosaic.' },
-    { icon: '💡', title: 'Design Advice', body: 'In-store consultants help you match tiles, grout and fittings.' },
+    { icon: '🏪', title: 'ප්‍රදර්ශනාගාර අත්දැකීම', body: 'මිලදී ගැනීමට පෙර සම්පූර්ණ ප්‍රමාණයෙන් ටයිල් බලන්න — රටා, ආලේපන හා ග්‍රවුට් සංයෝජන.' },
+    { icon: '🪨', title: 'පුළුල් පරාසය', body: 'ලාභ සිට ප්‍රිමියම් දක්වා — පෝසිලේන්, සෙරමික්, කිරිගරු හා මොසෙයික්.' },
+    { icon: '💡', title: 'සැලසුම් උපදෙස්', body: 'ටයිල්, ග්‍රවුට් හා ෆිටිංස් ගළපා ගැනීමට කඩේ ශිල්පීන් සහාය වේ.' },
   ],
   brand_dealer: [
-    { icon: '🏷️', title: 'Authorised Brands', body: 'Genuine Rocell, Lanka Tile, Megatile and imported brand products.' },
-    { icon: '✅', title: 'Warranty Backed', body: 'Authorised dealers provide manufacturer warranty on every product.' },
-    { icon: '🎨', title: 'Full Collections', body: 'Access the complete range of each brand including limited editions.' },
+    { icon: '🏷️', title: 'අනුමත බ්‍රෑන්ඩ්', body: 'Rocell, Lanka Tile, Megatile හා ආනයනික බ්‍රෑන්ඩ් නිෂ්පාදන — සත්‍ය ඒවා.' },
+    { icon: '✅', title: 'වගකීම් ලබා දේ', body: 'නිළ නියෝජිතයන් සෑම නිෂ්පාදනයකටම නිෂ්පාදක වගකීම ලබා දේ.' },
+    { icon: '🎨', title: 'සම්පූර්ණ එකතුව', body: 'සීමිත සංස්කරණ ඇතුළු සෑම බ්‍රෑන්ඩ් එකේම සම්පූර්ණ පරාසයට ප්‍රවේශය.' },
   ],
   tool_supplier: [
-    { icon: '🔧', title: 'Tile Cutters & Saws', body: 'Manual cutters, wet saws and rail cutters for clean straight cuts.' },
-    { icon: '⚙️', title: 'Leveling Systems', body: 'Clips, wedges and pliers for perfectly flat, lippage-free installations.' },
-    { icon: '🦺', title: 'Safety Equipment', body: 'Knee pads, gloves, safety glasses and dust masks for site use.' },
+    { icon: '🔧', title: 'ටයිල් කටර් සහ 톱', body: 'මැනුවල් කටර්, ස්ලෙශ් කටර් හා රේල් කටර් — නිවැරදි කෙළින් කැපීම් සඳහා.' },
+    { icon: '⚙️', title: 'ලෙවලිං පද්ධති', body: 'ක්ලිප්, ගල් හා ප්ලෙයර් — ලිප්-රහිත, සමතල කිරීම් සඳහා.' },
+    { icon: '🦺', title: 'ආරක්ෂිත උපකරණ', body: 'දණහිස් පෑඩ්, අත්වැසුම්, ආරක්ෂිත කණ්ණාඩි හා දූවිලි මාස්ක්.' },
   ],
   bathroom_shop: [
-    { icon: '🚿', title: 'Sanitary Ware', body: 'Toilets, basins, showers and bathtubs from leading brands.' },
-    { icon: '🔩', title: 'Faucets & Mixers', body: 'Basin mixers, bath mixers and kitchen taps in all finishes.' },
-    { icon: '🪞', title: 'Vanities & Mirrors', body: 'Bathroom vanity units, storage cabinets and LED mirrors.' },
+    { icon: '🚿', title: 'සනීපාරක්ෂක භාණ්ඩ', body: 'ප්‍රමුඛ බ්‍රෑන්ඩ්වලින් ටොයිලට්, ද්‍රෝණි, ෂවර් හා ස්නාන ටබ්.' },
+    { icon: '🔩', title: 'කුරුල්ල සහ මිශ්‍රණ', body: 'ද්‍රෝණි මිශ්‍රණ, ස්නාන මිශ්‍රණ හා කුස්සි කරාම — සියලු නිමාවන්ගෙන්.' },
+    { icon: '🪞', title: 'ව්‍යානිටි සහ කෞතුක කැඩපත්', body: 'නාන කාමර ව්‍යානිටි ඒකක, ගබඩා කැබිනට් හා LED කැඩපත්.' },
   ],
 }
 

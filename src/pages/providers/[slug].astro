@@ -62,11 +62,11 @@ function waLink(p, n) {
 }
 
 const PROVIDER_TYPE_LABELS = {
-  tiler: 'Tiler', workshop: 'Workshop', supplier: 'Supplier',
-  contractor: 'Contractor', tile_shop: 'Tile Shop', brand_dealer: 'Brand Dealer'
+  tiler: 'ටයිලර්', workshop: 'වැඩ පොළ', supplier: 'සැපයුම්කරු',
+  contractor: 'කොන්ත්‍රාත්කරු', tile_shop: 'ටයිල් සාප්පුව', brand_dealer: 'බ්‍රෑන්ඩ් නියෝජිතයා'
 }
 
-const typeLabel = isTiler ? 'Tiler' : (PROVIDER_TYPE_LABELS[item.provider_type] || 'Provider')
+const typeLabel = isTiler ? 'ටයිලර්' : (PROVIDER_TYPE_LABELS[item.provider_type] || 'සේවා සපයන්නා')
 
 const coverBg = 'linear-gradient(135deg,#0F2444 0%,#1B3A6B 100%)'
 const heroCoverSrc = isTiler
@@ -74,9 +74,9 @@ const heroCoverSrc = isTiler
   : (item.cover_image || item.profile_image || null)
 
 function verBadge(vs: string | null) {
-  if (vs === 'th_master')         return { label: 'TH Master ★',  bg: '#92400e', color: '#fef3c7' }
-  if (vs === 'th_certified_pro')  return { label: 'Certified Pro ✦', bg: '#1B3A6B', color: '#bfdbfe' }
-  if (vs === 'th_verified' || vs === 'verified') return { label: 'Verified', bg: 'rgba(22,163,74,0.9)', color: '#fff' }
+  if (vs === 'th_master')         return { label: 'TH ප්‍රධාන ★',  bg: '#92400e', color: '#fef3c7' }
+  if (vs === 'th_certified_pro')  return { label: 'සහතිකලත් ✦', bg: '#1B3A6B', color: '#bfdbfe' }
+  if (vs === 'th_verified' || vs === 'verified') return { label: '✓ සත්‍යාපිත', bg: 'rgba(22,163,74,0.9)', color: '#fff' }
   return null
 }
 
@@ -136,7 +136,7 @@ const bizSchemaStr = JSON.stringify(bizSchema)
     <div style="position:absolute;inset:0;background:linear-gradient(to bottom,rgba(10,28,56,0.55) 0%,rgba(10,28,56,0.75) 100%);pointer-events:none;"></div>
 
     <div style="max-width:800px;margin:0 auto;position:relative;">
-      <a href="/providers" style="display:inline-flex;align-items:center;gap:5px;font-size:11px;color:rgba(255,255,255,0.45);letter-spacing:1px;font-weight:600;margin-bottom:24px;text-decoration:none;">← All Providers</a>
+      <a href="/providers" style="display:inline-flex;align-items:center;gap:5px;font-size:11px;color:rgba(255,255,255,0.45);letter-spacing:1px;font-weight:600;margin-bottom:24px;text-decoration:none;">← සියලු සේවා සපයන්නන්</a>
       <div style="display:flex;align-items:flex-start;gap:20px;flex-wrap:wrap;">
         {/* Avatar */}
         <div style="width:96px;height:96px;border-radius:50%;background:rgba(255,255,255,0.15);border:2px solid rgba(212,175,55,0.6);display:flex;align-items:center;justify-content:center;font-size:32px;font-weight:800;color:#fff;flex-shrink:0;overflow:hidden;box-shadow:0 4px 20px rgba(0,0,0,0.35);">
@@ -151,10 +151,10 @@ const bizSchemaStr = JSON.stringify(bizSchema)
           <div style="font-size:14px;color:rgba(255,255,255,0.6);margin-bottom:10px;">📍 {city}</div>
           {/* Verification badges */}
           {isTiler && item.is_verified && (
-            <span style="display:inline-flex;align-items:center;gap:4px;font-size:11px;font-weight:700;padding:3px 10px;border-radius:20px;background:rgba(22,163,74,0.2);color:#4ade80;border:1px solid rgba(74,222,128,0.3);">✓ Skilled</span>
+            <span style="display:inline-flex;align-items:center;gap:4px;font-size:11px;font-weight:700;padding:3px 10px;border-radius:20px;background:rgba(22,163,74,0.2);color:#4ade80;border:1px solid rgba(74,222,128,0.3);">✓ දක්ෂ</span>
           )}
           {isTiler && !item.is_verified && (
-            <span style="display:inline-flex;align-items:center;gap:4px;font-size:11px;font-weight:700;padding:3px 10px;border-radius:20px;background:rgba(0,0,0,0.3);color:rgba(255,255,255,0.65);border:1px solid rgba(255,255,255,0.2);">Unverified</span>
+            <span style="display:inline-flex;align-items:center;gap:4px;font-size:11px;font-weight:700;padding:3px 10px;border-radius:20px;background:rgba(0,0,0,0.3);color:rgba(255,255,255,0.65);border:1px solid rgba(255,255,255,0.2);">සත්‍යාපිත නොවේ</span>
           )}
           {!isTiler && (() => {
             const badge = verBadge(item.verification_status)
@@ -172,7 +172,7 @@ const bizSchemaStr = JSON.stringify(bizSchema)
             )}
             <button id="hero-review-btn"
               style="display:inline-flex;align-items:center;gap:8px;background:rgba(255,255,255,0.12);color:#fff;border:1.5px solid rgba(255,255,255,0.3);border-radius:14px;padding:11px 20px;font-size:13px;font-weight:700;cursor:pointer;backdrop-filter:blur(6px);">
-              ⭐ Rate &amp; Review
+              ⭐ ශ්‍රේණිය දෙන්න
             </button>
           </div>
         </div>
@@ -189,20 +189,20 @@ const bizSchemaStr = JSON.stringify(bizSchema)
 
         {isUnverified && (
           <div style="background:#fef9f0;border:1px solid #fde68a;border-radius:12px;padding:14px 18px;margin-bottom:20px;font-size:13px;color:#78716c;line-height:1.7;">
-            ℹ️ This profile was added from community-submitted information and has not yet been verified by TILERSHUB.
+            ℹ️ මෙම ගොනුව ප්‍රජාව ඉදිරිපත් කළ තොරතුරු ආශ්‍රිතව TILERSHUB විසින් තවම සත්‍යාපනය කර නොමැත.
           </div>
         )}
 
         {(isTiler ? item.bio : item.description) && (
           <div style="background:var(--surface-2);border:1px solid var(--border);border-radius:16px;padding:22px;margin-bottom:20px;">
-            <h2 style="font-size:13px;font-weight:700;color:var(--text-3);text-transform:uppercase;letter-spacing:1px;margin-bottom:10px;">About</h2>
+            <h2 style="font-size:13px;font-weight:700;color:var(--text-3);text-transform:uppercase;letter-spacing:1px;margin-bottom:10px;">ගැන</h2>
             <p style="font-size:14px;color:var(--text-2);line-height:1.8;">{isTiler ? item.bio : item.description}</p>
           </div>
         )}
 
         {(item.services || []).length > 0 && (
           <div style="background:var(--surface-2);border:1px solid var(--border);border-radius:16px;padding:22px;margin-bottom:20px;">
-            <h2 style="font-size:13px;font-weight:700;color:var(--text-3);text-transform:uppercase;letter-spacing:1px;margin-bottom:12px;">Services</h2>
+            <h2 style="font-size:13px;font-weight:700;color:var(--text-3);text-transform:uppercase;letter-spacing:1px;margin-bottom:12px;">සේවාවන්</h2>
             <div style="display:flex;flex-wrap:wrap;gap:8px;">
               {(item.services || []).map((s: string) => (
                 <span class="chip chip-navy">{s}</span>
@@ -213,24 +213,24 @@ const bizSchemaStr = JSON.stringify(bizSchema)
 
         {isTiler && item.experience_years > 0 && (item.total_jobs > 0 || item.daily_rate_min) && (
           <div style="background:var(--surface-2);border:1px solid var(--border);border-radius:16px;padding:22px;margin-bottom:20px;">
-            <h2 style="font-size:13px;font-weight:700;color:var(--text-3);text-transform:uppercase;letter-spacing:1px;margin-bottom:12px;">Experience</h2>
+            <h2 style="font-size:13px;font-weight:700;color:var(--text-3);text-transform:uppercase;letter-spacing:1px;margin-bottom:12px;">අත්දැකීම</h2>
             <div style="display:flex;gap:12px;flex-wrap:wrap;">
               {item.experience_years > 0 && (
                 <div style="padding:12px 20px;background:#fff;border-radius:12px;border:1px solid var(--border);text-align:center;min-width:80px;">
                   <div style="font-size:20px;font-weight:700;color:var(--navy);">{item.experience_years}+</div>
-                  <div style="font-size:10px;color:var(--text-4);margin-top:2px;">Years Exp.</div>
+                  <div style="font-size:10px;color:var(--text-4);margin-top:2px;">අත්දැකීම් (වසර)</div>
                 </div>
               )}
               {item.total_jobs > 0 && (
                 <div style="padding:12px 20px;background:#fff;border-radius:12px;border:1px solid var(--border);text-align:center;min-width:80px;">
                   <div style="font-size:20px;font-weight:700;color:var(--navy);">{item.total_jobs}</div>
-                  <div style="font-size:10px;color:var(--text-4);margin-top:2px;">Jobs Done</div>
+                  <div style="font-size:10px;color:var(--text-4);margin-top:2px;">සේවා ගණන</div>
                 </div>
               )}
               {item.daily_rate_min && (
                 <div style="padding:12px 20px;background:#fff;border-radius:12px;border:1px solid var(--border);text-align:center;">
                   <div style="font-size:16px;font-weight:700;color:var(--navy);">Rs.{item.daily_rate_min}–{item.daily_rate_max}/sqft</div>
-                  <div style="font-size:10px;color:var(--text-4);margin-top:2px;">Rate per sq.ft</div>
+                  <div style="font-size:10px;color:var(--text-4);margin-top:2px;">ගාස්තු (sq.ft ට)</div>
                 </div>
               )}
             </div>
@@ -239,7 +239,7 @@ const bizSchemaStr = JSON.stringify(bizSchema)
 
         {(item.gallery || []).length > 0 && (
           <div style="background:var(--surface-2);border:1px solid var(--border);border-radius:16px;padding:22px;margin-bottom:20px;">
-            <h2 style="font-size:13px;font-weight:700;color:var(--text-3);text-transform:uppercase;letter-spacing:1px;margin-bottom:14px;">📸 Portfolio</h2>
+            <h2 style="font-size:13px;font-weight:700;color:var(--text-3);text-transform:uppercase;letter-spacing:1px;margin-bottom:14px;">📸 ගැලරිය</h2>
             <div style="display:grid;grid-template-columns:repeat(auto-fill,minmax(110px,1fr));gap:8px;">
               {(item.gallery || []).map((img: string, i: number) => (
                 <img src={img} alt={`Work photo ${i + 1}`}
@@ -251,7 +251,7 @@ const bizSchemaStr = JSON.stringify(bizSchema)
 
         {!isTiler && (item.service_areas || []).length > 0 && (
           <div style="background:var(--surface-2);border:1px solid var(--border);border-radius:16px;padding:22px;margin-bottom:20px;">
-            <h2 style="font-size:13px;font-weight:700;color:var(--text-3);text-transform:uppercase;letter-spacing:1px;margin-bottom:12px;">Service Areas</h2>
+            <h2 style="font-size:13px;font-weight:700;color:var(--text-3);text-transform:uppercase;letter-spacing:1px;margin-bottom:12px;">සේවා ප්‍රදේශ</h2>
             <div style="display:flex;flex-wrap:wrap;gap:8px;">
               {(item.service_areas || []).map((area: string) => (
                 <span class="chip chip-gray">📍 {area}</span>
@@ -271,7 +271,7 @@ const bizSchemaStr = JSON.stringify(bizSchema)
       <!-- Right: contact card -->
       <div style="position:sticky;top:80px;">
         <div style="background:#fff;border:1.5px solid var(--border);border-radius:20px;padding:24px;box-shadow:var(--shadow);">
-          <div style="font-size:12px;font-weight:700;color:var(--text-4);text-transform:uppercase;letter-spacing:1px;margin-bottom:16px;">Contact {isTiler ? 'Tiler' : typeLabel}</div>
+          <div style="font-size:12px;font-weight:700;color:var(--text-4);text-transform:uppercase;letter-spacing:1px;margin-bottom:16px;">සම්බන්ධ වන්න — {isTiler ? 'ටයිලර්' : typeLabel}</div>
 
           {phone && (
             <a href={waLink(phone, name)} target="_blank" rel="noopener noreferrer" style="display:flex;align-items:center;justify-content:center;gap:8px;width:100%;background:#25D366;color:#fff;border-radius:12px;padding:14px;font-size:14px;font-weight:700;text-decoration:none;margin-bottom:10px;box-shadow:0 4px 14px rgba(37,211,102,0.25);">
@@ -282,34 +282,34 @@ const bizSchemaStr = JSON.stringify(bizSchema)
 
           {altPhone && (
             <a href={waLink(altPhone, name)} target="_blank" rel="noopener noreferrer" style="display:flex;align-items:center;justify-content:center;gap:8px;width:100%;background:#f0fdf4;color:#16a34a;border:1.5px solid #bbf7d0;border-radius:12px;padding:12px;font-size:13px;font-weight:700;text-decoration:none;margin-bottom:10px;">
-              💬 Alt. Number
+              💬 වෙනත් අංකය
             </a>
           )}
           <div style="height:1px;background:var(--border);margin-bottom:16px;"></div>
           <div style="font-size:12px;color:var(--text-3);line-height:1.7;">
-            📍 Based in <strong style="color:var(--text-2);">{city}</strong>
+            📍 පිහිටා ඇත: <strong style="color:var(--text-2);">{city}</strong>
           </div>
           {item.district && item.district !== item.city && (
-            <div style="font-size:12px;color:var(--text-3);margin-top:4px;">🗺️ {item.district} District</div>
+            <div style="font-size:12px;color:var(--text-3);margin-top:4px;">🗺️ {item.district} දිස්ත්‍රික්කය</div>
           )}
           {!isTiler && item.website_url && (
-            <a href={item.website_url} target="_blank" rel="noopener" style="display:flex;align-items:center;gap:6px;font-size:12px;font-weight:600;color:var(--navy);margin-top:12px;text-decoration:none;">🌐 Visit Website →</a>
+            <a href={item.website_url} target="_blank" rel="noopener" style="display:flex;align-items:center;gap:6px;font-size:12px;font-weight:600;color:var(--navy);margin-top:12px;text-decoration:none;">🌐 වෙබ් අඩවිය →</a>
           )}
         </div>
 
         <button id="sidebar-review-btn"
           style="display:flex;align-items:center;justify-content:center;gap:7px;width:100%;background:#fff;color:#1B3A6B;border:2px solid #1B3A6B;border-radius:12px;padding:12px;margin-top:12px;font-size:13px;font-weight:700;cursor:pointer;">
-          ⭐ Rate &amp; Review
+          ⭐ ශ්‍රේණිය දෙන්න
         </button>
 
         <a href="/post-project" style="display:flex;align-items:center;justify-content:center;gap:6px;background:var(--terra);color:#fff;border-radius:12px;padding:12px;margin-top:10px;font-size:13px;font-weight:700;text-decoration:none;text-align:center;">
-          📋 Post Your Project Free
+          📋 නොමිලේ ව්‍යාපෘතිය ලිය කරන්න
         </a>
 
         <button
           id="share-profile-btn"
           style="display:flex;align-items:center;justify-content:center;gap:6px;width:100%;background:#f1f5f9;color:#374151;border:1px solid #e2e8f0;border-radius:12px;padding:10px;font-size:12px;font-weight:700;cursor:pointer;margin-top:10px;">
-          🔗 Share Profile
+          🔗 පැතිකඩ බෙදාගන්න
         </button>
 
         <EditProfileButton
@@ -353,8 +353,8 @@ const bizSchemaStr = JSON.stringify(bizSchema)
           try { await navigator.share({ title, url }) } catch (_) {}
         } else {
           await navigator.clipboard.writeText(url)
-          btn.textContent = '✓ Link Copied!'
-          setTimeout(() => { btn.textContent = '🔗 Share Profile' }, 2000)
+          btn.textContent = '✓ සබැඳිය පිටපත් විය!'
+          setTimeout(() => { btn.textContent = '🔗 පැතිකඩ බෙදාගන්න' }, 2000)
         }
       })
     }

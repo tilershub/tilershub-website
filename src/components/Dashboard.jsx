@@ -12,10 +12,10 @@ const TYPE_ICON = {
 function timeAgo(d) {
   if (!d) return ''
   const m = Math.floor((Date.now() - new Date(d)) / 60000)
-  if (m < 60)   return `${m}m ago`
-  if (m < 1440) return `${Math.floor(m/60)}h ago`
-  if (m < 10080)return `${Math.floor(m/1440)}d ago`
-  return new Date(d).toLocaleDateString('en-LK', { day:'numeric', month:'short' })
+  if (m < 60)   return `${m}මිනි`
+  if (m < 1440) return `${Math.floor(m/60)}පැය`
+  if (m < 10080)return `${Math.floor(m/1440)}දින`
+  return new Date(d).toLocaleDateString('si-LK', { day:'numeric', month:'short' })
 }
 
 // ─── ROOT COMPONENT ────────────────────────────────────────────────
@@ -141,11 +141,11 @@ function ProviderDashboard({ user, claimedProfile, claimedProfileType, submissio
   const newBids   = Object.values(myBids).flat().filter(b => b.status === 'new').length
 
   const TABS = [
-    { key:'projects',  label:'📋 My Projects'  },
-    { key:'bids',      label:`💰 Bids${newBids > 0 ? ` (${newBids})` : ''}` },
-    ...(claimedProfile ? [{ key:'portfolio', label:'📸 Portfolio'  }] : []),
-    ...(claimedProfile ? [{ key:'profile',   label:'✏️ My Profile' }] : []),
-    { key:'listing',   label:'📋 My Listing'   },
+    { key:'projects',  label:'📋 මගේ ව්‍යාපෘති'  },
+    { key:'bids',      label:`💰 ලංසු${newBids > 0 ? ` (${newBids})` : ''}` },
+    ...(claimedProfile ? [{ key:'portfolio', label:'📸 ගැලරිය'  }] : []),
+    ...(claimedProfile ? [{ key:'profile',   label:'✏️ මගේ පැතිකඩ' }] : []),
+    { key:'listing',   label:'📋 ලිස්ටිං'   },
   ]
 
   return (
@@ -158,7 +158,7 @@ function ProviderDashboard({ user, claimedProfile, claimedProfileType, submissio
 
           {showClaimedBanner && (
             <div style={{ padding:'10px 14px', background:'rgba(22,163,74,0.15)', border:'1px solid rgba(22,163,74,0.3)', borderRadius:10, marginBottom:14 }}>
-              <span style={{ fontSize:13, color:'#4ade80', fontWeight:600 }}>✓ Profile claimed! Edit it in the My Profile tab.</span>
+              <span style={{ fontSize:13, color:'#4ade80', fontWeight:600 }}>✓ පැතිකඩ ඉල්ලා සිටි! මගේ පැතිකඩ ටැබ් හි සංස්කරණය කරන්න.</span>
             </div>
           )}
 
@@ -169,13 +169,13 @@ function ProviderDashboard({ user, claimedProfile, claimedProfileType, submissio
                 {initials}
               </div>
               <div>
-                <div style={{ fontSize:10, fontWeight:700, color:'rgba(255,255,255,0.38)', letterSpacing:2, textTransform:'uppercase', marginBottom:2 }}>Provider</div>
+                <div style={{ fontSize:10, fontWeight:700, color:'rgba(255,255,255,0.38)', letterSpacing:2, textTransform:'uppercase', marginBottom:2 }}>සේවා සපයන්නා</div>
                 <div className="db-profile-name" style={{ fontSize:16, fontWeight:700, color:'#fff', lineHeight:1.2 }}>{profileName}</div>
                 {claimedProfile && (
                   <div style={{ fontSize:11, color:'rgba(255,255,255,0.38)', marginTop:1 }}>
                     {claimedProfile.city || claimedProfile.district || ''}
                     {claimedProfile.verification_status === 'th_master' && <span style={{ marginLeft:6, color:'#D4AF37' }}>· 🛡️ TH Master</span>}
-                    {claimedProfile.is_verified && claimedProfile.verification_status !== 'th_master' && <span style={{ marginLeft:6, color:'#4ade80' }}>· ✓ Verified</span>}
+                    {claimedProfile.is_verified && claimedProfile.verification_status !== 'th_master' && <span style={{ marginLeft:6, color:'#4ade80' }}>· ✓ සත්‍යාපිත</span>}
                   </div>
                 )}
               </div>
@@ -184,13 +184,13 @@ function ProviderDashboard({ user, claimedProfile, claimedProfileType, submissio
             <div className="db-identity-actions" style={{ display:'flex', gap:8, flexWrap:'wrap' }}>
               {profileHref && (
                 <a href={profileHref} style={{ fontSize:12, fontWeight:600, color:'rgba(255,255,255,0.55)', background:'rgba(255,255,255,0.07)', border:'1px solid rgba(255,255,255,0.12)', borderRadius:8, padding:'6px 12px', textDecoration:'none', whiteSpace:'nowrap' }}>
-                  🔗 View Listing
+                  🔗 ලිස්ටිං බලන්න
                 </a>
               )}
               <button
                 onClick={async () => { await signOut(); window.location.href = '/' }}
                 style={{ fontSize:12, color:'rgba(255,255,255,0.45)', background:'rgba(255,255,255,0.07)', border:'1px solid rgba(255,255,255,0.12)', borderRadius:8, padding:'6px 12px', cursor:'pointer', fontWeight:600, whiteSpace:'nowrap' }}
-              >Sign Out</button>
+              >ගිණුමෙන් ඉවත් වන්න</button>
             </div>
           </div>
 
@@ -235,15 +235,15 @@ function ProviderBidsTab({ projects, bids }) {
   if (allBids.length === 0) return (
     <div style={{ textAlign:'center', padding:'48px 20px', background:'#fff', borderRadius:16, border:'1px solid var(--border)' }}>
       <div style={{ fontSize:40, marginBottom:12 }}>💰</div>
-      <div style={{ fontSize:15, fontWeight:700, color:'var(--text)', marginBottom:8 }}>No bids yet</div>
+      <div style={{ fontSize:15, fontWeight:700, color:'var(--text)', marginBottom:8 }}>ලංසු නොමැත</div>
       <p style={{ fontSize:13, color:'var(--text-3)', lineHeight:1.7 }}>
         {projects.length === 0
-          ? 'Post a project first — providers will bid and you can contact them here.'
-          : 'Your project is live. Providers will bid soon — check back here for updates.'}
+          ? 'පළමුව ව්‍යාපෘතියක් ලිය කරන්න — සේවා සපයන්නන් ලංසු දෙන විට ඔබට ඔවුන් හා සම්බන්ධ වීමට හැකිය.'
+          : 'ඔබේ ව්‍යාපෘතිය සජීවී ය. සේවා සපයන්නන් ශීඝ්‍රයෙන් ලංසු දෙනු ඇත — යාවත්කාලීන සඳහා නැවත පරීක්ෂා කරන්න.'}
       </p>
       {projects.length === 0 && (
         <a href="/post-project" style={{ display:'inline-flex', alignItems:'center', gap:6, marginTop:12, padding:'11px 22px', background:'var(--terra)', color:'#fff', borderRadius:10, fontSize:13, fontWeight:700, textDecoration:'none' }}>
-          📋 Post a Project
+          📋 ව්‍යාපෘතිය ලිය කරන්න
         </a>
       )}
     </div>
@@ -255,10 +255,10 @@ function ProviderBidsTab({ projects, bids }) {
     <div>
       <div style={{ display:'flex', alignItems:'center', justifyContent:'space-between', marginBottom:16, flexWrap:'wrap', gap:8 }}>
         <div>
-          <div style={{ fontSize:16, fontWeight:700, color:'var(--text)', marginBottom:2 }}>Bid History & Updates</div>
+          <div style={{ fontSize:16, fontWeight:700, color:'var(--text)', marginBottom:2 }}>ලංසු ඉතිහාසය සහ යාවත්කාලීන</div>
           <div style={{ fontSize:12, color:'var(--text-3)' }}>
-            {allBids.length} bid{allBids.length !== 1 ? 's' : ''} across {projects.length} project{projects.length !== 1 ? 's' : ''}
-            {newCount > 0 && <span style={{ marginLeft:6, fontWeight:700, color:'#f59e0b' }}>· {newCount} new</span>}
+            {allBids.length} ලංසු · {projects.length} ව්‍යාපෘති
+            {newCount > 0 && <span style={{ marginLeft:6, fontWeight:700, color:'#f59e0b' }}>· {newCount} නව</span>}
           </div>
         </div>
       </div>
@@ -285,7 +285,7 @@ function ProviderBidsTab({ projects, bids }) {
                     <span style={{ marginLeft:8, color:'var(--text-4)' }}>· {timeAgo(bid.created_at)}</span>
                   </div>
                 </div>
-                {isNew && <span style={{ fontSize:10, fontWeight:700, padding:'2px 8px', borderRadius:20, background:'#fef3c7', color:'#92400e', whiteSpace:'nowrap', flexShrink:0 }}>New</span>}
+                {isNew && <span style={{ fontSize:10, fontWeight:700, padding:'2px 8px', borderRadius:20, background:'#fef3c7', color:'#92400e', whiteSpace:'nowrap', flexShrink:0 }}>නව</span>}
               </div>
               {bid.message && (
                 <p style={{ fontSize:13, color:'#475569', lineHeight:1.65, margin:'0 0 12px' }}>
@@ -294,7 +294,7 @@ function ProviderBidsTab({ projects, bids }) {
               )}
               {wa && (
                 <a href={waLink} target="_blank" rel="noopener noreferrer" style={{ display:'inline-flex', alignItems:'center', gap:6, fontSize:12, fontWeight:700, background:'#25D366', color:'#fff', borderRadius:8, padding:'7px 14px', textDecoration:'none' }}>
-                  💬 Contact on WhatsApp
+                  💬 WhatsApp හරහා අමතන්න
                 </a>
               )}
             </div>
@@ -314,8 +314,8 @@ function ConsumerDashboard({ user, projects, bids, submission, dataLoading, show
   const initials = (user.email || '?').split('@')[0].slice(0,2).toUpperCase()
 
   const TABS = [
-    { key:'projects', label:'📋 My Projects' },
-    { key:'find',     label:'👷 Find Tilers'  },
+    { key:'projects', label:'📋 මගේ ව්‍යාපෘති' },
+    { key:'find',     label:'👷 ටයිලර් සොයන්න'  },
   ]
 
   return (
@@ -328,7 +328,7 @@ function ConsumerDashboard({ user, projects, bids, submission, dataLoading, show
 
           {showClaimedBanner && (
             <div style={{ padding:'10px 14px', background:'#f0fdf4', border:'1px solid #bbf7d0', borderRadius:10, marginBottom:14 }}>
-              <span style={{ fontSize:13, color:'#15803d', fontWeight:600 }}>✓ Profile claimed successfully!</span>
+              <span style={{ fontSize:13, color:'#15803d', fontWeight:600 }}>✓ පැතිකඩ සාර්ථකව ඉල්ලා සිටියා!</span>
             </div>
           )}
 
@@ -339,20 +339,20 @@ function ConsumerDashboard({ user, projects, bids, submission, dataLoading, show
                 {initials}
               </div>
               <div>
-                <div style={{ fontSize:10, fontWeight:700, color:'var(--text-4)', letterSpacing:2, textTransform:'uppercase', marginBottom:2 }}>My Dashboard</div>
-                <div className="db-profile-name" style={{ fontSize:16, fontWeight:700, color:'var(--text)', lineHeight:1.2 }}>Welcome back</div>
+                <div style={{ fontSize:10, fontWeight:700, color:'var(--text-4)', letterSpacing:2, textTransform:'uppercase', marginBottom:2 }}>මගේ දෑළෙ</div>
+                <div className="db-profile-name" style={{ fontSize:16, fontWeight:700, color:'var(--text)', lineHeight:1.2 }}>නැවත සාදරයෙන් පිළිගනිමු</div>
                 <div style={{ fontSize:11, color:'var(--text-3)', marginTop:1, overflow:'hidden', textOverflow:'ellipsis', whiteSpace:'nowrap', maxWidth:'180px' }}>{user.email}</div>
               </div>
             </div>
 
             <div className="db-identity-actions" style={{ display:'flex', gap:8, flexWrap:'wrap', alignItems:'center' }}>
               <a href="/post-project" style={{ display:'inline-flex', alignItems:'center', gap:5, fontSize:12, fontWeight:700, color:'#fff', background:'var(--terra)', borderRadius:9, padding:'7px 14px', textDecoration:'none', whiteSpace:'nowrap' }}>
-                📋 Post Project
+                📋 ව්‍යාපෘතිය ලිය කරන්න
               </a>
               <button
                 onClick={async () => { await signOut(); window.location.href = '/' }}
                 style={{ fontSize:12, color:'var(--text-3)', background:'var(--surface-2)', border:'1px solid var(--border)', borderRadius:8, padding:'6px 12px', cursor:'pointer', fontWeight:600, whiteSpace:'nowrap' }}
-              >Sign Out</button>
+              >ගිණුමෙන් ඉවත් වන්න</button>
             </div>
           </div>
 
@@ -382,12 +382,12 @@ function ConsumerDashboard({ user, projects, bids, submission, dataLoading, show
 
         {/* Become a provider CTA */}
         <div style={{ marginTop:28, padding:'20px 22px', background:'var(--navy-50)', border:'1px solid var(--navy-100)', borderRadius:14 }}>
-          <div style={{ fontSize:13, fontWeight:700, color:'var(--navy)', marginBottom:4 }}>Are you a tiler or contractor?</div>
+          <div style={{ fontSize:13, fontWeight:700, color:'var(--navy)', marginBottom:4 }}>ඔබ ටයිලර් කෙනෙකු හෝ කොන්ත්‍රාත්කරුවෙකු ද?</div>
           <p style={{ fontSize:12, color:'var(--text-3)', marginBottom:12, lineHeight:1.65 }}>
-            Get listed on TilersHub — homeowners find and contact you directly via WhatsApp.
+            TilersHub හි ලිස්ට් වන්න — නිවාස හිමිකරුවන් WhatsApp හරහා ඔබ සොයා කෙළින්ම අමතති.
           </p>
           <a href="/join-tilershub" style={{ display:'inline-flex', alignItems:'center', gap:6, padding:'9px 18px', background:'var(--navy)', color:'#fff', borderRadius:9, fontSize:12, fontWeight:700, textDecoration:'none' }}>
-            ✅ Apply as Provider
+            ✅ සේවා සපයන්නෙකු ලෙස ඉල්ලුම් කරන්න
           </a>
         </div>
       </div>
@@ -397,21 +397,21 @@ function ConsumerDashboard({ user, projects, bids, submission, dataLoading, show
 
 function FindTilersTab() {
   const QUICK = [
-    { label:'All Tilers',          href:'/providers?type=tiler',            icon:'👷', desc:'Browse all verified tilers'            },
-    { label:'Bathroom Renovation',  href:'/providers?q=Bathroom+Renovation', icon:'🚿', desc:'Full bathroom renovation specialists'   },
-    { label:'Floor Tiling',         href:'/providers?q=Floor+Tiling',        icon:'🪨', desc:'Floor and wall tiling experts'          },
-    { label:'Waterproofing',        href:'/providers?q=Waterproofing',       icon:'💧', desc:'Certified waterproofing contractors'    },
-    { label:'Tile Cutting',         href:'/providers?q=Tile+Cutting',        icon:'✂️', desc:'Professional tile cutting workshops'    },
-    { label:'Workshops',            href:'/providers?type=workshop',         icon:'🏭', desc:'Tile cutting and fabrication workshops' },
-    { label:'Tile Shops',           href:'/providers?type=tile_shop',        icon:'🏪', desc:'Buy tiles directly from shops'          },
-    { label:'Suppliers',            href:'/providers?type=supplier',         icon:'📦', desc:'Building material suppliers'            },
+    { label:'සියලු ටයිලර්',          href:'/providers?type=tiler',            icon:'👷', desc:'සත්‍යාපිත ටයිලර් සොයන්න'            },
+    { label:'නාන කාමර ප්‍රතිසංස්.',  href:'/providers?q=Bathroom+Renovation', icon:'🚿', desc:'නාන කාමර ප්‍රතිසංස්කරණ විශේෂඥයන්'   },
+    { label:'බිම් ටයිල්',         href:'/providers?q=Floor+Tiling',        icon:'🪨', desc:'බිම් සහ බිත්ති ටයිල් විශේෂඥයන්'          },
+    { label:'ජලනිරෝධය',        href:'/providers?q=Waterproofing',       icon:'💧', desc:'සහතිකලත් ජලනිරෝධ කොන්ත්‍රාත්'    },
+    { label:'ටයිල් කැපීම',         href:'/providers?q=Tile+Cutting',        icon:'✂️', desc:'ව්‍යාවසායික ටයිල් කැපීම'    },
+    { label:'වැඩමුළු',            href:'/providers?type=workshop',         icon:'🏭', desc:'ටයිල් කැපීම සහ නිෂ්පාදන' },
+    { label:'ටයිල් සාප්පු',           href:'/providers?type=tile_shop',        icon:'🏪', desc:'සාප්පු සෙ ටයිල් මිලදී ගන්න'          },
+    { label:'සැපයුම්කරුවන්',            href:'/providers?type=supplier',         icon:'📦', desc:'ගොඩනැගිලි ද්‍රව්‍ය සැපයුම්කරුවන්'            },
   ]
 
   return (
     <div>
       <div style={{ marginBottom:16 }}>
-        <div style={{ fontSize:16, fontWeight:700, color:'var(--text)', marginBottom:4 }}>Find Tiling Professionals</div>
-        <div style={{ fontSize:13, color:'var(--text-3)' }}>Browse verified providers across Sri Lanka</div>
+        <div style={{ fontSize:16, fontWeight:700, color:'var(--text)', marginBottom:4 }}>ටයිලිං වෘත්තිකයන් සොයන්න</div>
+        <div style={{ fontSize:13, color:'var(--text-3)' }}>ශ්‍රී ලංකාවේ සත්‍යාපිත සේවා සපයන්නන් බලන්න</div>
       </div>
 
       <div style={{ display:'grid', gridTemplateColumns:'repeat(auto-fill,minmax(160px,1fr))', gap:10 }}>
@@ -430,7 +430,7 @@ function FindTilersTab() {
       </div>
 
       <div style={{ marginTop:14, textAlign:'center' }}>
-        <a href="/providers" style={{ fontSize:13, color:'var(--navy)', fontWeight:700, textDecoration:'none' }}>Browse all providers →</a>
+        <a href="/providers" style={{ fontSize:13, color:'var(--navy)', fontWeight:700, textDecoration:'none' }}>සියලු සේවා සපයන්නන් →</a>
       </div>
     </div>
   )
@@ -445,7 +445,7 @@ function Spinner({ full }) {
     <div style={{ ...(full ? { minHeight:'60vh' } : { padding:40 }), display:'flex', alignItems:'center', justifyContent:'center' }}>
       <div style={{ textAlign:'center' }}>
         <div className="spinner" style={{ margin:'0 auto 10px', borderColor:'rgba(26,43,74,0.15)', borderTopColor:'var(--navy)' }} />
-        <p style={{ fontSize:13, color:'var(--text-3)' }}>Loading…</p>
+        <p style={{ fontSize:13, color:'var(--text-3)' }}>පූරණය වෙමින්…</p>
       </div>
     </div>
   )
@@ -456,12 +456,12 @@ function SignInPrompt() {
     <div style={{ minHeight:'60vh', display:'flex', alignItems:'center', justifyContent:'center', padding:20 }}>
       <div style={{ textAlign:'center', maxWidth:380 }}>
         <div style={{ fontSize:56, marginBottom:14 }}>🔒</div>
-        <h2 style={{ fontFamily:"'Playfair Display',serif", fontSize:22, fontWeight:700, color:'var(--text)', marginBottom:10 }}>Sign in to your dashboard</h2>
+        <h2 style={{ fontFamily:"'Playfair Display',serif", fontSize:22, fontWeight:700, color:'var(--text)', marginBottom:10 }}>ඔබේ ගිණුමට ලොගිනය</h2>
         <p style={{ fontSize:14, color:'var(--text-3)', lineHeight:1.7, marginBottom:24 }}>
-          Providers: browse jobs and manage your profile.<br/>Homeowners: track projects and bids.
+          සේවා සපයන්නන්: ව්‍යාපෘති සොයා ගෙන පැතිකඩ කළමනාකරණය කරන්න.<br/>නිවාස හිමිකරුවන්: ව්‍යාපෘති සහ ලංසු නිරීක්ෂණය කරන්න.
         </p>
         <a href="/login" style={{ display:'inline-flex', alignItems:'center', gap:6, padding:'12px 28px', background:'var(--navy)', color:'#fff', borderRadius:12, fontSize:14, fontWeight:700, textDecoration:'none' }}>
-          Sign In →
+          ලොගිනය →
         </a>
       </div>
     </div>
@@ -473,7 +473,7 @@ function BidsPanel({ projectBids }) {
 
   if (!projectBids?.length) return (
     <div style={{ marginTop:12, padding:'12px 14px', background:'#f8fafc', borderRadius:10, fontSize:12, color:'#94a3b8' }}>
-      💬 No bids yet — your project is live and visible to all providers.
+      💬 ලංසු නොමැත — ඔබේ ව්‍යාපෘතිය සජීවීය, සියලු සේවා සපයන්නන්ට දිස් වේ.
     </div>
   )
 
@@ -485,8 +485,8 @@ function BidsPanel({ projectBids }) {
         <span style={{ display:'inline-flex', alignItems:'center', justifyContent:'center', background: newCount > 0 ? '#f59e0b' : '#e2e8f0', color: newCount > 0 ? '#fff' : '#64748b', borderRadius:20, padding:'2px 8px', fontSize:11, fontWeight:700 }}>
           {projectBids.length}
         </span>
-        {projectBids.length} Bid{projectBids.length !== 1 ? 's' : ''} Received
-        {newCount > 0 && <span style={{ fontSize:11, color:'#f59e0b', fontWeight:700 }}>· {newCount} new</span>}
+        {projectBids.length} ලංසු ලැබිලා
+        {newCount > 0 && <span style={{ fontSize:11, color:'#f59e0b', fontWeight:700 }}>· {newCount} නව</span>}
         <span style={{ fontSize:14, color:'#94a3b8' }}>{open ? '▲' : '▼'}</span>
       </button>
 
@@ -513,7 +513,7 @@ function BidsPanel({ projectBids }) {
                   {bid.message.length > 200 ? bid.message.slice(0,200)+'…' : bid.message}
                 </p>
                 <a href={waLink} target="_blank" rel="noopener noreferrer" style={{ display:'inline-flex', alignItems:'center', gap:6, fontSize:12, fontWeight:700, background:'#25D366', color:'#fff', borderRadius:8, padding:'7px 14px', textDecoration:'none' }}>
-                  💬 Contact on WhatsApp
+                  💬 WhatsApp හරහා අමතන්න
                 </a>
               </div>
             )
@@ -526,23 +526,23 @@ function BidsPanel({ projectBids }) {
 
 function ProjectsTab({ projects, bids, isProvider }) {
   const STATUS_COLOR = {
-    pending_review: { bg:'#FEF3C7', color:'#92400E', label:'Under Review' },
-    active:         { bg:'#F0FDF4', color:'#166534', label:'Active'        },
-    matched:        { bg:'#EFF6FF', color:'#1E40AF', label:'Matched'       },
-    completed:      { bg:'#F3F4F6', color:'#374151', label:'Completed'     },
+    pending_review: { bg:'#FEF3C7', color:'#92400E', label:'සමාලෝචනය යටතේ' },
+    active:         { bg:'#F0FDF4', color:'#166534', label:'ක්‍රියාකාරී'        },
+    matched:        { bg:'#EFF6FF', color:'#1E40AF', label:'ගලපා ගෙන'       },
+    completed:      { bg:'#F3F4F6', color:'#374151', label:'සම්පූර්ණ'     },
   }
 
   if (projects.length === 0) return (
     <div style={{ textAlign:'center', padding:'48px 20px', background:'#fff', borderRadius:16, border:'1px solid var(--border)' }}>
       <div style={{ fontSize:40, marginBottom:12 }}>📋</div>
-      <div style={{ fontSize:15, fontWeight:700, color:'var(--text)', marginBottom:8 }}>No projects yet</div>
+      <div style={{ fontSize:15, fontWeight:700, color:'var(--text)', marginBottom:8 }}>ව්‍යාපෘති නොමැත</div>
       <p style={{ fontSize:13, color:'var(--text-3)', marginBottom:20, lineHeight:1.7 }}>
         {isProvider
-          ? "You haven't posted any projects. You can still post a tiling project and get bids."
-          : 'Post a tiling project and providers will bid. You choose who to contact.'}
+          ? "ඔබ ව්‍යාපෘති ලිය කර නැත. ඔබට ටයිලිං ව්‍යාපෘතියක් ලිය කර ලංසු ලබා ගත හැකිය."
+          : 'ටයිලිං ව්‍යාපෘතියක් ලිය කරන්න — සේවා සපයන්නන් ලංසු දෙති. ඔබ කා හා සම්බන්ධ වන්නද යන්න ඔබ තෝරා ගනී.'}
       </p>
       <a href="/post-project" style={{ display:'inline-flex', alignItems:'center', gap:6, padding:'11px 22px', background:'var(--terra)', color:'#fff', borderRadius:10, fontSize:13, fontWeight:700, textDecoration:'none' }}>
-        📋 Post a Project
+        📋 ව්‍යාපෘතිය ලිය කරන්න
       </a>
     </div>
   )
@@ -561,14 +561,14 @@ function ProjectsTab({ projects, bids, isProvider }) {
               <span style={{ fontSize:11, fontWeight:700, padding:'3px 10px', borderRadius:20, background:s.bg, color:s.color, whiteSpace:'nowrap', flexShrink:0 }}>{s.label}</span>
             </div>
             <p style={{ fontSize:13, color:'var(--text-2)', lineHeight:1.6, margin:0 }}>{p.description}</p>
-            {p.budget_range && <div style={{ fontSize:11, color:'var(--text-4)', marginTop:8 }}>💰 Budget: {p.budget_range}</div>}
+            {p.budget_range && <div style={{ fontSize:11, color:'var(--text-4)', marginTop:8 }}>💰 අයවැය: {p.budget_range}</div>}
             {p.created_at   && <div style={{ fontSize:11, color:'var(--text-4)', marginTop:4 }}>Posted {new Date(p.created_at).toLocaleDateString('en-LK',{day:'numeric',month:'short',year:'numeric'})}</div>}
             <BidsPanel projectBids={bids[p.id] || []} />
           </div>
         )
       })}
       <div style={{ textAlign:'center', paddingTop:8 }}>
-        <a href="/post-project" style={{ fontSize:13, color:'var(--navy)', fontWeight:600, textDecoration:'none' }}>+ Post another project</a>
+        <a href="/post-project" style={{ fontSize:13, color:'var(--navy)', fontWeight:600, textDecoration:'none' }}>+ තවත් ව්‍යාපෘතියක් ලිය කරන්න</a>
       </div>
     </div>
   )
@@ -576,22 +576,22 @@ function ProjectsTab({ projects, bids, isProvider }) {
 
 function ListingTab({ submission }) {
   const STATUS = {
-    pending_review: { bg:'#FEF3C7', color:'#92400E', label:'Under Review', desc:'Your application is being reviewed. We will contact you on WhatsApp within 1–2 business days.' },
-    approved:       { bg:'#F0FDF4', color:'#166534', label:'Approved',      desc:'Your application was approved. Your listing is being set up.'                                   },
-    listed:         { bg:'#EFF6FF', color:'#1E40AF', label:'Listed',         desc:'You are live on TilersHub! Customers can find and contact you.'                                },
-    rejected:       { bg:'#FEF2F2', color:'#991B1B', label:'Not Approved',  desc:'Your application was not approved. Contact us for details.'                                    },
+    pending_review: { bg:'#FEF3C7', color:'#92400E', label:'සමාලෝචනය යටතේ', desc:'ඔබේ ඉල්ලුම සමාලෝචනය කෙරෙමින් ඇත. ව්‍යාපාරික දින 1-2 ඇතුළත WhatsApp හරහා සම්බන්ධ වෙමු.' },
+    approved:       { bg:'#F0FDF4', color:'#166534', label:'අනුමත',      desc:'ඔබේ ඉල්ලුම අනුමත කෙරිණ. ලිස්ටිං සකස් කෙරෙමින් ඇත.'                                   },
+    listed:         { bg:'#EFF6FF', color:'#1E40AF', label:'ලිස්ට් කෙරිණ',         desc:'ඔබ TilersHub හි සජීවී ය! ගනුදෙනුකරුවන්ට ඔබව සොයා සම්බන්ධ වීමට හැකිය.'                                },
+    rejected:       { bg:'#FEF2F2', color:'#991B1B', label:'අනුමත නොකෙරිණ',  desc:'ඔබේ ඉල්ලුම අනුමත නොකෙරිණ. විස්තර සඳහා අප අමතන්න.'                                    },
   }
 
   if (!submission) return (
     <div style={{ textAlign:'center', padding:'48px 20px', background:'#fff', borderRadius:16, border:'1px solid var(--border)' }}>
       <div style={{ fontSize:40, marginBottom:12 }}>👷</div>
-      <div style={{ fontSize:15, fontWeight:700, color:'var(--text)', marginBottom:8 }}>Not listed yet</div>
+      <div style={{ fontSize:15, fontWeight:700, color:'var(--text)', marginBottom:8 }}>ලිස්ට් කෙරී නැත</div>
       <p style={{ fontSize:13, color:'var(--text-3)', marginBottom:20, lineHeight:1.7 }}>
-        Apply to get listed on TilersHub for free and start receiving inquiries.
+        TilersHub හි නොමිලේ ලිස්ට් වී විමසීම් ලැබෙන්නට ඉල්ලුම් කරන්න.
       </p>
       <div style={{ display:'flex', gap:10, justifyContent:'center', flexWrap:'wrap' }}>
-        <a href="/join-tilershub" style={{ display:'inline-flex', alignItems:'center', gap:6, padding:'11px 22px', background:'var(--navy)', color:'#fff', borderRadius:10, fontSize:13, fontWeight:700, textDecoration:'none' }}>✅ Apply as Provider</a>
-        <a href="/providers"      style={{ display:'inline-flex', alignItems:'center', gap:6, padding:'11px 22px', background:'var(--surface-3)', color:'var(--text-2)', border:'1px solid var(--border)', borderRadius:10, fontSize:13, fontWeight:600, textDecoration:'none' }}>Browse Directory</a>
+        <a href="/join-tilershub" style={{ display:'inline-flex', alignItems:'center', gap:6, padding:'11px 22px', background:'var(--navy)', color:'#fff', borderRadius:10, fontSize:13, fontWeight:700, textDecoration:'none' }}>✅ සේවා සපයන්නෙකු ලෙස ඉල්ලුම් කරන්න</a>
+        <a href="/providers"      style={{ display:'inline-flex', alignItems:'center', gap:6, padding:'11px 22px', background:'var(--surface-3)', color:'var(--text-2)', border:'1px solid var(--border)', borderRadius:10, fontSize:13, fontWeight:600, textDecoration:'none' }}>නාමාවලිය</a>
       </div>
     </div>
   )
@@ -612,7 +612,7 @@ function ListingTab({ submission }) {
       </div>
       {(submission.services||[]).length > 0 && (
         <div>
-          <div style={{ fontSize:11, fontWeight:700, color:'var(--text-3)', textTransform:'uppercase', letterSpacing:1, marginBottom:8 }}>Services</div>
+          <div style={{ fontSize:11, fontWeight:700, color:'var(--text-3)', textTransform:'uppercase', letterSpacing:1, marginBottom:8 }}>සේවාවන්</div>
           <div style={{ display:'flex', flexWrap:'wrap', gap:6 }}>
             {submission.services.map(sv => <span key={sv} className="chip chip-navy" style={{ fontSize:11 }}>{sv}</span>)}
           </div>
@@ -620,7 +620,7 @@ function ListingTab({ submission }) {
       )}
       <div style={{ marginTop:18, paddingTop:16, borderTop:'1px solid var(--border)' }}>
         <a href={`https://wa.me/94774503744?text=Hi TilersHub, I applied as a provider (${submission.name}) and want to check my listing status.`} target="_blank" rel="noopener" style={{ fontSize:12, fontWeight:600, color:'#16a34a', textDecoration:'none', display:'inline-flex', alignItems:'center', gap:5 }}>
-          💬 Contact TilersHub on WhatsApp
+          💬 TilersHub WhatsApp හරහා අමතන්න
         </a>
       </div>
     </div>
