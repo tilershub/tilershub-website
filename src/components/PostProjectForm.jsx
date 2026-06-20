@@ -155,7 +155,7 @@ export default function PostProjectForm() {
         {/* Success header */}
         <div style={{ textAlign: 'center', padding: '32px 20px 24px', background: '#fff', borderRadius: '20px 20px 0 0', border: '1px solid #e2e8f0', borderBottom: 'none' }}>
           <div style={{ fontSize: 52, marginBottom: 12 }}>🎉</div>
-          <h2 style={{ fontFamily: "'Playfair Display', serif", fontSize: 24, fontWeight: 700, color: '#0f172a', marginBottom: 8 }}>ව්‍යාපෘතිය ලිය කෙරිණි!</h2>
+          <h2 style={{ fontFamily: "'Playfair Display', serif", fontSize: 24, fontWeight: 700, color: '#0f172a', marginBottom: 8 }}>ව්‍යාපෘතිය පල කෙරිණි!</h2>
           <p style={{ fontSize: 13, color: '#64748b', lineHeight: 1.8, maxWidth: 340, margin: '0 auto 16px' }}>
             ඔබේ ව්‍යාපෘතිය live වී ඇත. ලියාපදිංචි සේවා සපයන්නන්ට දැන් එය දැකිය හැකිය.
           </p>
@@ -199,7 +199,7 @@ export default function PostProjectForm() {
                 <span style={{ color: '#e2e8f0' }}>·</span>
                 <button onClick={() => { setSuccess(false); setForm({ project_type: '', city: '', district: '', description: '', budget_range: '', customer_name: '', whatsapp: '' }) }}
                   style={{ fontSize: 13, color: '#64748b', background: 'none', border: 'none', cursor: 'pointer', fontWeight: 600, padding: 0 }}>
-                  තවත් ව්‍යාපෘතියක් ලිය කරන්න
+                  තවත් ව්‍යාපෘතියක් පල කරන්න
                 </button>
               </div>
             </div>
@@ -274,7 +274,7 @@ export default function PostProjectForm() {
 
       <button type="submit" disabled={submitting}
         style={{ width: '100%', padding: '13px', background: submitting ? '#94a3b8' : '#E05A2B', color: '#fff', border: 'none', borderRadius: 12, fontSize: 15, fontWeight: 700, cursor: submitting ? 'not-allowed' : 'pointer', display: 'flex', alignItems: 'center', justifyContent: 'center', gap: 8, transition: 'background 0.2s' }}>
-        {submitting ? '⏳ ඉදිරිපත් කරමින්...' : '📋 මගේ ව්‍යාපෘතිය ලිය කරන්න'}
+        {submitting ? '⏳ ඉදිරිපත් කරමින්...' : '📋 මගේ ව්‍යාපෘතිය පල කරන්න'}
       </button>
 
       <p style={{ fontSize: 11, color: '#94a3b8', textAlign: 'center', marginTop: 12 }}>

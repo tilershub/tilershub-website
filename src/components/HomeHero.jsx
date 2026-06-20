@@ -273,7 +273,7 @@ function GuestHero({ heroImg }) {
 
       <div style={{ position:'relative', textAlign:'center', maxWidth:520, width:'100%' }}>
         <h1 style={{ fontFamily:"'Playfair Display',serif", fontSize:'clamp(26px,5.5vw,42px)', fontWeight:700, color:'#fff', lineHeight:1.15, marginBottom:10 }}>
-          ඔබේ ව්‍යාපෘතිය ලිය කරන්න,<br /><span style={{ color:'#F59E0B' }}>නොමිලේ ලංසු ලබා ගන්න.</span>
+          ඔබේ ව්‍යාපෘතිය පල කරන්න,<br /><span style={{ color:'#F59E0B' }}>නොමිලේ ලංසු ලබා ගන්න.</span>
         </h1>
 
         <p style={{ fontSize:13, color:'rgba(255,255,255,0.62)', marginBottom:22, lineHeight:1.7 }}>
@@ -282,7 +282,7 @@ function GuestHero({ heroImg }) {
 
         {/* Single primary CTA */}
         <a href="/post-project" style={{ display:'flex', alignItems:'center', justifyContent:'center', gap:8, background:'#E05A2B', color:'#fff', borderRadius:24, padding:'14px 28px', fontSize:15, fontWeight:800, textDecoration:'none', boxShadow:'0 4px 20px rgba(224,90,43,0.45)', marginBottom:14 }}>
-          📋 නොමිලේ ව්‍යාපෘතිය ලිය කරන්න
+          📋 නොමිලේ ව්‍යාපෘතිය පල කරන්න
         </a>
 
         <div style={{ marginBottom:14 }}>
