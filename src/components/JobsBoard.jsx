@@ -228,9 +228,9 @@ export default function JobsBoard() {
           <div style={{ textAlign: 'center', padding: '64px 20px', background: '#fff', borderRadius: 16, border: '1px solid #e2e8f0' }}>
             <div style={{ fontSize: 48, marginBottom: 16 }}>🏗️</div>
             <h3 style={{ fontSize: 18, fontWeight: 700, color: '#0f172a', marginBottom: 8 }}>දැනට විවෘත ව්‍යාපෘති නොමැත</h3>
-            <p style={{ fontSize: 14, color: '#64748b', marginBottom: 24 }}>ප්‍රථමයෙන් ව්‍යාපෘතිය ලිය කරන්න — සත්‍යාපිත ටයිලර්ලා ලංසු ඉදිරිපත් කරනු ඇත.</p>
+            <p style={{ fontSize: 14, color: '#64748b', marginBottom: 24 }}>ප්‍රථමයෙන් ව්‍යාපෘතිය පල කරන්න — සත්‍යාපිත ටයිලර්ලා ලංසු ඉදිරිපත් කරනු ඇත.</p>
             <a href="/post-project" style={{ display: 'inline-flex', alignItems: 'center', gap: 8, background: '#E05A2B', color: '#fff', borderRadius: 12, padding: '11px 24px', fontSize: 14, fontWeight: 700, textDecoration: 'none' }}>
-              📋 ව්‍යාපෘතිය ලිය කරන්න
+              📋 ව්‍යාපෘතිය පල කරන්න
             </a>
           </div>
         ) : (
@@ -245,10 +245,10 @@ export default function JobsBoard() {
           <div style={{ marginTop: 48, padding: '28px 32px', background: 'linear-gradient(135deg, #1B3A6B, #0F2444)', borderRadius: 16, display: 'flex', alignItems: 'center', justifyContent: 'space-between', flexWrap: 'wrap', gap: 16 }}>
             <div>
               <div style={{ fontSize: 16, fontWeight: 700, color: '#fff', marginBottom: 4 }}>ටයිලිං ව්‍යාපෘතියක් තිබේද?</div>
-              <div style={{ fontSize: 13, color: 'rgba(255,255,255,0.6)' }}>නොමිලේ ලිය කරන්න — සේවා සපයන්නන් ලංසු ඉදිරිපත් කරති, ඔබ තෝරා ගන්න.</div>
+              <div style={{ fontSize: 13, color: 'rgba(255,255,255,0.6)' }}>නොමිලේ පල කරන්න — සේවා සපයන්නන් ලංසු ඉදිරිපත් කරති, ඔබ තෝරා ගන්න.</div>
             </div>
             <a href="/post-project" style={{ display: 'inline-flex', alignItems: 'center', gap: 8, background: '#E05A2B', color: '#fff', borderRadius: 12, padding: '11px 22px', fontSize: 13, fontWeight: 700, textDecoration: 'none', whiteSpace: 'nowrap' }}>
-              📋 මගේ ව්‍යාපෘතිය ලිය කරන්න
+              📋 මගේ ව්‍යාපෘතිය පල කරන්න
             </a>
           </div>
         )}
