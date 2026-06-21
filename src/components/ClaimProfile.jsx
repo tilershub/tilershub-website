@@ -26,18 +26,25 @@ export default function ClaimProfile({ profileId, profileType, profileName, isCl
     try {
       const table = profileType === 'tiler' ? 'tilers' : 'providers'
       const { data: profile, error: fetchErr } = await supabase
-        .from(table).select('whatsapp').eq('id', profileId).single()
+        .from(table).select('whatsapp,phone').eq('id', profileId).single()
       if (fetchErr) throw fetchErr
+
+      const whatsapp = profile.whatsapp || profile.phone || null
+      if (!whatsapp) {
+        setErr('No WhatsApp number is linked to this profile yet. Contact TilersHub to claim it.')
+        setLoading(false)
+        return
+      }
 
       const code = String(Math.floor(10000 + Math.random() * 90000))
       const { data: claim, error: insertErr } = await supabase
         .from('claim_requests')
-        .insert({ profile_id: profileId, profile_type: profileType, profile_name: profileName, user_id: user.id, whatsapp: profile.whatsapp, code })
+        .insert({ profile_id: profileId, profile_type: profileType, profile_name: profileName, user_id: user.id, whatsapp, code })
         .select('id').single()
       if (insertErr) throw insertErr
 
       window.location.href = `/verify-claim?id=${claim.id}`
-    } catch {
+    } catch (e) {
       setErr('Something went wrong — please try again.')
       setLoading(false)
     }
