@@ -1,4 +1,4 @@
-import { useState, useRef } from 'react'
+import { useState, useRef, useEffect } from 'react'
 import { supabase, DISTRICTS, DISTRICTS_EN } from '../lib/supabase.js'
 import { SERVICES } from '../lib/services.js'
 
@@ -87,6 +87,8 @@ const TRANS = {
     descHint: 'Optional — describe your experience or what makes you stand out.',
     descPh: 'Describe your services, experience, and area of operation...',
     trustNote: '✓ <strong>Free listing</strong> · Direct WhatsApp leads · No commission ever · TilersHub team reviews within 1–2 business days.',
+    emailLabel: 'Email Address',
+    emailHint: 'Used to create your TilersHub account and manage your listing.',
     submitBtn: '✅ Submit Application',
     submittingBtn: '⏳ Submitting...',
     successTitle: 'Application Submitted!',
@@ -96,6 +98,7 @@ const TRANS = {
     providerTypeLabel: 'What type of provider are you?',
     errRequired: 'Required',
     errPhone: 'Enter a valid phone number',
+    errEmail: 'Enter a valid email address',
     errProviderType: 'Please select a provider type',
     errServices: 'Select at least one service',
     errSubmit: 'Something went wrong. Please try again.',
@@ -103,6 +106,9 @@ const TRANS = {
     clickToChange: 'Click to change',
     uploadHint: 'Click or drag to upload',
     maxSize: 'JPG, PNG, WebP · Max 5 MB',
+    checkInboxTitle: 'Check your inbox',
+    checkInboxBody: em => `We sent a magic link to ${em}. Click it to verify your email and complete your listing.`,
+    changeEmailBtn: '← Change email / Try again',
   },
   si: {
     nameLabel: 'නම / ව්‍යාපාර නාමය',
@@ -131,17 +137,18 @@ const TRANS = {
     descHint: 'අත්‍යාවශ්‍ය නොවේ — ඔබේ සේවාව හෝ ඔබ ඉස්මතු වන ආකාරය විස්තර කරන්න.',
     descPh: 'ඔබේ සේවාව, අත්දැකීම් සහ සේවා ප්‍රදේශය විස්තර කරන්න...',
     trustNote: '✓ <strong>නොමිලේ ලැයිස්තු</strong> · WhatsApp සෘජු ඇමතුම් · කොමිස් නොමැත · TilersHub කණ්ඩායම ව්‍යාපාරික දින 1–2 ඇතුළත සමාලෝචනය කරයි.',
+    emailLabel: 'විද්‍යුත් තැපැල් ලිපිනය',
+    emailHint: 'ඔබේ TilersHub ගිණුම සාදා ලැයිස්තුව කළමනාකරණය කිරීමට භාවිතා කෙරේ.',
     submitBtn: '✅ අයදුම්පත ඉදිරිපත් කරන්න',
     submittingBtn: '⏳ ඉදිරිපත් කරමින්...',
     successTitle: 'අයදුම්පත ඉදිරිපත් කරන ලදී!',
     successBody: 'TilersHub හා සම්බන්ධ වීමට ස්තූතිය. අපගේ කණ්ඩායම ව්‍යාපාරික දින 1–2 ඇතුළත WhatsApp හරහා ඔබ හා සම්බන්ධ වනු ඇත.',
     successReach: wa => `✓ ඉක්මනින් ${wa} ඇමතීමට කටයුතු කරමු.`,
     browseBtn: 'සේවා සපයන්නන් බ්‍රවුස් කරන්න',
-    errRequired: 'අවශ්‍යයි',
-    errPhone: 'වලංගු දුරකතන අංකයක් ඇතුළු කරන්න',
     providerTypeLabel: 'ඔබ කුමන ආකාරයේ සේවා සපයන්නෙකු ද?',
     errRequired: 'අවශ්‍ය',
     errPhone: 'වලංගු දුරකථන අංකයක් ඇතුළු කරන්න',
+    errEmail: 'වලංගු විද්‍යුත් තැපෑල ඇතුළු කරන්න',
     errProviderType: 'සේවා සපයන්නා වර්ගය තෝරන්න',
     errServices: 'අවම වශයෙන් සේවාවක් එකක් තෝරන්න',
     errSubmit: 'දෝෂයක් ඇති විය. නැවත උත්සාහ කරන්න.',
@@ -149,6 +156,9 @@ const TRANS = {
     clickToChange: 'වෙනස් කිරීමට ක්ලික් කරන්න',
     uploadHint: 'ක්ලික් කරන්න හෝ ඇද දමන්න',
     maxSize: 'JPG, PNG, WebP · උපරිම 5 MB',
+    checkInboxTitle: 'ඔබේ inbox බලන්න',
+    checkInboxBody: em => `${em} වෙත magic link එකක් යැව්වෙමු. ලැයිස්තුව සම්පූර්ණ කිරීමට ක්ලික් කරන්න.`,
+    changeEmailBtn: '← විද්‍යුත් තැපෑල වෙනස් කරන්න / නැවත උත්සාහ',
   },
 }
 
@@ -381,12 +391,40 @@ export default function JoinForm() {
     services: [],
     description: '',
   })
+  const [email, setEmail] = useState('')
+  const [emailSent, setEmailSent] = useState(false)
   const [profileFile, setProfileFile] = useState(null)
   const [coverFile, setCoverFile]     = useState(null)
   const [portfolioFiles, setPortfolioFiles] = useState([])
   const [errors, setErrors]   = useState({})
   const [submitting, setSubmitting] = useState(false)
   const [success, setSuccess] = useState(false)
+
+  const PENDING_KEY = 'tilershub_pending_join'
+
+  useEffect(() => {
+    async function trySubmitPending(user) {
+      const raw = localStorage.getItem(PENDING_KEY)
+      if (!raw) return
+      try {
+        const payload = JSON.parse(raw)
+        const { error } = await supabase.from('provider_submissions').insert({ ...payload, user_id: user.id })
+        if (!error) {
+          localStorage.removeItem(PENDING_KEY)
+          setSuccess(true)
+        }
+      } catch {}
+    }
+
+    supabase.auth.getUser().then(({ data: { user } }) => { if (user) trySubmitPending(user) })
+
+    const { data: { subscription } } = supabase.auth.onAuthStateChange((event, session) => {
+      if ((event === 'SIGNED_IN' || event === 'TOKEN_REFRESHED') && session?.user) {
+        trySubmitPending(session.user)
+      }
+    })
+    return () => subscription.unsubscribe()
+  }, [])
 
   const set = (k, v) => setForm(f => ({ ...f, [k]: v }))
 
@@ -403,6 +441,8 @@ export default function JoinForm() {
     if (!form.city.trim()) e.city = T.errRequired
     if (!form.whatsapp.trim()) e.whatsapp = T.errRequired
     else if (!/^\+?[0-9]{9,15}$/.test(form.whatsapp.replace(/\s/g, ''))) e.whatsapp = T.errPhone
+    if (!email.trim()) e.email = T.errRequired
+    else if (!/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email.trim())) e.email = T.errEmail
     if (form.services.length === 0) e.services = T.errServices
     return e
   }
@@ -419,7 +459,8 @@ export default function JoinForm() {
         coverFile   ? uploadImage(coverFile,   'covers')   : Promise.resolve(null),
         ...portfolioFiles.map(f => uploadImage(f, 'portfolio')),
       ])
-      await supabase.from('provider_submissions').insert({
+
+      const payload = {
         name: form.name.trim(),
         provider_type: category?.value || 'tiler',
         city: form.city.trim(),
@@ -432,13 +473,46 @@ export default function JoinForm() {
         cover_image: coverUrl,
         photo_urls: portfolioUrls.length ? portfolioUrls : null,
         status: 'pending_review',
-      })
-      setSuccess(true)
+      }
+
+      const { data: { user } } = await supabase.auth.getUser()
+
+      if (user) {
+        const { error } = await supabase.from('provider_submissions').insert({ ...payload, user_id: user.id })
+        if (error) throw error
+        setSuccess(true)
+      } else {
+        localStorage.setItem(PENDING_KEY, JSON.stringify(payload))
+        const { error } = await supabase.auth.signInWithOtp({
+          email: email.trim(),
+          options: { emailRedirectTo: window.location.origin + '/join-tilershub' },
+        })
+        if (error) throw error
+        setEmailSent(true)
+      }
     } catch {
       setErrors({ submit: T.errSubmit })
     } finally {
       setSubmitting(false)
     }
+  }
+
+  if (emailSent) {
+    return (
+      <div style={{ textAlign: 'center', padding: '60px 24px', background: '#fff', borderRadius: 20, border: '1px solid #e2e8f0', maxWidth: 520, margin: '0 auto' }}>
+        <div style={{ fontSize: 56, marginBottom: 16 }}>📧</div>
+        <h2 style={{ fontFamily: "'Playfair Display', serif", fontSize: 26, fontWeight: 700, color: '#0f172a', marginBottom: 12 }}>{T.checkInboxTitle}</h2>
+        <p style={{ fontSize: 14, color: '#64748b', lineHeight: 1.8, marginBottom: 24, maxWidth: 380, margin: '0 auto 24px' }}>
+          {T.checkInboxBody(<strong>{email}</strong>)}
+        </p>
+        <button
+          onClick={() => setEmailSent(false)}
+          style={{ fontSize: 13, color: '#1B3A6B', background: 'transparent', border: '1.5px solid #d5e2f5', borderRadius: 10, padding: '10px 20px', cursor: 'pointer', fontWeight: 600 }}
+        >
+          {T.changeEmailBtn}
+        </button>
+      </div>
+    )
   }
 
   if (success) {
@@ -539,6 +613,12 @@ export default function JoinForm() {
       <Field label={T.whatsappLabel} id="whatsapp" req error={errors.whatsapp} hint={T.whatsappHint}>
         <input id="whatsapp" value={form.whatsapp} onChange={e => set('whatsapp', e.target.value)}
           placeholder="+94771234567" type="tel" style={inputStyle(!!errors.whatsapp)} />
+      </Field>
+
+      {/* Email */}
+      <Field label={T.emailLabel} id="email" req error={errors.email} hint={T.emailHint}>
+        <input id="email" type="email" value={email} onChange={e => setEmail(e.target.value)}
+          placeholder="you@example.com" style={inputStyle(!!errors.email)} />
       </Field>
 
       {/* Service Areas */}
