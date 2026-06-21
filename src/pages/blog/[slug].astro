@@ -24,13 +24,25 @@ const articleSchema = JSON.stringify({
   mainEntityOfPage: { '@type': 'WebPage', '@id': `https://www.tilershub.lk/blog/${post.slug}` },
   keywords: `tiling Sri Lanka, ${post.category}, home improvement Sri Lanka`,
 })
+
+const faqSchema = post.sections?.length > 0 ? JSON.stringify({
+  '@context': 'https://schema.org',
+  '@type': 'FAQPage',
+  mainEntity: post.sections.map((s: { heading: string; body: string }) => ({
+    '@type': 'Question',
+    name: s.heading,
+    acceptedAnswer: { '@type': 'Answer', text: s.body },
+  })),
+}) : null
 ---
 
 <Layout
   title={`${post.title} · TilersHub Blog`}
   description={post.excerpt}
+  ogType="article"
 >
   <script slot="head" type="application/ld+json" set:html={articleSchema} />
+  {faqSchema && <script slot="head" type="application/ld+json" set:html={faqSchema} />}
 
   <!-- Header -->
   <div style={`background:linear-gradient(135deg,${post.color}ee 0%,${post.color} 100%);padding:40px 20px 36px;position:relative;overflow:hidden;`}>
