@@ -17,8 +17,9 @@ const [{ data: featuredTilersRaw }, { data: featuredShopsRaw }, { data: recentPr
     .from('tilers')
     .select('id,full_name,city,district,is_verified,slug,avg_rating,avatar_url,bio,whatsapp,phone,gallery,cover_image,experience_years,daily_rate_min,review_count')
     .eq('is_verified', true)
-    .eq('featured', true)
+    .gt('avg_rating', 0)
     .order('avg_rating', { ascending: false })
+    .order('review_count', { ascending: false })
     .limit(5),
   supabase
     .from('providers')
@@ -172,7 +173,7 @@ function verBadge(vs: string) {
   <!-- ══ TOP PROVIDERS (Professionals & Contractors only) ══ -->
   <section style="background:#f8fafc;padding:16px 0 20px;">
     <div style="padding:0 16px 12px;display:flex;align-items:center;justify-content:space-between;">
-      <span style="font-size:15px;font-weight:700;color:#111827;">ප්‍රමුඛ වෘත්තිකයන්</span>
+      <span style="font-size:15px;font-weight:700;color:#111827;">⭐ ඉහළ ශ්‍රේණිගත වෘත්තිකයෝ</span>
       <a href="/providers?type=tiler" style="font-size:12px;font-weight:600;color:#E05A2B;text-decoration:none;">සියල්ල ›</a>
     </div>
 
@@ -190,7 +191,7 @@ function verBadge(vs: string) {
         const color = avatarColor(t.full_name || 'T')
         const coverSrc = t.cover_image || (t.gallery || [])[0] || t.avatar_url
         return (
-          <a href={t.slug ? `/tilers/${t.slug}` : '/providers?type=tiler'}
+          <a href={t.slug ? `/providers/${t.slug}` : '/providers?type=tiler'}
             style="display:block;background:#fff;border-radius:16px;overflow:hidden;border:1px solid #e8edf5;text-decoration:none;color:inherit;box-shadow:0 2px 12px rgba(0,0,0,0.07);">
             <div style="height:180px;position:relative;overflow:hidden;">
               {coverSrc
@@ -205,7 +206,7 @@ function verBadge(vs: string) {
             <div style="padding:16px;">
               <div style="display:flex;align-items:flex-start;justify-content:space-between;gap:8px;margin-bottom:6px;">
                 <div style="min-width:0;">
-                  <div style="font-size:9px;font-weight:700;color:#94a3b8;letter-spacing:1px;text-transform:uppercase;margin-bottom:3px;">ටයිලර්</div>
+                  <div style="font-size:9px;font-weight:700;color:#94a3b8;letter-spacing:1px;text-transform:uppercase;margin-bottom:3px;">වෘත්තිකයා</div>
                   <div style="font-size:17px;font-weight:700;color:#0f172a;line-height:1.2;overflow:hidden;white-space:nowrap;text-overflow:ellipsis;">{t.full_name}</div>
                 </div>
                 {t.avg_rating > 0 && (
