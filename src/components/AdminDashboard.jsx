@@ -61,7 +61,7 @@ function timeAgo(ts) {
 
 function Table({ heads, children, empty }) {
   return (
-    <div style={{ overflowX: 'auto' }}>
+    <div style={{ overflowX: 'auto', WebkitOverflowScrolling: 'touch' }}>
       <table style={{ width: '100%', borderCollapse: 'collapse', fontSize: 13 }}>
         <thead><tr>{heads.map(h => <th key={h} style={S.th}>{h}</th>)}</tr></thead>
         <tbody>{children}</tbody>
@@ -184,6 +184,7 @@ function GalleryEditor({ existing, newFiles, onNewFiles, onRemoveExisting }) {
 
 // ─── Profile create/edit modal ────────────────────────────────────────────────
 function ProfileModal({ profile, profileType, adminUserId, onClose, onSaved }) {
+  const isNarrow = typeof window !== 'undefined' && window.innerWidth < 768
   const isTiler = profileType === 'tiler'
   const table   = isTiler ? 'tilers' : 'providers'
   const isCreate = !profile
@@ -271,7 +272,7 @@ function ProfileModal({ profile, profileType, adminUserId, onClose, onSaved }) {
     <div style={{ position: 'fixed', inset: 0, zIndex: 1000, display: 'flex' }}
       onClick={e => { if (e.target === e.currentTarget) onClose() }}>
       <div style={{ flex: 1, background: 'rgba(15,23,42,0.5)' }} onClick={onClose} />
-      <div style={{ width: 520, background: '#fff', overflowY: 'auto', boxShadow: '-4px 0 30px rgba(0,0,0,0.15)', display: 'flex', flexDirection: 'column' }}>
+      <div style={{ width: isNarrow ? '100vw' : 520, maxWidth: '100vw', background: '#fff', overflowY: 'auto', boxShadow: '-4px 0 30px rgba(0,0,0,0.15)', display: 'flex', flexDirection: 'column', borderRadius: isNarrow ? 0 : undefined }}>
         {/* Drawer header */}
         <div style={{ padding: '20px 24px', borderBottom: '1px solid #f1f5f9', display: 'flex', alignItems: 'center', justifyContent: 'space-between', flexShrink: 0, background: '#fff', position: 'sticky', top: 0, zIndex: 1 }}>
           <div>
@@ -1165,6 +1166,7 @@ export default function AdminDashboard() {
   const [user,      setUser]      = useState(null)
   const [isAdmin,   setIsAdmin]   = useState(null)
   const [tab,       setTab]       = useState('overview')
+  const [isMobile,  setIsMobile]  = useState(() => typeof window !== 'undefined' && window.innerWidth < 768)
 
   useEffect(() => {
     supabase.auth.getUser().then(async ({ data: { user: u } }) => {
@@ -1190,6 +1192,12 @@ export default function AdminDashboard() {
       setLoading(false)
     })
     return () => subscription.unsubscribe()
+  }, [])
+
+  useEffect(() => {
+    const fn = () => setIsMobile(window.innerWidth < 768)
+    window.addEventListener('resize', fn)
+    return () => window.removeEventListener('resize', fn)
   }, [])
 
   if (loading) {
@@ -1222,44 +1230,52 @@ export default function AdminDashboard() {
   }
 
   return (
-    <div style={S.page}>
-      <aside style={S.sidebar}>
-        <div style={{ padding: '24px 20px 20px' }}>
-          <div style={{ fontSize: 13, fontWeight: 800, letterSpacing: 1, marginBottom: 2 }}>TILERS<span style={{ color: TERRA }}>HUB</span></div>
-          <div style={{ fontSize: 10, color: 'rgba(255,255,255,0.4)', fontWeight: 600, letterSpacing: 1 }}>ADMIN</div>
-        </div>
+    <div style={{ ...S.page, display: isMobile ? 'block' : 'flex' }}>
 
-        <nav style={{ flex: 1, padding: '0 10px' }}>
-          {TABS.map(t => (
-            <button key={t.key} onClick={() => setTab(t.key)}
-              style={{
-                display: 'flex', alignItems: 'center', justifyContent: 'space-between',
-                width: '100%', textAlign: 'left',
-                padding: '10px 14px', borderRadius: 10, marginBottom: 3,
-                fontSize: 13, fontWeight: 600, cursor: 'pointer', border: 'none',
-                background: tab === t.key ? 'rgba(255,255,255,0.12)' : 'transparent',
-                color: tab === t.key ? '#fff' : 'rgba(255,255,255,0.55)',
-              }}>
-              <span>{t.label}</span>
-              {t.badge && (
-                <span style={{ fontSize: 9, fontWeight: 800, background: GOLD, color: '#0f172a', padding: '2px 7px', borderRadius: 20, flexShrink: 0 }}>
-                  {t.badge}
-                </span>
-              )}
+      {/* Desktop sidebar — hidden on mobile */}
+      {!isMobile && (
+        <aside style={S.sidebar}>
+          <div style={{ padding: '24px 20px 20px' }}>
+            <div style={{ fontSize: 13, fontWeight: 800, letterSpacing: 1, marginBottom: 2 }}>TILERS<span style={{ color: TERRA }}>HUB</span></div>
+            <div style={{ fontSize: 10, color: 'rgba(255,255,255,0.4)', fontWeight: 600, letterSpacing: 1 }}>ADMIN</div>
+          </div>
+
+          <nav style={{ flex: 1, padding: '0 10px' }}>
+            {TABS.map(t => (
+              <button key={t.key} onClick={() => setTab(t.key)}
+                style={{
+                  display: 'flex', alignItems: 'center', justifyContent: 'space-between',
+                  width: '100%', textAlign: 'left',
+                  padding: '10px 14px', borderRadius: 10, marginBottom: 3,
+                  fontSize: 13, fontWeight: 600, cursor: 'pointer', border: 'none',
+                  background: tab === t.key ? 'rgba(255,255,255,0.12)' : 'transparent',
+                  color: tab === t.key ? '#fff' : 'rgba(255,255,255,0.55)',
+                }}>
+                <span>{t.label}</span>
+                {t.badge && (
+                  <span style={{ fontSize: 9, fontWeight: 800, background: GOLD, color: '#0f172a', padding: '2px 7px', borderRadius: 20, flexShrink: 0 }}>
+                    {t.badge}
+                  </span>
+                )}
+              </button>
+            ))}
+          </nav>
+
+          <div style={{ padding: '14px 20px', borderTop: '1px solid rgba(255,255,255,0.1)' }}>
+            <div style={{ fontSize: 11, color: 'rgba(255,255,255,0.4)', marginBottom: 8, wordBreak: 'break-all' }}>{user.email}</div>
+            <button onClick={() => supabase.auth.signOut().then(() => window.location.reload())}
+              style={{ ...S.btn('rgba(255,255,255,0.1)', 'rgba(255,255,255,0.7)'), width: '100%', padding: '8px' }}>
+              Sign Out
             </button>
-          ))}
-        </nav>
+          </div>
+        </aside>
+      )}
 
-        <div style={{ padding: '14px 20px', borderTop: '1px solid rgba(255,255,255,0.1)' }}>
-          <div style={{ fontSize: 11, color: 'rgba(255,255,255,0.4)', marginBottom: 8, wordBreak: 'break-all' }}>{user.email}</div>
-          <button onClick={() => supabase.auth.signOut().then(() => window.location.reload())}
-            style={{ ...S.btn('rgba(255,255,255,0.1)', 'rgba(255,255,255,0.7)'), width: '100%', padding: '8px' }}>
-            Sign Out
-          </button>
-        </div>
-      </aside>
-
-      <main style={S.main}>
+      <main style={{
+        ...S.main,
+        padding: isMobile ? '16px 14px' : '28px 32px',
+        paddingBottom: isMobile ? 72 : undefined,
+      }}>
         {tab === 'overview'    && <OverviewTab />}
         {tab === 'profiles'    && <ProfilesTab adminUserId={user.id} />}
         {tab === 'submissions' && <SubmissionsTab />}
@@ -1270,6 +1286,45 @@ export default function AdminDashboard() {
         {tab === 'social_hub'  && <SocialHub />}
         {tab === 'blogs'       && <BlogsTab />}
       </main>
+
+      {/* Mobile bottom nav bar — replaces sidebar on small screens */}
+      {isMobile && (
+        <nav style={{
+          position: 'fixed', bottom: 0, left: 0, right: 0, zIndex: 50,
+          background: NAVY, display: 'flex', overflowX: 'auto',
+          WebkitOverflowScrolling: 'touch',
+          padding: '6px 4px', gap: 2,
+          boxShadow: '0 -2px 16px rgba(0,0,0,0.2)',
+          borderTop: '1px solid rgba(255,255,255,0.08)',
+        }}>
+          {TABS.map(t => {
+            const parts = t.label.split(' ')
+            const icon = parts[0]
+            const label = parts.slice(1).join(' ')
+            return (
+              <button key={t.key} onClick={() => setTab(t.key)} style={{
+                flexShrink: 0, display: 'flex', flexDirection: 'column', alignItems: 'center',
+                gap: 2, padding: '5px 10px', borderRadius: 8, border: 'none', cursor: 'pointer',
+                background: tab === t.key ? 'rgba(255,255,255,0.15)' : 'transparent',
+                color: tab === t.key ? '#fff' : 'rgba(255,255,255,0.45)',
+              }}>
+                <span style={{ fontSize: 17 }}>{icon}</span>
+                <span style={{ fontSize: 9, fontWeight: 700, whiteSpace: 'nowrap' }}>{label}</span>
+              </button>
+            )
+          })}
+          <button
+            onClick={() => supabase.auth.signOut().then(() => window.location.reload())}
+            style={{
+              flexShrink: 0, display: 'flex', flexDirection: 'column', alignItems: 'center',
+              gap: 2, padding: '5px 10px', borderRadius: 8, border: 'none', cursor: 'pointer',
+              background: 'transparent', color: 'rgba(255,255,255,0.35)',
+            }}>
+            <span style={{ fontSize: 17 }}>↩</span>
+            <span style={{ fontSize: 9, fontWeight: 700, whiteSpace: 'nowrap' }}>Exit</span>
+          </button>
+        </nav>
+      )}
     </div>
   )
 }
