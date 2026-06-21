@@ -31,6 +31,9 @@ const STATUS_BADGE = {
   none:           ['#F3F4F6','#64748b'],
   new:            ['#FEF3C7','#92400E'],
   seen:           ['#F3F4F6','#374151'],
+  draft:          ['#F3F4F6','#374151'],
+  published:      ['#D1FAE5','#065F46'],
+  archived:       ['#FEE2E2','#991B1B'],
 }
 
 const ALL_SERVICES = [
@@ -1053,6 +1056,95 @@ function ProfilesTab({ adminUserId }) {
   )
 }
 
+// ─── Blogs tab ────────────────────────────────────────────────────────────────
+function BlogsTab() {
+  const [rows,    setRows]    = useState([])
+  const [loading, setLoading] = useState(true)
+  const [page,    setPage]    = useState(0)
+  const [count,   setCount]   = useState(0)
+  const [filter,  setFilter]  = useState('all')
+  const PER = 20
+
+  const load = useCallback(async () => {
+    setLoading(true)
+    let q = supabase.from('blogs')
+      .select('id,title,slug,status,created_at,updated_at', { count: 'exact' })
+      .order('created_at', { ascending: false })
+      .range(page * PER, page * PER + PER - 1)
+    if (filter !== 'all') q = q.eq('status', filter)
+    const { data, count: c } = await q
+    setRows(data || [])
+    setCount(c || 0)
+    setLoading(false)
+  }, [page, filter])
+
+  useEffect(() => { load() }, [load])
+  useEffect(() => { setPage(0) }, [filter])
+
+  async function del(id, title) {
+    if (!confirm(`Delete "${title}"? This cannot be undone.`)) return
+    await supabase.from('blogs').delete().eq('id', id)
+    load()
+  }
+
+  return (
+    <div>
+      <div style={{ display: 'flex', alignItems: 'center', gap: 10, marginBottom: 18, flexWrap: 'wrap' }}>
+        <h2 style={{ ...S.h2, marginBottom: 0 }}>Blogs</h2>
+        <div style={{ display: 'flex', gap: 6 }}>
+          {['all', 'draft', 'published', 'archived'].map(f => (
+            <button key={f} onClick={() => setFilter(f)}
+              style={S.btn(filter === f ? NAVY : '#f1f5f9', filter === f ? '#fff' : '#334155')}>
+              {f.charAt(0).toUpperCase() + f.slice(1)}
+            </button>
+          ))}
+        </div>
+        <a href="/admin/new-blog" target="_blank" rel="noopener"
+          style={{ ...S.btn('#16a34a'), marginLeft: 'auto', textDecoration: 'none' }}>
+          + New Blog
+        </a>
+      </div>
+
+      {loading ? <p style={{ color: '#94a3b8' }}>Loading…</p> : (
+        <>
+          <div style={S.card}>
+            <Table
+              heads={['Title', 'Slug', 'Status', 'Created', 'Updated', 'Actions']}
+              empty={rows.length === 0 ? 'No blog posts found' : null}
+            >
+              {rows.map(r => (
+                <tr key={r.id}>
+                  <td style={{ ...S.td, maxWidth: 260 }}><strong>{r.title}</strong></td>
+                  <td style={{ ...S.td, fontSize: 11, color: '#64748b' }}>/blog/{r.slug}</td>
+                  <td style={S.td}><StatusBadge status={r.status} /></td>
+                  <td style={S.td}>{timeAgo(r.created_at)}</td>
+                  <td style={S.td}>{timeAgo(r.updated_at)}</td>
+                  <td style={S.td}>
+                    <div style={{ display: 'flex', gap: 5 }}>
+                      <a href={`/admin/edit-blog/${r.id}`} target="_blank" rel="noopener"
+                        style={{ ...S.btn(NAVY), textDecoration: 'none', display: 'inline-flex', alignItems: 'center' }}>
+                        ✏️ Edit
+                      </a>
+                      {r.status === 'published' && (
+                        <a href={`/blog/${r.slug}`} target="_blank" rel="noopener"
+                          style={{ ...S.btn('#f1f5f9', '#334155'), textDecoration: 'none', display: 'inline-flex', alignItems: 'center' }}>
+                          🔗
+                        </a>
+                      )}
+                      <button onClick={() => del(r.id, r.title)} style={S.btn('#fef2f2', '#dc2626')}>🗑</button>
+                    </div>
+                  </td>
+                </tr>
+              ))}
+            </Table>
+          </div>
+          <Pagination page={page} setPage={setPage} count={count} perPage={PER} />
+        </>
+      )}
+    </div>
+  )
+}
+
 // ─── Main AdminDashboard ───────────────────────────────────────────────────────
 const TABS = [
   { key: 'overview',     label: '📊 Overview' },
@@ -1063,6 +1155,7 @@ const TABS = [
   { key: 'bids',         label: '💬 Bids' },
   { key: 'reviews',      label: '⭐ Reviews' },
   { key: 'social_hub',  label: '📣 Social Hub', badge: 'NEW' },
+  { key: 'blogs',       label: '✍️ Blogs' },
 ]
 
 const GOLD = '#E8B341'
@@ -1175,6 +1268,7 @@ export default function AdminDashboard() {
         {tab === 'bids'        && <BidsTab />}
         {tab === 'reviews'     && <ReviewsTab />}
         {tab === 'social_hub'  && <SocialHub />}
+        {tab === 'blogs'       && <BlogsTab />}
       </main>
     </div>
   )
