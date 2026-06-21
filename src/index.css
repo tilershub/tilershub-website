@@ -73,7 +73,6 @@ body {
   line-height: 1.5;
   -webkit-font-smoothing: antialiased;
   padding-top: 60px;
-  padding-bottom: env(safe-area-inset-bottom);
 }
 
 a { text-decoration: none; color: inherit; }
@@ -767,7 +766,7 @@ footer.legacy-footer { background: var(--charcoal); color: rgba(245,240,232,0.35
 .site-footer {
   background: var(--navy-dark);
   color: rgba(255,255,255,0.45);
-  padding-bottom: 70px; /* account for bottom nav on mobile */
+  padding-bottom: calc(64px + env(safe-area-inset-bottom, 0px));
 }
 .footer-inner { max-width: 1140px; margin: 0 auto; padding: 52px 16px 40px; display: grid; grid-template-columns: 2fr 1fr 1fr 1fr; gap: 36px; border-bottom: 1px solid rgba(255,255,255,0.06); }
 .footer-brand-text { font-size: 13px; color: rgba(255,255,255,0.38); line-height: 1.9; max-width: 260px; margin-top: 12px; }
@@ -793,7 +792,7 @@ footer.legacy-footer { background: var(--charcoal); color: rgba(245,240,232,0.35
 }
 @media (max-width: 767px) {
   .bottom-nav { display: flex; }
-  .page-wrap { padding-bottom: 64px; }
+  .page-wrap { padding-bottom: calc(64px + env(safe-area-inset-bottom, 0px)); }
   .footer-inner { grid-template-columns: 1fr; gap: 24px; padding: 36px 16px 28px; }
   .modal-overlay { align-items: flex-end; padding: 0; }
   .modal { border-radius: var(--radius-xl) var(--radius-xl) 0 0; max-height: 92vh; }
