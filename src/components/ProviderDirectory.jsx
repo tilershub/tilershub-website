@@ -283,7 +283,7 @@ function TilerCard({ tiler, onClick, T }) {
 
   return (
     <div
-      onClick={() => tiler.slug ? (window.location.href = `/tilers/${tiler.slug}`) : onClick(tiler)}
+      onClick={() => tiler.slug ? (window.location.href = `/providers/${tiler.slug}`) : onClick(tiler)}
       style={{ background: '#fff', borderRadius: 20, border: '1px solid #e8edf5', overflow: 'hidden', cursor: 'pointer', boxShadow: '0 2px 12px rgba(0,0,0,0.06)', transition: 'box-shadow 0.2s,transform 0.2s' }}
       onMouseOver={e => { e.currentTarget.style.transform = 'translateY(-3px)'; e.currentTarget.style.boxShadow = '0 10px 28px rgba(0,0,0,0.12)' }}
       onMouseOut={e  => { e.currentTarget.style.transform = ''; e.currentTarget.style.boxShadow = '0 2px 12px rgba(0,0,0,0.06)' }}
@@ -307,7 +307,7 @@ function TilerCard({ tiler, onClick, T }) {
       {/* Content below image */}
       <div style={{ padding: '14px 16px 16px' }}>
         <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', marginBottom: 6 }}>
-          <span style={{ fontSize: 12, color: '#64748b', fontWeight: 600 }}>ටයිලර්</span>
+          <span style={{ fontSize: 12, color: '#64748b', fontWeight: 600 }}>වෘත්තිකයා</span>
           {tiler.daily_rate_min > 0 && (
             <span style={{ fontSize: 12, color: '#64748b' }}>{T.from} <span style={{ fontSize: 15, fontWeight: 800, color: '#0f172a' }}>Rs.{tiler.daily_rate_min}</span>/{T.dayLabel}</span>
           )}
@@ -340,7 +340,7 @@ function TilerCard({ tiler, onClick, T }) {
               </a>
             )}
             {tiler.slug && (
-              <a href={`/tilers/${tiler.slug}`} onClick={e => e.stopPropagation()}
+              <a href={`/providers/${tiler.slug}`} onClick={e => e.stopPropagation()}
                 style={{ display: 'inline-flex', alignItems: 'center', gap: 4, background: '#1B3A6B', color: '#fff', borderRadius: 10, padding: '7px 14px', fontSize: 12, fontWeight: 700, textDecoration: 'none', whiteSpace: 'nowrap' }}>
                 {T.viewProfile} ›
               </a>
