@@ -273,7 +273,7 @@ function ProfileModal({ profile, profileType, adminUserId, onClose, onSaved }) {
         <div style={{ padding: '20px 24px', borderBottom: '1px solid #f1f5f9', display: 'flex', alignItems: 'center', justifyContent: 'space-between', flexShrink: 0, background: '#fff', position: 'sticky', top: 0, zIndex: 1 }}>
           <div>
             <div style={{ fontSize: 16, fontWeight: 700, color: '#0f172a' }}>
-              {isCreate ? `Create ${isTiler ? 'Tiler' : 'Provider'}` : `Edit ${isTiler ? 'Tiler' : 'Provider'}`}
+              {isCreate ? `Create ${isTiler ? 'Professional' : 'Provider'}` : `Edit ${isTiler ? 'Professional' : 'Provider'}`}
             </div>
             {!isCreate && profile?.slug && (
               <div style={{ fontSize: 11, color: '#94a3b8', marginTop: 2 }}>/{profile.slug}</div>
@@ -510,7 +510,7 @@ function OverviewTab() {
     { label: 'Pending Claims',      value: stats.pendingClaims,      color: stats.pendingClaims > 0 ? '#f59e0b' : '#64748b', emoji: '📲' },
     { label: 'Active Projects',     value: stats.activeProjects,     color: '#16a34a', emoji: '📋' },
     { label: 'New Bids',            value: stats.newBids,            color: stats.newBids > 0 ? TERRA : '#64748b', emoji: '💬' },
-    { label: 'Total Tilers',        value: stats.totalTilers,        color: NAVY, emoji: '👷' },
+    { label: 'Total Professionals',  value: stats.totalTilers,        color: NAVY, emoji: '👷' },
     { label: 'Total Providers',     value: stats.totalProviders,     color: NAVY, emoji: '🏪' },
     { label: 'Total Projects',      value: stats.totalProjects,      color: '#64748b', emoji: '📊' },
     { label: 'Total Submissions',   value: stats.totalSubmissions,   color: '#64748b', emoji: '👥' },
@@ -898,7 +898,7 @@ function ReviewsTab() {
                   <td style={S.td}>{r.job_type || '—'}</td>
                   <td style={{ ...S.td, maxWidth: 260 }}>{r.comment?.slice(0, 120)}{r.comment?.length > 120 ? '…' : ''}</td>
                   <td style={S.td}>
-                    {r.tiler_id && <span style={{ fontSize: 11, color: '#64748b' }}>Tiler</span>}
+                    {r.tiler_id && <span style={{ fontSize: 11, color: '#64748b' }}>Professional</span>}
                     {r.provider_id && <span style={{ fontSize: 11, color: '#64748b' }}>Provider</span>}
                   </td>
                   <td style={S.td}>{timeAgo(r.created_at)}</td>
@@ -945,7 +945,7 @@ function ProfilesTab({ adminUserId }) {
 
   async function del(id) {
     const table = subTab === 'tilers' ? 'tilers' : 'providers'
-    if (!confirm(`Permanently delete this ${subTab === 'tilers' ? 'tiler' : 'provider'} profile? This cannot be undone.`)) return
+    if (!confirm(`Permanently delete this ${subTab === 'tilers' ? 'professional' : 'provider'} profile? This cannot be undone.`)) return
     await supabase.from(table).delete().eq('id', id)
     load()
   }
@@ -957,7 +957,7 @@ function ProfilesTab({ adminUserId }) {
       <div style={{ display: 'flex', alignItems: 'center', gap: 10, marginBottom: 18, flexWrap: 'wrap' }}>
         <h2 style={{ ...S.h2, marginBottom: 0 }}>Profiles</h2>
         <div style={{ display: 'flex', gap: 6 }}>
-          {[['providers','🏪 Providers'],['tilers','👷 Tilers']].map(([k,l]) => (
+          {[['providers','🏪 Providers'],['tilers','👷 Professionals']].map(([k,l]) => (
             <button key={k} onClick={() => setSubTab(k)}
               style={S.btn(subTab === k ? NAVY : '#f1f5f9', subTab === k ? '#fff' : '#334155')}>
               {l}
@@ -968,7 +968,7 @@ function ProfilesTab({ adminUserId }) {
           placeholder="Search by name…"
           style={{ padding: '7px 12px', border: '1.5px solid #e2e8f0', borderRadius: 10, fontSize: 13, outline: 'none', fontFamily: 'inherit', minWidth: 180 }} />
         <button onClick={() => setCreating(true)} style={{ ...S.btn('#16a34a'), marginLeft: 'auto' }}>
-          + New {isTilerTab ? 'Tiler' : 'Provider'}
+          + New {isTilerTab ? 'Professional' : 'Provider'}
         </button>
       </div>
 

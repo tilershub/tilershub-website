@@ -397,7 +397,7 @@ function ConsumerDashboard({ user, projects, bids, submission, dataLoading, show
 
 function FindTilersTab() {
   const QUICK = [
-    { label:'සියලු ටයිලර්',          href:'/providers?type=tiler',            icon:'👷', desc:'සත්‍යාපිත ටයිලර් සොයන්න'            },
+    { label:'සියලු වෘත්තිකයෝ',        href:'/providers?type=tiler',            icon:'👷', desc:'සත්‍යාපිත වෘත්තිකයෝ සොයන්න'          },
     { label:'නාන කාමර ප්‍රතිසංස්.',  href:'/providers?q=Bathroom+Renovation', icon:'🚿', desc:'නාන කාමර ප්‍රතිසංස්කරණ විශේෂඥයන්'   },
     { label:'බිම් ටයිල්',         href:'/providers?q=Floor+Tiling',        icon:'🪨', desc:'බිම් සහ බිත්ති ටයිල් විශේෂඥයන්'          },
     { label:'ජලනිරෝධය',        href:'/providers?q=Waterproofing',       icon:'💧', desc:'සහතිකලත් ජලනිරෝධ කොන්ත්‍රාත්'    },
