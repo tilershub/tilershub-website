@@ -156,6 +156,17 @@ const PROVIDER_TYPE_DISPLAY = {
 // Shop types use Card 2 (landscape); all others use Card 1 (portrait)
 const SHOP_TYPES = new Set(['tile_shop', 'supplier', 'workshop', 'brand_dealer', 'bathroom_shop', 'tool_supplier'])
 
+// Feature icons shown in shop cards — auto-generated per type
+const TYPE_FEATURES = {
+  tile_shop:     [{icon:'🔲',label:'Wide Variety'},{icon:'💎',label:'Premium Quality'},{icon:'💰',label:'Best Prices'},{icon:'🚚',label:'Quick Supply'}],
+  bathroom_shop: [{icon:'🛁',label:'Complete Range'},{icon:'✦',label:'Premium Brands'},{icon:'🎯',label:'Expert Guidance'},{icon:'✅',label:'Quality Assured'}],
+  supplier:      [{icon:'📦',label:'Bulk Supply'},{icon:'💰',label:'Trade Pricing'},{icon:'🚚',label:'Fast Delivery'},{icon:'✅',label:'Quality Assured'}],
+  workshop:      [{icon:'✂️',label:'Precision Cut'},{icon:'⚡',label:'Fast Turnaround'},{icon:'🔧',label:'Custom Orders'},{icon:'🏷️',label:'Trade Ready'}],
+  brand_dealer:  [{icon:'✦',label:'Authentic'},{icon:'🛡️',label:'Warranty Backed'},{icon:'💡',label:'Expert Guidance'},{icon:'🚚',label:'Island Wide'}],
+  tool_supplier: [{icon:'🔧',label:'Pro Equipment'},{icon:'🏷️',label:'Trade Pricing'},{icon:'📦',label:'In Stock'},{icon:'🚚',label:'Fast Delivery'}],
+}
+const DEFAULT_FEATURES = [{icon:'✅',label:'Verified'},{icon:'💯',label:'Quality'},{icon:'📍',label:'Local'},{icon:'💬',label:'WhatsApp'}]
+
 // ProviderCard routes to the correct card design based on provider_type
 function ProviderCard({ provider, onClick, T }) {
   if (SHOP_TYPES.has(provider.provider_type)) {
@@ -183,80 +194,78 @@ function ShopCard({ provider, onClick, T }) {
   const waLink = waPhone ? buildWhatsAppLink(waPhone, provider.name) : null
   const tagline = shopTagline(provider.provider_type, provider.services)
   const coverImg = provider.cover_image && !provider.cover_image.includes('picsum') ? provider.cover_image : null
-  const typeLabel = PROVIDER_TYPE_DISPLAY[provider.provider_type]?.label || 'Shop'
-  const chips = (provider.services || []).slice(0, 4)
   const rating = provider.avg_rating
   const reviewCount = provider.review_count || 0
+  const features = TYPE_FEATURES[provider.provider_type] || DEFAULT_FEATURES
+  const isFeatured = provider.is_featured
+  const isVerified = VERIFIED_STATUSES.has(provider.verification_status)
 
   return (
     <div
       onClick={() => provider.slug ? (window.location.href = `/providers/${provider.slug}`) : onClick(provider)}
-      style={{ background: '#fff', border: '1px solid #e8edf5', borderRadius: 20, overflow: 'hidden', cursor: 'pointer', display: 'flex', boxShadow: '0 2px 12px rgba(0,0,0,0.06)', transition: 'all 0.2s', minHeight: 160 }}
+      style={{ background: '#fff', border: '1px solid #e8edf5', borderRadius: 20, overflow: 'hidden', cursor: 'pointer', display: 'flex', flexDirection: 'column', boxShadow: '0 2px 12px rgba(0,0,0,0.06)', transition: 'all 0.2s' }}
       onMouseOver={e => { e.currentTarget.style.transform = 'translateY(-3px)'; e.currentTarget.style.boxShadow = '0 12px 32px rgba(0,0,0,0.12)' }}
       onMouseOut={e => { e.currentTarget.style.transform = ''; e.currentTarget.style.boxShadow = '0 2px 12px rgba(0,0,0,0.06)' }}
     >
-      {/* Left image panel — ~42% width */}
-      <div style={{ width: '42%', flexShrink: 0, position: 'relative', minHeight: 160 }}>
-        {coverImg ? (
-          <img src={coverImg} alt={provider.name} loading="lazy" style={{ width: '100%', height: '100%', objectFit: 'cover', display: 'block' }} />
-        ) : (
-          <div style={{ width: '100%', height: '100%', background: '#f1f5f9', backgroundImage: 'repeating-linear-gradient(0deg,transparent,transparent 19px,#e2e8f0 19px,#e2e8f0 20px),repeating-linear-gradient(90deg,transparent,transparent 19px,#e2e8f0 19px,#e2e8f0 20px)', display: 'flex', alignItems: 'center', justifyContent: 'center' }}>
-            <span style={{ fontSize: 34, opacity: 0.15 }}>🏪</span>
-          </div>
-        )}
-        {/* Gradient overlay on image */}
-        <div style={{ position: 'absolute', inset: 0, background: 'linear-gradient(to bottom, rgba(0,0,0,0.02) 50%, rgba(0,0,0,0.45) 100%)' }} />
-        {/* Top-left badge */}
-        {provider.is_featured && (
-          <div style={{ position: 'absolute', top: 9, left: 9, background: '#D4AF37', color: '#fff', fontSize: 9, fontWeight: 700, letterSpacing: 0.4, padding: '4px 8px', borderRadius: 20, boxShadow: '0 2px 8px rgba(0,0,0,0.3)', whiteSpace: 'nowrap' }}>
-            {T.topRated}
-          </div>
-        )}
-        {!provider.is_featured && VERIFIED_STATUSES.has(provider.verification_status) && (
-          <div style={{ position: 'absolute', top: 9, left: 9, background: 'rgba(22,163,74,0.9)', color: '#fff', fontSize: 9, fontWeight: 700, padding: '4px 8px', borderRadius: 20, boxShadow: '0 2px 8px rgba(0,0,0,0.25)', whiteSpace: 'nowrap' }}>
-            ✓ සත්‍යාපිත
-          </div>
-        )}
-        {/* City overlaid bottom-left */}
-        {(provider.city || provider.district) && (
-          <div style={{ position: 'absolute', bottom: 8, left: 9, fontSize: 10, fontWeight: 600, color: '#fff', textShadow: '0 1px 4px rgba(0,0,0,0.7)', whiteSpace: 'nowrap', overflow: 'hidden', textOverflow: 'ellipsis', maxWidth: 'calc(100% - 16px)' }}>
-            📍 {provider.city || provider.district}
-          </div>
-        )}
-      </div>
-
-      {/* Right content panel */}
-      <div style={{ flex: 1, padding: '14px 16px', display: 'flex', flexDirection: 'column', minWidth: 0 }}>
-        <div style={{ fontSize: 9, fontWeight: 700, color: '#94a3b8', letterSpacing: 1.2, textTransform: 'uppercase', marginBottom: 3 }}>{tagline}</div>
-        <div style={{ fontFamily: "'Playfair Display',serif", fontSize: 16, fontWeight: 700, color: '#0f172a', lineHeight: 1.2, marginBottom: 5, overflow: 'hidden', textOverflow: 'ellipsis', whiteSpace: 'nowrap' }}>{provider.name}</div>
-        {rating > 0 && (
-          <div style={{ display: 'flex', alignItems: 'center', gap: 4, marginBottom: 7 }}>
-            <span style={{ fontSize: 12 }}>⭐</span>
-            <span style={{ fontSize: 13, fontWeight: 700, color: '#92400e' }}>{rating.toFixed(1)}</span>
-            {reviewCount > 0 && <span style={{ fontSize: 11, color: '#94a3b8' }}>({T.reviewsLabel(reviewCount)})</span>}
-          </div>
-        )}
-        {provider.description && (
-          <p style={{ fontSize: 11, color: '#64748b', lineHeight: 1.6, margin: '0 0 9px', display: '-webkit-box', WebkitLineClamp: 2, WebkitBoxOrient: 'vertical', overflow: 'hidden' }}>{provider.description}</p>
-        )}
-        {chips.length > 0 && (
-          <div style={{ display: 'flex', flexWrap: 'wrap', gap: 4, marginBottom: 12 }}>
-            {chips.map(s => <span key={s} style={{ fontSize: 9, fontWeight: 600, padding: '3px 8px', borderRadius: 20, background: '#eef3fb', color: '#1B3A6B', border: '1px solid #d5e2f5' }}>{s}</span>)}
-          </div>
-        )}
-        <div style={{ marginTop: 'auto' }}>
-          {provider.slug ? (
-            <a href={`/providers/${provider.slug}`} onClick={e => e.stopPropagation()}
-              style={{ display: 'inline-flex', alignItems: 'center', gap: 4, background: '#0f172a', color: '#fff', borderRadius: 10, padding: '8px 14px', fontSize: 11, fontWeight: 700, textDecoration: 'none', whiteSpace: 'nowrap' }}>
-              {T.viewShop}
-            </a>
-          ) : waLink && (
-            <a href={waLink} target="_blank" rel="noopener noreferrer" onClick={e => e.stopPropagation()}
-              style={{ display: 'inline-flex', alignItems: 'center', gap: 4, background: '#0f172a', color: '#fff', borderRadius: 10, padding: '8px 14px', fontSize: 11, fontWeight: 700, textDecoration: 'none', whiteSpace: 'nowrap' }}>
-              {T.viewShop}
-            </a>
+      {/* Main row: image left + content right */}
+      <div style={{ display: 'flex', minHeight: 168 }}>
+        {/* Left image panel */}
+        <div style={{ width: '42%', flexShrink: 0, position: 'relative', background: '#e2e8f0' }}>
+          {coverImg ? (
+            <img src={coverImg} alt={provider.name} loading="lazy" style={{ width: '100%', height: '100%', objectFit: 'cover', display: 'block' }} />
+          ) : (
+            <div style={{ width: '100%', height: '100%', background: '#f1f5f9', backgroundImage: 'repeating-linear-gradient(0deg,transparent,transparent 19px,#e2e8f0 19px,#e2e8f0 20px),repeating-linear-gradient(90deg,transparent,transparent 19px,#e2e8f0 19px,#e2e8f0 20px)', display: 'flex', alignItems: 'center', justifyContent: 'center' }}>
+              <span style={{ fontSize: 34, opacity: 0.15 }}>🏪</span>
+            </div>
+          )}
+          {/* Badge top-left */}
+          {(isFeatured || isVerified) && (
+            <div style={{ position: 'absolute', top: 9, left: 9, background: isFeatured ? '#D4AF37' : 'rgba(22,163,74,0.92)', color: '#fff', fontSize: 9, fontWeight: 700, padding: '4px 8px', borderRadius: 20, boxShadow: '0 2px 8px rgba(0,0,0,0.25)', whiteSpace: 'nowrap' }}>
+              {isFeatured ? '⭐ Top Rated' : '✓ Verified'}
+            </div>
           )}
         </div>
+
+        {/* Right content panel */}
+        <div style={{ flex: 1, padding: '14px 14px 10px', display: 'flex', flexDirection: 'column', minWidth: 0 }}>
+          <div style={{ fontSize: 9, fontWeight: 700, color: '#94a3b8', letterSpacing: 1.2, textTransform: 'uppercase', marginBottom: 3 }}>{tagline}</div>
+          <div style={{ fontFamily: "'Playfair Display',serif", fontSize: 15, fontWeight: 700, color: '#0f172a', lineHeight: 1.2, marginBottom: 4, overflow: 'hidden', textOverflow: 'ellipsis', whiteSpace: 'nowrap' }}>{provider.name}</div>
+          {rating > 0 && (
+            <div style={{ display: 'flex', alignItems: 'center', gap: 4, marginBottom: 6 }}>
+              <span style={{ fontSize: 12 }}>⭐</span>
+              <span style={{ fontSize: 12, fontWeight: 700, color: '#92400e' }}>{Number(rating).toFixed(1)}</span>
+              {reviewCount > 0 && <span style={{ fontSize: 10, color: '#94a3b8' }}>({T.reviewsLabel(reviewCount)})</span>}
+            </div>
+          )}
+          {provider.description && (
+            <p style={{ fontSize: 11, color: '#64748b', lineHeight: 1.55, margin: '0 0 8px', display: '-webkit-box', WebkitLineClamp: 2, WebkitBoxOrient: 'vertical', overflow: 'hidden' }}>{provider.description}</p>
+          )}
+          {/* 2×2 feature icons grid */}
+          <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: 5, marginTop: 'auto' }}>
+            {features.map(f => (
+              <div key={f.label} style={{ display: 'flex', alignItems: 'center', gap: 5, background: '#f8fafc', border: '1px solid #f1f5f9', borderRadius: 8, padding: '5px 7px' }}>
+                <span style={{ fontSize: 13 }}>{f.icon}</span>
+                <span style={{ fontSize: 10, fontWeight: 600, color: '#374151' }}>{f.label}</span>
+              </div>
+            ))}
+          </div>
+        </div>
+      </div>
+
+      {/* Bottom strip: location + View Shop button */}
+      <div style={{ borderTop: '1px solid #f1f5f9', padding: '9px 14px', display: 'flex', alignItems: 'center', justifyContent: 'space-between', background: '#fafbfc' }}>
+        <span style={{ fontSize: 11, color: '#64748b' }}>📍 {provider.city || provider.district || 'Sri Lanka'}</span>
+        {provider.slug ? (
+          <a href={`/providers/${provider.slug}`} onClick={e => e.stopPropagation()}
+            style={{ fontSize: 11, fontWeight: 700, background: '#1A2B4A', color: '#fff', border: 'none', borderRadius: 8, padding: '5px 12px', cursor: 'pointer', textDecoration: 'none', whiteSpace: 'nowrap' }}>
+            {T.viewShop} ›
+          </a>
+        ) : waLink ? (
+          <a href={waLink} target="_blank" rel="noopener noreferrer" onClick={e => e.stopPropagation()}
+            style={{ fontSize: 11, fontWeight: 700, background: '#1A2B4A', color: '#fff', border: 'none', borderRadius: 8, padding: '5px 12px', cursor: 'pointer', textDecoration: 'none', whiteSpace: 'nowrap' }}>
+            {T.viewShop} ›
+          </a>
+        ) : null}
       </div>
     </div>
   )
