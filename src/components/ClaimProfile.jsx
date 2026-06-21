@@ -22,6 +22,7 @@ export default function ClaimProfile({ profileId, profileType, profileName, isCl
   if (!ready || claimed) return null
 
   async function claimDirectly() {
+    if (!user?.id) { setErr('Please sign in first.'); return }
     setLoading(true); setErr('')
     try {
       const table = profileType === 'tiler' ? 'tilers' : 'providers'
