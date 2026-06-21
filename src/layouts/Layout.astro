@@ -13,6 +13,7 @@ const {
   title = "TilersHub · Sri Lanka's Tile & Bathroom Marketplace",
   description = "Find tilers, contractors, tile shops, brands and products for your tile and bathroom project across Sri Lanka. Free — no login required.",
   ogImage = 'https://www.tilershub.lk/og.png',
+  ogType = 'website',
   noindex = false,
 } = Astro.props
 const path = Astro.url.pathname
@@ -60,7 +61,7 @@ const orgSchema = JSON.stringify({
   <!-- Open Graph -->
   <meta property="og:title" content={title} />
   <meta property="og:description" content={description} />
-  <meta property="og:type" content="website" />
+  <meta property="og:type" content={ogType} />
   <meta property="og:url" content={canonicalUrl} />
   <meta property="og:image" content={ogImage} />
   <meta property="og:site_name" content="TilersHub" />

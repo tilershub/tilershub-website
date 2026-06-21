@@ -215,13 +215,16 @@ const expYears = Number(item.experience_years || 0)
 
 const isUnverified = isTiler && !item.is_verified
 
+const topServices = services.slice(0, 3).join(', ')
 const metaDesc = isUnverified
-  ? `${name} is a tiling professional based in ${city}, Sri Lanka. Find contact details on TilersHub.`
-  : `Contact ${name}, a verified ${typeLabel.toLowerCase()} based in ${city}, Sri Lanka. Direct WhatsApp contact on TilersHub.`
+  ? `${name} is a tiling professional in ${city}, Sri Lanka.${topServices ? ' Services: ' + topServices + '.' : ''} Find contact details on TilersHub.`
+  : `Contact ${name}, a verified ${typeLabel.toLowerCase()} in ${city}, Sri Lanka.${topServices ? ' Services: ' + topServices + '.' : ''} Direct WhatsApp on TilersHub.`
 
 const schemaType = item.provider_type === 'tile_shop' || item.provider_type === 'bathroom_shop'
   ? 'HomeGoodsStore'
   : 'LocalBusiness'
+
+const ogImageUrl = heroCoverSrc || avatarSrc || 'https://www.tilershub.lk/og.png'
 
 const bizSchema: Record<string, unknown> = {
   '@context': 'https://schema.org',
@@ -237,6 +240,9 @@ const bizSchema: Record<string, unknown> = {
   },
   areaServed: item.district || city,
 }
+if (phone) bizSchema.telephone = phone
+if (avatarSrc || heroCoverSrc) bizSchema.image = avatarSrc || heroCoverSrc
+if (services.length > 0) bizSchema.knowsAbout = services
 if (avgRating > 0 && reviewCount > 0) {
   bizSchema.aggregateRating = {
     '@type': 'AggregateRating',
@@ -246,13 +252,25 @@ if (avgRating > 0 && reviewCount > 0) {
     worstRating: '1',
   }
 }
+
+const breadcrumbSchema = JSON.stringify({
+  '@context': 'https://schema.org',
+  '@type': 'BreadcrumbList',
+  itemListElement: [
+    { '@type': 'ListItem', position: 1, name: 'Home', item: 'https://www.tilershub.lk/' },
+    { '@type': 'ListItem', position: 2, name: 'Providers', item: 'https://www.tilershub.lk/providers' },
+    { '@type': 'ListItem', position: 3, name, item: `https://www.tilershub.lk/providers/${slug}` },
+  ],
+})
 ---
 
 <Layout
   title={`${name} · ${typeLabel} in ${city} · TilersHub`}
   description={metaDesc}
+  ogImage={ogImageUrl}
 >
   <script slot="head" type="application/ld+json" set:html={JSON.stringify(bizSchema)} />
+  <script slot="head" type="application/ld+json" set:html={breadcrumbSchema} />
 
   <!-- ══ HERO ══ -->
   <div style="position:relative;height:300px;overflow:hidden;background:#0F2444;">

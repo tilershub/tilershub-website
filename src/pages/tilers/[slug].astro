@@ -61,6 +61,9 @@ const localBizSchema: Record<string, unknown> = {
   areaServed: tiler.district || city,
   priceRange: tiler.daily_rate_min ? `Rs. ${tiler.daily_rate_min}–${tiler.daily_rate_max || '?'} per sq.ft` : 'Contact for quote',
 }
+if (phone) localBizSchema.telephone = phone
+if (tiler.avatar_url) localBizSchema.image = tiler.avatar_url
+if (services.length > 0) localBizSchema.knowsAbout = services
 if (rating > 0 && tiler.review_count > 0) {
   localBizSchema.aggregateRating = {
     '@type': 'AggregateRating',
@@ -71,13 +74,27 @@ if (rating > 0 && tiler.review_count > 0) {
   }
 }
 const schemaStr = JSON.stringify(localBizSchema)
+
+const ogImageUrl = tiler.avatar_url || 'https://www.tilershub.lk/og.png'
+
+const breadcrumbSchema = JSON.stringify({
+  '@context': 'https://schema.org',
+  '@type': 'BreadcrumbList',
+  itemListElement: [
+    { '@type': 'ListItem', position: 1, name: 'Home', item: 'https://www.tilershub.lk/' },
+    { '@type': 'ListItem', position: 2, name: 'Tilers', item: 'https://www.tilershub.lk/providers' },
+    { '@type': 'ListItem', position: 3, name, item: `https://www.tilershub.lk/tilers/${tiler.slug}` },
+  ],
+})
 ---
 
 <Layout
   title={`${name} · Skill Verified Tiler in ${city} · TilersHub`}
   description={`${name} is a Skill Verified tiler based in ${city}, Sri Lanka${tiler.experience_years > 0 ? ` with ${tiler.experience_years}+ years experience` : ''}. Contact directly on WhatsApp via TilersHub.`}
+  ogImage={ogImageUrl}
 >
   <script slot="head" type="application/ld+json" set:html={schemaStr} />
+  <script slot="head" type="application/ld+json" set:html={breadcrumbSchema} />
 
   <!-- Hero -->
   <div style="background:linear-gradient(135deg,#0A1C38 0%,#1B3A6B 60%,#243F70 100%);position:relative;overflow:hidden;">
