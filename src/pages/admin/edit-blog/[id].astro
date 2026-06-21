@@ -1,0 +1,22 @@
+---
+export const prerender = false
+const { id } = Astro.params
+import BlogEditor from '../../../components/BlogEditor.jsx'
+---
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Edit Blog · TilersHub Admin</title>
+  <meta name="robots" content="noindex, nofollow" />
+  <link rel="icon" type="image/png" href="/favicon.png" />
+  <style>
+    *, *::before, *::after { box-sizing: border-box; }
+    body { margin: 0; background: #f1f5f9; font-family: system-ui, -apple-system, sans-serif; color: #0f172a; }
+  </style>
+</head>
+<body>
+  <BlogEditor client:only="react" mode="edit" blogId={id} />
+</body>
+</html>

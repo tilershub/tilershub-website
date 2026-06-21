@@ -1,5 +1,8 @@
 name = "tilershub"
 compatibility_date = "2024-01-01"
+pages_build_output_dir = "./dist"
 
-[assets]
-directory = "./dist"
+# Set ANTHROPIC_API_KEY in the Cloudflare Pages dashboard:
+#   Pages → tilershub → Settings → Environment variables → Production
+#   Variable name: ANTHROPIC_API_KEY
+#   For local dev: add to .env file as ANTHROPIC_API_KEY=sk-ant-...
