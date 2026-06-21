@@ -66,12 +66,12 @@ function waLink(p: string, n: string, intent?: string) {
 }
 
 const PROVIDER_TYPE_LABELS: Record<string,string> = {
-  tiler: 'ටයිලර්', workshop: 'වැඩ පොළ', supplier: 'සැපයුම්කරු',
+  tiler: 'වෘත්තිකයා', workshop: 'වැඩ පොළ', supplier: 'සැපයුම්කරු',
   contractor: 'කොන්ත්‍රාත්කරු', tile_shop: 'ටයිල් සාප්පුව',
   brand_dealer: 'බ්‍රෑන්ඩ් නියෝජිතයා', bathroom_shop: 'නාන කාමර සාප්පුව',
   tool_supplier: 'මෙවලම් සැපයුම්කරු',
 }
-const typeLabel = isTiler ? 'ටයිලර්' : (PROVIDER_TYPE_LABELS[item.provider_type] || 'සේවා සපයන්නා')
+const typeLabel = isTiler ? 'වෘත්තිකයා' : (PROVIDER_TYPE_LABELS[item.provider_type] || 'සේවා සපයන්නා')
 
 // Tagline: short descriptor below the name
 function getTagline(): string {

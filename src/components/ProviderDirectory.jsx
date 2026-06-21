@@ -7,8 +7,9 @@ const TRANS = {
     searchPh: 'Search by name, service...',
     allDistricts: 'All Districts',
     all: 'All',
-    tilersOpt: '🪚 Tilers',
-    providersOpt: '👷 Providers',
+    professionalsOpt: '👷 Professionals',
+    contractorsOpt: '🏗️ Contractors',
+    suppliersOpt: '🏪 Suppliers',
     clear: label => label ? `✕ Clear (${label})` : '✕ Clear',
     found: n => `${n} found`,
     loading: 'Loading providers...',
@@ -49,8 +50,9 @@ const TRANS = {
     searchPh: 'නමින්, සේවාවෙන් සොයන්න...',
     allDistricts: 'සියලු දිස්ත්‍රික්ක',
     all: 'සියල්ල',
-    tilersOpt: '🪚 ටයිල් ශිල්පීන්',
-    providersOpt: '👷 සේවා සපයන්නන්',
+    professionalsOpt: '👷 වෘත්තිකයෝ',
+    contractorsOpt: '🏗️ කොන්ත්‍රාත්කරුවන්',
+    suppliersOpt: '🏪 සැපයුම්කරුවන්',
     clear: label => label ? `✕ ඉවත් (${label})` : '✕ ඉවත් කරන්න',
     found: n => `${n} ක් හමු විය`,
     loading: 'Loading...',
@@ -89,8 +91,8 @@ const TRANS = {
   },
 }
 
-const TYPE_LABELS_EN = { tiler: 'Tilers', provider: 'Providers' }
-const TYPE_LABELS_SI = { tiler: 'ටයිල් ශිල්පීන්', provider: 'සේවා සපයන්නන්' }
+const TYPE_LABELS_EN = { tiler: 'Professionals', contractor: 'Contractors', supplier: 'Suppliers' }
+const TYPE_LABELS_SI = { tiler: 'වෘත්තිකයෝ', contractor: 'කොන්ත්‍රාත්කරුවන්', supplier: 'සැපයුම්කරුවන්' }
 
 // ─── Language hook ─────────────────────────────────────────────────────────────
 function useLang() {
@@ -686,7 +688,7 @@ export default function ProviderDirectory({ initialType, initialSearch }) {
   }, [])
 
   const showTilers    = !type || type === 'tiler'
-  const showProviders = !type || type === 'provider'
+  const showProviders = !type || type === 'contractor' || type === 'supplier'
 
   const filteredTilers = showTilers ? tilers.filter(t => {
     if (district && t.district !== district) return false
@@ -698,6 +700,8 @@ export default function ProviderDirectory({ initialType, initialSearch }) {
   }) : []
 
   const filteredProviders = showProviders ? providers.filter(p => {
+    if (type === 'contractor' && p.provider_type !== 'contractor') return false
+    if (type === 'supplier' && !SHOP_TYPES.has(p.provider_type)) return false
     if (district && p.district !== district && !(p.service_areas || []).includes(district)) return false
     if (search) {
       const q = search.toLowerCase()
@@ -750,8 +754,9 @@ export default function ProviderDirectory({ initialType, initialSearch }) {
           {/* Type filter */}
           <select value={type} onChange={e => setType(e.target.value)} style={{ padding: '9px 12px', border: '1.5px solid #e2e8f0', borderRadius: 10, fontSize: 13, outline: 'none', background: '#fff', fontFamily: 'inherit', cursor: 'pointer' }}>
             <option value="">{T.all}</option>
-            <option value="tiler">{T.tilersOpt}</option>
-            <option value="provider">{T.providersOpt}</option>
+            <option value="tiler">{T.professionalsOpt}</option>
+            <option value="contractor">{T.contractorsOpt}</option>
+            <option value="supplier">{T.suppliersOpt}</option>
           </select>
 
           {/* District filter */}
