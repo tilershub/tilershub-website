@@ -55,9 +55,16 @@ export default function HomeHero({ heroImg }) {
     })
   }, [])
 
-  return role === 'provider'
-    ? <><ProviderHero name={providerName} /><ProviderActions /><ProviderProjectsFeed /></>
-    : <GuestHero heroImg={heroImg} />
+  // Show/hide the static guest hero based on auth state
+  useEffect(() => {
+    const el = document.getElementById('guest-hero-static')
+    if (el) el.style.display = role === 'provider' ? 'none' : ''
+  }, [role])
+
+  // Guest view — static HTML in index.astro handles the display
+  if (role !== 'provider') return null
+
+  return <><ProviderHero name={providerName} /><ProviderActions /><ProviderProjectsFeed /></>
 }
 
 // ─── PROVIDER HERO ────────────────────────────────────────────────

@@ -112,6 +112,33 @@ function verBadge(vs: string) {
   <link slot="head" rel="preload" as="image" href={HERO_IMG} fetchpriority="high" />
 
   <!-- ══ HERO ══ -->
+  <!-- Static guest hero — renders immediately for LCP; HomeHero hides it when a provider is logged in -->
+  <div id="guest-hero-static" style="position:relative;min-height:320px;display:flex;align-items:center;justify-content:center;overflow:hidden;padding:44px 20px 40px;background:#0a121f;">
+    <img src={HERO_IMG} alt="" width="1400" height="800"
+      style="position:absolute;inset:0;width:100%;height:100%;object-fit:cover;object-position:center 30%;opacity:0.32;"
+      loading="eager" fetchpriority="high" decoding="sync" />
+    <div style="position:absolute;inset:0;background:linear-gradient(175deg,rgba(8,15,28,0.72) 0%,rgba(20,35,65,0.68) 100%);pointer-events:none;"></div>
+    <div style="position:relative;text-align:center;max-width:520px;width:100%;">
+      <h1 style="font-family:'Playfair Display',serif;font-size:clamp(26px,5.5vw,42px);font-weight:700;color:#fff;line-height:1.15;margin-bottom:10px;">
+        ඔබේ ව්‍යාපෘතිය පල කරන්න,<br /><span style="color:#F59E0B;">නොමිලේ ලංසු ලබා ගන්න.</span>
+      </h1>
+      <p style="font-size:13px;color:rgba(255,255,255,0.62);margin-bottom:22px;line-height:1.7;">
+        ලොගිනය අවශ්‍ය නැත · සත්‍යාපිත ප්‍රවීණයන් පැය 24 ක් ඇතුළත ලංසු දෙති
+      </p>
+      <a href="/post-project" style="display:flex;align-items:center;justify-content:center;gap:8px;background:#E05A2B;color:#fff;border-radius:24px;padding:14px 28px;font-size:15px;font-weight:800;text-decoration:none;box-shadow:0 4px 20px rgba(224,90,43,0.45);margin-bottom:14px;">
+        📋 නොමිලේ ව්‍යාපෘතිය පල කරන්න
+      </a>
+      <div style="margin-bottom:14px;">
+        <a href="/providers" style="font-size:12px;color:rgba(255,255,255,0.45);text-decoration:none;font-weight:600;">හෝ සේවා සපයන්නන් බලන්න →</a>
+      </div>
+      <div style="display:flex;gap:8px;justify-content:center;flex-wrap:wrap;">
+        <span style="background:rgba(255,255,255,0.1);color:rgba(255,255,255,0.78);border-radius:20px;padding:5px 13px;font-size:11px;font-weight:600;border:1px solid rgba(255,255,255,0.15);">✓ පල කිරීම නොමිලේ</span>
+        <span style="background:rgba(255,255,255,0.1);color:rgba(255,255,255,0.78);border-radius:20px;padding:5px 13px;font-size:11px;font-weight:600;border:1px solid rgba(255,255,255,0.15);">✓ බහු ලංසු</span>
+        <span style="background:rgba(255,255,255,0.1);color:rgba(255,255,255,0.78);border-radius:20px;padding:5px 13px;font-size:11px;font-weight:600;border:1px solid rgba(255,255,255,0.15);">✓ බැඳීමක් නැත</span>
+      </div>
+    </div>
+  </div>
+  <!-- Provider dashboard — replaces static hero if user is a logged-in provider -->
   <HomeHero client:load heroImg={HERO_IMG} />
 
   <!-- ══ HOW IT WORKS ══ -->
