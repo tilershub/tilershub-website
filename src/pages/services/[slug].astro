@@ -9,28 +9,17 @@ export function getStaticPaths() {
 
 const { service } = Astro.props
 
-const orFilter = service.terms.map(t => `bio.ilike.%${t}%`).join(',')
+const { data: providersRaw } = await supabase
+  .from('providers')
+  .select('id,name,city,district,verification_status,slug,services,provider_type,whatsapp,phone,description,profile_image,avg_rating,experience_years')
+  .eq('status', 'active')
+  .limit(200)
 
-const [{ data: tilersRaw }, { data: providersRaw }] = await Promise.all([
-  supabase
-    .from('tilers')
-    .select('id,full_name,city,district,is_verified,avg_rating,slug,bio,avatar_url,experience_years,whatsapp,phone,services')
-    .or(orFilter)
-    .order('avg_rating', { ascending: false })
-    .limit(20),
-  supabase
-    .from('providers')
-    .select('id,name,city,district,verification_status,slug,services,provider_type,whatsapp,phone,description,profile_image')
-    .limit(100),
-])
-
-const matchedProviders = (providersRaw || []).filter(p =>
+const providers = (providersRaw || []).filter(p =>
   (p.services || []).some(s =>
     service.terms.some(t => String(s).toLowerCase().includes(t.toLowerCase()))
-  )
-)
-
-const tilers = tilersRaw || []
+  ) || service.terms.some(t => (p.description || '').toLowerCase().includes(t.toLowerCase()))
+).slice(0, 30)
 
 const AVATAR_COLORS = ['#1B3A6B','#0f766e','#7c3aed','#b45309','#0369a1','#E05A2B','#15803d','#be185d']
 function avatarColor(name) {
@@ -50,7 +39,7 @@ function waLink(phone, name) {
 const pageTitle = `${service.label} in Sri Lanka — Verified Specialists | TilersHub`
 const pageDesc  = `Find verified ${service.label} professionals across Sri Lanka. Compare quotes, read reviews, and contact directly on WhatsApp. Free on TilersHub.`
 const postUrl   = `/post-project?type=${encodeURIComponent(service.label)}`
-const total     = tilers.length + matchedProviders.length
+const total     = providers.length
 
 const serviceSchema = JSON.stringify({
   '@context': 'https://schema.org',
@@ -112,58 +101,12 @@ const serviceSchema = JSON.stringify({
           <a href="/providers" style="font-size:12px;color:#E05A2B;font-weight:600;text-decoration:none;">Browse all ›</a>
         </div>
 
-        {tilers.map(t => {
-          const color = avatarColor(t.full_name)
-          const inits = initials(t.full_name)
-          const phone = t.whatsapp || t.phone
-          const chips = (t.services || []).slice(0, 3)
-          return (
-            <div style="background:#fff;border-radius:20px;border:1px solid #e8edf5;overflow:hidden;box-shadow:0 2px 12px rgba(0,0,0,0.06);display:flex;">
-              <!-- Avatar block -->
-              <div style={`width:100px;flex-shrink:0;background:${color};display:flex;align-items:center;justify-content:center;min-height:130px;overflow:hidden;`}>
-                {t.avatar_url
-                  ? <img src={t.avatar_url} alt={t.full_name} style="width:100%;height:100%;object-fit:cover;" loading="lazy" />
-                  : <span style="font-size:32px;font-weight:800;color:rgba(255,255,255,0.85);">{inits}</span>
-                }
-              </div>
-              <!-- Info -->
-              <div style="flex:1;padding:14px 16px;display:flex;flex-direction:column;min-width:0;">
-                <div style="display:flex;align-items:flex-start;gap:7px;margin-bottom:4px;flex-wrap:wrap;">
-                  <span style="font-size:15px;font-weight:700;color:#0f172a;line-height:1.25;">{t.full_name}</span>
-                  {t.is_verified && <span style="font-size:8px;font-weight:700;color:#16a34a;background:#f0fdf4;border:1px solid #bbf7d0;border-radius:20px;padding:2px 7px;flex-shrink:0;margin-top:2px;">✓ Pro</span>}
-                </div>
-                {(t.city || t.district) && <div style="font-size:11px;color:#64748b;margin-bottom:6px;">📍 {t.city || t.district}</div>}
-                {t.bio && <div style="font-size:12px;color:#64748b;margin-bottom:8px;display:-webkit-box;-webkit-line-clamp:2;-webkit-box-orient:vertical;overflow:hidden;line-height:1.5;">{t.bio}</div>}
-                {chips.length > 0 && (
-                  <div style="display:flex;flex-wrap:wrap;gap:4px;margin-bottom:10px;">
-                    {chips.map(s => <span style="font-size:9px;font-weight:600;padding:2px 7px;border-radius:20px;background:#eef3fb;color:#1B3A6B;border:1px solid #d5e2f5;">{s}</span>)}
-                  </div>
-                )}
-                {t.avg_rating > 0 && <div style="font-size:11px;color:#f59e0b;margin-bottom:8px;">⭐ {t.avg_rating.toFixed(1)}</div>}
-                <div style="display:flex;gap:8px;flex-wrap:wrap;margin-top:auto;">
-                  {phone
-                    ? <a href={waLink(phone, t.full_name)} target="_blank" rel="noopener noreferrer"
-                        style="display:inline-flex;align-items:center;gap:5px;background:#25D366;color:#fff;border-radius:10px;padding:8px 14px;font-size:12px;font-weight:700;text-decoration:none;">
-                        💬 WhatsApp
-                      </a>
-                    : t.slug
-                      ? <a href={`/tilers/${t.slug}`}
-                          style="display:inline-flex;align-items:center;gap:5px;background:#1B3A6B;color:#fff;border-radius:10px;padding:8px 14px;font-size:12px;font-weight:700;text-decoration:none;">
-                          View Profile ›
-                        </a>
-                      : null
-                  }
-                </div>
-              </div>
-            </div>
-          )
-        })}
-
-        {matchedProviders.map(p => {
+        {providers.map(p => {
           const color = avatarColor(p.name || 'P')
           const inits = initials(p.name || 'P')
           const phone = p.whatsapp || p.phone
           const chips = (p.services || []).slice(0, 3)
+          const isVerified = ['th_master','th_certified_pro','th_verified'].includes(p.verification_status)
           return (
             <div style="background:#fff;border-radius:20px;border:1px solid #e8edf5;overflow:hidden;box-shadow:0 2px 12px rgba(0,0,0,0.06);display:flex;">
               <div style={`width:100px;flex-shrink:0;background:${color};display:flex;align-items:center;justify-content:center;min-height:130px;overflow:hidden;`}>
@@ -175,7 +118,7 @@ const serviceSchema = JSON.stringify({
               <div style="flex:1;padding:14px 16px;display:flex;flex-direction:column;min-width:0;">
                 <div style="display:flex;align-items:flex-start;gap:7px;margin-bottom:4px;flex-wrap:wrap;">
                   <span style="font-size:15px;font-weight:700;color:#0f172a;line-height:1.25;">{p.name}</span>
-                  {p.verification_status === 'verified' && <span style="font-size:8px;font-weight:700;color:#16a34a;background:#f0fdf4;border:1px solid #bbf7d0;border-radius:20px;padding:2px 7px;flex-shrink:0;margin-top:2px;">✓ Pro</span>}
+                  {isVerified && <span style="font-size:8px;font-weight:700;color:#16a34a;background:#f0fdf4;border:1px solid #bbf7d0;border-radius:20px;padding:2px 7px;flex-shrink:0;margin-top:2px;">✓ Pro</span>}
                 </div>
                 {(p.city || p.district) && <div style="font-size:11px;color:#64748b;margin-bottom:6px;">📍 {p.city || p.district}</div>}
                 {p.description && <div style="font-size:12px;color:#64748b;margin-bottom:8px;display:-webkit-box;-webkit-line-clamp:2;-webkit-box-orient:vertical;overflow:hidden;line-height:1.5;">{p.description}</div>}
@@ -184,16 +127,19 @@ const serviceSchema = JSON.stringify({
                     {chips.map(s => <span style="font-size:9px;font-weight:600;padding:2px 7px;border-radius:20px;background:#eef3fb;color:#1B3A6B;border:1px solid #d5e2f5;">{s}</span>)}
                   </div>
                 )}
+                {p.avg_rating > 0 && <div style="font-size:11px;color:#f59e0b;margin-bottom:8px;">⭐ {Number(p.avg_rating).toFixed(1)}</div>}
                 <div style="display:flex;gap:8px;flex-wrap:wrap;margin-top:auto;">
                   {phone
                     ? <a href={waLink(phone, p.name)} target="_blank" rel="noopener noreferrer"
                         style="display:inline-flex;align-items:center;gap:5px;background:#25D366;color:#fff;border-radius:10px;padding:8px 14px;font-size:12px;font-weight:700;text-decoration:none;">
                         💬 WhatsApp
                       </a>
-                    : <a href="/providers"
-                        style="display:inline-flex;align-items:center;gap:5px;background:#1B3A6B;color:#fff;border-radius:10px;padding:8px 14px;font-size:12px;font-weight:700;text-decoration:none;">
-                        View Profile ›
-                      </a>
+                    : p.slug
+                      ? <a href={`/providers/${p.slug}`}
+                          style="display:inline-flex;align-items:center;gap:5px;background:#1B3A6B;color:#fff;border-radius:10px;padding:8px 14px;font-size:12px;font-weight:700;text-decoration:none;">
+                          View Profile ›
+                        </a>
+                      : null
                   }
                 </div>
               </div>

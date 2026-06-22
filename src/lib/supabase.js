@@ -62,10 +62,27 @@ export const PROJECT_TYPES = [
   'Tile Shop Inquiry'
 ]
 
-export const PROVIDER_TYPES = [
-  { value: 'tiler',    label: 'Tiler',    icon: '🪚' },
-  { value: 'provider', label: 'Provider', icon: '👷' },
+export const PROFESSIONS = [
+  { value: 'tiler',                label: 'Tiler',               si: 'ටයිල් ශිල්පී',           icon: '🪚' },
+  { value: 'contractor',           label: 'Contractor',           si: 'කොන්ත්‍රාත්කරු',           icon: '🏗️' },
+  { value: 'electrician',          label: 'Electrician',          si: 'විදුලි ශිල්පී',           icon: '⚡' },
+  { value: 'plumber',              label: 'Plumber',              si: 'නළ ශිල්පී',               icon: '🔧' },
+  { value: 'carpenter',            label: 'Carpenter',            si: 'ලී ශිල්පී',               icon: '🪵' },
+  { value: 'painter',              label: 'Painter',              si: 'පින්තාරු ශිල්පී',         icon: '🖌️' },
+  { value: 'mason',                label: 'Mason / Bricklayer',   si: 'ගල් ශිල්පී',              icon: '🧱' },
+  { value: 'construction_company', label: 'Construction Company', si: 'ඉදිකිරීම් සමාගම',         icon: '🏢' },
+  { value: 'interior_designer',    label: 'Interior Designer',    si: 'අභ්‍යන්තර සැලසුම්කරු',   icon: '🛋️' },
+  { value: 'tile_shop',            label: 'Tile Shop',            si: 'ටයිල් සාප්පුව',           icon: '🔲' },
+  { value: 'bathroom_shop',        label: 'Bathroom Shop',        si: 'නාන කාමර සාප්පුව',        icon: '🛁' },
+  { value: 'supplier',             label: 'Supplier',             si: 'සැපයුම්කරු',              icon: '📦' },
+  { value: 'workshop',             label: 'Workshop',             si: 'වැඩ පොළ',                 icon: '✂️' },
+  { value: 'brand_dealer',         label: 'Brand Dealer',         si: 'බ්‍රෑන්ඩ් නියෝජිතයා',    icon: '✦' },
+  { value: 'tool_supplier',        label: 'Tool Supplier',        si: 'මෙවලම් සැපයුම්කරු',       icon: '🔨' },
 ]
+
+export const PROFESSION_LABELS = Object.fromEntries(PROFESSIONS.map(p => [p.value, p.label]))
+
+export const PROVIDER_TYPES = PROFESSIONS
 
 export const VERIFICATION_BADGES = {
   listed: { label: 'Listed', color: '#64748b', bg: '#f1f5f9' },

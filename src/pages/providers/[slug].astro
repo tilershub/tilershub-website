@@ -6,49 +6,19 @@ import ClaimProfile from '../../components/ClaimProfile.jsx'
 import EditProfileButton from '../../components/EditProfileButton.jsx'
 
 export async function getStaticPaths() {
-  const [{ data: providers }, { data: tilers }] = await Promise.all([
-    supabase.from('providers').select('slug,id').not('slug', 'is', null),
-    supabase.from('tilers').select('id,slug'),
-  ])
-  const paths = []
-  for (const p of providers || []) {
-    if (p.slug) paths.push({ params: { slug: p.slug }, props: { type: 'provider', lookupKey: p.slug } })
-  }
-  for (const t of tilers || []) {
-    if (t.slug) {
-      paths.push({ params: { slug: t.slug }, props: { type: 'tiler', lookupKey: t.slug } })
-      paths.push({ params: { slug: String(t.id) }, props: { type: 'tiler', lookupKey: t.slug } })
-    } else {
-      paths.push({ params: { slug: String(t.id) }, props: { type: 'tiler', lookupKey: String(t.id) } })
-    }
-  }
-  return paths
+  const { data: providers } = await supabase.from('providers').select('slug').not('slug', 'is', null)
+  return (providers || []).map(p => ({ params: { slug: p.slug } }))
 }
 
 const { slug } = Astro.params
-const { type, lookupKey } = Astro.props
 
-let provider = null
-let tiler = null
+const { data: item } = await supabase.from('providers').select('*').eq('slug', slug).single()
 
-if (type === 'provider') {
-  const { data } = await supabase.from('providers').select('*').eq('slug', lookupKey).single()
-  provider = data
-} else {
-  const isUuid = /^[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}$/.test(lookupKey)
-  const { data } = isUuid
-    ? await supabase.from('tilers').select('*').eq('id', lookupKey).single()
-    : await supabase.from('tilers').select('*').eq('slug', lookupKey).single()
-  tiler = data
-}
+if (!item) return Astro.redirect('/providers')
 
-if (!provider && !tiler) return Astro.redirect('/providers')
-
-const item = provider || tiler
-const isTiler = !!tiler
-const name = isTiler ? item.full_name : item.name
+const name = item.name || ''
 const phone = item.whatsapp || item.phone
-const altPhone = (isTiler && item.whatsapp && item.phone && item.whatsapp !== item.phone) ? item.phone : null
+const altPhone = null
 const city = item.city || item.district
 const gallery: string[] = item.gallery || []
 const services: string[] = item.services || []
@@ -66,12 +36,15 @@ function waLink(p: string, n: string, intent?: string) {
 }
 
 const PROVIDER_TYPE_LABELS: Record<string,string> = {
-  tiler: 'වෘත්තිකයා', workshop: 'වැඩ පොළ', supplier: 'සැපයුම්කරු',
-  contractor: 'කොන්ත්‍රාත්කරු', tile_shop: 'ටයිල් සාප්පුව',
+  tiler: 'ටයිල් ශිල්පී', contractor: 'කොන්ත්‍රාත්කරු', electrician: 'විදුලි ශිල්පී',
+  plumber: 'නළ ශිල්පී', carpenter: 'ලී ශිල්පී', painter: 'පින්තාරු ශිල්පී',
+  mason: 'ගල් ශිල්පී', construction_company: 'ඉදිකිරීම් සමාගම',
+  interior_designer: 'අභ්‍යන්තර සැලසුම්කරු', workshop: 'වැඩ පොළ',
+  supplier: 'සැපයුම්කරු', tile_shop: 'ටයිල් සාප්පුව',
   brand_dealer: 'බ්‍රෑන්ඩ් නියෝජිතයා', bathroom_shop: 'නාන කාමර සාප්පුව',
   tool_supplier: 'මෙවලම් සැපයුම්කරු',
 }
-const typeLabel = isTiler ? 'වෘත්තිකයා' : (PROVIDER_TYPE_LABELS[item.provider_type] || 'සේවා සපයන්නා')
+const typeLabel = PROVIDER_TYPE_LABELS[item.provider_type] || 'සේවා සපයන්නා'
 
 // Tagline: short descriptor below the name
 function getTagline(): string {
@@ -81,30 +54,33 @@ function getTagline(): string {
     if (svc.includes('bathroom') || svc.includes('renovation')) return 'Bathroom Renovation & Construction'
     return 'Building & Construction'
   }
+  if (pt === 'construction_company') return 'Construction Company'
   if (pt === 'tile_shop' || pt === 'bathroom_shop') return 'ටයිල් සහ නාන කාමර'
   if (pt === 'workshop') return 'Tile Cutting & Workshop'
   if (pt === 'supplier') return 'Tile & Material Supplier'
   if (pt === 'brand_dealer') return 'Authorized Brand Dealer'
-  if (isTiler) return 'ටයිලිං සේවා'
+  if (pt === 'tiler') return 'ටයිලිං සේවා'
+  if (pt === 'electrician') return 'Electrical Works'
+  if (pt === 'plumber') return 'Plumbing Services'
+  if (pt === 'carpenter') return 'Carpentry Services'
+  if (pt === 'painter') return 'Painting Services'
+  if (pt === 'mason') return 'Masonry & Brickwork'
+  if (pt === 'interior_designer') return 'Interior Design'
   return typeLabel
 }
 const tagline = getTagline()
 
-// Cover image: use cover_image, else profile_image, else gallery[0], else avatar
-const heroCoverSrc = isTiler
-  ? (item.avatar_url || gallery[0] || null)
-  : (item.cover_image || item.profile_image || gallery[0] || null)
+// Cover image: use cover_image, else profile_image, else gallery[0]
+const heroCoverSrc = item.cover_image || item.profile_image || gallery[0] || null
 
 // Verification
 function verBadge(vs: string | null) {
-  if (vs === 'th_master')         return { label: 'TH Master ★',            bg: '#92400e', color: '#fef3c7' }
-  if (vs === 'th_certified_pro')  return { label: 'Certified Pro ✦',        bg: '#1B3A6B', color: '#bfdbfe' }
-  if (vs === 'th_verified' || vs === 'verified') return { label: '✓ Verified Contractor', bg: 'rgba(22,163,74,0.92)', color: '#fff' }
+  if (vs === 'th_master')         return { label: 'TH Master ★',      bg: '#92400e', color: '#fef3c7' }
+  if (vs === 'th_certified_pro')  return { label: 'Certified Pro ✦',  bg: '#1B3A6B', color: '#bfdbfe' }
+  if (vs === 'th_verified' || vs === 'verified') return { label: '✓ Verified', bg: 'rgba(22,163,74,0.92)', color: '#fff' }
   return null
 }
-const badge = isTiler
-  ? (item.is_verified ? { label: '✓ Verified Tiler', bg: 'rgba(22,163,74,0.92)', color: '#fff' } : null)
-  : verBadge(item.verification_status)
+const badge = verBadge(item.verification_status)
 
 const isVerified = badge !== null
 const verificationLabel = badge?.label || 'Listed'
@@ -196,13 +172,13 @@ const WHY_BULLETS: Record<string,string[]> = {
   ],
 }
 const whyBullets = isVerified
-  ? (WHY_BULLETS[isTiler ? 'tiler' : (item.provider_type || 'default')] || WHY_BULLETS.default)
+  ? (WHY_BULLETS[item.provider_type || 'default'] || WHY_BULLETS.default)
   : []
 
 // Layout type determines which profile template to render
+const PROFESSIONAL_TYPES_SET = new Set(['tiler','electrician','plumber','carpenter','painter','mason','interior_designer'])
 const SHOP_TYPES_SET = new Set(['tile_shop','supplier','workshop','brand_dealer','bathroom_shop','tool_supplier'])
-const layoutType = isTiler ? 'professional'
-  : item.provider_type === 'contractor' ? 'contractor'
+const layoutType = PROFESSIONAL_TYPES_SET.has(item.provider_type) ? 'professional'
   : SHOP_TYPES_SET.has(item.provider_type) ? 'shop'
   : 'contractor'
 
@@ -229,17 +205,17 @@ function avatarColor(n: string) {
   return AVATAR_COLORS[h % AVATAR_COLORS.length]
 }
 const avatarBg = avatarColor(name || 'T')
-const avatarSrc = isTiler ? item.avatar_url : item.profile_image
+const avatarSrc = item.profile_image || item.avatar_url
 
 const avgRating = Number(item.avg_rating || 0)
 const reviewCount = Number(item.review_count || 0)
 const expYears = Number(item.experience_years || 0)
 
-const isUnverified = isTiler && !item.is_verified
+const isUnverified = !badge
 
 const topServices = services.slice(0, 3).join(', ')
 const metaDesc = isUnverified
-  ? `${name} is a tiling professional in ${city}, Sri Lanka.${topServices ? ' Services: ' + topServices + '.' : ''} Find contact details on TilersHub.`
+  ? `${name} is a ${typeLabel.toLowerCase()} in ${city}, Sri Lanka.${topServices ? ' Services: ' + topServices + '.' : ''} Find contact details on TilersHub.`
   : `Contact ${name}, a verified ${typeLabel.toLowerCase()} in ${city}, Sri Lanka.${topServices ? ' Services: ' + topServices + '.' : ''} Direct WhatsApp on TilersHub.`
 
 const schemaType = item.provider_type === 'tile_shop' || item.provider_type === 'bathroom_shop'
@@ -389,10 +365,10 @@ const breadcrumbSchema = JSON.stringify({
       )}
 
       <!-- Bio -->
-      {item.bio && (
+      {item.description && (
         <section style="background:#fff;padding:20px 16px 24px;border-bottom:1px solid #f1f5f9;">
           <h2 style="font-size:15px;font-weight:700;color:#0f172a;margin:0 0 10px;">ගැන {name}</h2>
-          <p style="font-size:13px;color:#64748b;line-height:1.8;margin:0;">{item.bio}</p>
+          <p style="font-size:13px;color:#64748b;line-height:1.8;margin:0;">{item.description}</p>
         </section>
       )}
 
@@ -438,7 +414,7 @@ const breadcrumbSchema = JSON.stringify({
 
       <!-- Reviews -->
       <section style="background:#fff;padding:20px 0 8px;">
-        <ReviewsSection client:load tilerId={tiler.id} />
+        <ReviewsSection client:load providerId={item.id} />
       </section>
 
       <!-- Bottom CTA -->
@@ -609,7 +585,7 @@ const breadcrumbSchema = JSON.stringify({
 
       <!-- Reviews -->
       <section style="background:#fff;padding:20px 0 8px;">
-        <ReviewsSection client:load providerId={provider.id} />
+        <ReviewsSection client:load providerId={item.id} />
       </section>
 
       <!-- Bottom CTA -->
@@ -777,7 +753,7 @@ const breadcrumbSchema = JSON.stringify({
 
       <!-- Reviews -->
       <section style="background:#fff;padding:20px 0 8px;">
-        <ReviewsSection client:load providerId={provider.id} />
+        <ReviewsSection client:load providerId={item.id} />
       </section>
 
       <!-- Bottom CTA -->
@@ -808,16 +784,16 @@ const breadcrumbSchema = JSON.stringify({
     </button>
     <EditProfileButton
       client:load
-      ownerId={isTiler ? tiler.user_id : provider.user_id}
-      profileType={isTiler ? 'tiler' : 'provider'}
+      ownerId={item.user_id}
+      profileType="provider"
       profileSlug={item.slug}
     />
     <ClaimProfile
       client:load
-      profileId={isTiler ? tiler.id : provider.id}
-      profileType={isTiler ? 'tiler' : 'provider'}
+      profileId={item.id}
+      profileType="provider"
       profileName={name}
-      isClaimed={!!(isTiler ? tiler.user_id : provider.user_id)}
+      isClaimed={!!item.user_id}
     />
   </div>
 

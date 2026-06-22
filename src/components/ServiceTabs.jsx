@@ -155,7 +155,7 @@ function timeAgo(ts) {
 function providerMatchesCat(p, cat) {
   const text = [
     ...(p.services || []),
-    p.bio || '',
+    p.description || p.bio || '',
   ].join(' ').toLowerCase()
   return cat.terms.some(t => text.includes(t))
 }
@@ -168,12 +168,12 @@ function projectMatchesCat(proj, cat) {
 // ─── Cards ──────────────────────────────────────────────────────────────────
 
 function ProviderCard({ p }) {
-  const name = p.full_name || p.name || 'Provider'
+  const name = p.name || p.full_name || 'Provider'
   const color = avatarColor(name)
-  const img = p.avatar_url || p.profile_image
+  const img = p.profile_image || p.avatar_url
   const phone = p.whatsapp || p.phone
-  const verified = p.is_verified || p.verification_status === 'verified'
-  const href = p.slug ? `/${p._type === 'tiler' ? 'tilers' : 'providers'}/${p.slug}` : null
+  const verified = ['th_master','th_certified_pro','th_verified'].includes(p.verification_status) || p.is_verified
+  const href = p.slug ? `/providers/${p.slug}` : null
   const chips = (p.services || []).slice(0, 3)
 
   return (
@@ -192,7 +192,7 @@ function ProviderCard({ p }) {
           {verified && <span style={{ fontSize: 8, fontWeight: 700, color: '#16a34a', background: '#f0fdf4', border: '1px solid #bbf7d0', borderRadius: 20, padding: '2px 7px', flexShrink: 0, marginTop: 2 }}>✓ Pro</span>}
         </div>
         {(p.city || p.district) && <div style={{ fontSize: 11, color: '#64748b', marginBottom: 5 }}>📍 {p.city || p.district}</div>}
-        {p.bio && <div style={{ fontSize: 11, color: '#64748b', marginBottom: 6, display: '-webkit-box', WebkitLineClamp: 2, WebkitBoxOrient: 'vertical', overflow: 'hidden', lineHeight: 1.5 }}>{p.bio}</div>}
+        {(p.description || p.bio) && <div style={{ fontSize: 11, color: '#64748b', marginBottom: 6, display: '-webkit-box', WebkitLineClamp: 2, WebkitBoxOrient: 'vertical', overflow: 'hidden', lineHeight: 1.5 }}>{p.description || p.bio}</div>}
         {chips.length > 0 && (
           <div style={{ display: 'flex', flexWrap: 'wrap', gap: 4, marginBottom: 8 }}>
             {chips.map(s => <span key={s} style={{ fontSize: 9, fontWeight: 600, padding: '2px 7px', borderRadius: 20, background: '#eef3fb', color: '#1B3A6B', border: '1px solid #d5e2f5' }}>{s}</span>)}
@@ -288,20 +288,13 @@ export default function ServiceTabs() {
   const [loading, setLoading] = useState(true)
 
   useEffect(() => {
-    Promise.all([
-      supabase.from('tilers')
-        .select('id,full_name,city,district,slug,bio,services,avg_rating,is_verified,avatar_url,whatsapp,phone')
-        .eq('is_verified', true).limit(200),
-      supabase.from('providers')
-        .select('id,name,city,district,slug,services,provider_type,whatsapp,phone,profile_image,verification_status')
-        .limit(200),
-    ]).then(([{ data: tilers }, { data: prov }]) => {
-      setAllProviders([
-        ...(tilers || []).map(t => ({ ...t, _type: 'tiler' })),
-        ...(prov  || []).map(p => ({ ...p, _type: 'provider' })),
-      ])
-      setLoading(false)
-    })
+    supabase.from('providers')
+      .select('id,name,city,district,slug,description,services,provider_type,whatsapp,phone,profile_image,verification_status,avg_rating')
+      .eq('status', 'active').limit(300)
+      .then(({ data }) => {
+        setAllProviders(data || [])
+        setLoading(false)
+      })
   }, [])
 
   return (

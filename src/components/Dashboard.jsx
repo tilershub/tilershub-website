@@ -39,7 +39,6 @@ export default function Dashboard() {
   const [bids, setBids]               = useState({})
   const [submission, setSubmission]   = useState(null)
   const [claimedProfile, setClaimedProfile]       = useState(null)
-  const [claimedProfileType, setClaimedProfileType] = useState(null)
   const [dataLoading, setDataLoading] = useState(false)
 
   useEffect(() => {
@@ -49,17 +48,15 @@ export default function Dashboard() {
 
   async function loadData(u) {
     setDataLoading(true)
-    const [{ data: proj }, { data: sub }, { data: tilerRow }, { data: providerRow }] = await Promise.all([
+    const [{ data: proj }, { data: sub }, { data: providerRow }] = await Promise.all([
       supabase.from('projects').select('*').eq('user_id', u.id).order('created_at', { ascending: false }),
       supabase.from('provider_submissions').select('*').eq('user_id', u.id).order('created_at', { ascending: false }).limit(1).maybeSingle(),
-      supabase.from('tilers').select('*').eq('user_id', u.id).maybeSingle(),
       supabase.from('providers').select('*').eq('user_id', u.id).maybeSingle(),
     ])
     const userProjects = proj || []
     setProjects(userProjects)
     setSubmission(sub)
-    if (tilerRow)        { setClaimedProfile(tilerRow);    setClaimedProfileType('tiler')    }
-    else if (providerRow){ setClaimedProfile(providerRow); setClaimedProfileType('provider') }
+    if (providerRow) setClaimedProfile(providerRow)
 
     if (userProjects.length > 0) {
       const { data: bidData } = await supabase
@@ -83,7 +80,7 @@ export default function Dashboard() {
     !!claimedProfile
 
   return isProvider
-    ? <ProviderDashboard user={user} claimedProfile={claimedProfile} claimedProfileType={claimedProfileType} submission={submission} showClaimedBanner={showClaimedBanner} />
+    ? <ProviderDashboard user={user} claimedProfile={claimedProfile} submission={submission} showClaimedBanner={showClaimedBanner} />
     : <ConsumerDashboard user={user} projects={projects} bids={bids} submission={submission} dataLoading={dataLoading} showClaimedBanner={showClaimedBanner} />
 }
 
@@ -91,7 +88,7 @@ export default function Dashboard() {
 // PROVIDER DASHBOARD
 // ═══════════════════════════════════════════════════════════════════
 
-function ProviderDashboard({ user, claimedProfile, claimedProfileType, submission, showClaimedBanner }) {
+function ProviderDashboard({ user, claimedProfile, submission, showClaimedBanner }) {
   const initialTab = typeof window !== 'undefined'
     ? (new URLSearchParams(window.location.search).get('tab') || 'projects')
     : 'projects'
@@ -150,11 +147,9 @@ function ProviderDashboard({ user, claimedProfile, claimedProfileType, submissio
     setDataLoading(false)
   }
 
-  const profileName = claimedProfile?.full_name || claimedProfile?.name || user.email.split('@')[0]
+  const profileName = claimedProfile?.name || user.email.split('@')[0]
   const initials    = profileName.split(' ').map(w => w[0]).join('').slice(0,2).toUpperCase()
-  const profileHref = claimedProfile?.slug
-    ? `/${claimedProfileType === 'tiler' ? 'tilers' : 'providers'}/${claimedProfile.slug}`
-    : null
+  const profileHref = claimedProfile?.slug ? `/providers/${claimedProfile.slug}` : null
 
   const newBids = Object.values(myBids).flat().filter(b => b.status === 'new').length
 
@@ -242,10 +237,10 @@ function ProviderDashboard({ user, claimedProfile, claimedProfileType, submissio
         {tab === 'projects'  && (dataLoading ? <Spinner /> : <ProjectsTab projects={myProjects} bids={myBids} isProvider />)}
         {tab === 'bids'      && (dataLoading ? <Spinner /> : <ProviderBidsTab projects={myProjects} bids={myBids} submittedBids={submittedBids} />)}
         {tab === 'portfolio' && claimedProfile && (
-          <PortfolioEditor profile={claimedProfile} profileType={claimedProfileType} userId={user.id} />
+          <PortfolioEditor profile={claimedProfile} profileType="provider" userId={user.id} />
         )}
         {tab === 'profile'   && claimedProfile && (
-          <ProfileEditor profile={claimedProfile} profileType={claimedProfileType} userId={user.id} />
+          <ProfileEditor profile={claimedProfile} profileType="provider" userId={user.id} />
         )}
         {tab === 'listing'   && <ListingTab submission={submission} />}
       </div>
