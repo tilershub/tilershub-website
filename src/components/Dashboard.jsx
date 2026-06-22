@@ -261,12 +261,12 @@ function ProviderBidsTab({ projects, bids, submittedBids }) {
       <div style={{ fontSize:15, fontWeight:700, color:'var(--text)', marginBottom:8 }}>ලංසු නොමැත</div>
       <p style={{ fontSize:13, color:'var(--text-3)', lineHeight:1.7 }}>
         {projects.length === 0
-          ? 'පළමුව ව්‍යාපෘතියක් පල කරන්න — සේවා සපයන්නන් ලංසු දෙන විට ඔබට ඔවුන් හා සම්බන්ධ වීමට හැකිය.'
+          ? 'පළමුව ව්‍යාපෘතියක් පලකරන්න — සේවා සපයන්නන් ලංසු දෙන විට ඔබට ඔවුන් හා සම්බන්ධ වීමට හැකිය.'
           : 'ඔබේ ව්‍යාපෘතිය සජීවී ය. සේවා සපයන්නන් ශීඝ්‍රයෙන් ලංසු දෙනු ඇත — යාවත්කාලීන සඳහා නැවත පරීක්ෂා කරන්න.'}
       </p>
       {projects.length === 0 && (
         <a href="/post-project" style={{ display:'inline-flex', alignItems:'center', gap:6, marginTop:12, padding:'11px 22px', background:'var(--terra)', color:'#fff', borderRadius:10, fontSize:13, fontWeight:700, textDecoration:'none' }}>
-          📋 ව්‍යාපෘතිය පල කරන්න
+          📋 ව්‍යාපෘතිය පලකරන්න
         </a>
       )}
     </div>
@@ -386,7 +386,7 @@ function ConsumerDashboard({ user, projects, bids, submission, dataLoading, show
 
             <div className="db-identity-actions" style={{ display:'flex', gap:8, flexWrap:'wrap', alignItems:'center' }}>
               <a href="/post-project" style={{ display:'inline-flex', alignItems:'center', gap:5, fontSize:12, fontWeight:700, color:'#fff', background:'var(--terra)', borderRadius:9, padding:'7px 14px', textDecoration:'none', whiteSpace:'nowrap' }}>
-                📋 ව්‍යාපෘතිය පල කරන්න
+                📋 ව්‍යාපෘතිය පලකරන්න
               </a>
               <button
                 onClick={async () => { await signOut(); window.location.href = '/' }}
@@ -578,10 +578,10 @@ function ProjectsTab({ projects, bids, isProvider }) {
       <p style={{ fontSize:13, color:'var(--text-3)', marginBottom:20, lineHeight:1.7 }}>
         {isProvider
           ? "ඔබ ව්‍යාපෘති ලිය කර නැත. ඔබට ටයිලිං ව්‍යාපෘතියක් ලිය කර ලංසු ලබා ගත හැකිය."
-          : 'ටයිලිං ව්‍යාපෘතියක් පල කරන්න — සේවා සපයන්නන් ලංසු දෙති. ඔබ කා හා සම්බන්ධ වන්නද යන්න ඔබ තෝරා ගනී.'}
+          : 'ටයිලිං ව්‍යාපෘතියක් පලකරන්න — සේවා සපයන්නන් ලංසු දෙති. ඔබ කා හා සම්බන්ධ වන්නද යන්න ඔබ තෝරා ගනී.'}
       </p>
       <a href="/post-project" style={{ display:'inline-flex', alignItems:'center', gap:6, padding:'11px 22px', background:'var(--terra)', color:'#fff', borderRadius:10, fontSize:13, fontWeight:700, textDecoration:'none' }}>
-        📋 ව්‍යාපෘතිය පල කරන්න
+        📋 ව්‍යාපෘතිය පලකරන්න
       </a>
     </div>
   )
@@ -607,7 +607,7 @@ function ProjectsTab({ projects, bids, isProvider }) {
         )
       })}
       <div style={{ textAlign:'center', paddingTop:8 }}>
-        <a href="/post-project" style={{ fontSize:13, color:'var(--navy)', fontWeight:600, textDecoration:'none' }}>+ තවත් ව්‍යාපෘතියක් පල කරන්න</a>
+        <a href="/post-project" style={{ fontSize:13, color:'var(--navy)', fontWeight:600, textDecoration:'none' }}>+ තවත් ව්‍යාපෘතියක් පලකරන්න</a>
       </div>
     </div>
   )
