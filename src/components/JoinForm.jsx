@@ -1,36 +1,6 @@
 import { useState, useRef, useEffect } from 'react'
-import { supabase, DISTRICTS, DISTRICTS_EN } from '../lib/supabase.js'
+import { supabase, DISTRICTS, DISTRICTS_EN, PROFESSIONS } from '../lib/supabase.js'
 import { SERVICES } from '../lib/services.js'
-
-const PROVIDER_CATEGORIES = [
-  {
-    value: 'tiler',
-    icon: '🪚',
-    label: 'වෘත්තිකයා',
-    sub: 'ටයිලර්, ටයිලිං විශේෂඥ හෝ දක්ෂ කම්කරුවා',
-    examples: 'බිම ටයිලිං · නාන කාමර ටයිලිං · Mosaic · ජල නිරෝධ',
-    color: '#1B3A6B',
-    bg: '#eef3fb',
-  },
-  {
-    value: 'contractor',
-    icon: '🏗️',
-    label: 'කොන්ත්‍රාත්කරු',
-    sub: 'සම්පූර්ණ ප්‍රතිසංස්කරණ හෝ ඉදිකිරීම් කොන්ත්‍රාත්කරු',
-    examples: 'නාන කාමර ප්‍රතිසංස්කරණ · විදුලිය · ඇලුමිනියම් සහ ග්ලාස් · භූ දර්ශනය',
-    color: '#0f766e',
-    bg: '#f0fdfa',
-  },
-  {
-    value: 'supplier',
-    icon: '📦',
-    label: 'සැපයුම්කරු',
-    sub: 'ටයිල්, නාන කාමර, මෙවලම් හෝ ද්‍රව්‍ය සැපයුම්කරු',
-    examples: 'ටයිල් සාප්පු · නාන කාමර · Tap-ware · මෙවලම් සැපයුම',
-    color: '#7c3aed',
-    bg: '#f5f3ff',
-  },
-]
 
 // ─── Service names (index-aligned EN ↔ SI) ───────────────────────────────────
 const ALL_SERVICES_EN = SERVICES.map(s => s.label)
@@ -533,36 +503,35 @@ export default function JoinForm() {
     )
   }
 
-  // ── Step 1: Category picker ───────────────────────────────────────────────────
+  // ── Step 1: Profession picker ─────────────────────────────────────────────────
   if (!category) {
     return (
       <div style={{ maxWidth: 600, margin: '0 auto' }}>
         <div style={{ display: 'flex', justifyContent: 'flex-end', marginBottom: 20 }}>
           <LangToggle lang={lang} onToggle={toggleLang} />
         </div>
-        <div style={{ textAlign: 'center', marginBottom: 28 }}>
-          <div style={{ fontSize: 13, fontWeight: 700, color: '#374151', marginBottom: 4 }}>ඔබව හොඳින් විස්තර කරන්නේ කුමක්ද?</div>
-          <div style={{ fontSize: 12, color: '#94a3b8' }}>ඔබේ වර්ගය තෝරන්න — මිනිත්තු 2ක් ගත වේ.</div>
+        <div style={{ textAlign: 'center', marginBottom: 24 }}>
+          <div style={{ fontSize: 14, fontWeight: 700, color: '#374151', marginBottom: 4 }}>
+            {lang === 'si' ? 'ඔබේ වෘත්තිය / සේවාව තෝරන්න' : 'Select your profession / service'}
+          </div>
+          <div style={{ fontSize: 12, color: '#94a3b8' }}>
+            {lang === 'si' ? 'ඔබව හොඳින් විස්තර කරන්නේ කුමක්ද?' : 'What best describes you?'}
+          </div>
         </div>
-        <div style={{ display: 'flex', flexDirection: 'column', gap: 12 }}>
-          {PROVIDER_CATEGORIES.map(cat => (
+        <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fill, minmax(140px, 1fr))', gap: 10 }}>
+          {PROFESSIONS.map(prof => (
             <button
-              key={cat.value}
+              key={prof.value}
               type="button"
-              onClick={() => setCategory(cat)}
-              style={{ display: 'flex', alignItems: 'center', gap: 16, padding: '18px 20px', borderRadius: 16, border: `2px solid ${cat.color}22`, background: cat.bg, cursor: 'pointer', textAlign: 'left', transition: 'border-color 0.15s, box-shadow 0.15s', boxShadow: '0 1px 4px rgba(0,0,0,0.04)' }}
-              onMouseOver={e => { e.currentTarget.style.borderColor = cat.color; e.currentTarget.style.boxShadow = `0 4px 16px ${cat.color}22` }}
-              onMouseOut={e  => { e.currentTarget.style.borderColor = `${cat.color}22`; e.currentTarget.style.boxShadow = '0 1px 4px rgba(0,0,0,0.04)' }}
+              onClick={() => setCategory(prof)}
+              style={{ display: 'flex', flexDirection: 'column', alignItems: 'center', gap: 8, padding: '18px 12px', borderRadius: 14, border: '2px solid #e2e8f0', background: '#fff', cursor: 'pointer', textAlign: 'center', transition: 'all 0.15s', boxShadow: '0 1px 4px rgba(0,0,0,0.04)' }}
+              onMouseOver={e => { e.currentTarget.style.borderColor = '#1B3A6B'; e.currentTarget.style.boxShadow = '0 4px 16px rgba(27,58,107,0.12)'; e.currentTarget.style.background = '#eef3fb' }}
+              onMouseOut={e => { e.currentTarget.style.borderColor = '#e2e8f0'; e.currentTarget.style.boxShadow = '0 1px 4px rgba(0,0,0,0.04)'; e.currentTarget.style.background = '#fff' }}
             >
-              <div style={{ width: 56, height: 56, borderRadius: 14, background: '#fff', border: `1.5px solid ${cat.color}30`, display: 'flex', alignItems: 'center', justifyContent: 'center', fontSize: 28, flexShrink: 0, boxShadow: '0 1px 6px rgba(0,0,0,0.06)' }}>
-                {cat.icon}
+              <span style={{ fontSize: 30 }}>{prof.icon}</span>
+              <div style={{ fontSize: 12, fontWeight: 700, color: '#0f172a', lineHeight: 1.3 }}>
+                {lang === 'si' ? prof.si : prof.label}
               </div>
-              <div style={{ flex: 1, minWidth: 0 }}>
-                <div style={{ fontSize: 16, fontWeight: 800, color: cat.color, marginBottom: 2 }}>{cat.label}</div>
-                <div style={{ fontSize: 12, color: '#374151', marginBottom: 4 }}>{cat.sub}</div>
-                <div style={{ fontSize: 10, color: '#94a3b8', lineHeight: 1.5 }}>{cat.examples}</div>
-              </div>
-              <div style={{ fontSize: 22, color: cat.color, flexShrink: 0, opacity: 0.5 }}>›</div>
             </button>
           ))}
         </div>
@@ -574,14 +543,14 @@ export default function JoinForm() {
   return (
     <form onSubmit={handleSubmit} noValidate style={{ maxWidth: 600, margin: '0 auto' }}>
 
-      {/* Language toggle + selected category badge */}
+      {/* Language toggle + selected profession badge */}
       <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', marginBottom: 24, flexWrap: 'wrap', gap: 10 }}>
         <button
           type="button"
           onClick={() => setCategory(null)}
-          style={{ display: 'inline-flex', alignItems: 'center', gap: 8, background: category.bg, border: `1.5px solid ${category.color}40`, borderRadius: 10, padding: '7px 14px', cursor: 'pointer', fontSize: 12, fontWeight: 700, color: category.color }}
+          style={{ display: 'inline-flex', alignItems: 'center', gap: 8, background: '#eef3fb', border: '1.5px solid #d5e2f5', borderRadius: 10, padding: '7px 14px', cursor: 'pointer', fontSize: 12, fontWeight: 700, color: '#1B3A6B' }}
         >
-          {category.icon} {category.label} <span style={{ fontSize: 10, color: '#94a3b8', fontWeight: 400 }}>· වෙනස් කරන්න</span>
+          {category.icon} {lang === 'si' ? category.si : category.label} <span style={{ fontSize: 10, color: '#94a3b8', fontWeight: 400 }}>· {lang === 'si' ? 'වෙනස් කරන්න' : 'Change'}</span>
         </button>
         <LangToggle lang={lang} onToggle={toggleLang} />
       </div>

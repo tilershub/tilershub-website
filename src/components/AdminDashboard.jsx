@@ -185,22 +185,21 @@ function GalleryEditor({ existing, newFiles, onNewFiles, onRemoveExisting }) {
 // ─── Profile create/edit modal ────────────────────────────────────────────────
 function ProfileModal({ profile, profileType, adminUserId, onClose, onSaved }) {
   const isNarrow = typeof window !== 'undefined' && window.innerWidth < 768
-  const isTiler = profileType === 'tiler'
-  const table   = isTiler ? 'tilers' : 'providers'
   const isCreate = !profile
 
-  const [name,       setName]       = useState(isTiler ? (profile?.full_name || '') : (profile?.name || ''))
+  const [name,       setName]       = useState(profile?.name || '')
+  const [profType,   setProfType]   = useState(profile?.provider_type || 'tiler')
   const [whatsapp,   setWhatsapp]   = useState(profile?.whatsapp || '')
   const [city,       setCity]       = useState(profile?.city || '')
   const [district,   setDistrict]   = useState(profile?.district || '')
-  const [bio,        setBio]        = useState(isTiler ? (profile?.bio || '') : (profile?.description || ''))
+  const [bio,        setBio]        = useState(profile?.description || '')
   const [services,   setServices]   = useState(profile?.services || [])
   const [svcAreas,   setSvcAreas]   = useState(profile?.service_areas || [])
   const [expYears,   setExpYears]   = useState(profile?.experience_years ?? '')
   const [rateMin,    setRateMin]    = useState(profile?.daily_rate_min ?? '')
   const [rateMax,    setRateMax]    = useState(profile?.daily_rate_max ?? '')
   const [website,    setWebsite]    = useState(profile?.website_url || '')
-  const [badge,      setBadge]      = useState(profile?.verification_status || 'none')
+  const [badge,      setBadge]      = useState(profile?.verification_status || 'listed')
   const [existingGallery, setExistingGallery] = useState(profile?.gallery || [])
   const [newGalleryFiles, setNewGalleryFiles] = useState([])
   const [profileImageFile, setProfileImageFile] = useState(null)
@@ -229,35 +228,30 @@ function ProfileModal({ profile, profileType, adminUserId, onClose, onSaved }) {
       for (const f of newGalleryFiles) newGalleryUrls.push(await uploadImage(f, 'portfolio', prefix))
 
       const payload = {
-        [isTiler ? 'full_name' : 'name']: name.trim(),
+        name: name.trim(),
         whatsapp: whatsapp.replace(/\s/g,''),
         city: city.trim(),
         district: district || null,
-        [isTiler ? 'bio' : 'description']: bio.trim() || null,
+        description: bio.trim() || null,
         services: services.length ? services : null,
         service_areas: svcAreas.length ? svcAreas : null,
         gallery: [...existingGallery, ...newGalleryUrls],
+        experience_years: expYears !== '' ? parseInt(expYears,10)||null : null,
+        daily_rate_min:   rateMin  !== '' ? parseInt(rateMin,10)||null  : null,
+        daily_rate_max:   rateMax  !== '' ? parseInt(rateMax,10)||null  : null,
+        verification_status: badge,
+        website_url: website.trim() || null,
+        provider_type: profType,
       }
-
-      if (isTiler) {
-        payload.experience_years = expYears !== '' ? parseInt(expYears,10)||null : null
-        payload.daily_rate_min   = rateMin   !== '' ? parseInt(rateMin,10)||null  : null
-        payload.daily_rate_max   = rateMax   !== '' ? parseInt(rateMax,10)||null  : null
-        if (profileImageUrl !== undefined) payload.avatar_url = profileImageUrl
-      } else {
-        payload.verification_status = badge
-        payload.website_url = website.trim() || null
-        if (profileImageUrl !== undefined) payload.profile_image = profileImageUrl
-        if (coverImageUrl   !== undefined) payload.cover_image   = coverImageUrl
-      }
+      if (profileImageUrl !== undefined) payload.profile_image = profileImageUrl
+      if (coverImageUrl   !== undefined) payload.cover_image   = coverImageUrl
 
       if (isCreate) {
         payload.slug = slugify(name.trim()) + '-' + Math.random().toString(36).slice(2,6)
-        if (!isTiler) payload.provider_type = 'provider'
-        const { error } = await supabase.from(table).insert(payload)
+        const { error } = await supabase.from('providers').insert(payload)
         if (error) throw error
       } else {
-        const { error } = await supabase.from(table).update(payload).eq('id', profile.id)
+        const { error } = await supabase.from('providers').update(payload).eq('id', profile.id)
         if (error) throw error
       }
       onSaved()
@@ -277,7 +271,7 @@ function ProfileModal({ profile, profileType, adminUserId, onClose, onSaved }) {
         <div style={{ padding: '20px 24px', borderBottom: '1px solid #f1f5f9', display: 'flex', alignItems: 'center', justifyContent: 'space-between', flexShrink: 0, background: '#fff', position: 'sticky', top: 0, zIndex: 1 }}>
           <div>
             <div style={{ fontSize: 16, fontWeight: 700, color: '#0f172a' }}>
-              {isCreate ? `Create ${isTiler ? 'Professional' : 'Provider'}` : `Edit ${isTiler ? 'Professional' : 'Provider'}`}
+              {isCreate ? 'Create Provider' : 'Edit Provider'}
             </div>
             {!isCreate && profile?.slug && (
               <div style={{ fontSize: 11, color: '#94a3b8', marginTop: 2 }}>/{profile.slug}</div>
@@ -289,22 +283,39 @@ function ProfileModal({ profile, profileType, adminUserId, onClose, onSaved }) {
         {/* Drawer body */}
         <div style={{ padding: '20px 24px', flex: 1 }}>
           {/* Images */}
-          {!isTiler ? (
-            <div style={{ display: 'grid', gridTemplateColumns: '1fr 1.6fr', gap: 12 }}>
-              <ImageUploadBox label="Profile Photo" aspect="profile"
-                value={profile?.profile_image} onChange={setProfileImageFile} />
-              <ImageUploadBox label="Cover Image" aspect="cover"
-                value={profile?.cover_image} onChange={setCoverImageFile} />
-            </div>
-          ) : (
+          <div style={{ display: 'grid', gridTemplateColumns: '1fr 1.6fr', gap: 12 }}>
             <ImageUploadBox label="Profile Photo" aspect="profile"
-              value={profile?.avatar_url} onChange={setProfileImageFile} />
-          )}
+              value={profile?.profile_image} onChange={setProfileImageFile} />
+            <ImageUploadBox label="Cover Image" aspect="cover"
+              value={profile?.cover_image} onChange={setCoverImageFile} />
+          </div>
 
           {/* Name */}
           <div style={{ marginBottom: 14 }}>
-            <label style={lbl()}>{isTiler ? 'Full Name' : 'Name / Company'} *</label>
-            <input value={name} onChange={e => setName(e.target.value)} style={inp(!name && err)} placeholder={isTiler ? 'Full name' : 'Business or person name'} />
+            <label style={lbl()}>Name / Company *</label>
+            <input value={name} onChange={e => setName(e.target.value)} style={inp(!name && err)} placeholder="Business or person name" />
+          </div>
+
+          {/* Profession */}
+          <div style={{ marginBottom: 14 }}>
+            <label style={lbl()}>Profession</label>
+            <select value={profType} onChange={e => setProfType(e.target.value)} style={{ ...inp(false), WebkitAppearance: 'none', cursor: 'pointer' }}>
+              <option value="tiler">Tiler</option>
+              <option value="contractor">Contractor</option>
+              <option value="electrician">Electrician</option>
+              <option value="plumber">Plumber</option>
+              <option value="carpenter">Carpenter</option>
+              <option value="painter">Painter</option>
+              <option value="mason">Mason / Bricklayer</option>
+              <option value="construction_company">Construction Company</option>
+              <option value="interior_designer">Interior Designer</option>
+              <option value="tile_shop">Tile Shop</option>
+              <option value="bathroom_shop">Bathroom Shop</option>
+              <option value="supplier">Supplier</option>
+              <option value="workshop">Workshop</option>
+              <option value="brand_dealer">Brand Dealer</option>
+              <option value="tool_supplier">Tool Supplier</option>
+            </select>
           </div>
 
           {/* City + District */}
@@ -328,45 +339,42 @@ function ProfileModal({ profile, profileType, adminUserId, onClose, onSaved }) {
             <input value={whatsapp} onChange={e => setWhatsapp(e.target.value)} style={inp(!whatsapp && err)} placeholder="+94771234567" type="tel" />
           </div>
 
-          {/* Tiler rate/experience */}
-          {isTiler && (
-            <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr 1fr', gap: 12, marginBottom: 14 }}>
-              <div>
-                <label style={lbl()}>Experience (years)</label>
-                <input value={expYears} onChange={e => setExpYears(e.target.value)} style={inp(false)} placeholder="e.g. 8" type="number" min="0" />
-              </div>
-              <div>
-                <label style={lbl()}>Rate Min (Rs/sqft)</label>
-                <input value={rateMin} onChange={e => setRateMin(e.target.value)} style={inp(false)} placeholder="e.g. 180" type="number" min="0" />
-              </div>
-              <div>
-                <label style={lbl()}>Rate Max (Rs/sqft)</label>
-                <input value={rateMax} onChange={e => setRateMax(e.target.value)} style={inp(false)} placeholder="e.g. 300" type="number" min="0" />
-              </div>
+          {/* Experience + Rate */}
+          <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr 1fr', gap: 12, marginBottom: 14 }}>
+            <div>
+              <label style={lbl()}>Experience (years)</label>
+              <input value={expYears} onChange={e => setExpYears(e.target.value)} style={inp(false)} placeholder="e.g. 8" type="number" min="0" />
             </div>
-          )}
-
-          {/* Provider: website + badge */}
-          {!isTiler && (
-            <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: 12, marginBottom: 14 }}>
-              <div>
-                <label style={lbl()}>Website URL</label>
-                <input value={website} onChange={e => setWebsite(e.target.value)} style={inp(false)} placeholder="https://…" type="url" />
-              </div>
-              <div>
-                <label style={lbl()}>Badge</label>
-                <select value={badge} onChange={e => setBadge(e.target.value)} style={{ ...inp(false), WebkitAppearance: 'none', cursor: 'pointer' }}>
-                  <option value="none">None</option>
-                  <option value="verified">Verified</option>
-                  <option value="featured">Featured</option>
-                </select>
-              </div>
+            <div>
+              <label style={lbl()}>Rate Min (Rs/sqft)</label>
+              <input value={rateMin} onChange={e => setRateMin(e.target.value)} style={inp(false)} placeholder="e.g. 180" type="number" min="0" />
             </div>
-          )}
+            <div>
+              <label style={lbl()}>Rate Max (Rs/sqft)</label>
+              <input value={rateMax} onChange={e => setRateMax(e.target.value)} style={inp(false)} placeholder="e.g. 300" type="number" min="0" />
+            </div>
+          </div>
 
-          {/* Bio / Description */}
+          {/* Website + Badge */}
+          <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: 12, marginBottom: 14 }}>
+            <div>
+              <label style={lbl()}>Website URL</label>
+              <input value={website} onChange={e => setWebsite(e.target.value)} style={inp(false)} placeholder="https://…" type="url" />
+            </div>
+            <div>
+              <label style={lbl()}>Verification Badge</label>
+              <select value={badge} onChange={e => setBadge(e.target.value)} style={{ ...inp(false), WebkitAppearance: 'none', cursor: 'pointer' }}>
+                <option value="listed">Listed</option>
+                <option value="th_verified">TH Verified</option>
+                <option value="th_certified_pro">Certified Pro</option>
+                <option value="th_master">TH Master</option>
+              </select>
+            </div>
+          </div>
+
+          {/* Description */}
           <div style={{ marginBottom: 14 }}>
-            <label style={lbl()}>{isTiler ? 'Bio' : 'Description'}</label>
+            <label style={lbl()}>Description</label>
             <textarea value={bio} onChange={e => setBio(e.target.value)} rows={3}
               placeholder="Profile description…"
               style={{ ...inp(false), resize: 'vertical' }} />
@@ -493,9 +501,8 @@ function OverviewTab() {
       supabase.from('bids').select('id', { count: 'exact', head: true }).eq('status', 'new'),
       supabase.from('projects').select('id', { count: 'exact', head: true }),
       supabase.from('provider_submissions').select('id', { count: 'exact', head: true }),
-      supabase.from('tilers').select('id', { count: 'exact', head: true }),
       supabase.from('providers').select('id', { count: 'exact', head: true }),
-    ]).then(([pend, claims, activeProj, newBids, totalProj, totalSub, totalTilers, totalProviders]) => {
+    ]).then(([pend, claims, activeProj, newBids, totalProj, totalSub, totalProviders]) => {
       setStats({
         pendingSubmissions: pend.count ?? 0,
         pendingClaims:      claims.count ?? 0,
@@ -503,7 +510,6 @@ function OverviewTab() {
         newBids:            newBids.count ?? 0,
         totalProjects:      totalProj.count ?? 0,
         totalSubmissions:   totalSub.count ?? 0,
-        totalTilers:        totalTilers.count ?? 0,
         totalProviders:     totalProviders.count ?? 0,
       })
     })
@@ -514,8 +520,7 @@ function OverviewTab() {
     { label: 'Pending Claims',      value: stats.pendingClaims,      color: stats.pendingClaims > 0 ? '#f59e0b' : '#64748b', emoji: '📲' },
     { label: 'Active Projects',     value: stats.activeProjects,     color: '#16a34a', emoji: '📋' },
     { label: 'New Bids',            value: stats.newBids,            color: stats.newBids > 0 ? TERRA : '#64748b', emoji: '💬' },
-    { label: 'Total Professionals',  value: stats.totalTilers,        color: NAVY, emoji: '👷' },
-    { label: 'Total Providers',     value: stats.totalProviders,     color: NAVY, emoji: '🏪' },
+    { label: 'Total Providers',      value: stats.totalProviders,     color: NAVY, emoji: '👷' },
     { label: 'Total Projects',      value: stats.totalProjects,      color: '#64748b', emoji: '📊' },
     { label: 'Total Submissions',   value: stats.totalSubmissions,   color: '#64748b', emoji: '👥' },
   ] : []
@@ -941,7 +946,6 @@ function ReviewsTab() {
 
 // ─── Profiles tab ─────────────────────────────────────────────────────────────
 function ProfilesTab({ adminUserId }) {
-  const [subTab,  setSubTab]  = useState('providers')
   const [rows,    setRows]    = useState([])
   const [loading, setLoading] = useState(true)
   const [loadError, setLoadError] = useState(null)
@@ -955,12 +959,10 @@ function ProfilesTab({ adminUserId }) {
   const load = useCallback(async () => {
     setLoading(true)
     setLoadError(null)
-    const table   = subTab === 'tilers' ? 'tilers' : 'providers'
-    const nameCol = subTab === 'tilers' ? 'full_name' : 'name'
-    let q = supabase.from(table).select('*', { count: 'exact' })
+    let q = supabase.from('providers').select('*', { count: 'exact' })
       .order('created_at', { ascending: false })
       .range(page * PER, page * PER + PER - 1)
-    if (search.trim()) q = q.ilike(nameCol, `%${search.trim()}%`)
+    if (search.trim()) q = q.ilike('name', `%${search.trim()}%`)
     const { data, error, count: c } = await q
     if (error) {
       console.error('profiles load error:', error)
@@ -970,37 +972,26 @@ function ProfilesTab({ adminUserId }) {
       setCount(c || 0)
     }
     setLoading(false)
-  }, [subTab, page, search])
+  }, [page, search])
 
   useEffect(() => { load() }, [load])
-  useEffect(() => { setPage(0) }, [subTab, search])
+  useEffect(() => { setPage(0) }, [search])
 
   async function del(id) {
-    const table = subTab === 'tilers' ? 'tilers' : 'providers'
-    if (!confirm(`Permanently delete this ${subTab === 'tilers' ? 'professional' : 'provider'} profile? This cannot be undone.`)) return
-    await supabase.from(table).delete().eq('id', id)
+    if (!confirm('Permanently delete this provider profile? This cannot be undone.')) return
+    await supabase.from('providers').delete().eq('id', id)
     load()
   }
-
-  const isTilerTab = subTab === 'tilers'
 
   return (
     <div>
       <div style={{ display: 'flex', alignItems: 'center', gap: 10, marginBottom: 18, flexWrap: 'wrap' }}>
         <h2 style={{ ...S.h2, marginBottom: 0 }}>Profiles</h2>
-        <div style={{ display: 'flex', gap: 6 }}>
-          {[['providers','🏪 Providers'],['tilers','👷 Professionals']].map(([k,l]) => (
-            <button key={k} onClick={() => setSubTab(k)}
-              style={S.btn(subTab === k ? NAVY : '#f1f5f9', subTab === k ? '#fff' : '#334155')}>
-              {l}
-            </button>
-          ))}
-        </div>
         <input value={search} onChange={e => setSearch(e.target.value)}
           placeholder="Search by name…"
           style={{ padding: '7px 12px', border: '1.5px solid #e2e8f0', borderRadius: 10, fontSize: 13, outline: 'none', fontFamily: 'inherit', minWidth: 180 }} />
         <button onClick={() => setCreating(true)} style={{ ...S.btn('#16a34a'), marginLeft: 'auto' }}>
-          + New {isTilerTab ? 'Professional' : 'Provider'}
+          + New Provider
         </button>
       </div>
 
@@ -1009,16 +1000,19 @@ function ProfilesTab({ adminUserId }) {
         <>
           <div style={S.card}>
             <Table
-              heads={isTilerTab
-                ? ['Name','City','WhatsApp','Services','Exp','Rate','Actions']
-                : ['Name','City','WhatsApp','Services','Badge','Actions']}
-              empty={rows.length === 0 ? `No ${subTab} found` : null}
+              heads={['Name','Profession','City','WhatsApp','Services','Badge','Actions']}
+              empty={rows.length === 0 ? 'No providers found' : null}
             >
               {rows.map(r => (
                 <tr key={r.id}>
                   <td style={S.td}>
-                    <strong>{isTilerTab ? r.full_name : r.name}</strong>
+                    <strong>{r.name}</strong>
                     {r.slug && <div style={{ fontSize: 10, color: '#94a3b8' }}>/{r.slug}</div>}
+                  </td>
+                  <td style={S.td}>
+                    <span style={{ fontSize: 10, padding: '2px 8px', background: '#eef3fb', color: NAVY, borderRadius: 20, fontWeight: 700 }}>
+                      {(r.provider_type || '').replace(/_/g,' ')}
+                    </span>
                   </td>
                   <td style={S.td}>{r.city}{r.district ? `, ${r.district}` : ''}</td>
                   <td style={S.td}>
@@ -1035,18 +1029,11 @@ function ProfilesTab({ adminUserId }) {
                       {(r.services||[]).length > 2 && <span style={{ fontSize: 10, color: '#94a3b8' }}>+{r.services.length-2}</span>}
                     </div>
                   </td>
-                  {isTilerTab ? (
-                    <>
-                      <td style={S.td}>{r.experience_years ? `${r.experience_years}y` : '—'}</td>
-                      <td style={S.td}>{r.daily_rate_min ? `Rs.${r.daily_rate_min}${r.daily_rate_max ? `–${r.daily_rate_max}` : '+'}` : '—'}</td>
-                    </>
-                  ) : (
-                    <td style={S.td}><StatusBadge status={r.verification_status || 'none'} /></td>
-                  )}
+                  <td style={S.td}><StatusBadge status={r.verification_status || 'listed'} /></td>
                   <td style={S.td}>
                     <div style={{ display: 'flex', gap: 5 }}>
                       <button
-                        onClick={() => setEditProfile({ ...r, _type: isTilerTab ? 'tiler' : 'provider' })}
+                        onClick={() => setEditProfile(r)}
                         style={S.btn(NAVY)}>✏️ Edit</button>
                       {r.slug && (
                         <a href={`/providers/${r.slug}`} target="_blank" rel="noopener"
@@ -1066,7 +1053,7 @@ function ProfilesTab({ adminUserId }) {
       {editProfile && (
         <ProfileModal
           profile={editProfile}
-          profileType={editProfile._type}
+          profileType="provider"
           adminUserId={adminUserId}
           onClose={() => setEditProfile(null)}
           onSaved={() => { setEditProfile(null); load() }}
@@ -1076,7 +1063,7 @@ function ProfilesTab({ adminUserId }) {
       {creating && (
         <ProfileModal
           profile={null}
-          profileType={isTilerTab ? 'tiler' : 'provider'}
+          profileType="provider"
           adminUserId={adminUserId}
           onClose={() => setCreating(false)}
           onSaved={() => { setCreating(false); load() }}

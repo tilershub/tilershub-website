@@ -427,13 +427,13 @@ function ContractorCard({ provider, onClick, T }) {
 }
 
 // ─── Profile modal ─────────────────────────────────────────────────────────────
-function ProviderModal({ item, isTiler, onClose, T }) {
+function ProviderModal({ item, onClose, T }) {
   if (!item) return null
-  const name = isTiler ? item.full_name : item.name
-  const phone = isTiler ? (item.whatsapp || item.phone) : (item.whatsapp || item.phone)
-  const altWaPhone = isTiler && item.whatsapp && item.phone && item.whatsapp !== item.phone ? item.phone : null
-  const pts = !isTiler && PROVIDER_TYPES.find(p => p.value === item.provider_type)
-  const avatarImage = isTiler ? item.avatar_url : item.profile_image
+  const name = item.name || 'Provider'
+  const phone = item.whatsapp || item.phone
+  const altWaPhone = item.whatsapp && item.phone && item.whatsapp !== item.phone ? item.phone : null
+  const pts = PROVIDER_TYPES.find(p => p.value === item.provider_type)
+  const avatarImage = item.profile_image || item.avatar_url
   const coverImage  = item.cover_image
 
   return (
@@ -464,36 +464,28 @@ function ProviderModal({ item, isTiler, onClose, T }) {
           </div>
 
           <div style={{ display: 'flex', flexWrap: 'wrap', gap: 6, marginBottom: 16 }}>
-            {!isTiler && pts && <span style={{ fontSize: 11, fontWeight: 700, padding: '3px 10px', borderRadius: 20, background: '#eef3fb', color: '#1B3A6B' }}>{pts.icon} {pts.label}</span>}
-            {isTiler && item.is_verified && <span style={{ fontSize: 11, fontWeight: 700, padding: '3px 10px', borderRadius: 20, background: '#f0fdf4', color: '#16a34a', border: '1px solid #bbf7d0' }}>{T.skilled}</span>}
-            {isTiler && !item.is_verified && <span style={{ fontSize: 11, fontWeight: 700, padding: '3px 10px', borderRadius: 20, background: '#f8fafc', color: '#94a3b8', border: '1px solid #e2e8f0' }}>{T.unverified}</span>}
-            {!isTiler && <VerificationBadge status={item.verification_status} />}
+            {pts && <span style={{ fontSize: 11, fontWeight: 700, padding: '3px 10px', borderRadius: 20, background: '#eef3fb', color: '#1B3A6B' }}>{pts.icon} {pts.label}</span>}
+            <VerificationBadge status={item.verification_status} />
           </div>
 
-          {isTiler && !item.is_verified && (
+          {item.verification_status === 'listed' && (
             <div style={{ fontSize: 12, color: '#78716c', background: '#fef9f0', border: '1px solid #fde68a', borderRadius: 10, padding: '10px 14px', marginBottom: 16, lineHeight: 1.6 }}>
               {T.unverifiedNotice}
             </div>
           )}
 
-          {(isTiler ? item.bio : item.description) && (
+          {item.description && (
             <p style={{ fontSize: 13, color: '#475569', lineHeight: 1.75, marginBottom: 18, padding: 14, background: '#f8fafc', borderRadius: 10 }}>
-              {isTiler ? item.bio : item.description}
+              {item.description}
             </p>
           )}
 
-          {isTiler && (item.experience_years || item.total_jobs || item.daily_rate_min) && (
+          {(item.experience_years || item.daily_rate_min || item.avg_rating > 0) && (
             <div style={{ display: 'flex', gap: 10, marginBottom: 18, flexWrap: 'wrap' }}>
               {item.experience_years > 0 && (
                 <div style={{ padding: '10px 16px', background: '#f8fafc', borderRadius: 10, border: '1px solid #e2e8f0', textAlign: 'center', flex: 1 }}>
                   <div style={{ fontSize: 17, fontWeight: 700, color: '#1B3A6B' }}>{item.experience_years}+</div>
                   <div style={{ fontSize: 10, color: '#94a3b8' }}>{T.yearsExpLabel}</div>
-                </div>
-              )}
-              {item.total_jobs > 0 && (
-                <div style={{ padding: '10px 16px', background: '#f8fafc', borderRadius: 10, border: '1px solid #e2e8f0', textAlign: 'center', flex: 1 }}>
-                  <div style={{ fontSize: 17, fontWeight: 700, color: '#1B3A6B' }}>{item.total_jobs}</div>
-                  <div style={{ fontSize: 10, color: '#94a3b8' }}>{T.jobsDoneLabel}</div>
                 </div>
               )}
               {item.daily_rate_min && (
@@ -504,7 +496,7 @@ function ProviderModal({ item, isTiler, onClose, T }) {
               )}
               {item.avg_rating > 0 && (
                 <div style={{ padding: '10px 16px', background: '#fffbeb', borderRadius: 10, border: '1px solid #fde68a', textAlign: 'center', flex: 1 }}>
-                  <div style={{ fontSize: 17, fontWeight: 700, color: '#92400e' }}>⭐ {item.avg_rating.toFixed(1)}</div>
+                  <div style={{ fontSize: 17, fontWeight: 700, color: '#92400e' }}>⭐ {Number(item.avg_rating).toFixed(1)}</div>
                   <div style={{ fontSize: 10, color: '#94a3b8' }}>{T.reviewsLabel(item.review_count || 0)}</div>
                 </div>
               )}
@@ -605,7 +597,7 @@ const TYPE_INFO_CARDS = {
   ],
 }
 
-function SuggestedContent({ type, tilers, providers, onSelectTiler, onSelectProvider, T }) {
+function SuggestedContent({ type, providers, onSelectProvider, T }) {
   const infoCards = TYPE_INFO_CARDS[type] || []
   const otherProviders = providers.filter(p => p.provider_type !== type).slice(0, 3)
   const typeLabel = TYPE_LABELS_EN[type] || type || 'Providers'
@@ -662,7 +654,6 @@ export default function ProviderDirectory({ initialType, initialSearch }) {
   const [lang, toggleLang] = useLang()
   const T = TRANS[lang]
 
-  const [tilers,    setTilers]    = useState([])
   const [providers, setProviders] = useState([])
   const [loading,   setLoading]   = useState(true)
   const [inputValue, setInputValue] = useState(initialSearch || '')
@@ -670,59 +661,33 @@ export default function ProviderDirectory({ initialType, initialSearch }) {
   const [district,  setDistrict]  = useState('')
   const [type,      setType]      = useState(initialType || '')
   const [selected,  setSelected]  = useState(null)
-  const [isTilerSelected, setIsTilerSelected] = useState(false)
   const debounceRef = useRef(null)
 
   useEffect(() => {
     async function load() {
       setLoading(true)
-      const [tilersRes, providersRes] = await Promise.all([
-        supabase.from('tilers').select('*').order('featured', { ascending: false }).order('experience_years', { ascending: false }),
-        supabase.from('providers').select('*').eq('status', 'active').order('is_featured', { ascending: false })
-      ])
-      setTilers(tilersRes.data || [])
-      setProviders(providersRes.data || [])
+      const { data } = await supabase.from('providers').select('*').eq('status', 'active').order('is_featured', { ascending: false }).order('avg_rating', { ascending: false })
+      setProviders(data || [])
       setLoading(false)
     }
     load()
   }, [])
 
-  const showTilers    = !type || type === 'tiler'
-  const showProviders = !type || type === 'contractor' || type === 'supplier'
-
-  const filteredTilers = showTilers ? tilers.filter(t => {
-    if (district && t.district !== district) return false
-    if (search) {
-      const q = search.toLowerCase()
-      return t.full_name?.toLowerCase().includes(q) || t.district?.toLowerCase().includes(q) || (t.services || []).some(s => s.toLowerCase().includes(q))
-    }
-    return true
-  }) : []
-
-  const filteredProviders = showProviders ? providers.filter(p => {
-    if (type === 'contractor' && p.provider_type !== 'contractor') return false
-    if (type === 'supplier' && !SHOP_TYPES.has(p.provider_type)) return false
+  const filteredProviders = providers.filter(p => {
+    if (type && p.provider_type !== type && !(type === 'supplier' && SHOP_TYPES.has(p.provider_type))) return false
     if (district && p.district !== district && !(p.service_areas || []).includes(district)) return false
     if (search) {
       const q = search.toLowerCase()
       return p.name?.toLowerCase().includes(q) || p.city?.toLowerCase().includes(q) || (p.services || []).some(s => s.toLowerCase().includes(q))
     }
     return true
-  }) : []
+  })
 
-  const total = filteredTilers.length + filteredProviders.length
+  const total = filteredProviders.length
 
-
-  // Merge + sort: verified/featured first across both tilers and providers
-  const allCards = [
-    ...filteredProviders.map(p => {
-      const verified = VERIFIED_STATUSES.has(p.verification_status)
-      return { ...p, _kind: 'provider', _score: (p.is_featured ? 2 : 0) + (verified ? 1 : 0) }
-    }),
-    ...filteredTilers.map(t => ({
-      ...t, _kind: 'tiler', _score: (t.featured ? 2 : 0) + (t.is_verified ? 1 : 0)
-    })),
-  ].sort((a, b) => b._score - a._score)
+  const allCards = filteredProviders.map(p => ({
+    ...p, _score: (p.is_featured ? 2 : 0) + (VERIFIED_STATUSES.has(p.verification_status) ? 1 : 0)
+  })).sort((a, b) => b._score - a._score)
 
   const clearLabel = type && !inputValue && !district
     ? (lang === 'si' ? TYPE_LABELS_SI[type] : TYPE_LABELS_EN[type]) || type
@@ -754,9 +719,21 @@ export default function ProviderDirectory({ initialType, initialSearch }) {
           {/* Type filter */}
           <select value={type} onChange={e => setType(e.target.value)} style={{ padding: '9px 12px', border: '1.5px solid #e2e8f0', borderRadius: 10, fontSize: 13, outline: 'none', background: '#fff', fontFamily: 'inherit', cursor: 'pointer' }}>
             <option value="">{T.all}</option>
-            <option value="tiler">{T.professionalsOpt}</option>
-            <option value="contractor">{T.contractorsOpt}</option>
-            <option value="supplier">{T.suppliersOpt}</option>
+            <option value="tiler">🪚 Tiler</option>
+            <option value="contractor">🏗️ Contractor</option>
+            <option value="electrician">⚡ Electrician</option>
+            <option value="plumber">🔧 Plumber</option>
+            <option value="carpenter">🪵 Carpenter</option>
+            <option value="painter">🖌️ Painter</option>
+            <option value="mason">🧱 Mason</option>
+            <option value="interior_designer">🛋️ Interior Designer</option>
+            <option value="construction_company">🏢 Construction Co.</option>
+            <option value="tile_shop">🔲 Tile Shop</option>
+            <option value="bathroom_shop">🛁 Bathroom Shop</option>
+            <option value="supplier">📦 Supplier</option>
+            <option value="workshop">✂️ Workshop</option>
+            <option value="brand_dealer">✦ Brand Dealer</option>
+            <option value="tool_supplier">🔨 Tool Supplier</option>
           </select>
 
           {/* District filter */}
@@ -787,11 +764,10 @@ export default function ProviderDirectory({ initialType, initialSearch }) {
             <p>{T.loading}</p>
           </div>
         ) : total === 0 ? (
-          type && type !== 'tiler' && !search && !district ? (
+          type && !search && !district ? (
             <SuggestedContent
-              type={type} tilers={tilers} providers={providers}
-              onSelectTiler={item => { setSelected(item); setIsTilerSelected(true) }}
-              onSelectProvider={item => { setSelected(item); setIsTilerSelected(false) }}
+              type={type} providers={providers}
+              onSelectProvider={item => setSelected(item)}
               T={T}
             />
           ) : (
@@ -813,16 +789,15 @@ export default function ProviderDirectory({ initialType, initialSearch }) {
           )
         ) : (
           <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fill, minmax(300px, 1fr))', gap: 16 }}>
-            {allCards.map(item => item._kind === 'tiler'
-              ? <TilerCard key={`t-${item.id}`} tiler={item} T={T} onClick={t => { setSelected(t); setIsTilerSelected(true) }} />
-              : <ProviderCard key={`p-${item.id}`} provider={item} T={T} onClick={p => { setSelected(p); setIsTilerSelected(false) }} />
-            )}
+            {allCards.map(item => (
+              <ProviderCard key={item.id} provider={item} T={T} onClick={p => setSelected(p)} />
+            ))}
           </div>
         )}
       </div>
 
       {selected && (
-        <ProviderModal item={selected} isTiler={isTilerSelected} onClose={() => setSelected(null)} T={T} />
+        <ProviderModal item={selected} onClose={() => setSelected(null)} T={T} />
       )}
     </div>
   )
