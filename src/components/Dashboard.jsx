@@ -98,6 +98,7 @@ function ProviderDashboard({ user, claimedProfile, claimedProfileType, submissio
   const [tab, setTab]           = useState(initialTab)
   const [myProjects, setMyProjects] = useState([])
   const [myBids, setMyBids]     = useState({})
+  const [submittedBids, setSubmittedBids] = useState([])
   const [dataLoading, setDataLoading] = useState(false)
   const [dataLoaded, setDataLoaded]   = useState(false)
 
@@ -127,6 +128,24 @@ function ProviderDashboard({ user, claimedProfile, claimedProfileType, submissio
       for (const b of bidData || []) { if (!byJob[b.job_id]) byJob[b.job_id] = []; byJob[b.job_id].push(b) }
       setMyBids(byJob)
     }
+
+    // Load bids submitted BY this provider (matched by their WhatsApp/phone)
+    const providerWA = claimedProfile?.whatsapp || claimedProfile?.phone
+    if (providerWA) {
+      const { data: subBidData } = await supabase
+        .from('bids').select('*').eq('bidder_whatsapp', providerWA).order('created_at', { ascending: false })
+      if (subBidData && subBidData.length > 0) {
+        const jobIds = [...new Set(subBidData.map(b => b.job_id))]
+        const { data: jobProjects } = await supabase
+          .from('projects').select('id, project_type, city, district, description').in('id', jobIds)
+        const projById = {}
+        for (const p of jobProjects || []) projById[p.id] = p
+        setSubmittedBids(subBidData.map(b => ({ ...b, project: projById[b.job_id] || null })))
+      } else {
+        setSubmittedBids([])
+      }
+    }
+
     setDataLoaded(true)
     setDataLoading(false)
   }
@@ -137,14 +156,14 @@ function ProviderDashboard({ user, claimedProfile, claimedProfileType, submissio
     ? `/${claimedProfileType === 'tiler' ? 'tilers' : 'providers'}/${claimedProfile.slug}`
     : null
 
-  const totalBids = Object.values(myBids).reduce((s, arr) => s + arr.length, 0)
-  const newBids   = Object.values(myBids).flat().filter(b => b.status === 'new').length
+  const newBids = Object.values(myBids).flat().filter(b => b.status === 'new').length
 
   const TABS = [
     { key:'projects',  label:'📋 මගේ ව්‍යාපෘති'  },
     { key:'bids',      label:`💰 ලංසු${newBids > 0 ? ` (${newBids})` : ''}` },
     ...(claimedProfile ? [{ key:'portfolio', label:'📸 ගැලරිය'  }] : []),
-    ...(claimedProfile ? [{ key:'profile',   label:'✏️ මගේ පැතිකඩ' }] : []),
+    ...(claimedProfile && profileHref ? [{ key:'_profile_link', label:'👤 මගේ පැතිකඩ', href: profileHref }] : []),
+    ...(claimedProfile ? [{ key:'profile',   label:'✏️ Edit' }] : []),
     { key:'listing',   label:'📋 ලිස්ටිං'   },
   ]
 
@@ -196,15 +215,22 @@ function ProviderDashboard({ user, claimedProfile, claimedProfileType, submissio
 
           {/* Tab bar — scrollable on mobile */}
           <div className="db-tab-bar" style={{ display:'flex', overflowX:'auto', WebkitOverflowScrolling:'touch', marginLeft:-14, marginRight:-14, paddingLeft:14 }}>
-            {TABS.map(t => (
-              <button key={t.key} onClick={() => setTab(t.key)} style={{
-                padding:'10px 14px', fontSize:13, fontWeight:600, border:'none', cursor:'pointer',
-                background:'transparent', flexShrink:0,
-                color: tab === t.key ? '#fff' : 'rgba(255,255,255,0.4)',
-                borderBottom: tab === t.key ? '2.5px solid #D4AF37' : '2.5px solid transparent',
-                transition:'all 0.15s', whiteSpace:'nowrap',
-              }}>{t.label}</button>
-            ))}
+            {TABS.map(t => t.href
+              ? <a key={t.key} href={t.href} style={{
+                  padding:'10px 14px', fontSize:13, fontWeight:600, border:'none', cursor:'pointer',
+                  background:'transparent', flexShrink:0, textDecoration:'none',
+                  color:'rgba(255,255,255,0.4)',
+                  borderBottom:'2.5px solid transparent',
+                  transition:'all 0.15s', whiteSpace:'nowrap', display:'block',
+                }}>{t.label}</a>
+              : <button key={t.key} onClick={() => setTab(t.key)} style={{
+                  padding:'10px 14px', fontSize:13, fontWeight:600, border:'none', cursor:'pointer',
+                  background:'transparent', flexShrink:0,
+                  color: tab === t.key ? '#fff' : 'rgba(255,255,255,0.4)',
+                  borderBottom: tab === t.key ? '2.5px solid #D4AF37' : '2.5px solid transparent',
+                  transition:'all 0.15s', whiteSpace:'nowrap',
+                }}>{t.label}</button>
+            )}
             {/* Trailing spacer so last tab isn't flush against edge */}
             <div style={{ flexShrink:0, width:14 }} />
           </div>
@@ -214,7 +240,7 @@ function ProviderDashboard({ user, claimedProfile, claimedProfileType, submissio
       {/* ── Tab content ── */}
       <div className="db-content-pad" style={{ maxWidth:860, margin:'0 auto', padding:'20px 16px' }}>
         {tab === 'projects'  && (dataLoading ? <Spinner /> : <ProjectsTab projects={myProjects} bids={myBids} isProvider />)}
-        {tab === 'bids'      && (dataLoading ? <Spinner /> : <ProviderBidsTab projects={myProjects} bids={myBids} />)}
+        {tab === 'bids'      && (dataLoading ? <Spinner /> : <ProviderBidsTab projects={myProjects} bids={myBids} submittedBids={submittedBids} />)}
         {tab === 'portfolio' && claimedProfile && (
           <PortfolioEditor profile={claimedProfile} profileType={claimedProfileType} userId={user.id} />
         )}
@@ -227,12 +253,14 @@ function ProviderDashboard({ user, claimedProfile, claimedProfileType, submissio
   )
 }
 
-function ProviderBidsTab({ projects, bids }) {
-  const allBids = projects.flatMap(p =>
+function ProviderBidsTab({ projects, bids, submittedBids }) {
+  const receivedBids = projects.flatMap(p =>
     (bids[p.id] || []).map(b => ({ ...b, project: p }))
   ).sort((a, b) => new Date(b.created_at) - new Date(a.created_at))
 
-  if (allBids.length === 0) return (
+  const hasAnything = submittedBids.length > 0 || receivedBids.length > 0
+
+  if (!hasAnything) return (
     <div style={{ textAlign:'center', padding:'48px 20px', background:'#fff', borderRadius:16, border:'1px solid var(--border)' }}>
       <div style={{ fontSize:40, marginBottom:12 }}>💰</div>
       <div style={{ fontSize:15, fontWeight:700, color:'var(--text)', marginBottom:8 }}>ලංසු නොමැත</div>
@@ -249,58 +277,74 @@ function ProviderBidsTab({ projects, bids }) {
     </div>
   )
 
-  const newCount = allBids.filter(b => b.status === 'new').length
+  const BidCard = ({ bid, isSubmitted }) => {
+    const wa   = (isSubmitted ? null : bid.bidder_whatsapp)?.replace(/\D/g,'')
+    const norm = wa ? (wa.startsWith('94') ? wa : '94' + wa.replace(/^0/,'')) : ''
+    const waLink = wa ? `https://wa.me/${norm}?text=${encodeURIComponent('ආයුබෝවන්! 🙏\n\nTilersHub හරහා ඔබේ bid දැක්කා. ඔබගේ quote / message ගැන කතා කරමු.\n\nස්තූතියි!')}` : ''
+    const isNew = bid.status === 'new'
+    const statusColor = bid.status === 'accepted' ? '#16a34a' : bid.status === 'rejected' ? '#dc2626' : '#f59e0b'
+    const statusLabel = bid.status === 'accepted' ? '✓ අනුමත' : bid.status === 'rejected' ? '✗ ප්‍රතික්ෂේප' : 'නව'
+    return (
+      <div style={{ padding:'16px 18px', background:'#fff', borderRadius:14, border:`1.5px solid ${isNew ? '#fde68a' : 'var(--border)'}`, borderLeft:`4px solid ${isNew ? '#f59e0b' : '#e2e8f0'}`, boxShadow:'var(--shadow-sm)' }}>
+        <div style={{ fontSize:10, fontWeight:700, color:'var(--text-4)', textTransform:'uppercase', letterSpacing:1, marginBottom:6 }}>
+          {TYPE_ICON[bid.project?.project_type] || '🏠'} {bid.project?.project_type || 'ව්‍යාපෘතිය'} · 📍 {bid.project?.city || bid.project?.district || '—'}
+        </div>
+        <div style={{ display:'flex', alignItems:'flex-start', justifyContent:'space-between', gap:10, marginBottom:8 }}>
+          <div>
+            {isSubmitted
+              ? <div style={{ fontSize:14, fontWeight:700, color:'var(--text)' }}>ඔබේ ලංසු</div>
+              : <div style={{ fontSize:14, fontWeight:700, color:'var(--text)' }}>{bid.bidder_name}</div>
+            }
+            <div style={{ fontSize:12, color:'var(--text-3)', marginTop:2 }}>
+              {!isSubmitted && <span style={{ textTransform:'capitalize' }}>{bid.bidder_type}</span>}
+              {bid.quote_amount && <span style={{ marginLeft: isSubmitted ? 0 : 8, color:'#166534', fontWeight:700 }}>Rs. {Number(bid.quote_amount).toLocaleString()}</span>}
+              {bid.timeline     && <span style={{ marginLeft:8 }}>· {bid.timeline}</span>}
+              <span style={{ marginLeft:8, color:'var(--text-4)' }}>· {timeAgo(bid.created_at)}</span>
+            </div>
+          </div>
+          <span style={{ fontSize:10, fontWeight:700, padding:'2px 8px', borderRadius:20, background: isNew ? '#fef3c7' : '#f1f5f9', color: isNew ? '#92400e' : '#64748b', whiteSpace:'nowrap', flexShrink:0 }}>{statusLabel}</span>
+        </div>
+        {bid.message && (
+          <p style={{ fontSize:13, color:'#475569', lineHeight:1.65, margin:'0 0 12px' }}>
+            {bid.message.length > 220 ? bid.message.slice(0,220) + '…' : bid.message}
+          </p>
+        )}
+        {wa && (
+          <a href={waLink} target="_blank" rel="noopener noreferrer" style={{ display:'inline-flex', alignItems:'center', gap:6, fontSize:12, fontWeight:700, background:'#25D366', color:'#fff', borderRadius:8, padding:'7px 14px', textDecoration:'none' }}>
+            💬 WhatsApp හරහා අමතන්න
+          </a>
+        )}
+      </div>
+    )
+  }
 
   return (
-    <div>
-      <div style={{ display:'flex', alignItems:'center', justifyContent:'space-between', marginBottom:16, flexWrap:'wrap', gap:8 }}>
+    <div style={{ display:'flex', flexDirection:'column', gap:24 }}>
+
+      {/* Submitted bids — bids this provider sent */}
+      {submittedBids.length > 0 && (
         <div>
-          <div style={{ fontSize:16, fontWeight:700, color:'var(--text)', marginBottom:2 }}>ලංසු ඉතිහාසය සහ යාවත්කාලීන</div>
-          <div style={{ fontSize:12, color:'var(--text-3)' }}>
-            {allBids.length} ලංසු · {projects.length} ව්‍යාපෘති
-            {newCount > 0 && <span style={{ marginLeft:6, fontWeight:700, color:'#f59e0b' }}>· {newCount} නව</span>}
+          <div style={{ fontSize:13, fontWeight:700, color:'var(--text-3)', textTransform:'uppercase', letterSpacing:1, marginBottom:10 }}>
+            ඔබ ඉදිරිපත් කළ ලංසු ({submittedBids.length})
+          </div>
+          <div style={{ display:'flex', flexDirection:'column', gap:10 }}>
+            {submittedBids.map(bid => <BidCard key={bid.id} bid={bid} isSubmitted />)}
           </div>
         </div>
-      </div>
+      )}
 
-      <div style={{ display:'flex', flexDirection:'column', gap:10 }}>
-        {allBids.map(bid => {
-          const wa   = bid.bidder_whatsapp?.replace(/\D/g,'')
-          const norm = wa?.startsWith('94') ? wa : '94' + (wa?.replace(/^0/,'') || '')
-          const waLink = `https://wa.me/${norm}?text=${encodeURIComponent('ආයුබෝවන්! 🙏\n\nTilersHub හරහා ඔබේ bid දැක්කා. ඔබගේ quote / message ගැන කතා කරමු.\n\nස්තූතියි!')}`
-          const isNew = bid.status === 'new'
-          return (
-            <div key={bid.id} style={{ padding:'16px 18px', background:'#fff', borderRadius:14, border:`1.5px solid ${isNew ? '#fde68a' : 'var(--border)'}`, borderLeft:`4px solid ${isNew ? '#f59e0b' : '#e2e8f0'}`, boxShadow:'var(--shadow-sm)' }}>
-              {/* project context */}
-              <div style={{ fontSize:10, fontWeight:700, color:'var(--text-4)', textTransform:'uppercase', letterSpacing:1, marginBottom:6 }}>
-                {TYPE_ICON[bid.project?.project_type] || '🏠'} {bid.project?.project_type} · 📍 {bid.project?.city || bid.project?.district}
-              </div>
-              <div style={{ display:'flex', alignItems:'flex-start', justifyContent:'space-between', gap:10, marginBottom:8 }}>
-                <div>
-                  <div style={{ fontSize:14, fontWeight:700, color:'var(--text)' }}>{bid.bidder_name}</div>
-                  <div style={{ fontSize:12, color:'var(--text-3)', marginTop:2 }}>
-                    <span style={{ textTransform:'capitalize' }}>{bid.bidder_type}</span>
-                    {bid.quote_amount && <span style={{ marginLeft:8, color:'#166534', fontWeight:700 }}>· Rs. {Number(bid.quote_amount).toLocaleString()}</span>}
-                    {bid.timeline     && <span style={{ marginLeft:8 }}>· {bid.timeline}</span>}
-                    <span style={{ marginLeft:8, color:'var(--text-4)' }}>· {timeAgo(bid.created_at)}</span>
-                  </div>
-                </div>
-                {isNew && <span style={{ fontSize:10, fontWeight:700, padding:'2px 8px', borderRadius:20, background:'#fef3c7', color:'#92400e', whiteSpace:'nowrap', flexShrink:0 }}>නව</span>}
-              </div>
-              {bid.message && (
-                <p style={{ fontSize:13, color:'#475569', lineHeight:1.65, margin:'0 0 12px' }}>
-                  {bid.message.length > 220 ? bid.message.slice(0,220) + '…' : bid.message}
-                </p>
-              )}
-              {wa && (
-                <a href={waLink} target="_blank" rel="noopener noreferrer" style={{ display:'inline-flex', alignItems:'center', gap:6, fontSize:12, fontWeight:700, background:'#25D366', color:'#fff', borderRadius:8, padding:'7px 14px', textDecoration:'none' }}>
-                  💬 WhatsApp හරහා අමතන්න
-                </a>
-              )}
-            </div>
-          )
-        })}
-      </div>
+      {/* Received bids — bids on the provider's own posted projects */}
+      {receivedBids.length > 0 && (
+        <div>
+          <div style={{ fontSize:13, fontWeight:700, color:'var(--text-3)', textTransform:'uppercase', letterSpacing:1, marginBottom:10 }}>
+            ලැබුණු ලංසු ({receivedBids.length})
+          </div>
+          <div style={{ display:'flex', flexDirection:'column', gap:10 }}>
+            {receivedBids.map(bid => <BidCard key={bid.id} bid={bid} isSubmitted={false} />)}
+          </div>
+        </div>
+      )}
+
     </div>
   )
 }
