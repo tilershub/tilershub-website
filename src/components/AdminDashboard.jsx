@@ -923,6 +923,7 @@ function ProfilesTab({ adminUserId }) {
   const [subTab,  setSubTab]  = useState('providers')
   const [rows,    setRows]    = useState([])
   const [loading, setLoading] = useState(true)
+  const [loadError, setLoadError] = useState(null)
   const [page,    setPage]    = useState(0)
   const [count,   setCount]   = useState(0)
   const [search,  setSearch]  = useState('')
@@ -932,15 +933,21 @@ function ProfilesTab({ adminUserId }) {
 
   const load = useCallback(async () => {
     setLoading(true)
+    setLoadError(null)
     const table   = subTab === 'tilers' ? 'tilers' : 'providers'
     const nameCol = subTab === 'tilers' ? 'full_name' : 'name'
     let q = supabase.from(table).select('*', { count: 'exact' })
       .order('created_at', { ascending: false })
       .range(page * PER, page * PER + PER - 1)
     if (search.trim()) q = q.ilike(nameCol, `%${search.trim()}%`)
-    const { data, count: c } = await q
-    setRows(data || [])
-    setCount(c || 0)
+    const { data, error, count: c } = await q
+    if (error) {
+      console.error('profiles load error:', error)
+      setLoadError(error.message)
+    } else {
+      setRows(data || [])
+      setCount(c || 0)
+    }
     setLoading(false)
   }, [subTab, page, search])
 
@@ -976,6 +983,7 @@ function ProfilesTab({ adminUserId }) {
         </button>
       </div>
 
+      {loadError && <p style={{ color: '#dc2626', fontSize: 13, marginBottom: 12 }}>Error loading profiles: {loadError}</p>}
       {loading ? <p style={{ color: '#94a3b8' }}>Loading…</p> : (
         <>
           <div style={S.card}>
