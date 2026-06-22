@@ -66,7 +66,7 @@ export const PROFESSIONS = [
   { value: 'tiler',                label: 'Tiler',               si: 'ටයිල් ශිල්පී',           icon: '🪚' },
   { value: 'contractor',           label: 'Contractor',           si: 'කොන්ත්‍රාත්කරු',           icon: '🏗️' },
   { value: 'electrician',          label: 'Electrician',          si: 'විදුලි ශිල්පී',           icon: '⚡' },
-  { value: 'plumber',              label: 'Plumber',              si: 'නළ ශිල්පී',               icon: '🔧' },
+  { value: 'plumber',              label: 'Plumber',              si: 'ජලනල කාර්මික',               icon: '🔧' },
   { value: 'carpenter',            label: 'Carpenter',            si: 'ලී ශිල්පී',               icon: '🪵' },
   { value: 'painter',              label: 'Painter',              si: 'පින්තාරු ශිල්පී',         icon: '🖌️' },
   { value: 'mason',                label: 'Mason / Bricklayer',   si: 'ගල් ශිල්පී',              icon: '🧱' },
