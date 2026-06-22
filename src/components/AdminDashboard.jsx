@@ -858,18 +858,27 @@ function BidsTab() {
 
 // ─── Reviews tab ──────────────────────────────────────────────────────────────
 function ReviewsTab() {
-  const [rows, setRows]       = useState([])
-  const [loading, setLoading] = useState(true)
-  const [page, setPage]       = useState(0)
-  const [count, setCount]     = useState(0)
+  const [rows, setRows]           = useState([])
+  const [loading, setLoading]     = useState(true)
+  const [loadError, setLoadError] = useState(null)
+  const [deleteError, setDeleteError] = useState(null)
+  const [page, setPage]           = useState(0)
+  const [count, setCount]         = useState(0)
   const PER = 20
 
   const load = useCallback(async () => {
     setLoading(true)
-    const { data, count: c } = await supabase.from('reviews').select('*', { count: 'exact' })
+    setLoadError(null)
+    const { data, error, count: c } = await supabase.from('reviews').select('*', { count: 'exact' })
       .order('created_at', { ascending: false })
       .range(page * PER, page * PER + PER - 1)
-    setRows(data || []); setCount(c || 0)
+    if (error) {
+      console.error('reviews load error:', error)
+      setLoadError(error.message)
+    } else {
+      setRows(data || [])
+      setCount(c || 0)
+    }
     setLoading(false)
   }, [page])
 
@@ -877,8 +886,18 @@ function ReviewsTab() {
 
   async function del(id) {
     if (!confirm('Delete this review?')) return
-    await supabase.from('reviews').delete().eq('id', id)
-    load()
+    setDeleteError(null)
+    const { data: deleted, error } = await supabase
+      .from('reviews').delete().eq('id', id).select('id')
+    if (error) {
+      setDeleteError('Delete failed: ' + error.message)
+      return
+    }
+    if (!deleted || deleted.length === 0) {
+      setDeleteError('Review was not deleted — your session may have expired. Please refresh the page and sign in again.')
+      return
+    }
+    await load()
   }
 
   function Stars({ n }) {
@@ -890,6 +909,8 @@ function ReviewsTab() {
       <h2 style={S.h2}>Reviews</h2>
       {loading ? <p style={{ color: '#94a3b8' }}>Loading…</p> : (
         <>
+          {loadError && <p style={{ color: '#dc2626', fontSize: 13, marginBottom: 12 }}>Error loading reviews: {loadError}</p>}
+          {deleteError && <p style={{ color: '#dc2626', fontSize: 13, marginBottom: 12, padding: '8px 12px', background: '#fef2f2', borderRadius: 8, border: '1px solid #fecaca' }}>{deleteError}</p>}
           <div style={S.card}>
             <Table
               heads={['Reviewer','Rating','Job Type','Comment','Profile','Date','Del']}
