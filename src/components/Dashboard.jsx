@@ -35,6 +35,7 @@ const MOBILE_STYLES = `
 export default function Dashboard() {
   const [user, setUser]               = useState(null)
   const [loading, setLoading]         = useState(true)
+  const [loadError, setLoadError]     = useState(null)
   const [projects, setProjects]       = useState([])
   const [bids, setBids]               = useState({})
   const [submission, setSubmission]   = useState(null)
@@ -48,15 +49,23 @@ export default function Dashboard() {
 
   async function loadData(u) {
     setDataLoading(true)
-    const [{ data: proj }, { data: sub }, { data: providerRow }] = await Promise.all([
+    setLoadError(null)
+    const [projRes, subRes, providerRes] = await Promise.all([
       supabase.from('projects').select('*').eq('user_id', u.id).order('created_at', { ascending: false }),
       supabase.from('provider_submissions').select('*').eq('user_id', u.id).order('created_at', { ascending: false }).limit(1).maybeSingle(),
       supabase.from('providers').select('*').eq('user_id', u.id).maybeSingle(),
     ])
-    const userProjects = proj || []
+    if (projRes.error || subRes.error || providerRes.error) {
+      const err = projRes.error || subRes.error || providerRes.error
+      console.error('dashboard load error:', err)
+      setLoadError(err.message)
+      setDataLoading(false)
+      return
+    }
+    const userProjects = projRes.data || []
     setProjects(userProjects)
-    setSubmission(sub)
-    if (providerRow) setClaimedProfile(providerRow)
+    setSubmission(subRes.data)
+    if (providerRes.data) setClaimedProfile(providerRes.data)
 
     if (userProjects.length > 0) {
       const { data: bidData } = await supabase
@@ -70,6 +79,18 @@ export default function Dashboard() {
 
   if (loading) return <Spinner full />
   if (!user)   return <SignInPrompt />
+  if (loadError) return (
+    <div style={{ minHeight: '60vh', display: 'flex', alignItems: 'center', justifyContent: 'center', padding: 24 }}>
+      <div style={{ textAlign: 'center', maxWidth: 400 }}>
+        <div style={{ fontSize: 40, marginBottom: 12 }}>⚠️</div>
+        <h3 style={{ fontSize: 16, fontWeight: 700, color: '#dc2626', marginBottom: 8 }}>Could not load your dashboard</h3>
+        <p style={{ fontSize: 13, color: '#64748b', marginBottom: 20 }}>{loadError}</p>
+        <button onClick={() => window.location.reload()} style={{ padding: '10px 24px', background: '#1B3A6B', color: '#fff', border: 'none', borderRadius: 10, fontSize: 14, fontWeight: 600, cursor: 'pointer' }}>
+          Try Again
+        </button>
+      </div>
+    </div>
+  )
 
   const isProvider = !!claimedProfile ||
     (submission && ['pending_review','approved','listed'].includes(submission?.status))

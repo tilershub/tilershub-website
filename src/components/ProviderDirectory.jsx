@@ -316,7 +316,7 @@ function TilerCard({ tiler, onClick, T }) {
         {tiler.avg_rating > 0 && (
           <div style={{ display: 'flex', alignItems: 'center', gap: 5, marginBottom: 8 }}>
             <span>⭐</span>
-            <span style={{ fontSize: 13, fontWeight: 700, color: '#92400e' }}>{tiler.avg_rating.toFixed(1)}</span>
+            <span style={{ fontSize: 13, fontWeight: 700, color: '#92400e' }}>{Number(tiler.avg_rating).toFixed(1)}</span>
             {tiler.review_count > 0 && <span style={{ fontSize: 12, color: '#94a3b8' }}>({T.reviewsLabel(tiler.review_count)})</span>}
           </div>
         )}
@@ -393,7 +393,7 @@ function ContractorCard({ provider, onClick, T }) {
         {provider.avg_rating > 0 && (
           <div style={{ display: 'flex', alignItems: 'center', gap: 5, marginBottom: 8 }}>
             <span>⭐</span>
-            <span style={{ fontSize: 13, fontWeight: 700, color: '#92400e' }}>{provider.avg_rating.toFixed(1)}</span>
+            <span style={{ fontSize: 13, fontWeight: 700, color: '#92400e' }}>{Number(provider.avg_rating).toFixed(1)}</span>
             {provider.review_count > 0 && <span style={{ fontSize: 12, color: '#94a3b8' }}>({T.reviewsLabel(provider.review_count)})</span>}
           </div>
         )}
@@ -656,6 +656,7 @@ export default function ProviderDirectory({ initialType, initialSearch }) {
 
   const [providers, setProviders] = useState([])
   const [loading,   setLoading]   = useState(true)
+  const [loadError, setLoadError] = useState(null)
   const [inputValue, setInputValue] = useState(initialSearch || '')
   const [search,    setSearch]    = useState(initialSearch || '')
   const [district,  setDistrict]  = useState('')
@@ -666,8 +667,14 @@ export default function ProviderDirectory({ initialType, initialSearch }) {
   useEffect(() => {
     async function load() {
       setLoading(true)
-      const { data } = await supabase.from('providers').select('*').eq('status', 'active').order('is_featured', { ascending: false }).order('avg_rating', { ascending: false })
-      setProviders(data || [])
+      setLoadError(null)
+      const { data, error } = await supabase.from('providers').select('*').eq('status', 'active').order('is_featured', { ascending: false }).order('avg_rating', { ascending: false })
+      if (error) {
+        console.error('providers load error:', error)
+        setLoadError(error.message)
+      } else {
+        setProviders(data || [])
+      }
       setLoading(false)
     }
     load()
@@ -762,6 +769,15 @@ export default function ProviderDirectory({ initialType, initialSearch }) {
           <div style={{ textAlign: 'center', padding: '80px 0', color: '#94a3b8' }}>
             <div style={{ fontSize: 36, marginBottom: 16 }}>⏳</div>
             <p>{T.loading}</p>
+          </div>
+        ) : loadError ? (
+          <div style={{ textAlign: 'center', padding: '60px 20px', background: '#fff', borderRadius: 16, border: '1px solid #fecaca' }}>
+            <div style={{ fontSize: 40, marginBottom: 12 }}>⚠️</div>
+            <h3 style={{ fontSize: 16, fontWeight: 700, color: '#dc2626', marginBottom: 8 }}>Could not load providers</h3>
+            <p style={{ fontSize: 13, color: '#64748b', marginBottom: 20 }}>{loadError}</p>
+            <button onClick={() => window.location.reload()} style={{ padding: '10px 24px', background: '#1B3A6B', color: '#fff', border: 'none', borderRadius: 10, fontSize: 14, fontWeight: 600, cursor: 'pointer' }}>
+              Try Again
+            </button>
           </div>
         ) : total === 0 ? (
           type && !search && !district ? (
