@@ -199,7 +199,7 @@ export default function PostProjectForm() {
                 <span style={{ color: '#e2e8f0' }}>·</span>
                 <button onClick={() => { setSuccess(false); setForm({ project_type: '', city: '', district: '', description: '', budget_range: '', customer_name: '', whatsapp: '' }) }}
                   style={{ fontSize: 13, color: '#64748b', background: 'none', border: 'none', cursor: 'pointer', fontWeight: 600, padding: 0 }}>
-                  තවත් ව්‍යාපෘතියක් පල කරන්න
+                  තවත් ව්‍යාපෘතියක් පලකරන්න
                 </button>
               </div>
             </div>
@@ -274,7 +274,7 @@ export default function PostProjectForm() {
 
       <button type="submit" disabled={submitting}
         style={{ width: '100%', padding: '13px', background: submitting ? '#94a3b8' : '#E05A2B', color: '#fff', border: 'none', borderRadius: 12, fontSize: 15, fontWeight: 700, cursor: submitting ? 'not-allowed' : 'pointer', display: 'flex', alignItems: 'center', justifyContent: 'center', gap: 8, transition: 'background 0.2s' }}>
-        {submitting ? '⏳ ඉදිරිපත් කරමින්...' : '📋 මගේ ව්‍යාපෘතිය පල කරන්න'}
+        {submitting ? '⏳ ඉදිරිපත් කරමින්...' : '📋 මගේ ව්‍යාපෘතිය පලකරන්න'}
       </button>
 
       <p style={{ fontSize: 11, color: '#94a3b8', textAlign: 'center', marginTop: 12 }}>

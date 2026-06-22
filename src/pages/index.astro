@@ -126,19 +126,19 @@ function verBadge(vs: string) {
     <div style="position:absolute;inset:0;background:linear-gradient(175deg,rgba(8,15,28,0.72) 0%,rgba(20,35,65,0.68) 100%);pointer-events:none;"></div>
     <div style="position:relative;text-align:center;max-width:520px;width:100%;">
       <h1 style="font-family:'Playfair Display',serif;font-size:clamp(26px,5.5vw,42px);font-weight:700;color:#fff;line-height:1.15;margin-bottom:10px;">
-        ඔබේ ව්‍යාපෘතිය පල කරන්න,<br /><span style="color:#F59E0B;">නොමිලේ ලංසු ලබා ගන්න.</span>
+        ඔබේ ව්‍යාපෘතිය පලකරන්න,<br /><span style="color:#F59E0B;">නොමිලේ ලංසු ලබා ගන්න.</span>
       </h1>
       <p style="font-size:13px;color:rgba(255,255,255,0.62);margin-bottom:22px;line-height:1.7;">
         ලොගිනය අවශ්‍ය නැත · සත්‍යාපිත ප්‍රවීණයන් පැය 24 ක් ඇතුළත ලංසු දෙති
       </p>
       <a href="/post-project" style="display:flex;align-items:center;justify-content:center;gap:8px;background:#E05A2B;color:#fff;border-radius:24px;padding:14px 28px;font-size:15px;font-weight:800;text-decoration:none;box-shadow:0 4px 20px rgba(224,90,43,0.45);margin-bottom:14px;">
-        📋 නොමිලේ ව්‍යාපෘතිය පල කරන්න
+        📋 නොමිලේ ව්‍යාපෘතිය පලකරන්න
       </a>
       <div style="margin-bottom:14px;">
         <a href="/providers" style="font-size:12px;color:rgba(255,255,255,0.45);text-decoration:none;font-weight:600;">හෝ සේවා සපයන්නන් බලන්න →</a>
       </div>
       <div style="display:flex;gap:8px;justify-content:center;flex-wrap:wrap;">
-        <span style="background:rgba(255,255,255,0.1);color:rgba(255,255,255,0.78);border-radius:20px;padding:5px 13px;font-size:11px;font-weight:600;border:1px solid rgba(255,255,255,0.15);">✓ පල කිරීම නොමිලේ</span>
+        <span style="background:rgba(255,255,255,0.1);color:rgba(255,255,255,0.78);border-radius:20px;padding:5px 13px;font-size:11px;font-weight:600;border:1px solid rgba(255,255,255,0.15);">✓ පලකිරීම නොමිලේ</span>
         <span style="background:rgba(255,255,255,0.1);color:rgba(255,255,255,0.78);border-radius:20px;padding:5px 13px;font-size:11px;font-weight:600;border:1px solid rgba(255,255,255,0.15);">✓ බහු ලංසු</span>
         <span style="background:rgba(255,255,255,0.1);color:rgba(255,255,255,0.78);border-radius:20px;padding:5px 13px;font-size:11px;font-weight:600;border:1px solid rgba(255,255,255,0.15);">✓ බැඳීමක් නැත</span>
       </div>
@@ -152,7 +152,7 @@ function verBadge(vs: string) {
     <div style="max-width:480px;margin:0 auto;">
       <p style="font-size:9px;font-weight:700;color:rgba(255,255,255,0.4);letter-spacing:3px;text-transform:uppercase;text-align:center;margin:0 0 18px;">ක්‍රියාකාරී ආකාරය</p>
       {[
-        { n:'1', icon:'📋', title:'ව්‍යාපෘතිය පල කරන්න',  desc:'නොමිලේ — ලොගිනය අවශ්‍ය නැත. මිනිත්තු 2 ක් ගනී.',      c:'#E05A2B' },
+        { n:'1', icon:'📋', title:'ව්‍යාපෘතිය පලකරන්න',  desc:'නොමිලේ — ලොගිනය අවශ්‍ය නැත. මිනිත්තු 2 ක් ගනී.',      c:'#E05A2B' },
         { n:'2', icon:'💬', title:'ලංසු ලැබේ',      desc:'සත්‍යාපිත ටයිලර්වරු WhatsApp ට ලංසු යවති.', c:'#D4AF37' },
         { n:'3', icon:'✅', title:'ඔබ තෝරා ගන්න',         desc:'සසඳන්න, කෙළින්ම කතා කරන්න, හොඳම අය තෝරන්න.',        c:'#25D366' },
       ].map((s, i) => (
@@ -176,7 +176,7 @@ function verBadge(vs: string) {
     <div style="display:flex;flex-direction:column;gap:10px;padding:0 16px;">
       {recentProjects.length === 0
         ? (
-          <div style="padding:20px 0;font-size:13px;color:#94a3b8;text-align:center;">දැනට ව්‍යාපෘති නොමැත — <a href="/post-project" style="color:#E05A2B;font-weight:600;text-decoration:none;">නොමිලේ පල කරන්න →</a></div>
+          <div style="padding:20px 0;font-size:13px;color:#94a3b8;text-align:center;">දැනට ව්‍යාපෘති නොමැත — <a href="/post-project" style="color:#E05A2B;font-weight:600;text-decoration:none;">නොමිලේ පලකරන්න →</a></div>
         )
         : recentProjects.map((p: any) => {
           const icon  = PROJECT_TYPE_ICONS[p.project_type]  || '🏠'
@@ -357,10 +357,10 @@ function verBadge(vs: string) {
         <div style="font-size:28px;flex-shrink:0;">🏠</div>
         <div style="flex:1;">
           <div style="font-size:13px;font-weight:800;color:#fff;margin-bottom:2px;">ව්‍යාපෘතිය ආරම්භ කිරීමට සූදානම්ද?</div>
-          <div style="font-size:11px;color:rgba(255,255,255,0.75);">නොමිලේ පල කරන්න — WhatsApp ලංසු ලබා ගන්න.</div>
+          <div style="font-size:11px;color:rgba(255,255,255,0.75);">නොමිලේ පලකරන්න — WhatsApp ලංසු ලබා ගන්න.</div>
         </div>
         <div style="font-size:13px;font-weight:800;color:#fff;flex-shrink:0;background:rgba(255,255,255,0.15);border-radius:10px;padding:8px 14px;">
-          පල කරන්න →
+          පලකරන්න →
         </div>
       </a>
     </div>
