@@ -320,9 +320,9 @@ function TilerCard({ tiler, onClick, T }) {
             {tiler.review_count > 0 && <span style={{ fontSize: 12, color: '#94a3b8' }}>({T.reviewsLabel(tiler.review_count)})</span>}
           </div>
         )}
-        {tiler.speciality && (
+        {tiler.bio && (
           <div style={{ fontSize: 13, color: '#64748b', lineHeight: 1.65, marginBottom: 14, overflow: 'hidden', display: '-webkit-box', WebkitLineClamp: 2, WebkitBoxOrient: 'vertical' }}>
-            {tiler.speciality}
+            {tiler.bio}
           </div>
         )}
         <div style={{ display: 'flex', alignItems: 'center', gap: 8, borderTop: '1px solid #f1f5f9', paddingTop: 12, flexWrap: 'wrap' }}>

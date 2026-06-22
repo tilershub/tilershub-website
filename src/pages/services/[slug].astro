@@ -9,12 +9,12 @@ export function getStaticPaths() {
 
 const { service } = Astro.props
 
-const orFilter = service.terms.map(t => `speciality.ilike.%${t}%`).join(',')
+const orFilter = service.terms.map(t => `bio.ilike.%${t}%`).join(',')
 
 const [{ data: tilersRaw }, { data: providersRaw }] = await Promise.all([
   supabase
     .from('tilers')
-    .select('id,full_name,city,district,is_verified,avg_rating,slug,speciality,avatar_url,experience_years,whatsapp,phone,services')
+    .select('id,full_name,city,district,is_verified,avg_rating,slug,bio,avatar_url,experience_years,whatsapp,phone,services')
     .or(orFilter)
     .order('avg_rating', { ascending: false })
     .limit(20),
@@ -116,7 +116,7 @@ const serviceSchema = JSON.stringify({
           const color = avatarColor(t.full_name)
           const inits = initials(t.full_name)
           const phone = t.whatsapp || t.phone
-          const chips = (t.services || (t.speciality ? [t.speciality] : [])).slice(0, 3)
+          const chips = (t.services || []).slice(0, 3)
           return (
             <div style="background:#fff;border-radius:20px;border:1px solid #e8edf5;overflow:hidden;box-shadow:0 2px 12px rgba(0,0,0,0.06);display:flex;">
               <!-- Avatar block -->
@@ -133,7 +133,7 @@ const serviceSchema = JSON.stringify({
                   {t.is_verified && <span style="font-size:8px;font-weight:700;color:#16a34a;background:#f0fdf4;border:1px solid #bbf7d0;border-radius:20px;padding:2px 7px;flex-shrink:0;margin-top:2px;">✓ Pro</span>}
                 </div>
                 {(t.city || t.district) && <div style="font-size:11px;color:#64748b;margin-bottom:6px;">📍 {t.city || t.district}</div>}
-                {t.speciality && <div style="font-size:12px;color:#64748b;margin-bottom:8px;display:-webkit-box;-webkit-line-clamp:2;-webkit-box-orient:vertical;overflow:hidden;line-height:1.5;">{t.speciality}</div>}
+                {t.bio && <div style="font-size:12px;color:#64748b;margin-bottom:8px;display:-webkit-box;-webkit-line-clamp:2;-webkit-box-orient:vertical;overflow:hidden;line-height:1.5;">{t.bio}</div>}
                 {chips.length > 0 && (
                   <div style="display:flex;flex-wrap:wrap;gap:4px;margin-bottom:10px;">
                     {chips.map(s => <span style="font-size:9px;font-weight:600;padding:2px 7px;border-radius:20px;background:#eef3fb;color:#1B3A6B;border:1px solid #d5e2f5;">{s}</span>)}
