@@ -574,6 +574,45 @@ function SubmissionsTab() {
     load()
   }
 
+  async function listProvider(sub) {
+    await supabase.from('provider_submissions').update({ status: 'listed' }).eq('id', sub.id)
+
+    // Check for existing provider to avoid duplicates
+    let existing = null
+    if (sub.user_id) {
+      const { data } = await supabase.from('providers').select('id').eq('user_id', sub.user_id).maybeSingle()
+      existing = data
+    }
+    if (!existing && sub.whatsapp) {
+      const { data } = await supabase.from('providers').select('id')
+        .eq('whatsapp', sub.whatsapp).eq('name', sub.name).maybeSingle()
+      existing = data
+    }
+
+    if (!existing) {
+      const slug = slugify(sub.name || 'provider') + '-' + Math.random().toString(36).slice(2, 6)
+      await supabase.from('providers').insert({
+        name:                sub.name,
+        provider_type:       sub.provider_type,
+        city:                sub.city,
+        district:            sub.district,
+        whatsapp:            sub.whatsapp,
+        phone:               sub.phone,
+        description:         sub.description,
+        profile_image:       sub.profile_image,
+        cover_image:         sub.cover_image,
+        gallery:             sub.photo_urls || null,
+        service_areas:       sub.service_areas,
+        services:            sub.services,
+        user_id:             sub.user_id,
+        slug,
+        status:              'active',
+        verification_status: 'none',
+      })
+    }
+    load()
+  }
+
   const FILTERS = ['all','pending_review','approved','listed','rejected']
 
   return (
@@ -609,7 +648,7 @@ function SubmissionsTab() {
                   <td style={S.td}>{timeAgo(r.created_at)}</td>
                   <td style={S.td}>
                     <div style={{ display: 'flex', gap: 5, flexWrap: 'wrap' }}>
-                      {r.status !== 'listed'    && <button onClick={() => update(r.id, { status: 'listed' })}    style={S.btn('#16a34a')}>✓ List</button>}
+                      {r.status !== 'listed'    && <button onClick={() => listProvider(r)}                      style={S.btn('#16a34a')}>✓ List</button>}
                       {r.status !== 'approved'  && <button onClick={() => update(r.id, { status: 'approved' })}  style={S.btn(NAVY)}>Approve</button>}
                       {r.status !== 'rejected'  && <button onClick={() => update(r.id, { status: 'rejected' })}  style={S.btn('#dc2626')}>Reject</button>}
                       {r.status !== 'pending_review' && <button onClick={() => update(r.id, { status: 'pending_review' })} style={S.btn('#94a3b8')}>Reset</button>}
