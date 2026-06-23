@@ -2,46 +2,18 @@
 import Layout from '../layouts/Layout.astro'
 import { supabase } from '../lib/supabase.js'
 import HomeHero from '../components/HomeHero.jsx'
+import { HOME_GROUPS, SERVICES } from '../lib/services.js'
 
 const HERO_IMG = 'https://images.unsplash.com/photo-1552321554-5fefe8c9ef14?auto=format&fit=crop&w=1400&q=75'
 
+const serviceBySlug = Object.fromEntries(SERVICES.map(s => [s.slug, s]))
+
 const BLOG_POSTS = [
-  { slug: 'how-to-choose-a-tiler',             icon: '👷', color: '#1B3A6B', category: 'බඳවා ගැනීමේ ඉඟි',      title: 'ඔබේ ව්‍යාපෘතිය සඳහා නිවැරදි ටයිලර් කෙනෙකු තෝරා ගන්නේ කෙසේද'           },
-  { slug: 'bathroom-renovation-cost-sri-lanka', icon: '💰', color: '#0f766e', category: 'පිරිවැය මාර්ගෝ.',       title: 'ශ්‍රී ලංකාවේ නාන කාමර ප්‍රතිසංස්කරණ පිරිවැය (2025 මාර්ගෝපදේශ)'      },
-  { slug: 'waterproofing-bathroom-guide',       icon: '💧', color: '#0369a1', category: 'ක්‍රමෝපාය',           title: 'ජලනිරෝධය වඩාත්ම වැදගත් පියවර වන්නේ ඇයි'             },
-  { slug: 'large-format-tiles-guide',           icon: '📏', color: '#b45309', category: 'ටයිල් මාර්ගෝ.',       title: 'විශාල ෆෝමැට් ටයිල්: වාසි, අවාසි සහ ස්ථාපන ඉඟි'       },
+  { slug: 'how-to-choose-a-tiler',             icon: '👷', color: '#1B3A6B', category: 'Hiring Tips',          titleEn: 'How to Choose the Right Tiler for Your Project',                      titleSi: 'ඔබේ ව්‍යාපෘතිය සඳහා නිවැරදි ටයිලර් කෙනෙකු තෝරා ගන්නේ කෙසේද' },
+  { slug: 'bathroom-renovation-cost-sri-lanka', icon: '💰', color: '#0f766e', category: 'Cost Guide',           titleEn: 'Bathroom Renovation Cost in Sri Lanka (2025 Guide)',                    titleSi: 'ශ්‍රී ලංකාවේ නාන කාමර ප්‍රතිසංස්කරණ පිරිවැය (2025 මාර්ගෝපදේශ)' },
+  { slug: 'waterproofing-bathroom-guide',       icon: '💧', color: '#0369a1', category: 'How-to Guide',         titleEn: 'Why Waterproofing Is the Most Important Step',                         titleSi: 'ජලනිරෝධය වඩාත්ම වැදගත් පියවර වන්නේ ඇයි' },
+  { slug: 'large-format-tiles-guide',           icon: '📏', color: '#b45309', category: 'Tile Guide',           titleEn: 'Large Format Tiles: Pros, Cons & Installation Tips',                   titleSi: 'විශාල ෆෝමැට් ටයිල්: වාසි, අවාසි සහ ස්ථාපන ඉඟි' },
 ]
-
-const [{ data: featuredTilersRaw }, { data: featuredShopsRaw }, { data: recentProjectsRaw }] = await Promise.all([
-  supabase
-    .from('providers')
-    .select('id,name,city,district,verification_status,slug,avg_rating,profile_image,description,whatsapp,phone,gallery,cover_image,experience_years,daily_rate_min,review_count,provider_type')
-    .eq('status', 'active')
-    .in('provider_type', ['tiler','electrician','plumber','carpenter','painter','mason','contractor','interior_designer'])
-    .not('slug', 'is', null)
-    .gt('avg_rating', 0)
-    .order('avg_rating', { ascending: false })
-    .order('review_count', { ascending: false })
-    .limit(5),
-  supabase
-    .from('providers')
-    .select('id,name,city,district,slug,provider_type,verification_status,profile_image,cover_image,description,whatsapp,phone,avg_rating,is_featured,services')
-    .eq('status', 'active')
-    .in('provider_type', ['tile_shop', 'supplier', 'workshop', 'brand_dealer', 'bathroom_shop', 'tool_supplier', 'construction_company'])
-    .not('slug', 'is', null)
-    .order('is_featured', { ascending: false })
-    .limit(6),
-  supabase
-    .from('projects')
-    .select('id,project_type,city,district,description,budget_range,created_at')
-    .eq('status', 'active')
-    .order('created_at', { ascending: false })
-    .limit(3),
-])
-
-const tilers = featuredTilersRaw || []
-const homeShops = featuredShopsRaw || []
-const recentProjects = recentProjectsRaw || []
 
 const PROJECT_TYPE_ICONS: Record<string,string> = {
   'Floor Tiling':'🪨','Bathroom Tiling':'🚿','Bathroom Renovation':'🛁',
@@ -53,114 +25,175 @@ const PROJECT_TYPE_COLORS: Record<string,string> = {
   'Granite Works':'#7c3aed','Tile Cutting':'#b45309','Routering':'#b45309',
   'Waterproofing':'#0369a1','Tile Shop Inquiry':'#E05A2B',
 }
+
+const { data: recentProjectsRaw } = await supabase
+  .from('projects')
+  .select('id,project_type,city,district,description,budget_range,created_at')
+  .eq('status', 'active')
+  .order('created_at', { ascending: false })
+  .limit(3)
+
+const recentProjects = recentProjectsRaw || []
+
 function projectTimeAgo(ts: string) {
   const diff = Math.floor((Date.now() - new Date(ts).getTime()) / 1000)
-  if (diff < 60)     return 'දැන්ම'
-  if (diff < 3600)   return `${Math.floor(diff / 60)}මිනි`
-  if (diff < 86400)  return `${Math.floor(diff / 3600)}පැය`
-  if (diff < 604800) return `${Math.floor(diff / 86400)}දින`
-  return new Date(ts).toLocaleDateString('si-LK', { day:'numeric', month:'short' })
+  if (diff < 60)     return 'just now'
+  if (diff < 3600)   return `${Math.floor(diff / 60)}m`
+  if (diff < 86400)  return `${Math.floor(diff / 3600)}h`
+  if (diff < 604800) return `${Math.floor(diff / 86400)}d`
+  return new Date(ts).toLocaleDateString('en-LK', { day:'numeric', month:'short' })
 }
 
-function providerTypeLabel(type: string) {
-  const map: Record<string,string> = {
-    tiler: 'ටයිලර්', contractor: 'කොන්ත්‍රාත්කරු', electrician: 'විදුලි ශිල්පී',
-    plumber: 'ජලනල කාර්මික', carpenter: 'ලී ශිල්පී', painter: 'පින්තාරු ශිල්පී',
-    mason: 'ගල් ශිල්පී', construction_company: 'ඉදිකිරීම් සමාගම',
-    interior_designer: 'අභ්‍යන්තර සැලසුම්කරු',
-    tile_shop: 'ටයිල් සාප්පුව', supplier: 'සැපයුම්කරු', workshop: 'වැඩමුළු',
-    brand_dealer: 'බ්‍රෑන්ඩ් නියෝජිතයා', bathroom_shop: 'නාන කාමර සාප්පු',
-    tool_supplier: 'මෙවලම් සැපයුම්කරු',
-  }
-  return map[type] || type?.replace(/_/g,' ').replace(/\b\w/g,c=>c.toUpperCase()) || 'සේවා සපයන්නා'
-}
-
-function shopTaglineHome(type: string, services: string[]) {
-  const s = (services||[]).join(' ').toLowerCase()
-  const hasTile = ['tile','floor','wall','mosaic','porcelain','ceramic','granite','marble'].some(k => s.includes(k))
-  const hasBath = ['bathroom','sanitary','bathware','faucet','vanity','shower','basin','toilet'].some(k => s.includes(k))
-  if (hasTile && hasBath) return 'ටයිල් සහ නාන කාමර'
-  if (type === 'bathroom_shop') return hasTile ? 'ටයිල් සහ නාන කාමර' : 'නාන කාමර විශේෂඥ'
-  if (type === 'brand_dealer') return 'අනුමත ආසන්නය'
-  return hasBath ? 'ටයිල් සහ නාන කාමර' : 'ටයිල් ප්‍රදර්ශනාගාරය'
-}
-
-function initials(name: string) {
-  return name.split(' ').slice(0,2).map((w:string) => w[0]||'').join('').toUpperCase() || '?'
-}
-const AVATAR_COLORS = ['#1B3A6B','#0f766e','#7c3aed','#b45309','#0369a1','#E05A2B','#15803d','#be185d']
-function avatarColor(name: string) {
-  let h = 0; for (const c of name) h = (h*31+c.charCodeAt(0))>>>0
-  return AVATAR_COLORS[h % AVATAR_COLORS.length]
-}
-function verBadge(vs: string) {
-  if (vs === 'th_master')         return { label: 'TH ප්‍රධාන',     bg: '#92400e', color: '#fef3c7' }
-  if (vs === 'th_certified_pro')  return { label: 'සහතිකලත් ප්‍රවීණ', bg: '#1B3A6B', color: '#bfdbfe' }
-  if (vs === 'th_verified' || vs === 'verified') return { label: 'සත්‍යාපිත', bg: 'rgba(22,163,74,0.9)', color: '#fff' }
-  return null
-}
+const WHY_ITEMS = [
+  { icon: '✅', en: 'Verified Providers', si: 'සත්‍යාපිත ශිල්පීන්', descEn: 'All professionals are reviewed before listing', descSi: 'සියලු ශිල්පීන් ලැයිස්තු කිරීමට පෙර සමාලෝචනය කෙරේ' },
+  { icon: '📊', en: 'Compare Quotations', si: 'ලංසු සංසන්දනය',    descEn: 'Receive multiple quotes and choose the best', descSi: 'ලංසු කිහිපයක් ලබා ගෙන හොඳම එක තෝරා ගන්න' },
+  { icon: '⭐', en: 'Reviews & Ratings',  si: 'සමාලෝචන',          descEn: 'Real reviews from verified customers',      descSi: 'සත්‍යාපිත ගනුදෙනුකරුවන්ගේ ඇත්ත සමාලෝචන' },
+  { icon: '🗺️', en: 'Islandwide Service', si: 'දිවයිනපුරා',        descEn: 'Covering all 25 districts across Sri Lanka', descSi: 'ශ්‍රී ලංකාවේ සියලු දිස්ත්‍රික්ක 25 ආවරණය' },
+]
 ---
 
 <Layout
-  title="TilersHub · Sri Lanka's Tile & Bathroom Marketplace"
-  description="Post your tiling project free, get bids from verified tilers and contractors across Sri Lanka."
+  title="TilersHub · Sri Lanka's Home Improvement Marketplace"
+  description="Post your home project free and get quotes from verified tilers, contractors and specialists across Sri Lanka."
 >
   <meta slot="head" name="keywords" content="tilers Sri Lanka, tiling services, bathroom renovation, floor tiling, tile contractor Colombo, tile shop Sri Lanka, waterproofing Sri Lanka, TilersHub" />
   <script slot="head" type="application/ld+json" set:html={JSON.stringify({
     '@context': 'https://schema.org',
     '@type': 'WebPage',
-    name: "TilersHub · Sri Lanka's Tile & Bathroom Marketplace",
-    description: 'Post your tiling project free, get bids from verified tilers and contractors across Sri Lanka.',
+    name: "TilersHub · Sri Lanka's Home Improvement Marketplace",
+    description: 'Post your home project free and get quotes from verified specialists across Sri Lanka.',
     url: 'https://www.tilershub.lk',
     isPartOf: { '@id': 'https://www.tilershub.lk/#website' },
-    about: { '@type': 'Thing', name: 'Tiling and bathroom renovation services in Sri Lanka' },
+    about: { '@type': 'Thing', name: 'Tiling and home improvement services in Sri Lanka' },
   })} />
   <link slot="head" rel="preload" as="image" href={HERO_IMG} fetchpriority="high" />
 
   <!-- ══ HERO ══ -->
-  <!-- Static guest hero — renders immediately for LCP; HomeHero hides it when a provider is logged in -->
   <div id="guest-hero-static" style="position:relative;min-height:320px;display:flex;align-items:center;justify-content:center;overflow:hidden;padding:44px 20px 40px;background:#0a121f;">
     <img src={HERO_IMG} alt="" width="1400" height="800"
       style="position:absolute;inset:0;width:100%;height:100%;object-fit:cover;object-position:center 30%;opacity:0.32;"
       loading="eager" fetchpriority="high" decoding="sync" />
     <div style="position:absolute;inset:0;background:linear-gradient(175deg,rgba(8,15,28,0.72) 0%,rgba(20,35,65,0.68) 100%);pointer-events:none;"></div>
-    <div style="position:relative;text-align:center;max-width:520px;width:100%;">
-      <h1 style="font-family:'Playfair Display',serif;font-size:clamp(26px,5.5vw,42px);font-weight:700;color:#fff;line-height:1.15;margin-bottom:10px;">
-        ඔබේ ව්‍යාපෘතිය පලකරන්න,<br /><span style="color:#F59E0B;">නොමිලේ ලංසු ලබා ගන්න.</span>
+    <div style="position:relative;text-align:center;max-width:560px;width:100%;">
+      <h1 style="font-family:'Playfair Display',serif;font-size:clamp(24px,5vw,40px);font-weight:700;color:#fff;line-height:1.15;margin-bottom:10px;">
+        <span class="en-text">Find the Right Professional for Your Home</span>
+        <span class="si-text">ඔබේ නිවස සඳහා නිවැරදි ශිල්පියා සොයන්න</span>
       </h1>
       <p style="font-size:13px;color:rgba(255,255,255,0.62);margin-bottom:22px;line-height:1.7;">
-        ලොගිනය අවශ්‍ය නැත · සත්‍යාපිත ප්‍රවීණයන් පැය 24 ක් ඇතුළත ලංසු දෙති
+        <span class="en-text">Post your project free and get quotes from verified specialists</span>
+        <span class="si-text">ව්‍යාපෘතිය නොමිලේ පළ කර සත්‍යාපිත ශිල්පීන්ගේ ලංසු ලබා ගන්න</span>
       </p>
-      <a href="/post-project" style="display:flex;align-items:center;justify-content:center;gap:8px;background:#E05A2B;color:#fff;border-radius:24px;padding:14px 28px;font-size:15px;font-weight:800;text-decoration:none;box-shadow:0 4px 20px rgba(224,90,43,0.45);margin-bottom:14px;">
-        📋 නොමිලේ ව්‍යාපෘතිය පලකරන්න
-      </a>
-      <div style="margin-bottom:14px;">
-        <a href="/providers" style="font-size:12px;color:rgba(255,255,255,0.45);text-decoration:none;font-weight:600;">හෝ සේවා සපයන්නන් බලන්න →</a>
+      <!-- Search bar -->
+      <form id="hero-search" style="display:flex;gap:8px;margin-bottom:16px;max-width:480px;margin-left:auto;margin-right:auto;">
+        <input id="hero-q" type="search"
+          style="flex:1;padding:13px 16px;border-radius:24px;border:none;font-size:14px;outline:none;color:#0f172a;"
+          aria-label="Search services" />
+        <button type="submit"
+          style="flex-shrink:0;background:#E05A2B;color:#fff;border:none;border-radius:24px;padding:13px 22px;font-size:14px;font-weight:700;cursor:pointer;white-space:nowrap;">
+          <span class="en-text">Search</span>
+          <span class="si-text">සොයන්න</span>
+        </button>
+      </form>
+      <div>
+        <a href="/post-project" style="display:inline-flex;align-items:center;gap:8px;background:#E05A2B;color:#fff;border-radius:24px;padding:13px 26px;font-size:14px;font-weight:800;text-decoration:none;box-shadow:0 4px 20px rgba(224,90,43,0.45);margin-bottom:14px;">
+          📋
+          <span class="en-text">Post Your Project Free</span>
+          <span class="si-text">ව්‍යාපෘතිය නොමිලේ පලකරන්න</span>
+        </a>
       </div>
       <div style="display:flex;gap:8px;justify-content:center;flex-wrap:wrap;">
-        <span style="background:rgba(255,255,255,0.1);color:rgba(255,255,255,0.78);border-radius:20px;padding:5px 13px;font-size:11px;font-weight:600;border:1px solid rgba(255,255,255,0.15);">✓ පලකිරීම නොමිලේ</span>
-        <span style="background:rgba(255,255,255,0.1);color:rgba(255,255,255,0.78);border-radius:20px;padding:5px 13px;font-size:11px;font-weight:600;border:1px solid rgba(255,255,255,0.15);">✓ බහු ලංසු</span>
-        <span style="background:rgba(255,255,255,0.1);color:rgba(255,255,255,0.78);border-radius:20px;padding:5px 13px;font-size:11px;font-weight:600;border:1px solid rgba(255,255,255,0.15);">✓ බැඳීමක් නැත</span>
+        <span style="background:rgba(255,255,255,0.1);color:rgba(255,255,255,0.78);border-radius:20px;padding:5px 13px;font-size:11px;font-weight:600;border:1px solid rgba(255,255,255,0.15);">
+          <span class="en-text">✓ Free to post</span>
+          <span class="si-text">✓ නොමිලේ</span>
+        </span>
+        <span style="background:rgba(255,255,255,0.1);color:rgba(255,255,255,0.78);border-radius:20px;padding:5px 13px;font-size:11px;font-weight:600;border:1px solid rgba(255,255,255,0.15);">
+          <span class="en-text">✓ Multiple quotes</span>
+          <span class="si-text">✓ බහු ලංසු</span>
+        </span>
+        <span style="background:rgba(255,255,255,0.1);color:rgba(255,255,255,0.78);border-radius:20px;padding:5px 13px;font-size:11px;font-weight:600;border:1px solid rgba(255,255,255,0.15);">
+          <span class="en-text">✓ No commitment</span>
+          <span class="si-text">✓ බැඳීමක් නැත</span>
+        </span>
       </div>
     </div>
   </div>
-  <!-- Provider dashboard — replaces static hero if user is a logged-in provider -->
+  <!-- Provider-specific hero — replaces static hero if logged-in provider -->
   <HomeHero client:load heroImg={HERO_IMG} />
+
+  <!-- ══ SERVICE GROUPS ══ -->
+  <section style="background:#fff;padding:20px 0 8px;border-bottom:1px solid #f1f5f9;">
+    <div style="padding:0 16px 10px;">
+      <h2 style="font-size:16px;font-weight:700;color:#111827;margin:0 0 2px;">
+        <span class="en-text">Browse by Service</span>
+        <span class="si-text">සේවාවෙන් සොයන්න</span>
+      </h2>
+    </div>
+
+    {HOME_GROUPS.map(group => {
+      const groupServices = group.services.map(slug => serviceBySlug[slug]).filter(Boolean)
+      return (
+        <div style="margin-bottom:20px;">
+          <!-- Group header -->
+          <div style="display:flex;align-items:center;justify-content:space-between;padding:0 16px 8px;">
+            <div style="display:flex;align-items:center;gap:7px;">
+              <span style="font-size:16px;">{group.icon}</span>
+              <span style="font-size:14px;font-weight:700;color:#111827;">
+                <span class="en-text">{group.label}</span>
+                <span class="si-text">{group.labelSi}</span>
+              </span>
+            </div>
+            <a href={group.viewAllHref} style="font-size:12px;font-weight:600;color:#E05A2B;text-decoration:none;">
+              <span class="en-text">View all ›</span>
+              <span class="si-text">සියල්ල ›</span>
+            </a>
+          </div>
+          <!-- Scrollable service cards -->
+          <div style="display:flex;gap:8px;overflow-x:auto;padding:0 16px 4px;scrollbar-width:none;-webkit-overflow-scrolling:touch;">
+            {groupServices.map(svc => (
+              <a href={`/services/${svc.slug}`}
+                style="flex-shrink:0;display:flex;flex-direction:column;align-items:center;gap:6px;width:86px;padding:12px 6px 10px;background:#f8fafc;border-radius:14px;border:1px solid #e2e8f0;text-decoration:none;color:#0f172a;transition:border-color 0.15s;">
+                <span style="font-size:26px;line-height:1;">{svc.icon}</span>
+                <span style="font-size:10px;font-weight:600;text-align:center;line-height:1.3;color:#374151;">{svc.label}</span>
+              </a>
+            ))}
+          </div>
+        </div>
+      )
+    })}
+  </section>
 
   <!-- ══ HOW IT WORKS ══ -->
   <section style="background:linear-gradient(135deg,#0F1E35,#1A2B4A);padding:28px 16px 24px;">
     <div style="max-width:480px;margin:0 auto;">
-      <p style="font-size:9px;font-weight:700;color:rgba(255,255,255,0.4);letter-spacing:3px;text-transform:uppercase;text-align:center;margin:0 0 18px;">ක්‍රියාකාරී ආකාරය</p>
+      <p style="font-size:9px;font-weight:700;color:rgba(255,255,255,0.4);letter-spacing:3px;text-transform:uppercase;text-align:center;margin:0 0 18px;">
+        <span class="en-text">HOW IT WORKS</span>
+        <span class="si-text">ක්‍රියාකාරී ආකාරය</span>
+      </p>
       {[
-        { n:'1', icon:'📋', title:'ව්‍යාපෘතිය පලකරන්න',  desc:'නොමිලේ — ලොගිනය අවශ්‍ය නැත. මිනිත්තු 2 ක් ගනී.',      c:'#E05A2B' },
-        { n:'2', icon:'💬', title:'ලංසු ලැබේ',      desc:'සත්‍යාපිත ටයිලර්වරු WhatsApp ට ලංසු යවති.', c:'#D4AF37' },
-        { n:'3', icon:'✅', title:'ඔබ තෝරා ගන්න',         desc:'සසඳන්න, කෙළින්ම කතා කරන්න, හොඳම අය තෝරන්න.',        c:'#25D366' },
+        { n:'1', icon:'📋',
+          titleEn:'Post Your Project', titleSi:'ව්‍යාපෘතිය පලකරන්න',
+          descEn:'Free — no login needed. Takes 2 minutes.', descSi:'නොමිලේ — ලොගිනය අවශ්‍ය නැත. මිනිත්තු 2 ක් ගනී.',
+          c:'#E05A2B' },
+        { n:'2', icon:'💬',
+          titleEn:'Receive Quotes',    titleSi:'ලංසු ලැබේ',
+          descEn:'Verified specialists send quotes via WhatsApp.', descSi:'සත්‍යාපිත ශිල්පීවරු WhatsApp ට ලංසු යවති.',
+          c:'#D4AF37' },
+        { n:'3', icon:'✅',
+          titleEn:'Choose the Best',   titleSi:'ඔබ තෝරා ගන්න',
+          descEn:'Compare, chat directly, hire the best fit.', descSi:'සසඳන්න, කෙළින්ම කතා කරන්න, හොඳම අය තෝරන්න.',
+          c:'#25D366' },
       ].map((s, i) => (
         <div style={`display:flex;align-items:flex-start;gap:16px;padding:13px 0;${i<2?'border-bottom:1px solid rgba(255,255,255,0.07);':''}`}>
           <div style={`width:38px;height:38px;border-radius:50%;background:${s.c};display:flex;align-items:center;justify-content:center;font-size:14px;font-weight:800;color:#fff;flex-shrink:0;`}>{s.n}</div>
           <div style="padding-top:2px;">
-            <div style="font-size:14px;font-weight:700;color:#fff;margin-bottom:2px;">{s.title}</div>
-            <div style="font-size:12px;color:rgba(255,255,255,0.45);line-height:1.6;">{s.desc}</div>
+            <div style="font-size:14px;font-weight:700;color:#fff;margin-bottom:2px;">
+              <span class="en-text">{s.titleEn}</span>
+              <span class="si-text">{s.titleSi}</span>
+            </div>
+            <div style="font-size:12px;color:rgba(255,255,255,0.45);line-height:1.6;">
+              <span class="en-text">{s.descEn}</span>
+              <span class="si-text">{s.descSi}</span>
+            </div>
           </div>
         </div>
       ))}
@@ -170,13 +203,26 @@ function verBadge(vs: string) {
   <!-- ══ RECENT PROJECTS ══ -->
   <section style="background:#fff;padding:22px 0 24px;border-bottom:1px solid #f1f5f9;">
     <div style="padding:0 16px 14px;display:flex;align-items:center;justify-content:space-between;">
-      <span style="font-size:15px;font-weight:700;color:#111827;">මෑත ව්‍යාපෘති</span>
-      <a href="/jobs" style="font-size:12px;font-weight:600;color:#E05A2B;text-decoration:none;">සියල්ල ›</a>
+      <span style="font-size:15px;font-weight:700;color:#111827;">
+        <span class="en-text">Recent Projects</span>
+        <span class="si-text">මෑත ව්‍යාපෘති</span>
+      </span>
+      <a href="/jobs" style="font-size:12px;font-weight:600;color:#E05A2B;text-decoration:none;">
+        <span class="en-text">View all ›</span>
+        <span class="si-text">සියල්ල ›</span>
+      </a>
     </div>
     <div style="display:flex;flex-direction:column;gap:10px;padding:0 16px;">
       {recentProjects.length === 0
         ? (
-          <div style="padding:20px 0;font-size:13px;color:#94a3b8;text-align:center;">දැනට ව්‍යාපෘති නොමැත — <a href="/post-project" style="color:#E05A2B;font-weight:600;text-decoration:none;">නොමිලේ පලකරන්න →</a></div>
+          <div style="padding:20px 0;font-size:13px;color:#94a3b8;text-align:center;">
+            <span class="en-text">No projects yet — </span>
+            <span class="si-text">දැනට ව්‍යාපෘති නොමැත — </span>
+            <a href="/post-project" style="color:#E05A2B;font-weight:600;text-decoration:none;">
+              <span class="en-text">post yours free →</span>
+              <span class="si-text">නොමිලේ පලකරන්න →</span>
+            </a>
+          </div>
         )
         : recentProjects.map((p: any) => {
           const icon  = PROJECT_TYPE_ICONS[p.project_type]  || '🏠'
@@ -195,72 +241,14 @@ function verBadge(vs: string) {
                 {excerpt && <p style="font-size:12px;color:#64748b;margin:0 0 6px;line-height:1.5;overflow:hidden;white-space:nowrap;text-overflow:ellipsis;">{excerpt}</p>}
                 {p.budget_range && <span style="font-size:10px;padding:2px 8px;border-radius:20px;background:#f0fdf4;color:#15803d;font-weight:600;border:1px solid #bbf7d0;">💰 {p.budget_range}</span>}
               </div>
-              <div style={`flex-shrink:0;background:${color};color:#fff;border-radius:10px;padding:9px 16px;font-size:12px;font-weight:700;white-space:nowrap;`}>ලංසු →</div>
+              <div style={`flex-shrink:0;background:${color};color:#fff;border-radius:10px;padding:9px 16px;font-size:12px;font-weight:700;white-space:nowrap;`}>
+                <span class="en-text">Bid →</span>
+                <span class="si-text">ලංසු →</span>
+              </div>
             </a>
           )
         })
       }
-    </div>
-  </section>
-
-  <!-- ══ TOP PROVIDERS (Professionals & Contractors only) ══ -->
-  <section style="background:#f8fafc;padding:16px 0 20px;">
-    <div style="padding:0 16px 12px;display:flex;align-items:center;justify-content:space-between;">
-      <span style="font-size:15px;font-weight:700;color:#111827;">⭐ ඉහළ ශ්‍රේණිගත වෘත්තිකයෝ</span>
-      <a href="/providers?type=tiler" style="font-size:12px;font-weight:600;color:#E05A2B;text-decoration:none;">සියල්ල ›</a>
-    </div>
-
-    <div style="display:flex;flex-direction:column;gap:12px;padding:0 16px;">
-
-      {tilers.length === 0 && (
-        <div style="padding:20px 0;font-size:13px;color:#94a3b8;">
-          සත්‍යාපිත වෘත්තිකයන් නොමැත —{' '}
-          <a href="/join-tilershub" style="color:#E05A2B;font-weight:600;text-decoration:none;">TilersHub ට එකතු වන්න →</a>
-        </div>
-      )}
-
-      <!-- Verified tiler cards -->
-      {tilers.slice(0,2).map((t: any) => {
-        const color = avatarColor(t.name || 'T')
-        const coverSrc = t.cover_image || (t.gallery || [])[0] || t.profile_image
-        const isVerified = t.verification_status && t.verification_status !== 'listed'
-        return (
-          <a href={t.slug ? `/providers/${t.slug}` : '/providers'}
-            style="display:block;background:#fff;border-radius:16px;overflow:hidden;border:1px solid #e8edf5;text-decoration:none;color:inherit;box-shadow:0 2px 12px rgba(0,0,0,0.07);">
-            <div style="height:180px;position:relative;overflow:hidden;">
-              {coverSrc
-                ? <img src={coverSrc} alt={t.name} style="width:100%;height:100%;object-fit:cover;" loading="lazy" />
-                : <div style={`width:100%;height:100%;background:${color};background-image:repeating-linear-gradient(0deg,transparent,transparent 19px,rgba(255,255,255,0.08) 19px,rgba(255,255,255,0.08) 20px),repeating-linear-gradient(90deg,transparent,transparent 19px,rgba(255,255,255,0.08) 19px,rgba(255,255,255,0.08) 20px);display:flex;align-items:center;justify-content:center;`}>
-                    <span style="font-size:52px;font-weight:800;color:rgba(255,255,255,0.75);">{initials(t.name || 'T')}</span>
-                  </div>
-              }
-              <div style="position:absolute;inset:0;background:linear-gradient(to bottom,rgba(0,0,0,0.01) 55%,rgba(0,0,0,0.15) 100%);"></div>
-              {isVerified && <div style="position:absolute;top:10px;right:10px;background:rgba(22,163,74,0.9);color:#fff;font-size:11px;font-weight:700;padding:4px 12px;border-radius:20px;display:flex;align-items:center;gap:4px;backdrop-filter:blur(4px);">✓ සත්‍යාපිත</div>}
-            </div>
-            <div style="padding:16px;">
-              <div style="display:flex;align-items:flex-start;justify-content:space-between;gap:8px;margin-bottom:6px;">
-                <div style="min-width:0;">
-                  <div style="font-size:9px;font-weight:700;color:#94a3b8;letter-spacing:1px;text-transform:uppercase;margin-bottom:3px;">{providerTypeLabel(t.provider_type)}</div>
-                  <div style="font-size:17px;font-weight:700;color:#0f172a;line-height:1.2;overflow:hidden;white-space:nowrap;text-overflow:ellipsis;">{t.name}</div>
-                </div>
-                {t.avg_rating > 0 && (
-                  <div style="text-align:right;flex-shrink:0;">
-                    <div style="font-size:10px;color:#94a3b8;margin-bottom:1px;">ශ්‍රේණිය</div>
-                    <div style="font-size:20px;font-weight:800;color:#0f172a;line-height:1;">⭐ {Number(t.avg_rating).toFixed(1)}</div>
-                  </div>
-                )}
-              </div>
-              {t.description && <p style="font-size:13px;color:#64748b;line-height:1.6;margin:0 0 14px;display:-webkit-box;-webkit-line-clamp:2;-webkit-box-orient:vertical;overflow:hidden;">{t.description}</p>}
-              <div style="display:flex;align-items:center;gap:10px;border-top:1px solid #f1f5f9;padding-top:12px;flex-wrap:wrap;">
-                {t.experience_years > 0 && <span style="font-size:12px;color:#475569;display:flex;align-items:center;gap:4px;">🔧 {t.experience_years} වසර</span>}
-                {(t.city || t.district) && <span style="font-size:12px;color:#64748b;display:flex;align-items:center;gap:3px;">📍 {t.city || t.district}</span>}
-                <span style="margin-left:auto;background:#1B3A6B;color:#fff;border-radius:10px;padding:8px 18px;font-size:13px;font-weight:700;white-space:nowrap;">පැතිකඩ ›</span>
-              </div>
-            </div>
-          </a>
-        )
-      })}
-
     </div>
   </section>
 
@@ -271,72 +259,59 @@ function verBadge(vs: string) {
       <div style="display:flex;align-items:center;gap:14px;">
         <div style="font-size:28px;flex-shrink:0;">📐</div>
         <div>
-          <div style="font-size:14px;font-weight:800;color:#fff;margin-bottom:2px;">ඔබේ ව්‍යාපෘති පිරිවැය ගණනය කරන්න</div>
-          <div style="font-size:11px;color:rgba(255,255,255,0.55);">ටයිල් ප්‍රමාණය · කම්කරු · ද්‍රව්‍ය — නොමිලේ</div>
+          <div style="font-size:14px;font-weight:800;color:#fff;margin-bottom:2px;">
+            <span class="en-text">Calculate Your Project Cost</span>
+            <span class="si-text">ඔබේ ව්‍යාපෘති පිරිවැය ගණනය කරන්න</span>
+          </div>
+          <div style="font-size:11px;color:rgba(255,255,255,0.55);">
+            <span class="en-text">Tiles · Labour · Materials — Free</span>
+            <span class="si-text">ටයිල් ප්‍රමාණය · කම්කරු · ද්‍රව්‍ය — නොමිලේ</span>
+          </div>
         </div>
       </div>
       <div style="background:#fff;color:#1B3A6B;border-radius:12px;padding:9px 16px;font-size:12px;font-weight:800;white-space:nowrap;flex-shrink:0;">
-        නොමිලේ ›
+        <span class="en-text">Free ›</span>
+        <span class="si-text">නොමිලේ ›</span>
       </div>
     </a>
   </div>
 
-  <!-- ══ TOP SUPPLIERS & TILE SHOPS ══ -->
-  <section style="background:#f8fafc;padding:16px 0 20px;border-top:1px solid #f1f5f9;">
-    <div style="padding:0 16px 12px;display:flex;align-items:center;justify-content:space-between;">
-      <span style="font-size:15px;font-weight:700;color:#111827;">🏪 ප්‍රමුඛ ටයිල් සාප්පු සහ සැපයුම්කරුවන්</span>
-      <a href="/providers?type=provider" style="font-size:12px;font-weight:600;color:#E05A2B;text-decoration:none;">සියල්ල ›</a>
-    </div>
-    <div style="display:flex;gap:12px;overflow-x:auto;padding:0 16px 8px;scrollbar-width:none;-webkit-overflow-scrolling:touch;">
-
-      {homeShops.length === 0
-        ? (
-          <div style="padding:20px 0;font-size:13px;color:#94a3b8;">සාප්පු නොමැත — <a href="/join-tilershub" style="color:#E05A2B;font-weight:600;text-decoration:none;">TilersHub ට එකතු වන්න →</a></div>
-        )
-        : homeShops.map((p: any) => {
-          const tagline = shopTaglineHome(p.provider_type, p.services||[])
-          const coverSrc = p.cover_image || p.profile_image
-          const badge = verBadge(p.verification_status)
-          const color = avatarColor(p.name||'S')
-          return (
-            <a href={p.slug ? `/providers/${p.slug}` : '/providers'}
-              style="flex-shrink:0;width:280px;display:flex;background:#fff;border-radius:18px;border:1px solid #e2e8f0;overflow:hidden;text-decoration:none;color:inherit;box-shadow:0 2px 10px rgba(0,0,0,0.05);min-height:140px;">
-              {/* Left image panel ~42% */}
-              <div style="width:110px;flex-shrink:0;position:relative;min-height:140px;overflow:hidden;">
-                {coverSrc
-                  ? <img src={coverSrc} alt={p.name} style="width:100%;height:100%;object-fit:cover;display:block;" loading="lazy" />
-                  : <div style={`width:100%;height:100%;background:${color};background-image:repeating-linear-gradient(0deg,transparent,transparent 19px,rgba(255,255,255,0.08) 19px,rgba(255,255,255,0.08) 20px),repeating-linear-gradient(90deg,transparent,transparent 19px,rgba(255,255,255,0.08) 19px,rgba(255,255,255,0.08) 20px);display:flex;align-items:center;justify-content:center;`}>
-                      <span style="font-size:26px;font-weight:800;color:rgba(255,255,255,0.7);">{initials(p.name||'S')}</span>
-                    </div>
-                }
-                <div style="position:absolute;inset:0;background:linear-gradient(to bottom,rgba(0,0,0,0.01) 50%,rgba(0,0,0,0.4) 100%);"></div>
-                {p.is_featured && <div style="position:absolute;top:6px;left:6px;background:#D4AF37;color:#fff;font-size:7px;font-weight:700;padding:2px 6px;border-radius:20px;white-space:nowrap;">⭐ Top</div>}
-                {!p.is_featured && badge && <div style={`position:absolute;top:6px;left:6px;background:${badge.bg};color:${badge.color};font-size:7px;font-weight:700;padding:2px 6px;border-radius:20px;white-space:nowrap;`}>✓</div>}
-                {(p.city||p.district) && <div style="position:absolute;bottom:5px;left:7px;font-size:9px;font-weight:600;color:#fff;text-shadow:0 1px 3px rgba(0,0,0,0.7);white-space:nowrap;overflow:hidden;text-overflow:ellipsis;max-width:calc(100% - 12px);">📍 {p.city||p.district}</div>}
-              </div>
-              {/* Right content */}
-              <div style="flex:1;padding:11px 13px;display:flex;flex-direction:column;min-width:0;">
-                <div style="font-size:8px;font-weight:700;color:#94a3b8;letter-spacing:1px;text-transform:uppercase;margin-bottom:3px;">{tagline}</div>
-                <div style="font-family:'Playfair Display',serif;font-size:13px;font-weight:700;color:#0f172a;line-height:1.2;margin-bottom:4px;overflow:hidden;text-overflow:ellipsis;white-space:nowrap;">{p.name}</div>
-                {p.avg_rating > 0 && <div style="font-size:10px;color:#f59e0b;margin-bottom:4px;">⭐ {Number(p.avg_rating).toFixed(1)}</div>}
-                {p.description && <div style="font-size:10px;color:#64748b;line-height:1.4;margin-bottom:6px;overflow:hidden;display:-webkit-box;-webkit-line-clamp:2;-webkit-box-orient:vertical;">{p.description}</div>}
-                <div style="margin-top:auto;">
-                  <span style="display:inline-flex;align-items:center;background:#0f172a;color:#fff;border-radius:8px;padding:5px 10px;font-size:9px;font-weight:700;white-space:nowrap;">සාප්පු ›</span>
-                </div>
-              </div>
-            </a>
-          )
-        })
-      }
-
+  <!-- ══ WHY TILERSHUB ══ -->
+  <section style="background:#f8fafc;padding:28px 16px 24px;border-top:1px solid #f1f5f9;">
+    <div style="max-width:560px;margin:0 auto;">
+      <h2 style="font-size:17px;font-weight:700;color:#0f172a;text-align:center;margin:0 0 20px;">
+        <span class="en-text">Why TilersHub?</span>
+        <span class="si-text">ඇයි TilersHub?</span>
+      </h2>
+      <div style="display:grid;grid-template-columns:1fr 1fr;gap:12px;">
+        {WHY_ITEMS.map(item => (
+          <div style="background:#fff;border-radius:14px;border:1px solid #e2e8f0;padding:16px 14px;">
+            <div style="font-size:24px;margin-bottom:8px;">{item.icon}</div>
+            <div style="font-size:13px;font-weight:700;color:#0f172a;margin-bottom:4px;line-height:1.3;">
+              <span class="en-text">{item.en}</span>
+              <span class="si-text">{item.si}</span>
+            </div>
+            <div style="font-size:11px;color:#64748b;line-height:1.5;">
+              <span class="en-text">{item.descEn}</span>
+              <span class="si-text">{item.descSi}</span>
+            </div>
+          </div>
+        ))}
+      </div>
     </div>
   </section>
 
   <!-- ══ BLOG / TIPS ══ -->
-  <section style="background:#f8fafc;padding:20px 0 24px;border-top:1px solid #f1f5f9;">
+  <section style="background:#fff;padding:20px 0 24px;border-top:1px solid #f1f5f9;">
     <div style="padding:0 16px 12px;display:flex;align-items:center;justify-content:space-between;">
-      <span style="font-size:15px;font-weight:700;color:#111827;">📰 ඉඟි සහ මාර්ගෝපදේශ</span>
-      <a href="/blog" style="font-size:12px;font-weight:600;color:#E05A2B;text-decoration:none;">සියල්ල ›</a>
+      <span style="font-size:15px;font-weight:700;color:#111827;">
+        <span class="en-text">📰 Tips & Guides</span>
+        <span class="si-text">📰 ඉඟි සහ මාර්ගෝපදේශ</span>
+      </span>
+      <a href="/blog" style="font-size:12px;font-weight:600;color:#E05A2B;text-decoration:none;">
+        <span class="en-text">View all ›</span>
+        <span class="si-text">සියල්ල ›</span>
+      </a>
     </div>
     <div style="display:flex;flex-direction:column;gap:8px;padding:0 16px;">
       {BLOG_POSTS.slice(0,2).map(post => (
@@ -345,38 +320,59 @@ function verBadge(vs: string) {
           <div style={`width:64px;height:64px;background:${post.color};flex-shrink:0;display:flex;align-items:center;justify-content:center;font-size:24px;`}>{post.icon}</div>
           <div style="flex:1;padding:11px 13px;min-width:0;">
             <span style="font-size:9px;font-weight:700;color:#E05A2B;background:#fff4f0;border:1px solid #fcd5c0;border-radius:20px;padding:1px 7px;">{post.category}</span>
-            <div style="font-size:12px;font-weight:700;color:#111827;line-height:1.4;margin-top:5px;overflow:hidden;display:-webkit-box;-webkit-line-clamp:2;-webkit-box-orient:vertical;">{post.title}</div>
+            <div style="font-size:12px;font-weight:700;color:#111827;line-height:1.4;margin-top:5px;overflow:hidden;display:-webkit-box;-webkit-line-clamp:2;-webkit-box-orient:vertical;">
+              <span class="en-text">{post.titleEn}</span>
+              <span class="si-text">{post.titleSi}</span>
+            </div>
           </div>
           <div style="padding:0 14px;font-size:18px;color:#cbd5e1;flex-shrink:0;">›</div>
         </a>
       ))}
-
-      <!-- Post project CTA card -->
-      <a href="/post-project"
-        style="display:flex;align-items:center;gap:16px;background:#E05A2B;border-radius:14px;padding:16px 20px;text-decoration:none;">
-        <div style="font-size:28px;flex-shrink:0;">🏠</div>
-        <div style="flex:1;">
-          <div style="font-size:13px;font-weight:800;color:#fff;margin-bottom:2px;">ව්‍යාපෘතිය ආරම්භ කිරීමට සූදානම්ද?</div>
-          <div style="font-size:11px;color:rgba(255,255,255,0.75);">නොමිලේ පලකරන්න — WhatsApp ලංසු ලබා ගන්න.</div>
-        </div>
-        <div style="font-size:13px;font-weight:800;color:#fff;flex-shrink:0;background:rgba(255,255,255,0.15);border-radius:10px;padding:8px 14px;">
-          පලකරන්න →
-        </div>
-      </a>
     </div>
   </section>
 
-  <!-- ══ JOIN CTA ══ -->
-  <section style="background:#fff;padding:28px 20px;border-top:1px solid #f1f5f9;">
+  <!-- ══ BOTTOM CTA ══ -->
+  <section style="background:linear-gradient(135deg,#0F1E35,#1A2B4A);padding:36px 20px;">
     <div style="max-width:480px;margin:0 auto;text-align:center;">
-      <div style="font-size:28px;margin-bottom:10px;">🔨</div>
-      <div style="font-size:9px;font-weight:700;color:#E05A2B;letter-spacing:2px;text-transform:uppercase;margin-bottom:6px;">වෘත්තිකයන් සඳහා</div>
-      <h2 style="font-family:'Playfair Display',serif;font-size:20px;font-weight:700;color:#0f172a;margin:0 0 10px;line-height:1.3;">ඔබ ටයිලර් කෙනෙකු හෝ කොන්ත්‍රාත්කරුවෙකු ද?</h2>
-      <p style="font-size:13px;color:#64748b;line-height:1.7;margin:0 0 20px;">නොමිලේ එකතු වන්න — නිවාස හිමිකරුවන් WhatsApp හරහා ඔබ සොයා කෙළින්ම අමතති. මැදිහත්කාරයන් නැත, කොමිෂන් නැත.</p>
-      <a href="/join-tilershub" style="display:inline-flex;align-items:center;gap:7px;background:#E05A2B;color:#fff;border-radius:14px;padding:13px 28px;font-size:13px;font-weight:800;text-decoration:none;">
-        ✅ නොමිලේ එකතු වන්න
-      </a>
+      <div style="font-size:32px;margin-bottom:12px;">🏠</div>
+      <h2 style="font-family:'Playfair Display',serif;font-size:20px;font-weight:700;color:#fff;margin:0 0 10px;line-height:1.3;">
+        <span class="en-text">Ready to start your project?</span>
+        <span class="si-text">ව්‍යාපෘතිය ආරම්භ කිරීමට සූදානම්ද?</span>
+      </h2>
+      <p style="font-size:13px;color:rgba(255,255,255,0.55);line-height:1.7;margin:0 0 22px;">
+        <span class="en-text">Post it free — receive quotes from verified professionals across Sri Lanka.</span>
+        <span class="si-text">නොමිලේ පලකරන්න — ශ්‍රී ලංකාව පුරා සත්‍යාපිත ශිල්පීන්ගේ ලංසු ලබා ගන්න.</span>
+      </p>
+      <div style="display:flex;gap:12px;justify-content:center;flex-wrap:wrap;">
+        <a href="/post-project" style="display:inline-flex;align-items:center;gap:8px;background:#E05A2B;color:#fff;border-radius:14px;padding:14px 28px;font-size:14px;font-weight:800;text-decoration:none;box-shadow:0 4px 20px rgba(224,90,43,0.35);">
+          📋
+          <span class="en-text">Post Your Project Free</span>
+          <span class="si-text">ව්‍යාපෘතිය නොමිලේ පලකරන්න</span>
+        </a>
+        <a href="/join-tilershub" style="display:inline-flex;align-items:center;gap:8px;background:rgba(255,255,255,0.1);color:#fff;border-radius:14px;padding:14px 22px;font-size:13px;font-weight:700;text-decoration:none;border:1px solid rgba(255,255,255,0.2);">
+          ✅
+          <span class="en-text">Join as Provider</span>
+          <span class="si-text">සේවා සපයන්නෙකු ලෙස එකතු වන්න</span>
+        </a>
+      </div>
     </div>
   </section>
 
+  <script>
+    const form = document.getElementById('hero-search')
+    const input = document.getElementById('hero-q') as HTMLInputElement
+    form?.addEventListener('submit', e => {
+      e.preventDefault()
+      const q = input?.value.trim()
+      if (q) window.location.href = `/providers?q=${encodeURIComponent(q)}`
+    })
+    // Update search placeholder based on language
+    function updatePlaceholder() {
+      if (!input) return
+      const lang = document.documentElement.getAttribute('data-lang') || 'en'
+      input.placeholder = lang === 'si' ? 'ඔබ සොයන සේවාව කුමක්ද?' : 'What service are you looking for?'
+    }
+    updatePlaceholder()
+    new MutationObserver(updatePlaceholder).observe(document.documentElement, { attributes: true, attributeFilter: ['data-lang'] })
+  </script>
 </Layout>

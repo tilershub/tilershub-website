@@ -1,6 +1,8 @@
 import { useState, useEffect, useCallback, useRef } from 'react'
 import { supabase, signInWithOtp, DISTRICTS_EN } from '../lib/supabase.js'
 import SocialHub from '../modules/social/SocialHub.jsx'
+import { SERVICES, HOME_GROUPS } from '../lib/services.js'
+import { CATEGORIES } from '../lib/categories.js'
 
 // ─── Design tokens ────────────────────────────────────────────────────────────
 const NAVY  = '#1B3A6B'
@@ -1162,6 +1164,178 @@ function BlogsTab() {
   )
 }
 
+// ─── Services tab ────────────────────────────────────────────────────────────
+function ServicesTab() {
+  return (
+    <div>
+      <h2 style={S.h2}>Services ({SERVICES.length})</h2>
+      <Table heads={['Icon', 'Label', 'Slug', 'Link']}>
+        {SERVICES.map(s => (
+          <tr key={s.slug}>
+            <td style={S.td}>{s.icon}</td>
+            <td style={S.td}>{s.label}</td>
+            <td style={{ ...S.td, fontFamily: 'monospace', fontSize: 11, color: '#64748b' }}>{s.slug}</td>
+            <td style={S.td}>
+              <a href={`/services/${s.slug}`} target="_blank" rel="noopener" style={{ color: TERRA, fontSize: 12, fontWeight: 600 }}>/services/{s.slug} ›</a>
+            </td>
+          </tr>
+        ))}
+      </Table>
+    </div>
+  )
+}
+
+// ─── Categories tab ──────────────────────────────────────────────────────────
+function CategoriesTab() {
+  return (
+    <div>
+      <h2 style={S.h2}>Categories ({CATEGORIES.length})</h2>
+      <Table heads={['Icon', 'Label', 'Slug', 'Description', 'Link']}>
+        {CATEGORIES.map(c => (
+          <tr key={c.slug}>
+            <td style={S.td}>{c.icon}</td>
+            <td style={S.td}>{c.label}</td>
+            <td style={{ ...S.td, fontFamily: 'monospace', fontSize: 11, color: '#64748b' }}>{c.slug}</td>
+            <td style={{ ...S.td, maxWidth: 200, overflow: 'hidden', textOverflow: 'ellipsis', whiteSpace: 'nowrap', color: '#64748b' }}>{c.description || '—'}</td>
+            <td style={S.td}>
+              <a href={`/categories/${c.slug}`} target="_blank" rel="noopener" style={{ color: TERRA, fontSize: 12, fontWeight: 600 }}>/categories/{c.slug} ›</a>
+            </td>
+          </tr>
+        ))}
+      </Table>
+    </div>
+  )
+}
+
+// ─── Users tab ───────────────────────────────────────────────────────────────
+function UsersTab() {
+  const [rows, setRows]     = useState([])
+  const [loading, setLoading] = useState(true)
+  const [loadError, setLoadError] = useState(null)
+  const [page, setPage]     = useState(0)
+  const [count, setCount]   = useState(0)
+  const PER = 25
+
+  const load = useCallback(async () => {
+    setLoading(true)
+    setLoadError(null)
+    const { data, error, count: c } = await supabase
+      .from('providers')
+      .select('id,name,provider_type,status,whatsapp,created_at,user_id', { count: 'exact' })
+      .not('user_id', 'is', null)
+      .order('created_at', { ascending: false })
+      .range(page * PER, page * PER + PER - 1)
+    if (error) {
+      setLoadError(error.message)
+    } else {
+      setRows(data || [])
+      setCount(c || 0)
+    }
+    setLoading(false)
+  }, [page])
+
+  useEffect(() => { load() }, [load])
+
+  return (
+    <div>
+      <h2 style={S.h2}>Provider-linked Users ({count})</h2>
+      {loadError && <p style={{ color: '#dc2626', fontSize: 13, marginBottom: 12 }}>Error: {loadError}</p>}
+      {loading ? <p style={{ color: '#94a3b8' }}>Loading…</p> : (
+        <>
+          <Table
+            heads={['Name', 'Type', 'Status', 'WhatsApp', 'Joined']}
+            empty={rows.length === 0 ? 'No provider-linked users found' : undefined}
+          >
+            {rows.map(r => (
+              <tr key={r.id}>
+                <td style={S.td}>{r.name}</td>
+                <td style={S.td}><StatusBadge status={r.provider_type} /></td>
+                <td style={S.td}><StatusBadge status={r.status} /></td>
+                <td style={{ ...S.td, fontFamily: 'monospace', fontSize: 11 }}>{r.whatsapp || '—'}</td>
+                <td style={{ ...S.td, color: '#94a3b8' }}>{timeAgo(r.created_at)}</td>
+              </tr>
+            ))}
+          </Table>
+          <Pagination page={page} setPage={setPage} count={count} perPage={PER} />
+        </>
+      )}
+    </div>
+  )
+}
+
+// ─── Analytics tab ───────────────────────────────────────────────────────────
+function AnalyticsTab() {
+  const [stats, setStats] = useState(null)
+  const [typeBreakdown, setTypeBreakdown] = useState([])
+
+  useEffect(() => {
+    Promise.all([
+      supabase.from('providers').select('id', { count: 'exact', head: true }).eq('status', 'active'),
+      supabase.from('projects').select('id', { count: 'exact', head: true }),
+      supabase.from('bids').select('id', { count: 'exact', head: true }),
+      supabase.from('provider_submissions').select('id', { count: 'exact', head: true }).eq('status', 'pending_review'),
+      supabase.from('providers').select('provider_type').eq('status', 'active'),
+    ]).then(([activeP, totalProj, totalBids, pendingSubs, types]) => {
+      setStats({
+        activeProviders: activeP.count ?? 0,
+        totalProjects:   totalProj.count ?? 0,
+        totalBids:       totalBids.count ?? 0,
+        pendingReview:   pendingSubs.count ?? 0,
+      })
+      const counts = {}
+      for (const row of (types.data || [])) {
+        const t = row.provider_type || 'unknown'
+        counts[t] = (counts[t] || 0) + 1
+      }
+      setTypeBreakdown(Object.entries(counts).sort((a, b) => b[1] - a[1]))
+    })
+  }, [])
+
+  const cards = stats ? [
+    { label: 'Active Providers', value: stats.activeProviders, emoji: '👷', color: NAVY },
+    { label: 'Total Projects',   value: stats.totalProjects,   emoji: '📋', color: '#16a34a' },
+    { label: 'Total Bids',       value: stats.totalBids,       emoji: '💬', color: '#7c3aed' },
+    { label: 'Pending Review',   value: stats.pendingReview,   emoji: '📝', color: stats?.pendingReview > 0 ? TERRA : '#64748b' },
+  ] : []
+
+  const maxCount = typeBreakdown[0]?.[1] || 1
+
+  return (
+    <div>
+      <h2 style={S.h2}>Analytics</h2>
+      {!stats ? <p style={{ color: '#94a3b8' }}>Loading…</p> : (
+        <>
+          <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fill,minmax(160px,1fr))', gap: 14, marginBottom: 28 }}>
+            {cards.map(c => (
+              <div key={c.label} style={{ ...S.card, textAlign: 'center' }}>
+                <div style={{ fontSize: 26, marginBottom: 8 }}>{c.emoji}</div>
+                <div style={{ fontSize: 32, fontWeight: 800, color: c.color }}>{c.value}</div>
+                <div style={{ fontSize: 12, color: '#64748b', marginTop: 4 }}>{c.label}</div>
+              </div>
+            ))}
+          </div>
+          {typeBreakdown.length > 0 && (
+            <div style={S.card}>
+              <div style={{ fontWeight: 700, fontSize: 14, marginBottom: 14 }}>Provider Type Breakdown</div>
+              <div style={{ display: 'flex', flexDirection: 'column', gap: 8 }}>
+                {typeBreakdown.map(([type, cnt]) => (
+                  <div key={type} style={{ display: 'flex', alignItems: 'center', gap: 10 }}>
+                    <div style={{ width: 140, fontSize: 12, color: '#374151', flexShrink: 0 }}>{type.replace(/_/g, ' ')}</div>
+                    <div style={{ flex: 1, background: '#f1f5f9', borderRadius: 4, height: 14, overflow: 'hidden' }}>
+                      <div style={{ height: '100%', background: NAVY, borderRadius: 4, width: `${(cnt / maxCount) * 100}%` }} />
+                    </div>
+                    <div style={{ width: 30, fontSize: 12, fontWeight: 700, color: '#334155', textAlign: 'right', flexShrink: 0 }}>{cnt}</div>
+                  </div>
+                ))}
+              </div>
+            </div>
+          )}
+        </>
+      )}
+    </div>
+  )
+}
+
 // ─── Main AdminDashboard ───────────────────────────────────────────────────────
 const TABS = [
   { key: 'overview',     label: '📊 Overview' },
@@ -1171,8 +1345,12 @@ const TABS = [
   { key: 'projects',     label: '📋 Projects' },
   { key: 'bids',         label: '💬 Bids' },
   { key: 'reviews',      label: '⭐ Reviews' },
-  { key: 'social_hub',  label: '📣 Social Hub', badge: 'NEW' },
-  { key: 'blogs',       label: '✍️ Blogs' },
+  { key: 'social_hub',   label: '📣 Social Hub', badge: 'NEW' },
+  { key: 'blogs',        label: '✍️ Blogs' },
+  { key: 'services',     label: '🔧 Services' },
+  { key: 'categories',   label: '📂 Categories' },
+  { key: 'users',        label: '👤 Users' },
+  { key: 'analytics',    label: '📈 Analytics' },
 ]
 
 const GOLD = '#E8B341'
@@ -1301,6 +1479,10 @@ export default function AdminDashboard() {
         {tab === 'reviews'     && <ReviewsTab />}
         {tab === 'social_hub'  && <SocialHub />}
         {tab === 'blogs'       && <BlogsTab />}
+        {tab === 'services'    && <ServicesTab />}
+        {tab === 'categories'  && <CategoriesTab />}
+        {tab === 'users'       && <UsersTab />}
+        {tab === 'analytics'   && <AnalyticsTab />}
       </main>
 
       {/* Mobile bottom nav bar — replaces sidebar on small screens */}

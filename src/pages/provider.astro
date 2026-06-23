@@ -1,0 +1,12 @@
+---
+import Layout from '../layouts/Layout.astro'
+import Dashboard from '../components/Dashboard.jsx'
+---
+
+<Layout
+  title="Provider Dashboard · TilersHub"
+  description="Find projects, manage your profile and track your quotes on TilersHub."
+  noindex={true}
+>
+  <Dashboard client:only="react" />
+</Layout>

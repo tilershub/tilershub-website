@@ -49,7 +49,52 @@ export const SERVICES = [
   { slug: 'smart-home-automation',   icon: '🏠', label: 'Smart Home / Automation',   terms: ['Smart Home', 'Home Automation', 'Smart Lighting', 'Automation'] },
   { slug: 'paving-driveways',        icon: '🛤️', label: 'Paving & Driveways',        terms: ['Paving', 'Driveways', 'Paving & Driveways', 'Driveway', 'Patio Paving'] },
   { slug: 'pergola-shade',           icon: '⛱️', label: 'Pergola & Shade Structures', terms: ['Pergola', 'Shade Structure', 'Pergola & Shade', 'Gazebo', 'Awning'] },
+  { slug: 'wall-tiling',             icon: '🧱', label: 'Wall Tiling',               terms: ['Wall Tiling', 'Wall Tiles', 'Feature Wall'] },
+  { slug: 'pvc-ceiling',             icon: '🏠', label: 'PVC Ceiling',               terms: ['PVC Ceiling', 'PVC Board Ceiling', 'PVC'] },
 ]
 
 export const SERVICES_GROUP_1 = SERVICES.slice(0, 8)
 export const SERVICES_GROUP_2 = SERVICES.slice(8, 16)
+
+export const HOME_GROUPS = [
+  {
+    key: 'bathroom',
+    label: 'Bathroom',
+    labelSi: 'නාන කාමර',
+    icon: '🚿',
+    viewAllHref: '/categories/bathroom',
+    services: ['bathroom-renovation','shower-cubicle','vanity-cupboard','bathroom-mirrors','waterproofing','bathroom-plumbing','bathroom-lighting'],
+  },
+  {
+    key: 'tiling',
+    label: 'Tiling',
+    labelSi: 'ටයිල් කිරීම',
+    icon: '⬜',
+    viewAllHref: '/categories/flooring',
+    services: ['floor-tiling','wall-tiling','large-format-tiling','mosaic-tiling','tile-cutting-routering'],
+  },
+  {
+    key: 'electrical',
+    label: 'Electrical',
+    labelSi: 'විදුලි',
+    icon: '⚡',
+    viewAllHref: '/providers?q=electrical',
+    services: ['house-wiring','house-lighting','smart-home-automation'],
+  },
+  {
+    key: 'ceiling',
+    label: 'Ceiling & Interior',
+    labelSi: 'සිවිලිම සහ අභ්‍යන්තර',
+    icon: '🏠',
+    viewAllHref: '/providers?q=ceiling',
+    services: ['ipanel-ceiling','pvc-ceiling','gypsum-ceiling','house-painting'],
+  },
+  {
+    key: 'outdoor',
+    label: 'Outdoor',
+    labelSi: 'බාහිර',
+    icon: '🌿',
+    viewAllHref: '/categories/outdoor',
+    services: ['landscaping-gardening','paving-driveways','glass-railing'],
+  },
+]

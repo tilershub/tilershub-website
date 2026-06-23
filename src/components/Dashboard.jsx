@@ -1,7 +1,8 @@
 import { useState, useEffect } from 'react'
-import { supabase, getUser, signOut, onAuthStateChange } from '../lib/supabase.js'
+import { supabase, getUser, signOut, onAuthStateChange, buildWhatsAppLink } from '../lib/supabase.js'
 import ProfileEditor from './ProfileEditor.jsx'
 import PortfolioEditor from './PortfolioEditor.jsx'
+import { useLang } from '../lib/useLang.js'
 
 const TYPE_ICON = {
   'Floor Tiling':'🪨','Bathroom Tiling':'🚿','Bathroom Renovation':'🛁',
@@ -110,52 +111,53 @@ export default function Dashboard() {
 // ═══════════════════════════════════════════════════════════════════
 
 function ProviderDashboard({ user, claimedProfile, submission, showClaimedBanner }) {
+  const lang = useLang()
   const initialTab = typeof window !== 'undefined'
-    ? (new URLSearchParams(window.location.search).get('tab') || 'projects')
-    : 'projects'
-  const [tab, setTab]           = useState(initialTab)
-  const [myProjects, setMyProjects] = useState([])
-  const [myBids, setMyBids]     = useState({})
-  const [submittedBids, setSubmittedBids] = useState([])
-  const [dataLoading, setDataLoading] = useState(false)
-  const [dataLoaded, setDataLoaded]   = useState(false)
+    ? (new URLSearchParams(window.location.search).get('tab') || 'explore')
+    : 'explore'
+  const [tab, setTab]                   = useState(initialTab)
+  const [exploreProjects, setExploreProjects] = useState([])
+  const [submittedBids, setSubmittedBids]     = useState([])
+  const [savedProjects, setSavedProjects]     = useState([])
+  const [reviews, setReviews]                 = useState([])
+  const [dataLoaded, setDataLoaded]           = useState({ explore:false, quotes:false, saved:false, reviews:false })
+  const [dataLoading, setDataLoading]         = useState(false)
 
   useEffect(() => {
     const params = new URLSearchParams(window.location.search)
     if (params.has('tab')) {
-      const t = params.get('tab')
-      setTab(t)
+      setTab(params.get('tab'))
       window.history.replaceState({}, '', window.location.pathname)
     }
   }, [])
 
   useEffect(() => {
-    if ((tab === 'projects' || tab === 'bids') && !dataLoaded) loadMyData()
+    if (tab === 'explore'  && !dataLoaded.explore)  loadExploreData()
+    if (tab === 'quotes'   && !dataLoaded.quotes)   loadQuotesData()
+    if (tab === 'saved'    && !dataLoaded.saved)    loadSavedData()
+    if (tab === 'reviews'  && !dataLoaded.reviews)  loadReviewsData()
   }, [tab])
 
-  async function loadMyData() {
+  async function loadExploreData() {
     setDataLoading(true)
-    const { data: proj } = await supabase
-      .from('projects').select('*').eq('user_id', user.id).order('created_at', { ascending: false })
-    const userProjects = proj || []
-    setMyProjects(userProjects)
-    if (userProjects.length > 0) {
-      const { data: bidData } = await supabase
-        .from('bids').select('*').in('job_id', userProjects.map(p => p.id)).order('created_at', { ascending: false })
-      const byJob = {}
-      for (const b of bidData || []) { if (!byJob[b.job_id]) byJob[b.job_id] = []; byJob[b.job_id].push(b) }
-      setMyBids(byJob)
-    }
+    const { data } = await supabase
+      .from('projects').select('*').eq('status', 'active')
+      .order('created_at', { ascending: false })
+    setExploreProjects(data || [])
+    setDataLoaded(p => ({ ...p, explore: true }))
+    setDataLoading(false)
+  }
 
-    // Load bids submitted BY this provider (matched by their WhatsApp/phone)
+  async function loadQuotesData() {
+    setDataLoading(true)
     const providerWA = claimedProfile?.whatsapp || claimedProfile?.phone
     if (providerWA) {
       const { data: subBidData } = await supabase
         .from('bids').select('*').eq('bidder_whatsapp', providerWA).order('created_at', { ascending: false })
-      if (subBidData && subBidData.length > 0) {
+      if (subBidData?.length > 0) {
         const jobIds = [...new Set(subBidData.map(b => b.job_id))]
         const { data: jobProjects } = await supabase
-          .from('projects').select('id, project_type, city, district, description').in('id', jobIds)
+          .from('projects').select('id,project_type,city,district,description').in('id', jobIds)
         const projById = {}
         for (const p of jobProjects || []) projById[p.id] = p
         setSubmittedBids(subBidData.map(b => ({ ...b, project: projById[b.job_id] || null })))
@@ -163,25 +165,48 @@ function ProviderDashboard({ user, claimedProfile, submission, showClaimedBanner
         setSubmittedBids([])
       }
     }
-
-    setDataLoaded(true)
+    setDataLoaded(p => ({ ...p, quotes: true }))
     setDataLoading(false)
   }
+
+  async function loadSavedData() {
+    setDataLoading(true)
+    const { data, error } = await supabase
+      .from('saved_projects')
+      .select('id,project_id,created_at,projects(*)')
+      .eq('provider_id', user.id)
+      .order('created_at', { ascending: false })
+    if (!error) setSavedProjects(data || [])
+    setDataLoaded(p => ({ ...p, saved: true }))
+    setDataLoading(false)
+  }
+
+  async function loadReviewsData() {
+    if (!claimedProfile?.id) { setDataLoaded(p => ({ ...p, reviews: true })); return }
+    setDataLoading(true)
+    const { data, error } = await supabase
+      .from('reviews').select('*').eq('provider_id', claimedProfile.id)
+      .order('created_at', { ascending: false })
+    if (!error) setReviews(data || [])
+    setDataLoaded(p => ({ ...p, reviews: true }))
+    setDataLoading(false)
+  }
+
+  const T = lang === 'si'
+    ? { explore:'🔍 ව්‍යාපෘති', quotes:'💬 ලංසු', saved:'🔖 සුරැකූ', profile:'👤 පැතිකඩ', reviews:'⭐ සමාලෝචන', provider:'සේවා සපයන්නා', signOut:'ගිණුමෙන් ඉවත් වන්න', viewListing:'🔗 ලිස්ටිං බලන්න' }
+    : { explore:'🔍 Explore', quotes:'💬 My Quotes', saved:'🔖 Saved', profile:'👤 Profile', reviews:'⭐ Reviews', provider:'Provider', signOut:'Sign Out', viewListing:'🔗 View Listing' }
+
+  const TABS = [
+    { key:'explore',  label: T.explore  },
+    { key:'quotes',   label: T.quotes   },
+    { key:'saved',    label: T.saved    },
+    { key:'profile',  label: T.profile  },
+    { key:'reviews',  label: T.reviews  },
+  ]
 
   const profileName = claimedProfile?.name || user.email.split('@')[0]
   const initials    = profileName.split(' ').map(w => w[0]).join('').slice(0,2).toUpperCase()
   const profileHref = claimedProfile?.slug ? `/providers/${claimedProfile.slug}` : null
-
-  const newBids = Object.values(myBids).flat().filter(b => b.status === 'new').length
-
-  const TABS = [
-    { key:'projects',  label:'📋 මගේ ව්‍යාපෘති'  },
-    { key:'bids',      label:`💰 ලංසු${newBids > 0 ? ` (${newBids})` : ''}` },
-    ...(claimedProfile ? [{ key:'portfolio', label:'📸 ගැලරිය'  }] : []),
-    ...(claimedProfile && profileHref ? [{ key:'_profile_link', label:'👤 මගේ පැතිකඩ', href: profileHref }] : []),
-    ...(claimedProfile ? [{ key:'profile',   label:'✏️ Edit' }] : []),
-    { key:'listing',   label:'📋 ලිස්ටිං'   },
-  ]
 
   return (
     <div style={{ minHeight:'100dvh', background:'#f8fafc', paddingBottom:80 }}>
@@ -193,7 +218,7 @@ function ProviderDashboard({ user, claimedProfile, submission, showClaimedBanner
 
           {showClaimedBanner && (
             <div style={{ padding:'10px 14px', background:'rgba(22,163,74,0.15)', border:'1px solid rgba(22,163,74,0.3)', borderRadius:10, marginBottom:14 }}>
-              <span style={{ fontSize:13, color:'#4ade80', fontWeight:600 }}>✓ පැතිකඩ ඉල්ලා සිටි! මගේ පැතිකඩ ටැබ් හි සංස්කරණය කරන්න.</span>
+              <span style={{ fontSize:13, color:'#4ade80', fontWeight:600 }}>✓ {lang === 'si' ? 'පැතිකඩ ඉල්ලා සිටි! Profile ටැබ් හි සංස්කරණය කරන්න.' : 'Profile claimed! Edit your profile in the Profile tab.'}</span>
             </div>
           )}
 
@@ -204,13 +229,13 @@ function ProviderDashboard({ user, claimedProfile, submission, showClaimedBanner
                 {initials}
               </div>
               <div>
-                <div style={{ fontSize:10, fontWeight:700, color:'rgba(255,255,255,0.38)', letterSpacing:2, textTransform:'uppercase', marginBottom:2 }}>සේවා සපයන්නා</div>
+                <div style={{ fontSize:10, fontWeight:700, color:'rgba(255,255,255,0.38)', letterSpacing:2, textTransform:'uppercase', marginBottom:2 }}>{T.provider}</div>
                 <div className="db-profile-name" style={{ fontSize:16, fontWeight:700, color:'#fff', lineHeight:1.2 }}>{profileName}</div>
                 {claimedProfile && (
                   <div style={{ fontSize:11, color:'rgba(255,255,255,0.38)', marginTop:1 }}>
                     {claimedProfile.city || claimedProfile.district || ''}
                     {claimedProfile.verification_status === 'th_master' && <span style={{ marginLeft:6, color:'#D4AF37' }}>· 🛡️ TH Master</span>}
-                    {claimedProfile.is_verified && claimedProfile.verification_status !== 'th_master' && <span style={{ marginLeft:6, color:'#4ade80' }}>· ✓ සත්‍යාපිත</span>}
+                    {claimedProfile.is_verified && claimedProfile.verification_status !== 'th_master' && <span style={{ marginLeft:6, color:'#4ade80' }}>· ✓ {lang === 'si' ? 'සත්‍යාපිත' : 'Verified'}</span>}
                   </div>
                 )}
               </div>
@@ -219,35 +244,27 @@ function ProviderDashboard({ user, claimedProfile, submission, showClaimedBanner
             <div className="db-identity-actions" style={{ display:'flex', gap:8, flexWrap:'wrap' }}>
               {profileHref && (
                 <a href={profileHref} style={{ fontSize:12, fontWeight:600, color:'rgba(255,255,255,0.55)', background:'rgba(255,255,255,0.07)', border:'1px solid rgba(255,255,255,0.12)', borderRadius:8, padding:'6px 12px', textDecoration:'none', whiteSpace:'nowrap' }}>
-                  🔗 ලිස්ටිං බලන්න
+                  {T.viewListing}
                 </a>
               )}
               <button
                 onClick={async () => { await signOut(); window.location.href = '/' }}
                 style={{ fontSize:12, color:'rgba(255,255,255,0.45)', background:'rgba(255,255,255,0.07)', border:'1px solid rgba(255,255,255,0.12)', borderRadius:8, padding:'6px 12px', cursor:'pointer', fontWeight:600, whiteSpace:'nowrap' }}
-              >ගිණුමෙන් ඉවත් වන්න</button>
+              >{T.signOut}</button>
             </div>
           </div>
 
-          {/* Tab bar — scrollable on mobile */}
+          {/* Tab bar */}
           <div className="db-tab-bar" style={{ display:'flex', overflowX:'auto', WebkitOverflowScrolling:'touch', marginLeft:-14, marginRight:-14, paddingLeft:14 }}>
-            {TABS.map(t => t.href
-              ? <a key={t.key} href={t.href} style={{
-                  padding:'10px 14px', fontSize:13, fontWeight:600, border:'none', cursor:'pointer',
-                  background:'transparent', flexShrink:0, textDecoration:'none',
-                  color:'rgba(255,255,255,0.4)',
-                  borderBottom:'2.5px solid transparent',
-                  transition:'all 0.15s', whiteSpace:'nowrap', display:'block',
-                }}>{t.label}</a>
-              : <button key={t.key} onClick={() => setTab(t.key)} style={{
-                  padding:'10px 14px', fontSize:13, fontWeight:600, border:'none', cursor:'pointer',
-                  background:'transparent', flexShrink:0,
-                  color: tab === t.key ? '#fff' : 'rgba(255,255,255,0.4)',
-                  borderBottom: tab === t.key ? '2.5px solid #D4AF37' : '2.5px solid transparent',
-                  transition:'all 0.15s', whiteSpace:'nowrap',
-                }}>{t.label}</button>
-            )}
-            {/* Trailing spacer so last tab isn't flush against edge */}
+            {TABS.map(t => (
+              <button key={t.key} onClick={() => setTab(t.key)} style={{
+                padding:'10px 14px', fontSize:13, fontWeight:600, border:'none', cursor:'pointer',
+                background:'transparent', flexShrink:0,
+                color: tab === t.key ? '#fff' : 'rgba(255,255,255,0.4)',
+                borderBottom: tab === t.key ? '2.5px solid #D4AF37' : '2.5px solid transparent',
+                transition:'all 0.15s', whiteSpace:'nowrap',
+              }}>{t.label}</button>
+            ))}
             <div style={{ flexShrink:0, width:14 }} />
           </div>
         </div>
@@ -255,112 +272,288 @@ function ProviderDashboard({ user, claimedProfile, submission, showClaimedBanner
 
       {/* ── Tab content ── */}
       <div className="db-content-pad" style={{ maxWidth:860, margin:'0 auto', padding:'20px 16px' }}>
-        {tab === 'projects'  && (dataLoading ? <Spinner /> : <ProjectsTab projects={myProjects} bids={myBids} isProvider />)}
-        {tab === 'bids'      && (dataLoading ? <Spinner /> : <ProviderBidsTab projects={myProjects} bids={myBids} submittedBids={submittedBids} />)}
-        {tab === 'portfolio' && claimedProfile && (
-          <PortfolioEditor profile={claimedProfile} profileType="provider" userId={user.id} />
-        )}
-        {tab === 'profile'   && claimedProfile && (
-          <ProfileEditor profile={claimedProfile} profileType="provider" userId={user.id} />
-        )}
-        {tab === 'listing'   && <ListingTab submission={submission} />}
+        {tab === 'explore' && (dataLoading ? <Spinner /> : <ExploreTab projects={exploreProjects} user={user} lang={lang} />)}
+        {tab === 'quotes'  && (dataLoading ? <Spinner /> : <MyQuotesTab submittedBids={submittedBids} lang={lang} />)}
+        {tab === 'saved'   && (dataLoading ? <Spinner /> : <SavedTab savedProjects={savedProjects} user={user} setSavedProjects={setSavedProjects} lang={lang} />)}
+        {tab === 'profile' && <ProfileTab user={user} claimedProfile={claimedProfile} submission={submission} profileHref={profileHref} lang={lang} />}
+        {tab === 'reviews' && (dataLoading ? <Spinner /> : <ReviewsTab reviews={reviews} profileHref={profileHref} lang={lang} />)}
       </div>
     </div>
   )
 }
 
-function ProviderBidsTab({ projects, bids, submittedBids }) {
-  const receivedBids = projects.flatMap(p =>
-    (bids[p.id] || []).map(b => ({ ...b, project: p }))
-  ).sort((a, b) => new Date(b.created_at) - new Date(a.created_at))
+// ── Explore Projects Tab ──────────────────────────────────────────────────────
+function ExploreTab({ projects, user, lang }) {
+  const [typeFilter, setTypeFilter] = useState('')
+  const [districtFilter, setDistrictFilter] = useState('')
+  const [savedIds, setSavedIds] = useState(new Set())
+  const [saving, setSaving] = useState(null)
 
-  const hasAnything = submittedBids.length > 0 || receivedBids.length > 0
+  const T = lang === 'si'
+    ? { empty:'ව්‍යාපෘති නොමැත', allTypes:'සියලු සේවා', allDist:'සියලු ප්‍රදේශ', contact:'📞 ගනුදෙනුකරු', save:'🔖 සුරකින්න', saved:'🔖 සුරැකිණ' }
+    : { empty:'No projects found', allTypes:'All services', allDist:'All districts', contact:'📞 Contact', save:'🔖 Save', saved:'🔖 Saved' }
 
-  if (!hasAnything) return (
-    <div style={{ textAlign:'center', padding:'48px 20px', background:'#fff', borderRadius:16, border:'1px solid var(--border)' }}>
-      <div style={{ fontSize:40, marginBottom:12 }}>💰</div>
-      <div style={{ fontSize:15, fontWeight:700, color:'var(--text)', marginBottom:8 }}>ලංසු නොමැත</div>
-      <p style={{ fontSize:13, color:'var(--text-3)', lineHeight:1.7 }}>
-        {projects.length === 0
-          ? 'පළමුව ව්‍යාපෘතියක් පලකරන්න — සේවා සපයන්නන් ලංසු දෙන විට ඔබට ඔවුන් හා සම්බන්ධ වීමට හැකිය.'
-          : 'ඔබේ ව්‍යාපෘතිය සජීවී ය. සේවා සපයන්නන් ශීඝ්‍රයෙන් ලංසු දෙනු ඇත — යාවත්කාලීන සඳහා නැවත පරීක්ෂා කරන්න.'}
-      </p>
-      {projects.length === 0 && (
-        <a href="/post-project" style={{ display:'inline-flex', alignItems:'center', gap:6, marginTop:12, padding:'11px 22px', background:'var(--terra)', color:'#fff', borderRadius:10, fontSize:13, fontWeight:700, textDecoration:'none' }}>
-          📋 ව්‍යාපෘතිය පලකරන්න
-        </a>
+  useEffect(() => {
+    if (!user?.id) return
+    supabase.from('saved_projects').select('project_id').eq('provider_id', user.id)
+      .then(({ data }) => { if (data) setSavedIds(new Set(data.map(s => s.project_id))) })
+  }, [user?.id])
+
+  async function toggleSave(e, projectId) {
+    e.preventDefault()
+    if (!user?.id) return
+    setSaving(projectId)
+    if (savedIds.has(projectId)) {
+      await supabase.from('saved_projects').delete().eq('provider_id', user.id).eq('project_id', projectId)
+      setSavedIds(prev => { const n = new Set(prev); n.delete(projectId); return n })
+    } else {
+      await supabase.from('saved_projects').insert({ provider_id: user.id, project_id: projectId })
+      setSavedIds(prev => new Set([...prev, projectId]))
+    }
+    setSaving(null)
+  }
+
+  const types     = [...new Set(projects.map(p => p.project_type).filter(Boolean))]
+  const districts = [...new Set(projects.map(p => p.district).filter(Boolean))]
+  const filtered  = projects.filter(p =>
+    (!typeFilter || p.project_type === typeFilter) &&
+    (!districtFilter || p.district === districtFilter)
+  )
+
+  return (
+    <div>
+      {/* Filters */}
+      {projects.length > 0 && (
+        <div style={{ display:'flex', gap:8, marginBottom:16, flexWrap:'wrap' }}>
+          <select value={typeFilter} onChange={e => setTypeFilter(e.target.value)}
+            style={{ padding:'8px 12px', borderRadius:10, border:'1px solid var(--border)', fontSize:13, background:'#fff', color:'var(--text)', cursor:'pointer' }}>
+            <option value="">{T.allTypes}</option>
+            {types.map(t => <option key={t} value={t}>{t}</option>)}
+          </select>
+          <select value={districtFilter} onChange={e => setDistrictFilter(e.target.value)}
+            style={{ padding:'8px 12px', borderRadius:10, border:'1px solid var(--border)', fontSize:13, background:'#fff', color:'var(--text)', cursor:'pointer' }}>
+            <option value="">{T.allDist}</option>
+            {districts.map(d => <option key={d} value={d}>{d}</option>)}
+          </select>
+        </div>
+      )}
+
+      {filtered.length === 0 ? (
+        <div style={{ textAlign:'center', padding:'48px 20px', background:'#fff', borderRadius:16, border:'1px solid var(--border)' }}>
+          <div style={{ fontSize:40, marginBottom:12 }}>📋</div>
+          <div style={{ fontSize:15, fontWeight:700, color:'var(--text)' }}>{T.empty}</div>
+        </div>
+      ) : (
+        <div style={{ display:'flex', flexDirection:'column', gap:12 }}>
+          {filtered.map(p => {
+            const icon  = TYPE_ICON[p.project_type] || '🏠'
+            const isSaved = savedIds.has(p.id)
+            const phone = p.customer_whatsapp || p.whatsapp
+            const excerpt = p.description?.length > 120 ? p.description.slice(0,120)+'…' : p.description
+            return (
+              <div key={p.id} style={{ background:'#fff', borderRadius:16, border:'1px solid var(--border)', padding:'16px 18px', boxShadow:'var(--shadow-sm)' }}>
+                <div style={{ display:'flex', alignItems:'flex-start', justifyContent:'space-between', gap:10, marginBottom:8 }}>
+                  <div style={{ display:'flex', alignItems:'center', gap:8 }}>
+                    <span style={{ fontSize:20 }}>{icon}</span>
+                    <div>
+                      <div style={{ fontSize:14, fontWeight:700, color:'var(--text)' }}>{p.project_type}</div>
+                      {(p.city || p.district) && <div style={{ fontSize:11, color:'var(--text-3)' }}>📍 {p.city}{p.district && p.district !== p.city ? `, ${p.district}` : ''}</div>}
+                    </div>
+                  </div>
+                  <span style={{ fontSize:11, color:'var(--text-4)', whiteSpace:'nowrap', flexShrink:0 }}>{timeAgo(p.created_at)}</span>
+                </div>
+                {excerpt && <p style={{ fontSize:13, color:'var(--text-2)', lineHeight:1.6, margin:'0 0 10px' }}>{excerpt}</p>}
+                {p.budget_range && <div style={{ fontSize:11, color:'#166534', fontWeight:600, marginBottom:10 }}>💰 {p.budget_range}</div>}
+                <div style={{ display:'flex', gap:8, flexWrap:'wrap' }}>
+                  {phone && (
+                    <a href={buildWhatsAppLink(phone, p.customer_name || '')} target="_blank" rel="noopener noreferrer"
+                      style={{ display:'inline-flex', alignItems:'center', gap:5, background:'#25D366', color:'#fff', borderRadius:8, padding:'8px 14px', fontSize:12, fontWeight:700, textDecoration:'none' }}>
+                      {T.contact}
+                    </a>
+                  )}
+                  <button
+                    onClick={e => toggleSave(e, p.id)}
+                    disabled={saving === p.id}
+                    style={{ display:'inline-flex', alignItems:'center', gap:5, background: isSaved ? '#eef3fb' : '#f8fafc', color: isSaved ? '#1B3A6B' : 'var(--text-3)', border:`1px solid ${isSaved ? '#d5e2f5' : 'var(--border)'}`, borderRadius:8, padding:'7px 12px', fontSize:12, fontWeight:600, cursor:'pointer' }}>
+                    {isSaved ? T.saved : T.save}
+                  </button>
+                </div>
+              </div>
+            )
+          })}
+        </div>
       )}
     </div>
   )
+}
 
-  const BidCard = ({ bid, isSubmitted }) => {
-    const wa   = (isSubmitted ? null : bid.bidder_whatsapp)?.replace(/\D/g,'')
-    const norm = wa ? (wa.startsWith('94') ? wa : '94' + wa.replace(/^0/,'')) : ''
-    const waLink = wa ? `https://wa.me/${norm}?text=${encodeURIComponent('ආයුබෝවන්! 🙏\n\nTilersHub හරහා ඔබේ bid දැක්කා. ඔබගේ quote / message ගැන කතා කරමු.\n\nස්තූතියි!')}` : ''
-    const isNew = bid.status === 'new'
-    const statusColor = bid.status === 'accepted' ? '#16a34a' : bid.status === 'rejected' ? '#dc2626' : '#f59e0b'
-    const statusLabel = bid.status === 'accepted' ? '✓ අනුමත' : bid.status === 'rejected' ? '✗ ප්‍රතික්ෂේප' : 'නව'
-    return (
-      <div style={{ padding:'16px 18px', background:'#fff', borderRadius:14, border:`1.5px solid ${isNew ? '#fde68a' : 'var(--border)'}`, borderLeft:`4px solid ${isNew ? '#f59e0b' : '#e2e8f0'}`, boxShadow:'var(--shadow-sm)' }}>
-        <div style={{ fontSize:10, fontWeight:700, color:'var(--text-4)', textTransform:'uppercase', letterSpacing:1, marginBottom:6 }}>
-          {TYPE_ICON[bid.project?.project_type] || '🏠'} {bid.project?.project_type || 'ව්‍යාපෘතිය'} · 📍 {bid.project?.city || bid.project?.district || '—'}
-        </div>
-        <div style={{ display:'flex', alignItems:'flex-start', justifyContent:'space-between', gap:10, marginBottom:8 }}>
-          <div>
-            {isSubmitted
-              ? <div style={{ fontSize:14, fontWeight:700, color:'var(--text)' }}>ඔබේ ලංසු</div>
-              : <div style={{ fontSize:14, fontWeight:700, color:'var(--text)' }}>{bid.bidder_name}</div>
-            }
-            <div style={{ fontSize:12, color:'var(--text-3)', marginTop:2 }}>
-              {!isSubmitted && <span style={{ textTransform:'capitalize' }}>{bid.bidder_type}</span>}
-              {bid.quote_amount && <span style={{ marginLeft: isSubmitted ? 0 : 8, color:'#166534', fontWeight:700 }}>Rs. {Number(bid.quote_amount).toLocaleString()}</span>}
-              {bid.timeline     && <span style={{ marginLeft:8 }}>· {bid.timeline}</span>}
-              <span style={{ marginLeft:8, color:'var(--text-4)' }}>· {timeAgo(bid.created_at)}</span>
-            </div>
-          </div>
-          <span style={{ fontSize:10, fontWeight:700, padding:'2px 8px', borderRadius:20, background: isNew ? '#fef3c7' : '#f1f5f9', color: isNew ? '#92400e' : '#64748b', whiteSpace:'nowrap', flexShrink:0 }}>{statusLabel}</span>
-        </div>
-        {bid.message && (
-          <p style={{ fontSize:13, color:'#475569', lineHeight:1.65, margin:'0 0 12px' }}>
-            {bid.message.length > 220 ? bid.message.slice(0,220) + '…' : bid.message}
-          </p>
-        )}
-        {wa && (
-          <a href={waLink} target="_blank" rel="noopener noreferrer" style={{ display:'inline-flex', alignItems:'center', gap:6, fontSize:12, fontWeight:700, background:'#25D366', color:'#fff', borderRadius:8, padding:'7px 14px', textDecoration:'none' }}>
-            💬 WhatsApp හරහා අමතන්න
-          </a>
-        )}
-      </div>
-    )
-  }
+// ── My Quotes Tab ─────────────────────────────────────────────────────────────
+function MyQuotesTab({ submittedBids, lang }) {
+  const T = lang === 'si'
+    ? { title:'ඔබ ඉදිරිපත් කළ ලංසු', empty:'ලංසු නොමැත', emptyDesc:'ව්‍යාපෘති ලිපිගොනු බලා ලංසු ඉදිරිපත් කරන්න.' }
+    : { title:'Quotes You Submitted', empty:'No quotes yet', emptyDesc:'Browse the Explore tab and submit quotes to active projects.' }
+
+  if (submittedBids.length === 0) return (
+    <div style={{ textAlign:'center', padding:'48px 20px', background:'#fff', borderRadius:16, border:'1px solid var(--border)' }}>
+      <div style={{ fontSize:40, marginBottom:12 }}>💬</div>
+      <div style={{ fontSize:15, fontWeight:700, color:'var(--text)', marginBottom:8 }}>{T.empty}</div>
+      <p style={{ fontSize:13, color:'var(--text-3)', lineHeight:1.7 }}>{T.emptyDesc}</p>
+    </div>
+  )
 
   return (
-    <div style={{ display:'flex', flexDirection:'column', gap:24 }}>
+    <div style={{ display:'flex', flexDirection:'column', gap:12 }}>
+      <div style={{ fontSize:12, fontWeight:700, color:'var(--text-3)', textTransform:'uppercase', letterSpacing:1, marginBottom:4 }}>{T.title} ({submittedBids.length})</div>
+      {submittedBids.map(bid => {
+        const isNew = bid.status === 'new'
+        const statusLabel = bid.status === 'accepted' ? (lang === 'si' ? '✓ අනුමත' : '✓ Accepted') : bid.status === 'rejected' ? (lang === 'si' ? '✗ ප්‍රතික්ෂේප' : '✗ Rejected') : (lang === 'si' ? 'නව' : 'New')
+        return (
+          <div key={bid.id} style={{ padding:'16px 18px', background:'#fff', borderRadius:14, border:`1.5px solid ${isNew ? '#fde68a' : 'var(--border)'}`, borderLeft:`4px solid ${isNew ? '#f59e0b' : '#e2e8f0'}`, boxShadow:'var(--shadow-sm)' }}>
+            <div style={{ fontSize:10, fontWeight:700, color:'var(--text-4)', textTransform:'uppercase', letterSpacing:1, marginBottom:6 }}>
+              {TYPE_ICON[bid.project?.project_type] || '🏠'} {bid.project?.project_type || '—'} · 📍 {bid.project?.city || bid.project?.district || '—'}
+            </div>
+            <div style={{ display:'flex', alignItems:'flex-start', justifyContent:'space-between', gap:10, marginBottom:6 }}>
+              <div>
+                {bid.quote_amount && <span style={{ fontSize:14, fontWeight:700, color:'#166534' }}>Rs. {Number(bid.quote_amount).toLocaleString()}</span>}
+                {bid.timeline && <span style={{ fontSize:12, color:'var(--text-3)', marginLeft:10 }}>· {bid.timeline}</span>}
+                <span style={{ fontSize:11, color:'var(--text-4)', marginLeft:8 }}>· {timeAgo(bid.created_at)}</span>
+              </div>
+              <span style={{ fontSize:10, fontWeight:700, padding:'2px 8px', borderRadius:20, background: isNew ? '#fef3c7' : '#f1f5f9', color: isNew ? '#92400e' : '#64748b', whiteSpace:'nowrap', flexShrink:0 }}>{statusLabel}</span>
+            </div>
+            {bid.message && <p style={{ fontSize:13, color:'#475569', lineHeight:1.6, margin:0 }}>{bid.message.length > 200 ? bid.message.slice(0,200)+'…' : bid.message}</p>}
+          </div>
+        )
+      })}
+    </div>
+  )
+}
 
-      {/* Submitted bids — bids this provider sent */}
-      {submittedBids.length > 0 && (
-        <div>
-          <div style={{ fontSize:13, fontWeight:700, color:'var(--text-3)', textTransform:'uppercase', letterSpacing:1, marginBottom:10 }}>
-            ඔබ ඉදිරිපත් කළ ලංසු ({submittedBids.length})
+// ── Saved Projects Tab ────────────────────────────────────────────────────────
+function SavedTab({ savedProjects, user, setSavedProjects, lang }) {
+  const T = lang === 'si'
+    ? { empty:'සුරැකූ ව්‍යාපෘති නොමැත', emptyDesc:'Explore ටැබ් හි 🔖 ක්ලික් කර ව්‍යාපෘති සුරකින්න.', remove:'ඉවත් කරන්න', contact:'📞 ගනුදෙනුකරු' }
+    : { empty:'No saved projects', emptyDesc:'Tap 🔖 on any project in the Explore tab to save it here.', remove:'Remove', contact:'📞 Contact' }
+
+  async function removeSaved(projectId) {
+    await supabase.from('saved_projects').delete().eq('provider_id', user.id).eq('project_id', projectId)
+    setSavedProjects(prev => prev.filter(s => s.project_id !== projectId))
+  }
+
+  if (savedProjects.length === 0) return (
+    <div style={{ textAlign:'center', padding:'48px 20px', background:'#fff', borderRadius:16, border:'1px solid var(--border)' }}>
+      <div style={{ fontSize:40, marginBottom:12 }}>🔖</div>
+      <div style={{ fontSize:15, fontWeight:700, color:'var(--text)', marginBottom:8 }}>{T.empty}</div>
+      <p style={{ fontSize:13, color:'var(--text-3)', lineHeight:1.7 }}>{T.emptyDesc}</p>
+    </div>
+  )
+
+  return (
+    <div style={{ display:'flex', flexDirection:'column', gap:12 }}>
+      {savedProjects.map(sp => {
+        const p = sp.projects || {}
+        const icon = TYPE_ICON[p.project_type] || '🏠'
+        const phone = p.customer_whatsapp || p.whatsapp
+        const excerpt = p.description?.length > 100 ? p.description.slice(0,100)+'…' : p.description
+        return (
+          <div key={sp.id} style={{ background:'#fff', borderRadius:16, border:'1px solid var(--border)', padding:'16px 18px', boxShadow:'var(--shadow-sm)' }}>
+            <div style={{ display:'flex', alignItems:'flex-start', justifyContent:'space-between', gap:10, marginBottom:8 }}>
+              <div style={{ display:'flex', alignItems:'center', gap:8 }}>
+                <span style={{ fontSize:20 }}>{icon}</span>
+                <div>
+                  <div style={{ fontSize:14, fontWeight:700, color:'var(--text)' }}>{p.project_type || '—'}</div>
+                  {(p.city || p.district) && <div style={{ fontSize:11, color:'var(--text-3)' }}>📍 {p.city}{p.district && p.district !== p.city ? `, ${p.district}` : ''}</div>}
+                </div>
+              </div>
+              <button onClick={() => removeSaved(sp.project_id)} style={{ fontSize:11, color:'#dc2626', background:'#fef2f2', border:'1px solid #fecaca', borderRadius:7, padding:'4px 10px', cursor:'pointer', whiteSpace:'nowrap', fontWeight:600 }}>{T.remove}</button>
+            </div>
+            {excerpt && <p style={{ fontSize:13, color:'var(--text-2)', lineHeight:1.6, margin:'0 0 10px' }}>{excerpt}</p>}
+            {p.budget_range && <div style={{ fontSize:11, color:'#166534', fontWeight:600, marginBottom:10 }}>💰 {p.budget_range}</div>}
+            {phone && (
+              <a href={buildWhatsAppLink(phone, p.customer_name || '')} target="_blank" rel="noopener noreferrer"
+                style={{ display:'inline-flex', alignItems:'center', gap:5, background:'#25D366', color:'#fff', borderRadius:8, padding:'8px 14px', fontSize:12, fontWeight:700, textDecoration:'none' }}>
+                {T.contact}
+              </a>
+            )}
           </div>
-          <div style={{ display:'flex', flexDirection:'column', gap:10 }}>
-            {submittedBids.map(bid => <BidCard key={bid.id} bid={bid} isSubmitted />)}
+        )
+      })}
+    </div>
+  )
+}
+
+// ── Profile Tab ───────────────────────────────────────────────────────────────
+function ProfileTab({ user, claimedProfile, submission, profileHref, lang }) {
+  const [showEditor, setShowEditor]     = useState(false)
+  const [showPortfolio, setShowPortfolio] = useState(false)
+
+  const T = lang === 'si'
+    ? { viewProfile:'🔗 ලිස්ටිං බලන්න', editProfile:'✏️ Edit Profile', managePhotos:'📸 Photos', noProfile:'ලිස්ටිං නොමැත', noProfileDesc:'ව්‍යාපෘති ලිස්ටිං ලැබීමට TilersHub හිදී ලිස්ට් වන්න.', join:'✅ සේවා සපයන්නෙකු ලෙස ඉල්ලුම් කරන්න' }
+    : { viewProfile:'🔗 View Listing', editProfile:'✏️ Edit Profile', managePhotos:'📸 Photos', noProfile:'Not Listed', noProfileDesc:'Get listed on TilersHub to receive project enquiries.', join:'✅ Apply as Provider' }
+
+  return (
+    <div style={{ display:'flex', flexDirection:'column', gap:16 }}>
+      {claimedProfile ? (
+        <div style={{ background:'#fff', borderRadius:16, border:'1px solid var(--border)', padding:'20px 18px', boxShadow:'var(--shadow-sm)' }}>
+          <div style={{ display:'flex', alignItems:'flex-start', justifyContent:'space-between', gap:12, marginBottom:16, flexWrap:'wrap' }}>
+            <div>
+              <div style={{ fontSize:16, fontWeight:700, color:'var(--text)', marginBottom:3 }}>{claimedProfile.name}</div>
+              {(claimedProfile.city || claimedProfile.district) && <div style={{ fontSize:12, color:'var(--text-3)' }}>📍 {claimedProfile.city || claimedProfile.district}</div>}
+              {claimedProfile.avg_rating > 0 && <div style={{ fontSize:12, color:'#f59e0b', marginTop:3 }}>⭐ {Number(claimedProfile.avg_rating).toFixed(1)}</div>}
+            </div>
+            <div style={{ display:'flex', gap:8, flexWrap:'wrap' }}>
+              {profileHref && <a href={profileHref} target="_blank" rel="noopener" style={{ fontSize:12, fontWeight:600, color:'var(--navy)', background:'var(--navy-50)', border:'1px solid var(--navy-100)', borderRadius:8, padding:'7px 12px', textDecoration:'none', whiteSpace:'nowrap' }}>{T.viewProfile}</a>}
+              {claimedProfile && <button onClick={() => setShowEditor(true)} style={{ fontSize:12, fontWeight:600, color:'#fff', background:'var(--navy)', border:'none', borderRadius:8, padding:'7px 12px', cursor:'pointer', whiteSpace:'nowrap' }}>{T.editProfile}</button>}
+              {claimedProfile && <button onClick={() => setShowPortfolio(true)} style={{ fontSize:12, fontWeight:600, color:'var(--text-2)', background:'var(--surface-2)', border:'1px solid var(--border)', borderRadius:8, padding:'7px 12px', cursor:'pointer', whiteSpace:'nowrap' }}>{T.managePhotos}</button>}
+            </div>
           </div>
+          {showEditor && <ProfileEditor profile={claimedProfile} profileType="provider" userId={user.id} />}
+          {showPortfolio && <PortfolioEditor profile={claimedProfile} profileType="provider" userId={user.id} />}
+        </div>
+      ) : (
+        <div style={{ textAlign:'center', padding:'36px 20px', background:'#fff', borderRadius:16, border:'1px solid var(--border)' }}>
+          <div style={{ fontSize:36, marginBottom:12 }}>👷</div>
+          <div style={{ fontSize:15, fontWeight:700, color:'var(--text)', marginBottom:8 }}>{T.noProfile}</div>
+          <p style={{ fontSize:13, color:'var(--text-3)', lineHeight:1.7, marginBottom:16 }}>{T.noProfileDesc}</p>
+          <a href="/join-tilershub" style={{ display:'inline-flex', alignItems:'center', gap:6, padding:'10px 20px', background:'var(--navy)', color:'#fff', borderRadius:10, fontSize:13, fontWeight:700, textDecoration:'none' }}>{T.join}</a>
         </div>
       )}
+      <ListingTab submission={submission} />
+    </div>
+  )
+}
 
-      {/* Received bids — bids on the provider's own posted projects */}
-      {receivedBids.length > 0 && (
-        <div>
-          <div style={{ fontSize:13, fontWeight:700, color:'var(--text-3)', textTransform:'uppercase', letterSpacing:1, marginBottom:10 }}>
-            ලැබුණු ලංසු ({receivedBids.length})
-          </div>
-          <div style={{ display:'flex', flexDirection:'column', gap:10 }}>
-            {receivedBids.map(bid => <BidCard key={bid.id} bid={bid} isSubmitted={false} />)}
-          </div>
-        </div>
-      )}
+// ── Reviews Tab ───────────────────────────────────────────────────────────────
+function ReviewsTab({ reviews, profileHref, lang }) {
+  const T = lang === 'si'
+    ? { empty:'සමාලෝචන නොමැත', emptyDesc:'ඔබේ Profile Link Share කර සමාලෝචන ලබා ගන්න.', shareProfile:'🔗 Profile Link' }
+    : { empty:'No reviews yet', emptyDesc:'Share your profile link to receive reviews from customers.', shareProfile:'🔗 Share Profile' }
 
+  if (reviews.length === 0) return (
+    <div style={{ textAlign:'center', padding:'48px 20px', background:'#fff', borderRadius:16, border:'1px solid var(--border)' }}>
+      <div style={{ fontSize:40, marginBottom:12 }}>⭐</div>
+      <div style={{ fontSize:15, fontWeight:700, color:'var(--text)', marginBottom:8 }}>{T.empty}</div>
+      <p style={{ fontSize:13, color:'var(--text-3)', lineHeight:1.7, marginBottom:16 }}>{T.emptyDesc}</p>
+      {profileHref && <a href={profileHref} target="_blank" rel="noopener" style={{ fontSize:13, fontWeight:600, color:'var(--navy)', textDecoration:'none' }}>{T.shareProfile}</a>}
+    </div>
+  )
+
+  return (
+    <div style={{ display:'flex', flexDirection:'column', gap:12 }}>
+      {reviews.map(r => {
+        const stars = r.rating || r.stars || 5
+        const name = r.reviewer_name || r.customer_name || (lang === 'si' ? 'ගනුදෙනුකරු' : 'Customer')
+        const comment = r.comment || r.review_text || r.message || ''
+        return (
+          <div key={r.id} style={{ background:'#fff', borderRadius:14, border:'1px solid var(--border)', padding:'16px 18px', boxShadow:'var(--shadow-sm)' }}>
+            <div style={{ display:'flex', alignItems:'center', gap:6, marginBottom:6 }}>
+              <span style={{ color:'#f59e0b', fontSize:14 }}>{'⭐'.repeat(Math.min(stars, 5))}</span>
+              <span style={{ fontSize:12, fontWeight:700, color:'var(--text)' }}>{name}</span>
+              <span style={{ fontSize:11, color:'var(--text-4)', marginLeft:'auto' }}>{timeAgo(r.created_at)}</span>
+            </div>
+            {comment && <p style={{ fontSize:13, color:'var(--text-2)', lineHeight:1.6, margin:0 }}>{comment}</p>}
+          </div>
+        )
+      })}
     </div>
   )
 }

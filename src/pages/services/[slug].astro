@@ -9,17 +9,45 @@ export function getStaticPaths() {
 
 const { service } = Astro.props
 
-const { data: providersRaw } = await supabase
-  .from('providers')
-  .select('id,name,city,district,verification_status,slug,services,provider_type,whatsapp,phone,description,profile_image,avg_rating,experience_years')
-  .eq('status', 'active')
-  .limit(200)
+const [{ data: providersRaw }, { data: recentProjectsRaw }] = await Promise.all([
+  supabase
+    .from('providers')
+    .select('id,name,city,district,verification_status,slug,services,provider_type,whatsapp,phone,description,profile_image,avg_rating,experience_years')
+    .eq('status', 'active')
+    .limit(200),
+  supabase
+    .from('projects')
+    .select('id,project_type,district,created_at,budget_min,budget_max,description')
+    .eq('status', 'active')
+    .ilike('project_type', `%${service.terms[0]}%`)
+    .order('created_at', { ascending: false })
+    .limit(3),
+])
 
 const providers = (providersRaw || []).filter(p =>
   (p.services || []).some(s =>
     service.terms.some(t => String(s).toLowerCase().includes(t.toLowerCase()))
   ) || service.terms.some(t => (p.description || '').toLowerCase().includes(t.toLowerCase()))
 ).slice(0, 30)
+
+const recentProjects = recentProjectsRaw || []
+
+function timeAgoStr(ts) {
+  if (!ts) return ''
+  const mins = Math.floor((Date.now() - new Date(ts)) / 60000)
+  if (mins < 60) return `${mins}m ago`
+  const hrs = Math.floor(mins / 60)
+  if (hrs < 24) return `${hrs}h ago`
+  const days = Math.floor(hrs / 24)
+  return `${days}d ago`
+}
+
+function budgetStr(min, max) {
+  if (!min && !max) return null
+  if (min && max) return `Rs. ${Number(min).toLocaleString()} – ${Number(max).toLocaleString()}`
+  if (min) return `From Rs. ${Number(min).toLocaleString()}`
+  return `Up to Rs. ${Number(max).toLocaleString()}`
+}
 
 const AVATAR_COLORS = ['#1B3A6B','#0f766e','#7c3aed','#b45309','#0369a1','#E05A2B','#15803d','#be185d']
 function avatarColor(name) {
@@ -149,6 +177,58 @@ const serviceSchema = JSON.stringify({
 
       </div>
     )}
+  </div>
+
+  <!-- Recent Projects on this service -->
+  {recentProjects.length > 0 && (
+    <div style="background:#fff;padding:28px 16px 32px;border-top:1px solid #f1f5f9;">
+      <div style="max-width:640px;margin:0 auto;">
+        <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:16px;">
+          <h2 style="font-family:'Playfair Display',serif;font-size:18px;font-weight:700;color:#0f172a;margin:0;">
+            <span class="en-text">Recent Projects</span>
+            <span class="si-text">මෑත ව්‍යාපෘති</span>
+          </h2>
+          <a href="/jobs" style="font-size:12px;color:#E05A2B;font-weight:600;text-decoration:none;">
+            <span class="en-text">View all ›</span>
+            <span class="si-text">සියල්ල බලන්න ›</span>
+          </a>
+        </div>
+        <div style="display:flex;flex-direction:column;gap:10px;">
+          {recentProjects.map(proj => {
+            const budget = budgetStr(proj.budget_min, proj.budget_max)
+            return (
+              <div style="background:#f8fafc;border:1px solid #e8edf5;border-radius:14px;padding:14px 16px;">
+                <div style="display:flex;align-items:flex-start;justify-content:space-between;gap:8px;margin-bottom:6px;">
+                  <span style="font-size:13px;font-weight:700;color:#0f172a;">{proj.project_type}</span>
+                  <span style="font-size:10px;color:#94a3b8;white-space:nowrap;flex-shrink:0;">{timeAgoStr(proj.created_at)}</span>
+                </div>
+                {proj.district && <div style="font-size:11px;color:#64748b;margin-bottom:4px;">📍 {proj.district}</div>}
+                {proj.description && <p style="font-size:12px;color:#64748b;margin:0 0 6px;line-height:1.5;display:-webkit-box;-webkit-line-clamp:2;-webkit-box-orient:vertical;overflow:hidden;">{proj.description}</p>}
+                {budget && <div style="font-size:11px;font-weight:600;color:#374151;">💰 {budget}</div>}
+              </div>
+            )
+          })}
+        </div>
+      </div>
+    </div>
+  )}
+
+  <!-- Post Project CTA -->
+  <div style="background:linear-gradient(135deg,#1A2B4A 0%,#0F1E35 100%);padding:40px 20px;text-align:center;">
+    <h2 style="font-family:'Playfair Display',serif;font-size:clamp(18px,4vw,24px);font-weight:700;color:#fff;margin:0 0 10px;">
+      <span class="en-text">Need {service.label} done?</span>
+      <span class="si-text">{service.label} සේවාවක් අවශ්‍යද?</span>
+    </h2>
+    <p style="font-size:14px;color:rgba(255,255,255,0.65);margin:0 0 22px;line-height:1.7;">
+      <span class="en-text">Post your project free — get quotes from verified specialists</span>
+      <span class="si-text">ඔබේ ව්‍යාපෘතිය නොමිලේ පළ කර සත්‍යාපිත ශිල්පීන්ගේ ලංසු ලබා ගන්න</span>
+    </p>
+    <a href={postUrl}
+      style="display:inline-flex;align-items:center;gap:8px;background:#E05A2B;color:#fff;border-radius:24px;padding:13px 28px;font-size:14px;font-weight:700;text-decoration:none;box-shadow:0 4px 20px rgba(224,90,43,0.45);">
+      📋
+      <span class="en-text">Post Your Project →</span>
+      <span class="si-text">ව්‍යාපෘතිය පලකරන්න →</span>
+    </a>
   </div>
 
 </Layout>
