@@ -21,29 +21,39 @@ export default function AuthButton() {
 
   if (user) {
     const initials = (user.email || '?').slice(0, 2).toUpperCase()
+    const isAdmin = user.email === 'tilershub@gmail.com'
     return (
       <div style={{ display: 'flex', alignItems: 'center', gap: 6 }}>
-        <a
-          href="/auth/callback"
-          style={{
-            display: 'flex', alignItems: 'center', gap: 7,
-            padding: '5px 12px 5px 6px',
-            borderRadius: 10,
-            background: 'var(--navy-50)',
-            border: '1.5px solid var(--navy-100)',
-            color: 'var(--navy)',
-            fontSize: 13, fontWeight: 600,
-            textDecoration: 'none',
-          }}
-        >
+        {isAdmin ? (
+          <a
+            href="/admin"
+            style={{
+              display: 'flex', alignItems: 'center', gap: 7,
+              padding: '5px 12px 5px 6px',
+              borderRadius: 10,
+              background: 'var(--navy-50)',
+              border: '1.5px solid var(--navy-100)',
+              color: 'var(--navy)',
+              fontSize: 13, fontWeight: 600,
+              textDecoration: 'none',
+            }}
+          >
+            <div style={{
+              width: 26, height: 26, borderRadius: 8,
+              background: 'var(--navy)', color: '#fff',
+              display: 'flex', alignItems: 'center', justifyContent: 'center',
+              fontSize: 10, fontWeight: 700, flexShrink: 0,
+            }}>{initials}</div>
+            Dashboard
+          </a>
+        ) : (
           <div style={{
-            width: 26, height: 26, borderRadius: 8,
+            width: 32, height: 32, borderRadius: 8,
             background: 'var(--navy)', color: '#fff',
             display: 'flex', alignItems: 'center', justifyContent: 'center',
-            fontSize: 10, fontWeight: 700, flexShrink: 0,
+            fontSize: 11, fontWeight: 700, flexShrink: 0,
           }}>{initials}</div>
-          Dashboard
-        </a>
+        )}
         <button
           onClick={async () => { await signOut(); window.location.href = '/' }}
           title="Sign out"
