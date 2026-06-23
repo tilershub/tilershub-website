@@ -48,8 +48,11 @@ const orgSchema = JSON.stringify({
 })
 ---
 <!DOCTYPE html>
-<html lang="si">
+<html lang="en" data-lang="en">
 <head>
+  <script is:inline>
+    (function(){var l=localStorage.getItem('tilershub-lang')||'en';document.documentElement.setAttribute('data-lang',l);})()
+  </script>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover" />
   <title>{title}</title>
@@ -79,6 +82,16 @@ const orgSchema = JSON.stringify({
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
   <link href="https://fonts.googleapis.com/css2?family=Noto+Sans+Sinhala:wght@300;400;500;600;700;800&family=Playfair+Display:ital,wght@0,400;0,600;0,700;1,400&display=swap" rel="stylesheet" />
   <slot name="head" />
+  <style is:global>
+    [data-lang="en"] .si-text { display: none !important; }
+    [data-lang="si"] .en-text { display: none !important; }
+    .lang-toggle {
+      font-size: 12px; font-weight: 600; padding: 6px 11px; border-radius: 8px;
+      background: transparent; color: var(--text-2); border: 1.5px solid var(--border);
+      cursor: pointer; white-space: nowrap; line-height: 1;
+    }
+    .lang-toggle:hover { background: var(--surface-2); }
+  </style>
   <!-- Google Tag Manager -->
   <script is:inline>(function(w,d,s,l,i){w[l]=w[l]||[];w[l].push({'gtm.start':new Date().getTime(),event:'gtm.js'});var f=d.getElementsByTagName(s)[0],j=d.createElement(s),dl=l!='dataLayer'?'&l='+l:'';j.async=true;j.src='https://www.googletagmanager.com/gtm.js?id='+i+dl;f.parentNode.insertBefore(j,f);})(window,document,'script','dataLayer','GTM-MX727MR5');</script>
 </head>
@@ -99,7 +112,14 @@ const orgSchema = JSON.stringify({
       <a href="/providers" class="header-icon-btn header-search-hide" title="Search" aria-label="Search providers">🔍</a>
       <a href="/notifications" class="header-icon-btn" title="Notifications" aria-label="Notifications">🔔</a>
       <AuthButton client:load />
-      <a href="/post-project" class="header-cta">ව්‍යාපෘතිය පලකරන්න</a>
+      <button class="lang-toggle" id="lang-toggle" aria-label="Switch language">
+        <span class="en-text">සිංහල</span>
+        <span class="si-text">English</span>
+      </button>
+      <a href="/post-project" class="header-cta">
+        <span class="en-text">Post Project</span>
+        <span class="si-text">ව්‍යාපෘතිය පලකරන්න</span>
+      </a>
       <button class="header-icon-btn" id="hamburger" aria-label="Menu">☰</button>
     </div>
   </header>
@@ -216,6 +236,14 @@ const orgSchema = JSON.stringify({
   </nav>
 
   <script>
+    // Language toggle
+    const langToggle = document.getElementById('lang-toggle')
+    langToggle?.addEventListener('click', () => {
+      const next = document.documentElement.getAttribute('data-lang') === 'en' ? 'si' : 'en'
+      localStorage.setItem('tilershub-lang', next)
+      document.documentElement.setAttribute('data-lang', next)
+    })
+
     const hamburger = document.getElementById('hamburger')
     const bottomMenu = document.getElementById('bottom-menu-btn')
     const overlay = document.getElementById('drawer-overlay')

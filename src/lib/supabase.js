@@ -172,9 +172,16 @@ export async function submitProviderApplication(fields) {
 
 export async function signInWithOtp(email) {
   const redirectTo = typeof window !== 'undefined'
-    ? `${window.location.origin}/dashboard`
-    : '/dashboard'
+    ? `${window.location.origin}/auth/callback`
+    : '/auth/callback'
   return supabase.auth.signInWithOtp({ email, options: { emailRedirectTo: redirectTo } })
+}
+
+export async function signInWithGoogle() {
+  const redirectTo = typeof window !== 'undefined'
+    ? `${window.location.origin}/auth/callback`
+    : 'https://tilershub.lk/auth/callback'
+  return supabase.auth.signInWithOAuth({ provider: 'google', options: { redirectTo } })
 }
 
 export async function getUser() {
