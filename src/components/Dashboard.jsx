@@ -370,13 +370,7 @@ function ProviderBidsTab({ projects, bids, submittedBids }) {
 // ═══════════════════════════════════════════════════════════════════
 
 function ConsumerDashboard({ user, projects, bids, submission, dataLoading, showClaimedBanner }) {
-  const [tab, setTab] = useState('projects')
   const initials = (user.email || '?').split('@')[0].slice(0,2).toUpperCase()
-
-  const TABS = [
-    { key:'projects', label:'📋 මගේ ව්‍යාපෘති' },
-    { key:'find',     label:'👷 ටයිලර් සොයන්න'  },
-  ]
 
   return (
     <div style={{ minHeight:'100dvh', background:'#f8fafc', paddingBottom:80 }}>
@@ -416,29 +410,12 @@ function ConsumerDashboard({ user, projects, bids, submission, dataLoading, show
             </div>
           </div>
 
-          {/* Tab bar — scrollable on mobile */}
-          <div className="db-tab-bar" style={{ display:'flex', overflowX:'auto', WebkitOverflowScrolling:'touch', marginLeft:-14, marginRight:-14, paddingLeft:14 }}>
-            {TABS.map(t => (
-              <button key={t.key} onClick={() => setTab(t.key)} style={{
-                padding:'10px 16px', fontSize:13, fontWeight:600, border:'none', cursor:'pointer',
-                background:'transparent', flexShrink:0,
-                color: tab === t.key ? 'var(--navy)' : 'var(--text-3)',
-                borderBottom: tab === t.key ? '2.5px solid var(--terra)' : '2.5px solid transparent',
-                transition:'all 0.15s', whiteSpace:'nowrap',
-              }}>{t.label}</button>
-            ))}
-            <div style={{ flexShrink:0, width:14 }} />
-          </div>
         </div>
       </div>
 
-      {/* ── Tab content ── */}
+      {/* ── Content ── */}
       <div className="db-content-pad" style={{ maxWidth:800, margin:'0 auto', padding:'20px 16px' }}>
-        {dataLoading ? <Spinner /> : tab === 'projects' ? (
-          <ProjectsTab projects={projects} bids={bids} />
-        ) : (
-          <FindTilersTab />
-        )}
+        {dataLoading ? <Spinner /> : <ProjectsTab projects={projects} bids={bids} />}
 
         {/* Become a provider CTA */}
         <div style={{ marginTop:28, padding:'20px 22px', background:'var(--navy-50)', border:'1px solid var(--navy-100)', borderRadius:14 }}>
@@ -450,47 +427,6 @@ function ConsumerDashboard({ user, projects, bids, submission, dataLoading, show
             ✅ සේවා සපයන්නෙකු ලෙස ඉල්ලුම් කරන්න
           </a>
         </div>
-      </div>
-    </div>
-  )
-}
-
-function FindTilersTab() {
-  const QUICK = [
-    { label:'සියලු වෘත්තිකයෝ',        href:'/providers?type=tiler',            icon:'👷', desc:'සත්‍යාපිත වෘත්තිකයෝ සොයන්න'          },
-    { label:'නාන කාමර ප්‍රතිසංස්.',  href:'/providers?q=Bathroom+Renovation', icon:'🚿', desc:'නාන කාමර ප්‍රතිසංස්කරණ විශේෂඥයන්'   },
-    { label:'බිම් ටයිල්',         href:'/providers?q=Floor+Tiling',        icon:'🪨', desc:'බිම් සහ බිත්ති ටයිල් විශේෂඥයන්'          },
-    { label:'ජලනිරෝධය',        href:'/providers?q=Waterproofing',       icon:'💧', desc:'සහතිකලත් ජලනිරෝධ කොන්ත්‍රාත්'    },
-    { label:'ටයිල් කැපීම',         href:'/providers?q=Tile+Cutting',        icon:'✂️', desc:'ව්‍යාවසායික ටයිල් කැපීම'    },
-    { label:'වැඩමුළු',            href:'/providers?type=workshop',         icon:'🏭', desc:'ටයිල් කැපීම සහ නිෂ්පාදන' },
-    { label:'ටයිල් සාප්පු',           href:'/providers?type=tile_shop',        icon:'🏪', desc:'සාප්පු සෙ ටයිල් මිලදී ගන්න'          },
-    { label:'සැපයුම්කරුවන්',            href:'/providers?type=supplier',         icon:'📦', desc:'ගොඩනැගිලි ද්‍රව්‍ය සැපයුම්කරුවන්'            },
-  ]
-
-  return (
-    <div>
-      <div style={{ marginBottom:16 }}>
-        <div style={{ fontSize:16, fontWeight:700, color:'var(--text)', marginBottom:4 }}>ටයිලිං වෘත්තිකයන් සොයන්න</div>
-        <div style={{ fontSize:13, color:'var(--text-3)' }}>ශ්‍රී ලංකාවේ සත්‍යාපිත සේවා සපයන්නන් බලන්න</div>
-      </div>
-
-      <div style={{ display:'grid', gridTemplateColumns:'repeat(auto-fill,minmax(160px,1fr))', gap:10 }}>
-        {QUICK.map(q => (
-          <a key={q.href} href={q.href} style={{ display:'flex', alignItems:'center', gap:10, padding:'12px 14px', background:'#fff', border:'1.5px solid var(--border)', borderRadius:12, textDecoration:'none', color:'var(--text)', transition:'border-color 0.15s, box-shadow 0.15s' }}
-            onMouseOver={e => { e.currentTarget.style.borderColor='var(--navy)'; e.currentTarget.style.boxShadow='var(--shadow-sm)' }}
-            onMouseOut={e  => { e.currentTarget.style.borderColor='var(--border)'; e.currentTarget.style.boxShadow='none' }}
-          >
-            <div style={{ width:36, height:36, borderRadius:10, background:'var(--navy-50)', display:'flex', alignItems:'center', justifyContent:'center', fontSize:17, flexShrink:0 }}>{q.icon}</div>
-            <div style={{ minWidth:0 }}>
-              <div style={{ fontSize:12, fontWeight:700, color:'var(--text)', lineHeight:1.3 }}>{q.label}</div>
-              <div style={{ fontSize:10, color:'var(--text-3)', marginTop:1, overflow:'hidden', textOverflow:'ellipsis', whiteSpace:'nowrap' }}>{q.desc}</div>
-            </div>
-          </a>
-        ))}
-      </div>
-
-      <div style={{ marginTop:14, textAlign:'center' }}>
-        <a href="/providers" style={{ fontSize:13, color:'var(--navy)', fontWeight:700, textDecoration:'none' }}>සියලු සේවා සපයන්නන් →</a>
       </div>
     </div>
   )
