@@ -575,7 +575,7 @@ function SubmissionsTab() {
   }
 
   async function listProvider(sub) {
-    await supabase.from('provider_submissions').update({ status: 'listed' }).eq('id', sub.id)
+    await supabase.from('provider_submissions').update({ status: 'approved' }).eq('id', sub.id)
 
     // Check for existing provider to avoid duplicates
     let existing = null
@@ -613,7 +613,7 @@ function SubmissionsTab() {
     load()
   }
 
-  const FILTERS = ['all','pending_review','approved','listed','rejected']
+  const FILTERS = ['all','pending_review','approved','rejected']
 
   return (
     <div>
@@ -648,8 +648,7 @@ function SubmissionsTab() {
                   <td style={S.td}>{timeAgo(r.created_at)}</td>
                   <td style={S.td}>
                     <div style={{ display: 'flex', gap: 5, flexWrap: 'wrap' }}>
-                      {r.status !== 'listed'    && <button onClick={() => listProvider(r)}                      style={S.btn('#16a34a')}>✓ List</button>}
-                      {r.status !== 'approved'  && <button onClick={() => update(r.id, { status: 'approved' })}  style={S.btn(NAVY)}>Approve</button>}
+                      {r.status !== 'approved'  && <button onClick={() => listProvider(r)}                      style={S.btn('#16a34a')}>✓ Approve</button>}
                       {r.status !== 'rejected'  && <button onClick={() => update(r.id, { status: 'rejected' })}  style={S.btn('#dc2626')}>Reject</button>}
                       {r.status !== 'pending_review' && <button onClick={() => update(r.id, { status: 'pending_review' })} style={S.btn('#94a3b8')}>Reset</button>}
                     </div>
@@ -1393,6 +1392,7 @@ const TABS = [
 ]
 
 const GOLD = '#E8B341'
+const ADMIN_EMAILS = ['tilershub@gmail.com']
 
 export default function AdminDashboard() {
   const [loading,   setLoading]   = useState(true)
@@ -1402,27 +1402,16 @@ export default function AdminDashboard() {
   const [isMobile,  setIsMobile]  = useState(() => typeof window !== 'undefined' && window.innerWidth < 768)
 
   useEffect(() => {
-    supabase.auth.getUser().then(async ({ data: { user: u } }) => {
+    supabase.auth.getUser().then(({ data: { user: u } }) => {
       setUser(u)
-      if (u) {
-        const { data } = await supabase.rpc('is_admin')
-        setIsAdmin(!!data)
-      } else {
-        setIsAdmin(false)
-      }
+      setIsAdmin(u ? ADMIN_EMAILS.includes(u.email) : false)
       setLoading(false)
     })
 
-    const { data: { subscription } } = supabase.auth.onAuthStateChange(async (_, session) => {
+    const { data: { subscription } } = supabase.auth.onAuthStateChange((_, session) => {
       const u = session?.user ?? null
       setUser(u)
-      if (u) {
-        const { data } = await supabase.rpc('is_admin')
-        setIsAdmin(!!data)
-      } else {
-        setIsAdmin(false)
-      }
-      setLoading(false)
+      if (u !== null) setIsAdmin(ADMIN_EMAILS.includes(u.email))
     })
     return () => subscription.unsubscribe()
   }, [])
