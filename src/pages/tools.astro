@@ -1,6 +1,7 @@
 ---
 import Layout from '../layouts/Layout.astro'
-import { supabase } from '../lib/supabase.js'
+
+const supabase = Astro.locals.supabase
 
 function waLead(phone, name) {
   const n = (phone || '').replace(/\D/g, '')

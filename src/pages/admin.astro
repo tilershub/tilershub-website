@@ -1,5 +1,11 @@
 ---
+export const prerender = false
 import AdminDashboard from '../components/AdminDashboard.jsx'
+
+const user = Astro.locals.user
+if (!user || user.email !== 'tilershub@gmail.com') {
+  return Astro.redirect('/')
+}
 ---
 <!DOCTYPE html>
 <html lang="en">
@@ -16,6 +22,6 @@ import AdminDashboard from '../components/AdminDashboard.jsx'
   </style>
 </head>
 <body>
-  <AdminDashboard client:only="react" />
+  <AdminDashboard initialUser={user} client:only="react" />
 </body>
 </html>

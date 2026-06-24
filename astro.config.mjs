@@ -4,7 +4,7 @@ import cloudflare from '@astrojs/cloudflare'
 
 export default defineConfig({
   integrations: [react()],
-  output: 'static',
+  output: 'server',
   adapter: cloudflare(),
   site: 'https://www.tilershub.lk',
 })

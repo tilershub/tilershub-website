@@ -650,12 +650,12 @@ function SuggestedContent({ type, providers, onSelectProvider, T }) {
 }
 
 // ─── Main component ────────────────────────────────────────────────────────────
-export default function ProviderDirectory({ initialType, initialSearch }) {
+export default function ProviderDirectory({ initialType, initialSearch, initialProviders }) {
   const [lang, toggleLang] = useLang()
   const T = TRANS[lang]
 
-  const [providers, setProviders] = useState([])
-  const [loading,   setLoading]   = useState(true)
+  const [providers, setProviders] = useState(initialProviders || [])
+  const [loading,   setLoading]   = useState(!initialProviders)
   const [loadError, setLoadError] = useState(null)
   const [inputValue, setInputValue] = useState(initialSearch || '')
   const [search,    setSearch]    = useState(initialSearch || '')
@@ -665,6 +665,7 @@ export default function ProviderDirectory({ initialType, initialSearch }) {
   const debounceRef = useRef(null)
 
   useEffect(() => {
+    if (initialProviders && initialProviders.length > 0) return
     async function load() {
       setLoading(true)
       setLoadError(null)

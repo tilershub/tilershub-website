@@ -2,7 +2,9 @@
 import '../index.css'
 import AuthButton from '../components/AuthButton.jsx'
 import DraftLinker from '../components/DraftLinker.jsx'
-import { supabase } from '../lib/supabase.js'
+
+const user = Astro.locals.user
+const supabase = Astro.locals.supabase
 
 const { count: activeProjectCount } = await supabase
   .from('projects')
@@ -112,7 +114,7 @@ const orgSchema = JSON.stringify({
     <div class="header-actions">
       <a href="/providers" class="header-icon-btn header-search-hide" title="Search" aria-label="Search providers">🔍</a>
       <a href="/notifications" class="header-icon-btn" title="Notifications" aria-label="Notifications">🔔</a>
-      <AuthButton client:load />
+      <AuthButton initialUser={user} client:load />
       <button class="lang-toggle" id="lang-toggle" aria-label="Switch language">
         <span class="en-text">සිංහල</span>
         <span class="si-text">English</span>

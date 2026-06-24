@@ -1,6 +1,5 @@
 ---
 import Layout from '../layouts/Layout.astro'
-import { supabase } from '../lib/supabase.js'
 import HomeHero from '../components/HomeHero.jsx'
 import { HOME_GROUPS, SERVICES } from '../lib/services.js'
 
@@ -26,7 +25,7 @@ const PROJECT_TYPE_COLORS: Record<string,string> = {
   'Waterproofing':'#0369a1','Tile Shop Inquiry':'#E05A2B',
 }
 
-const { data: recentProjectsRaw } = await supabase
+const { data: recentProjectsRaw } = await Astro.locals.supabase
   .from('projects')
   .select('id,project_type,city,district,description,budget_range,created_at')
   .eq('status', 'active')

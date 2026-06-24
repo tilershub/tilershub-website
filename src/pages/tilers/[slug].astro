@@ -1,18 +1,5 @@
 ---
-import { supabase } from '../../lib/supabase.js'
-
-export async function getStaticPaths() {
-  const { data: tilers } = await supabase
-    .from('tilers')
-    .select('id,slug')
-    .eq('is_verified', true)
-    .not('slug', 'is', null)
-  const paths = []
-  for (const t of tilers || []) {
-    paths.push({ params: { slug: t.slug } })
-  }
-  return paths
-}
+export const prerender = false
 
 const { slug } = Astro.params
 return Astro.redirect(`/providers/${slug}`, 301)

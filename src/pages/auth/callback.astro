@@ -1,56 +1,27 @@
 ---
+export const prerender = false
 import Layout from '../../layouts/Layout.astro'
+
+const supabase = Astro.locals.supabase
+const { data: { user } } = await supabase.auth.getUser()
+
+if (!user) {
+  return Astro.redirect('/login')
+}
+
+const ADMIN_EMAILS = ['tilershub@gmail.com']
+if (ADMIN_EMAILS.includes(user.email ?? '')) {
+  return Astro.redirect('/admin')
+}
+
+const [{ data: provider }, { data: sub }] = await Promise.all([
+  supabase.from('providers').select('id').eq('user_id', user.id).maybeSingle(),
+  supabase.from('provider_submissions').select('status').eq('user_id', user.id).maybeSingle(),
+])
+
+const isProvider =
+  !!provider ||
+  (sub && ['pending_review', 'approved', 'listed'].includes(sub.status))
+
+return Astro.redirect(isProvider ? '/provider' : '/account')
 ---
-
-<Layout
-  title="Loading… · TilersHub"
-  noindex={true}
->
-  <div style="min-height:80vh;display:flex;align-items:center;justify-content:center;padding:40px 20px;">
-    <div style="text-align:center;">
-      <div style="font-size:36px;margin-bottom:14px;">⏳</div>
-      <p style="font-size:15px;font-weight:600;color:#374151;">Loading your dashboard…</p>
-      <p style="font-size:12px;color:#94a3b8;margin-top:6px;">You'll be redirected in a moment.</p>
-    </div>
-  </div>
-
-  <script>
-    import { supabase } from '../../lib/supabase.js'
-
-    const ADMIN_EMAILS = ['tilershub@gmail.com']
-
-    async function handleRedirect(user) {
-      if (!user) { window.location.href = '/login'; return }
-      if (ADMIN_EMAILS.includes(user.email)) { window.location.href = '/admin'; return }
-
-      const [{ data: provider }, { data: sub }] = await Promise.all([
-        supabase.from('providers').select('id').eq('user_id', user.id).maybeSingle(),
-        supabase.from('provider_submissions').select('status').eq('user_id', user.id).maybeSingle(),
-      ])
-
-      const isProvider = !!provider ||
-        (sub && ['pending_review', 'approved', 'listed'].includes(sub.status))
-
-      window.location.href = isProvider ? '/provider' : '/account'
-    }
-
-    // Handle immediate session (existing login or after magic link)
-    ;(async () => {
-      const { data: { user } } = await supabase.auth.getUser()
-      if (user) { await handleRedirect(user); return }
-    })()
-
-    // Handle OAuth/magic-link session being established async
-    supabase.auth.onAuthStateChange(async (event, session) => {
-      if ((event === 'SIGNED_IN' || event === 'TOKEN_REFRESHED') && session?.user) {
-        await handleRedirect(session.user)
-      }
-    })
-
-    // Timeout fallback
-    setTimeout(() => {
-      const cur = window.location.href
-      if (cur.includes('/auth/callback')) window.location.href = '/login'
-    }, 8000)
-  </script>
-</Layout>

@@ -1,20 +1,20 @@
 ---
+export const prerender = false
 import Layout from '../../layouts/Layout.astro'
-import { supabase } from '../../lib/supabase.js'
 import { SERVICES } from '../../lib/services.js'
 import { BLOG_POSTS } from '../../lib/blog-posts.js'
 import { CATEGORIES } from '../../lib/categories.js'
 
-export function getStaticPaths() {
-  return CATEGORIES.map(cat => ({ params: { slug: cat.slug }, props: { cat } }))
-}
-
-const { cat } = Astro.props
+const { slug } = Astro.params
+const cat = CATEGORIES.find((c: any) => c.slug === slug)
+if (!cat) return Astro.redirect('/providers')
 
 const catServices = SERVICES.filter(s => {
   const text = [s.label, ...s.terms].join(' ').toLowerCase()
   return cat.terms.some((t: string) => text.includes(t))
 })
+
+const supabase = Astro.locals.supabase
 
 const { data: providersRaw } = await supabase
   .from('providers')

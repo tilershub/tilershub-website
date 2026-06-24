@@ -1,14 +1,9 @@
 ---
+export const prerender = false
 import Layout from '../../layouts/Layout.astro'
-import { supabase } from '../../lib/supabase.js'
-
-export async function getStaticPaths() {
-  const { data } = await supabase.from('brands').select('slug').eq('status', 'active')
-  return (data || []).map(b => ({ params: { slug: b.slug } }))
-}
 
 const { slug } = Astro.params
-const { data: brand } = await supabase.from('brands').select('*').eq('slug', slug).single()
+const { data: brand } = await Astro.locals.supabase.from('brands').select('*').eq('slug', slug).single()
 
 if (!brand) return Astro.redirect('/brands')
 if (brand.dedicated_page_url) return Astro.redirect(brand.dedicated_page_url, 301)

@@ -1,23 +1,16 @@
 import { useState, useEffect } from 'react'
 import { supabase, signInWithOtp, signInWithGoogle, signOut } from '../lib/supabase.js'
 
-export default function AuthButton() {
-  const [user, setUser] = useState(null)
-  const [loading, setLoading] = useState(true)
+export default function AuthButton({ initialUser }) {
+  const [user, setUser] = useState(initialUser ?? null)
   const [showModal, setShowModal] = useState(false)
 
   useEffect(() => {
-    supabase.auth.getUser().then(({ data: { user: u } }) => {
-      setUser(u)
-      setLoading(false)
-    })
     const { data: { subscription } } = supabase.auth.onAuthStateChange((_e, session) => {
       setUser(session?.user ?? null)
     })
     return () => subscription.unsubscribe()
   }, [])
-
-  if (loading) return null
 
   if (user) {
     const initials = (user.email || '?').slice(0, 2).toUpperCase()
