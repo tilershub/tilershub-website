@@ -13,9 +13,12 @@ export const POST: APIRoute = async ({ request, locals }) => {
     return json({ error: 'Invalid JSON' }, 400)
   }
 
+  const { data: provider } = await locals.supabase
+    .from('providers').select('slug').eq('user_id', user.id).maybeSingle()
+
   const { error } = await locals.supabase
     .from('bids')
-    .insert({ ...body, user_id: user.id })
+    .insert({ ...body, user_id: user.id, provider_slug: provider?.slug ?? null })
 
   if (error) return json({ error: error.message }, 400)
   return json({ ok: true }, 200)

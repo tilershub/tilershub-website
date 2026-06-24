@@ -701,7 +701,10 @@ function BidsPanel({ projectBids }) {
               <div key={bid.id} style={{ padding:'14px 16px', background:'#fff', borderRadius:12, border:`1.5px solid ${bid.status==='new'?'#fde68a':'#e2e8f0'}`, borderLeft:`4px solid ${bid.status==='new'?'#f59e0b':'#e2e8f0'}` }}>
                 <div style={{ display:'flex', alignItems:'flex-start', justifyContent:'space-between', gap:10, marginBottom:8 }}>
                   <div>
-                    <div style={{ fontSize:13, fontWeight:700, color:'#0f172a' }}>{bid.bidder_name}</div>
+                    {bid.provider_slug
+                      ? <a href={`/providers/${bid.provider_slug}`} target="_blank" rel="noopener" style={{ fontSize:13, fontWeight:700, color:'#1B3A6B', textDecoration:'none' }}>{bid.bidder_name} ↗</a>
+                      : <div style={{ fontSize:13, fontWeight:700, color:'#0f172a' }}>{bid.bidder_name}</div>
+                    }
                     <div style={{ fontSize:11, color:'#64748b', marginTop:2 }}>
                       <span style={{ textTransform:'capitalize' }}>{bid.bidder_type}</span>
                       {bid.quote_amount && <span style={{ marginLeft:8, color:'#166534', fontWeight:600 }}>· Rs. {bid.quote_amount.toLocaleString()}</span>}
