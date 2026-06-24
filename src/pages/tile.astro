@@ -1,6 +1,7 @@
 ---
 import Layout from '../layouts/Layout.astro'
-import { supabase } from '../lib/supabase.js'
+
+const supabase = Astro.locals.supabase
 
 const { data: allBrands } = await supabase
   .from('brands').select('*').eq('status', 'active')

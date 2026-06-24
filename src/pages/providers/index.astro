@@ -1,6 +1,15 @@
 ---
+export const prerender = false
 import Layout from '../../layouts/Layout.astro'
 import ProviderDirectory from '../../components/ProviderDirectory.jsx'
+
+const supabase = Astro.locals.supabase
+const { data: initialProviders } = await supabase
+  .from('providers')
+  .select('*')
+  .eq('status', 'active')
+  .order('is_featured', { ascending: false })
+  .order('created_at', { ascending: false })
 
 const BLOG_TIPS = [
   { slug: 'how-to-choose-a-tiler',             icon: '👷', color: '#1B3A6B', category: 'Hiring Tips',  title: 'How to Choose the Right Tiler' },
@@ -65,6 +74,6 @@ const pageTitle = type ? `${TYPE_LABELS[type] || 'Providers'} in Sri Lanka` : 'F
     </div>
   </div>
 
-  <ProviderDirectory client:only="react" initialType={type} initialSearch={q} />
+  <ProviderDirectory client:only="react" initialProviders={initialProviders ?? []} initialType={type} initialSearch={q} />
 
 </Layout>

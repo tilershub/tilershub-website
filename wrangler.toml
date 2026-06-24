@@ -6,9 +6,18 @@ main = "./dist/_worker.js/index.js"
 
 [assets]
 directory = "./dist"
-not_found_handling = "single-page-application"
+not_found_handling = "none"
 
-# Set ANTHROPIC_API_KEY in the Cloudflare dashboard:
+[vars]
+SUPABASE_URL = "https://ginrgwaciblcvxvkbeyd.supabase.co"
+SUPABASE_ANON_KEY = "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6ImdpbnJnd2FjaWJsY3Z4dmtiZXlkIiwicm9sZSI6ImFub24iLCJpYXQiOjE3NzkzNjUyODMsImV4cCI6MjA5NDk0MTI4M30.vcfg0gTKSdyKgqggK3OAFwUYwLSfr-QkN2mRFFr_R1M"
+
+# Set these in the Cloudflare dashboard:
 #   Workers & Pages → tilershub → Settings → Variables and Secrets
-#   Variable name: ANTHROPIC_API_KEY
-#   For local dev: add to .env file as ANTHROPIC_API_KEY=sk-ant-...
+#
+#   ANTHROPIC_API_KEY     = sk-ant-...
+#   SUPABASE_URL          = https://ginrgwaciblcvxvkbeyd.supabase.co
+#   SUPABASE_ANON_KEY     = eyJhbGci...
+#   SUPABASE_SERVICE_ROLE_KEY = eyJhbGci...  (keep secret — never expose to browser)
+#
+#   For local dev: add all the above to .env

@@ -1,13 +1,13 @@
 ---
+export const prerender = false
 import Layout from '../../layouts/Layout.astro'
-import { supabase } from '../../lib/supabase.js'
 import { SERVICES } from '../../lib/services.js'
 
-export function getStaticPaths() {
-  return SERVICES.map(s => ({ params: { slug: s.slug }, props: { service: s } }))
-}
+const { slug } = Astro.params
+const service = SERVICES.find(s => s.slug === slug)
+if (!service) return Astro.redirect('/providers')
 
-const { service } = Astro.props
+const supabase = Astro.locals.supabase
 
 const [{ data: providersRaw }, { data: recentProjectsRaw }] = await Promise.all([
   supabase

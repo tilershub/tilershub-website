@@ -1,6 +1,18 @@
 ---
+export const prerender = false
 import Layout from '../layouts/Layout.astro'
 import Dashboard from '../components/Dashboard.jsx'
+
+if (!Astro.locals.user) return Astro.redirect('/login')
+
+const supabase = Astro.locals.supabase
+const user = Astro.locals.user
+
+const [{ data: projects }, { data: provider }, { data: bids }] = await Promise.all([
+  supabase.from('projects').select('*').order('created_at', { ascending: false }).limit(50),
+  supabase.from('providers').select('*').eq('user_id', user.id).maybeSingle(),
+  supabase.from('bids').select('*').eq('user_id', user.id).order('created_at', { ascending: false }),
+])
 ---
 
 <Layout
@@ -8,5 +20,11 @@ import Dashboard from '../components/Dashboard.jsx'
   description="Find projects, manage your profile and track your quotes on TilersHub."
   noindex={true}
 >
-  <Dashboard client:only="react" />
+  <Dashboard
+    initialUser={user}
+    initialProjects={projects ?? []}
+    initialProvider={provider}
+    initialBids={bids ?? []}
+    client:only="react"
+  />
 </Layout>

@@ -33,17 +33,31 @@ const MOBILE_STYLES = `
   }
 `
 
-export default function Dashboard() {
-  const [user, setUser]               = useState(null)
-  const [loading, setLoading]         = useState(true)
+export default function Dashboard({ initialUser, initialProjects, initialProvider, initialBids }) {
+  const [user, setUser]               = useState(initialUser ?? null)
+  const [loading, setLoading]         = useState(!initialUser)
   const [loadError, setLoadError]     = useState(null)
-  const [projects, setProjects]       = useState([])
-  const [bids, setBids]               = useState({})
-  const [submission, setSubmission]   = useState(null)
-  const [claimedProfile, setClaimedProfile]       = useState(null)
+  const [projects, setProjects]       = useState(initialProjects || [])
+  const [claimedProfile, setClaimedProfile] = useState(initialProvider ?? null)
   const [dataLoading, setDataLoading] = useState(false)
+  const [submission, setSubmission]   = useState(null)
+
+  // Build bids map from flat array
+  const buildBidsMap = (flatBids) => {
+    const byJob = {}
+    for (const b of flatBids || []) { if (!byJob[b.job_id]) byJob[b.job_id] = []; byJob[b.job_id].push(b) }
+    return byJob
+  }
+  const [bids, setBids] = useState(() => buildBidsMap(initialBids))
 
   useEffect(() => {
+    if (initialUser) {
+      // Load submission status (not passed from server yet)
+      supabase.from('provider_submissions').select('*').eq('user_id', initialUser.id)
+        .order('created_at', { ascending: false }).limit(1).maybeSingle()
+        .then(({ data }) => setSubmission(data))
+      return
+    }
     getUser().then(u => { setUser(u); setLoading(false); if (u) loadData(u) })
     onAuthStateChange(u => { setUser(u); if (u) loadData(u); else setLoading(false) })
   }, [])
@@ -71,9 +85,7 @@ export default function Dashboard() {
     if (userProjects.length > 0) {
       const { data: bidData } = await supabase
         .from('bids').select('*').in('job_id', userProjects.map(p => p.id)).order('created_at', { ascending: false })
-      const byJob = {}
-      for (const b of bidData || []) { if (!byJob[b.job_id]) byJob[b.job_id] = []; byJob[b.job_id].push(b) }
-      setBids(byJob)
+      setBids(buildBidsMap(bidData))
     }
     setDataLoading(false)
   }

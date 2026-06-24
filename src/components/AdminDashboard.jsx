@@ -1411,14 +1411,15 @@ const TABS = [
 const GOLD = '#E8B341'
 const ADMIN_EMAILS = ['tilershub@gmail.com']
 
-export default function AdminDashboard() {
-  const [loading,   setLoading]   = useState(true)
-  const [user,      setUser]      = useState(null)
-  const [isAdmin,   setIsAdmin]   = useState(null)
+export default function AdminDashboard({ initialUser }) {
+  const [loading,   setLoading]   = useState(!initialUser)
+  const [user,      setUser]      = useState(initialUser ?? null)
+  const [isAdmin,   setIsAdmin]   = useState(initialUser ? ADMIN_EMAILS.includes(initialUser.email) : null)
   const [tab,       setTab]       = useState('overview')
   const [isMobile,  setIsMobile]  = useState(() => typeof window !== 'undefined' && window.innerWidth < 768)
 
   useEffect(() => {
+    if (initialUser) return // server already verified auth
     supabase.auth.getUser().then(({ data: { user: u } }) => {
       setUser(u)
       setIsAdmin(u ? ADMIN_EMAILS.includes(u.email) : false)

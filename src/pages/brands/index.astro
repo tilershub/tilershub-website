@@ -1,8 +1,7 @@
 ---
 import Layout from '../../layouts/Layout.astro'
-import { supabase } from '../../lib/supabase.js'
 
-const { data: allBrands } = await supabase.from('brands').select('*').eq('status', 'active').order('is_featured', { ascending: false }).order('name')
+const { data: allBrands } = await Astro.locals.supabase.from('brands').select('*').eq('status', 'active').order('is_featured', { ascending: false }).order('name')
 const brands = allBrands || []
 
 const CHEMICAL_CATS = ['Tile Adhesive', 'Waterproofing', 'Construction Chemicals', 'Grout', 'Sealants']

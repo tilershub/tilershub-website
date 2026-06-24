@@ -1,6 +1,7 @@
 import { SERVICES } from '../lib/services.js'
 import { BLOG_POSTS } from '../lib/blog-posts.js'
-import { supabase } from '../lib/supabase.js'
+
+export const prerender = false
 
 const BASE = 'https://www.tilershub.lk'
 
@@ -24,12 +25,12 @@ function url(loc, lastmod, changefreq, priority) {
   return `  <url>\n    <loc>${BASE}${loc}</loc>\n    <lastmod>${lastmod}</lastmod>\n    <changefreq>${changefreq}</changefreq>\n    <priority>${priority}</priority>\n  </url>`
 }
 
-export async function GET() {
+export async function GET({ locals }) {
   const today = new Date().toISOString().split('T')[0]
 
   const [{ data: tilerRows }, { data: providerRows }] = await Promise.all([
-    supabase.from('tilers').select('slug,updated_at').eq('is_verified', true).not('slug', 'is', null),
-    supabase.from('providers').select('slug,updated_at').not('slug', 'is', null),
+    locals.supabase.from('tilers').select('slug,updated_at').eq('is_verified', true).not('slug', 'is', null),
+    locals.supabase.from('providers').select('slug,updated_at').not('slug', 'is', null),
   ])
 
   const urls = [

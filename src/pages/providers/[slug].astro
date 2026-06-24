@@ -1,16 +1,12 @@
 ---
+export const prerender = false
 import Layout from '../../layouts/Layout.astro'
-import { supabase } from '../../lib/supabase.js'
 import ReviewsSection from '../../components/ReviewsSection.jsx'
 import ClaimProfile from '../../components/ClaimProfile.jsx'
 import EditProfileButton from '../../components/EditProfileButton.jsx'
 
-export async function getStaticPaths() {
-  const { data: providers } = await supabase.from('providers').select('slug').not('slug', 'is', null)
-  return (providers || []).map(p => ({ params: { slug: p.slug } }))
-}
-
 const { slug } = Astro.params
+const supabase = Astro.locals.supabase
 
 const { data: item } = await supabase.from('providers').select('*').eq('slug', slug).single()
 

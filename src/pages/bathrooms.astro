@@ -1,7 +1,8 @@
 ---
 import Layout from '../layouts/Layout.astro'
-import { supabase } from '../lib/supabase.js'
 import BathroomShopsGrid from '../components/BathroomShopsGrid.jsx'
+
+const supabase = Astro.locals.supabase
 
 const { data: shopData } = await supabase
   .from('providers')
