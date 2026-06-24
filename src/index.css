@@ -107,8 +107,16 @@ img { max-width: 100%; display: block; }
   width: 20px;
   height: 20px;
 }
-.site-logo-tile { background: var(--terra); border-radius: 2px; }
-.site-logo-tile.e { background: transparent; border: 1px solid rgba(224,90,43,0.35); }
+.site-logo-tile { border-radius: 2px; }
+.site-logo-grid .site-logo-tile:nth-child(1) { background: #C4956A; }
+.site-logo-grid .site-logo-tile:nth-child(2) { background: #8B5C3A; }
+.site-logo-grid .site-logo-tile:nth-child(3) { background: #3C200E; }
+.site-logo-grid .site-logo-tile:nth-child(4) { background: #7A4828; }
+.site-logo-grid .site-logo-tile:nth-child(5) { background: #CB9462; }
+.site-logo-grid .site-logo-tile:nth-child(6) { background: #593018; }
+.site-logo-grid .site-logo-tile:nth-child(7) { background: #C4956A; opacity: 0.4; }
+.site-logo-grid .site-logo-tile:nth-child(8) { background: #8B5C3A; opacity: 0.3; }
+.site-logo-grid .site-logo-tile:nth-child(9) { background: #3C200E; opacity: 0.2; }
 .site-logo-mark {
   font-family: 'Playfair Display', serif;
   font-size: 17px;
