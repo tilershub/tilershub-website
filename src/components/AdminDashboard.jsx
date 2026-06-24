@@ -547,11 +547,12 @@ function OverviewTab() {
 
 // ─── Submissions tab ──────────────────────────────────────────────────────────
 function SubmissionsTab() {
-  const [rows, setRows]       = useState([])
-  const [filter, setFilter]   = useState('pending_review')
-  const [loading, setLoading] = useState(true)
-  const [page, setPage]       = useState(0)
-  const [count, setCount]     = useState(0)
+  const [rows, setRows]           = useState([])
+  const [filter, setFilter]       = useState('pending_review')
+  const [loading, setLoading]     = useState(true)
+  const [page, setPage]           = useState(0)
+  const [count, setCount]         = useState(0)
+  const [approveError, setApproveError] = useState(null)
   const PER = 20
 
   const load = useCallback(async () => {
@@ -575,6 +576,7 @@ function SubmissionsTab() {
   }
 
   async function listProvider(sub) {
+    setApproveError(null)
     await supabase.from('provider_submissions').update({ status: 'approved' }).eq('id', sub.id)
 
     // Check for existing provider to avoid duplicates
@@ -591,7 +593,7 @@ function SubmissionsTab() {
 
     if (!existing) {
       const slug = slugify(sub.name || 'provider') + '-' + Math.random().toString(36).slice(2, 6)
-      await supabase.from('providers').insert({
+      const { data: inserted, error: insertError } = await supabase.from('providers').insert({
         name:                sub.name,
         provider_type:       sub.provider_type,
         city:                sub.city,
@@ -608,7 +610,17 @@ function SubmissionsTab() {
         slug,
         status:              'active',
         verification_status: 'none',
-      })
+      }).select('id')
+      if (insertError) {
+        setApproveError(`Provider created in submissions but failed to add to directory: ${insertError.message}`)
+        load()
+        return
+      }
+      if (!inserted || inserted.length === 0) {
+        setApproveError('Provider approved but directory insert was blocked. Check Supabase RLS policies.')
+        load()
+        return
+      }
     }
     load()
   }
@@ -628,6 +640,11 @@ function SubmissionsTab() {
           ))}
         </div>
       </div>
+      {approveError && (
+        <p style={{ color: '#dc2626', fontSize: 13, marginBottom: 12, padding: '8px 12px', background: '#fef2f2', borderRadius: 8, border: '1px solid #fecaca' }}>
+          ⚠ {approveError}
+        </p>
+      )}
       {loading ? <p style={{ color: '#94a3b8' }}>Loading…</p> : (
         <>
           <div style={S.card}>
