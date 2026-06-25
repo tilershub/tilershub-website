@@ -577,50 +577,22 @@ function SubmissionsTab() {
 
   async function listProvider(sub) {
     setApproveError(null)
-    await supabase.from('provider_submissions').update({ status: 'approved' }).eq('id', sub.id)
-
-    // Check for existing provider to avoid duplicates
-    let existing = null
-    if (sub.user_id) {
-      const { data } = await supabase.from('providers').select('id').eq('user_id', sub.user_id).maybeSingle()
-      existing = data
-    }
-    if (!existing && sub.whatsapp) {
-      const { data } = await supabase.from('providers').select('id')
-        .eq('whatsapp', sub.whatsapp).eq('name', sub.name).maybeSingle()
-      existing = data
-    }
-
-    if (!existing) {
-      const slug = slugify(sub.name || 'provider') + '-' + Math.random().toString(36).slice(2, 6)
-      const { data: inserted, error: insertError } = await supabase.from('providers').insert({
-        name:                sub.name,
-        provider_type:       sub.provider_type,
-        city:                sub.city,
-        district:            sub.district,
-        whatsapp:            sub.whatsapp,
-        phone:               sub.phone,
-        description:         sub.description,
-        profile_image:       sub.profile_image,
-        cover_image:         sub.cover_image,
-        gallery:             sub.photo_urls || null,
-        service_areas:       sub.service_areas,
-        services:            sub.services,
-        user_id:             sub.user_id,
-        slug,
-        status:              'active',
-        verification_status: 'none',
-      }).select('id')
-      if (insertError) {
-        setApproveError(`Provider created in submissions but failed to add to directory: ${insertError.message}`)
+    try {
+      const res = await fetch('/api/admin/providers/approve', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify(sub),
+      })
+      if (!res.ok) {
+        const err = await res.json().catch(() => ({}))
+        setApproveError('Approve failed: ' + (err.error || `HTTP ${res.status}`))
         load()
         return
       }
-      if (!inserted || inserted.length === 0) {
-        setApproveError('Provider approved but directory insert was blocked. Check Supabase RLS policies.')
-        load()
-        return
-      }
+    } catch (e) {
+      setApproveError('Network error: ' + e.message)
+      load()
+      return
     }
     load()
   }
