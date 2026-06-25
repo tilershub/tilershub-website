@@ -4,7 +4,7 @@ import AdminDashboard from '../components/AdminDashboard.jsx'
 
 const user = Astro.locals.user
 if (!user || user.email !== 'tilershub@gmail.com') {
-  return Astro.redirect('/')
+  return Astro.redirect('/login')
 }
 ---
 <!DOCTYPE html>

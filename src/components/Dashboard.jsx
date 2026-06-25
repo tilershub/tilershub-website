@@ -671,6 +671,23 @@ function SignInPrompt() {
 
 function BidsPanel({ projectBids }) {
   const [open, setOpen] = useState(false)
+  const [providerMap, setProviderMap] = useState({})
+
+  useEffect(() => {
+    if (!open) return
+    const slugs = [...new Set(projectBids.map(b => b.provider_slug).filter(Boolean))]
+    if (slugs.length === 0) return
+    supabase.from('providers')
+      .select('slug, profile_image, avg_rating, review_count, city, provider_type')
+      .in('slug', slugs)
+      .then(({ data }) => {
+        if (data) {
+          const m = {}
+          for (const p of data) m[p.slug] = p
+          setProviderMap(m)
+        }
+      })
+  }, [open])
 
   if (!projectBids?.length) return (
     <div style={{ marginTop:12, padding:'12px 14px', background:'#f8fafc', borderRadius:10, fontSize:12, color:'#94a3b8' }}>
@@ -697,18 +714,34 @@ function BidsPanel({ projectBids }) {
             const wa = bid.bidder_whatsapp?.replace(/\D/g,'')
             const norm = wa?.startsWith('94') ? wa : '94' + (wa?.replace(/^0/,'') || '')
             const waLink = `https://wa.me/${norm}?text=${encodeURIComponent('ආයුබෝවන්! 🙏\n\nTilersHub හරහා ඔබේ bid දැක්කා. ඔබගේ quote / message ගැන කතා කරමු.\n\nස්තූතියි!')}`
+            const prov = bid.provider_slug ? providerMap[bid.provider_slug] : null
+            const profileUrl = bid.provider_slug ? `/providers/${bid.provider_slug}` : null
             return (
               <div key={bid.id} style={{ padding:'14px 16px', background:'#fff', borderRadius:12, border:`1.5px solid ${bid.status==='new'?'#fde68a':'#e2e8f0'}`, borderLeft:`4px solid ${bid.status==='new'?'#f59e0b':'#e2e8f0'}` }}>
                 <div style={{ display:'flex', alignItems:'flex-start', justifyContent:'space-between', gap:10, marginBottom:8 }}>
-                  <div>
-                    {bid.provider_slug
-                      ? <a href={`/providers/${bid.provider_slug}`} target="_blank" rel="noopener" style={{ fontSize:13, fontWeight:700, color:'#1B3A6B', textDecoration:'none' }}>{bid.bidder_name} ↗</a>
-                      : <div style={{ fontSize:13, fontWeight:700, color:'#0f172a' }}>{bid.bidder_name}</div>
+                  <div style={{ display:'flex', alignItems:'center', gap:10, flex:1, minWidth:0 }}>
+                    {/* Provider avatar */}
+                    {profileUrl
+                      ? <a href={profileUrl} target="_blank" rel="noopener" style={{ flexShrink:0, textDecoration:'none' }}>
+                          {prov?.profile_image
+                            ? <img src={prov.profile_image} alt={bid.bidder_name} style={{ width:44, height:44, borderRadius:'50%', objectFit:'cover', border:'2px solid #e2e8f0' }} />
+                            : <div style={{ width:44, height:44, borderRadius:'50%', background:'#1B3A6B', display:'flex', alignItems:'center', justifyContent:'center', fontSize:16, color:'#fff', fontWeight:700, flexShrink:0 }}>{(bid.bidder_name||'?')[0].toUpperCase()}</div>
+                          }
+                        </a>
+                      : <div style={{ width:44, height:44, borderRadius:'50%', background:'#e2e8f0', display:'flex', alignItems:'center', justifyContent:'center', fontSize:16, color:'#64748b', fontWeight:700, flexShrink:0 }}>{(bid.bidder_name||'?')[0].toUpperCase()}</div>
                     }
-                    <div style={{ fontSize:11, color:'#64748b', marginTop:2 }}>
-                      <span style={{ textTransform:'capitalize' }}>{bid.bidder_type}</span>
-                      {bid.quote_amount && <span style={{ marginLeft:8, color:'#166534', fontWeight:600 }}>· Rs. {bid.quote_amount.toLocaleString()}</span>}
-                      {bid.timeline     && <span style={{ marginLeft:8 }}>· {bid.timeline}</span>}
+                    <div style={{ minWidth:0 }}>
+                      {profileUrl
+                        ? <a href={profileUrl} target="_blank" rel="noopener" style={{ fontSize:13, fontWeight:700, color:'#1B3A6B', textDecoration:'none', display:'block' }}>{bid.bidder_name} ↗</a>
+                        : <div style={{ fontSize:13, fontWeight:700, color:'#0f172a' }}>{bid.bidder_name}</div>
+                      }
+                      <div style={{ fontSize:11, color:'#64748b', marginTop:2, display:'flex', flexWrap:'wrap', gap:'0 8px' }}>
+                        {prov?.avg_rating > 0 && <span style={{ color:'#b45309' }}>⭐ {Number(prov.avg_rating).toFixed(1)} ({prov.review_count || 0})</span>}
+                        {prov?.city && <span>📍 {prov.city}</span>}
+                        {!prov && <span style={{ textTransform:'capitalize' }}>{bid.bidder_type}</span>}
+                        {bid.quote_amount && <span style={{ color:'#166534', fontWeight:600 }}>Rs. {bid.quote_amount.toLocaleString()}</span>}
+                        {bid.timeline     && <span>· {bid.timeline}</span>}
+                      </div>
                     </div>
                   </div>
                   {bid.status === 'new' && <span style={{ fontSize:10, fontWeight:700, padding:'2px 8px', borderRadius:20, background:'#fef3c7', color:'#92400e', whiteSpace:'nowrap' }}>New</span>}

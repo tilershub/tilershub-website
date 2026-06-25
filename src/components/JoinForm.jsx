@@ -135,12 +135,12 @@ const TRANS = {
 // ─── Shared helpers ───────────────────────────────────────────────────────────
 function useLang() {
   const [lang, setLangState] = useState(() => {
-    try { return localStorage.getItem('tilershub_lang') || 'si' } catch { return 'si' }
+    try { return localStorage.getItem('tilershub-lang') || 'si' } catch { return 'si' }
   })
   function toggle() {
     const next = lang === 'en' ? 'si' : 'en'
     setLangState(next)
-    try { localStorage.setItem('tilershub_lang', next) } catch {}
+    try { localStorage.setItem('tilershub-lang', next) } catch {}
   }
   return [lang, toggle]
 }
