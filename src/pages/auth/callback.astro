@@ -1,8 +1,14 @@
 ---
 export const prerender = false
-import Layout from '../../layouts/Layout.astro'
 
 const supabase = Astro.locals.supabase
+
+// Exchange PKCE code for session (sets auth cookie via middleware's setAll handler)
+const code = Astro.url.searchParams.get('code')
+if (code) {
+  await supabase.auth.exchangeCodeForSession(code)
+}
+
 const { data: { user } } = await supabase.auth.getUser()
 
 if (!user) {
