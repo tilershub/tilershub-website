@@ -102,7 +102,10 @@ function useLang() {
   function toggle() {
     const next = lang === 'en' ? 'si' : 'en'
     setLangState(next)
-    try { localStorage.setItem('tilershub-lang', next) } catch {}
+    try {
+      localStorage.setItem('tilershub-lang', next)
+      document.documentElement.setAttribute('data-lang', next)
+    } catch {}
   }
   return [lang, toggle]
 }
