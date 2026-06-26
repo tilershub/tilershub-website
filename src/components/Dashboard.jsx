@@ -746,9 +746,9 @@ function BidsPanel({ projectBids }) {
                   </div>
                   {bid.status === 'new' && <span style={{ fontSize:10, fontWeight:700, padding:'2px 8px', borderRadius:20, background:'#fef3c7', color:'#92400e', whiteSpace:'nowrap' }}>New</span>}
                 </div>
-                <p style={{ fontSize:12, color:'#475569', lineHeight:1.6, margin:'0 0 10px' }}>
+                {bid.message && <p style={{ fontSize:12, color:'#475569', lineHeight:1.6, margin:'0 0 10px' }}>
                   {bid.message.length > 200 ? bid.message.slice(0,200)+'…' : bid.message}
-                </p>
+                </p>}
                 <a href={waLink} target="_blank" rel="noopener noreferrer" style={{ display:'inline-flex', alignItems:'center', gap:6, fontSize:12, fontWeight:700, background:'#25D366', color:'#fff', borderRadius:8, padding:'7px 14px', textDecoration:'none' }}>
                   💬 WhatsApp හරහා අමතන්න
                 </a>
