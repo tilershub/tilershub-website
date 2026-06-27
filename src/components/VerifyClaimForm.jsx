@@ -40,7 +40,7 @@ export default function VerifyClaimForm() {
     const { data: result, error } = await supabase.rpc('verify_claim', { p_claim_id: claimId, p_code: trimmed })
     setSubmitting(false)
     if (error) { setErr('Something went wrong. Please try again.'); return }
-    if (result === 'ok') { window.location.href = '/dashboard?claimed=1'; return }
+    if (result === 'ok') { window.location.href = '/provider'; return }
     if (result === 'wrong_code') { setErr('That code is incorrect. Check the WhatsApp message and try again.'); return }
     if (result === 'not_found') { setStatus('expired'); return }
     setErr('Unexpected error. Please try again.')
@@ -70,7 +70,7 @@ export default function VerifyClaimForm() {
         <div style={{ fontSize: 40, marginBottom: 12 }}>✅</div>
         <h2 style={{ fontSize: 18, fontWeight: 700, color: '#0f172a', marginBottom: 8 }}>Profile already claimed</h2>
         <p style={{ fontSize: 13, color: '#64748b', marginBottom: 20, lineHeight: 1.7 }}>This profile has already been verified and linked to an account.</p>
-        <a href="/dashboard" style={{ padding: '10px 22px', background: '#1B3A6B', color: '#fff', borderRadius: 10, fontSize: 13, fontWeight: 700, textDecoration: 'none', display: 'inline-block' }}>Go to Dashboard →</a>
+        <a href="/provider" style={{ padding: '10px 22px', background: '#1B3A6B', color: '#fff', borderRadius: 10, fontSize: 13, fontWeight: 700, textDecoration: 'none', display: 'inline-block' }}>Go to Dashboard →</a>
       </div>
     )
   }

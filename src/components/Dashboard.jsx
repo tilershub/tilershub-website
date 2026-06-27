@@ -13,10 +13,10 @@ const TYPE_ICON = {
 function timeAgo(d) {
   if (!d) return ''
   const m = Math.floor((Date.now() - new Date(d)) / 60000)
-  if (m < 60)   return `${m}මිනි`
-  if (m < 1440) return `${Math.floor(m/60)}පැය`
-  if (m < 10080)return `${Math.floor(m/1440)}දින`
-  return new Date(d).toLocaleDateString('si-LK', { day:'numeric', month:'short' })
+  if (m < 60)   return `${m}m`
+  if (m < 1440) return `${Math.floor(m/60)}h`
+  if (m < 10080)return `${Math.floor(m/1440)}d`
+  return new Date(d).toLocaleDateString('en-LK', { day:'numeric', month:'short' })
 }
 
 // ─── ROOT COMPONENT ────────────────────────────────────────────────
@@ -204,9 +204,7 @@ function ProviderDashboard({ user, claimedProfile, submission, showClaimedBanner
     setDataLoading(false)
   }
 
-  const T = lang === 'si'
-    ? { explore:'🔍 ව්‍යාපෘති', quotes:'💬 ලංසු', saved:'🔖 සුරැකූ', profile:'👤 පැතිකඩ', reviews:'⭐ සමාලෝචන', provider:'සේවා සපයන්නා', signOut:'ගිණුමෙන් ඉවත් වන්න', viewListing:'🔗 ලිස්ටිං බලන්න' }
-    : { explore:'🔍 Explore', quotes:'💬 My Quotes', saved:'🔖 Saved', profile:'👤 Profile', reviews:'⭐ Reviews', provider:'Provider', signOut:'Sign Out', viewListing:'🔗 View Listing' }
+  const T = { explore:'🔍 Explore', quotes:'💬 My Quotes', saved:'🔖 Saved', profile:'👤 Profile', reviews:'⭐ Reviews', provider:'Provider', signOut:'Sign Out', viewListing:'🔗 View Listing' }
 
   const TABS = [
     { key:'explore',  label: T.explore  },
@@ -230,7 +228,7 @@ function ProviderDashboard({ user, claimedProfile, submission, showClaimedBanner
 
           {showClaimedBanner && (
             <div style={{ padding:'10px 14px', background:'rgba(22,163,74,0.15)', border:'1px solid rgba(22,163,74,0.3)', borderRadius:10, marginBottom:14 }}>
-              <span style={{ fontSize:13, color:'#4ade80', fontWeight:600 }}>✓ {lang === 'si' ? 'පැතිකඩ ඉල්ලා සිටි! Profile ටැබ් හි සංස්කරණය කරන්න.' : 'Profile claimed! Edit your profile in the Profile tab.'}</span>
+              <span style={{ fontSize:13, color:'#4ade80', fontWeight:600 }}>✓ Profile claimed! Edit your profile in the Profile tab.</span>
             </div>
           )}
 
@@ -247,7 +245,7 @@ function ProviderDashboard({ user, claimedProfile, submission, showClaimedBanner
                   <div style={{ fontSize:11, color:'rgba(255,255,255,0.38)', marginTop:1 }}>
                     {claimedProfile.city || claimedProfile.district || ''}
                     {claimedProfile.verification_status === 'th_master' && <span style={{ marginLeft:6, color:'#D4AF37' }}>· 🛡️ TH Master</span>}
-                    {claimedProfile.is_verified && claimedProfile.verification_status !== 'th_master' && <span style={{ marginLeft:6, color:'#4ade80' }}>· ✓ {lang === 'si' ? 'සත්‍යාපිත' : 'Verified'}</span>}
+                    {claimedProfile.is_verified && claimedProfile.verification_status !== 'th_master' && <span style={{ marginLeft:6, color:'#4ade80' }}>· ✓ Verified</span>}
                   </div>
                 )}
               </div>
@@ -301,9 +299,7 @@ function ExploreTab({ projects, user, lang }) {
   const [savedIds, setSavedIds] = useState(new Set())
   const [saving, setSaving] = useState(null)
 
-  const T = lang === 'si'
-    ? { empty:'ව්‍යාපෘති නොමැත', allTypes:'සියලු සේවා', allDist:'සියලු ප්‍රදේශ', contact:'📞 ගනුදෙනුකරු', save:'🔖 සුරකින්න', saved:'🔖 සුරැකිණ' }
-    : { empty:'No projects found', allTypes:'All services', allDist:'All districts', contact:'📞 Contact', save:'🔖 Save', saved:'🔖 Saved' }
+  const T = { empty:'No projects found', allTypes:'All services', allDist:'All districts', contact:'📞 Contact', save:'🔖 Save', saved:'🔖 Saved' }
 
   useEffect(() => {
     if (!user?.id) return
@@ -401,9 +397,7 @@ function ExploreTab({ projects, user, lang }) {
 
 // ── My Quotes Tab ─────────────────────────────────────────────────────────────
 function MyQuotesTab({ submittedBids, lang }) {
-  const T = lang === 'si'
-    ? { title:'ඔබ ඉදිරිපත් කළ ලංසු', empty:'ලංසු නොමැත', emptyDesc:'ව්‍යාපෘති ලිපිගොනු බලා ලංසු ඉදිරිපත් කරන්න.' }
-    : { title:'Quotes You Submitted', empty:'No quotes yet', emptyDesc:'Browse the Explore tab and submit quotes to active projects.' }
+  const T = { title:'Quotes You Submitted', empty:'No quotes yet', emptyDesc:'Browse the Explore tab and submit quotes to active projects.' }
 
   if (submittedBids.length === 0) return (
     <div style={{ textAlign:'center', padding:'48px 20px', background:'#fff', borderRadius:16, border:'1px solid var(--border)' }}>
@@ -418,7 +412,7 @@ function MyQuotesTab({ submittedBids, lang }) {
       <div style={{ fontSize:12, fontWeight:700, color:'var(--text-3)', textTransform:'uppercase', letterSpacing:1, marginBottom:4 }}>{T.title} ({submittedBids.length})</div>
       {submittedBids.map(bid => {
         const isNew = bid.status === 'new'
-        const statusLabel = bid.status === 'accepted' ? (lang === 'si' ? '✓ අනුමත' : '✓ Accepted') : bid.status === 'rejected' ? (lang === 'si' ? '✗ ප්‍රතික්ෂේප' : '✗ Rejected') : (lang === 'si' ? 'නව' : 'New')
+        const statusLabel = bid.status === 'accepted' ? '✓ Accepted' : bid.status === 'rejected' ? '✗ Rejected' : 'New'
         return (
           <div key={bid.id} style={{ padding:'16px 18px', background:'#fff', borderRadius:14, border:`1.5px solid ${isNew ? '#fde68a' : 'var(--border)'}`, borderLeft:`4px solid ${isNew ? '#f59e0b' : '#e2e8f0'}`, boxShadow:'var(--shadow-sm)' }}>
             <div style={{ fontSize:10, fontWeight:700, color:'var(--text-4)', textTransform:'uppercase', letterSpacing:1, marginBottom:6 }}>
@@ -442,9 +436,7 @@ function MyQuotesTab({ submittedBids, lang }) {
 
 // ── Saved Projects Tab ────────────────────────────────────────────────────────
 function SavedTab({ savedProjects, user, setSavedProjects, lang }) {
-  const T = lang === 'si'
-    ? { empty:'සුරැකූ ව්‍යාපෘති නොමැත', emptyDesc:'Explore ටැබ් හි 🔖 ක්ලික් කර ව්‍යාපෘති සුරකින්න.', remove:'ඉවත් කරන්න', contact:'📞 ගනුදෙනුකරු' }
-    : { empty:'No saved projects', emptyDesc:'Tap 🔖 on any project in the Explore tab to save it here.', remove:'Remove', contact:'📞 Contact' }
+  const T = { empty:'No saved projects', emptyDesc:'Tap 🔖 on any project in the Explore tab to save it here.', remove:'Remove', contact:'📞 Contact' }
 
   async function removeSaved(projectId) {
     await supabase.from('saved_projects').delete().eq('provider_id', user.id).eq('project_id', projectId)
@@ -498,9 +490,7 @@ function ProfileTab({ user, claimedProfile, submission, profileHref, lang }) {
   const [showEditor, setShowEditor]     = useState(false)
   const [showPortfolio, setShowPortfolio] = useState(false)
 
-  const T = lang === 'si'
-    ? { viewProfile:'🔗 ලිස්ටිං බලන්න', editProfile:'✏️ Edit Profile', managePhotos:'📸 Photos', noProfile:'ලිස්ටිං නොමැත', noProfileDesc:'ව්‍යාපෘති ලිස්ටිං ලැබීමට TilersHub හිදී ලිස්ට් වන්න.', join:'✅ සේවා සපයන්නෙකු ලෙස ඉල්ලුම් කරන්න' }
-    : { viewProfile:'🔗 View Listing', editProfile:'✏️ Edit Profile', managePhotos:'📸 Photos', noProfile:'Not Listed', noProfileDesc:'Get listed on TilersHub to receive project enquiries.', join:'✅ Apply as Provider' }
+  const T = { viewProfile:'🔗 View Listing', editProfile:'✏️ Edit Profile', managePhotos:'📸 Photos', noProfile:'Not Listed', noProfileDesc:'Get listed on TilersHub to receive project enquiries.', join:'✅ Apply as Provider' }
 
   return (
     <div style={{ display:'flex', flexDirection:'column', gap:16 }}>
@@ -536,9 +526,7 @@ function ProfileTab({ user, claimedProfile, submission, profileHref, lang }) {
 
 // ── Reviews Tab ───────────────────────────────────────────────────────────────
 function ReviewsTab({ reviews, profileHref, lang }) {
-  const T = lang === 'si'
-    ? { empty:'සමාලෝචන නොමැත', emptyDesc:'ඔබේ Profile Link Share කර සමාලෝචන ලබා ගන්න.', shareProfile:'🔗 Profile Link' }
-    : { empty:'No reviews yet', emptyDesc:'Share your profile link to receive reviews from customers.', shareProfile:'🔗 Share Profile' }
+  const T = { empty:'No reviews yet', emptyDesc:'Share your profile link to receive reviews from customers.', shareProfile:'🔗 Share Profile' }
 
   if (reviews.length === 0) return (
     <div style={{ textAlign:'center', padding:'48px 20px', background:'#fff', borderRadius:16, border:'1px solid var(--border)' }}>
@@ -553,7 +541,7 @@ function ReviewsTab({ reviews, profileHref, lang }) {
     <div style={{ display:'flex', flexDirection:'column', gap:12 }}>
       {reviews.map(r => {
         const stars = r.rating || r.stars || 5
-        const name = r.reviewer_name || r.customer_name || (lang === 'si' ? 'ගනුදෙනුකරු' : 'Customer')
+        const name = r.reviewer_name || r.customer_name || 'Customer'
         const comment = r.comment || r.review_text || r.message || ''
         return (
           <div key={r.id} style={{ background:'#fff', borderRadius:14, border:'1px solid var(--border)', padding:'16px 18px', boxShadow:'var(--shadow-sm)' }}>
@@ -587,7 +575,7 @@ function ConsumerDashboard({ user, projects, bids, submission, dataLoading, show
 
           {showClaimedBanner && (
             <div style={{ padding:'10px 14px', background:'#f0fdf4', border:'1px solid #bbf7d0', borderRadius:10, marginBottom:14 }}>
-              <span style={{ fontSize:13, color:'#15803d', fontWeight:600 }}>✓ පැතිකඩ සාර්ථකව ඉල්ලා සිටියා!</span>
+              <span style={{ fontSize:13, color:'#15803d', fontWeight:600 }}>✓ Profile claimed successfully!</span>
             </div>
           )}
 
@@ -598,20 +586,20 @@ function ConsumerDashboard({ user, projects, bids, submission, dataLoading, show
                 {initials}
               </div>
               <div>
-                <div style={{ fontSize:10, fontWeight:700, color:'var(--text-4)', letterSpacing:2, textTransform:'uppercase', marginBottom:2 }}>මගේ දෑළෙ</div>
-                <div className="db-profile-name" style={{ fontSize:16, fontWeight:700, color:'var(--text)', lineHeight:1.2 }}>නැවත සාදරයෙන් පිළිගනිමු</div>
+                <div style={{ fontSize:10, fontWeight:700, color:'var(--text-4)', letterSpacing:2, textTransform:'uppercase', marginBottom:2 }}>My Dashboard</div>
+                <div className="db-profile-name" style={{ fontSize:16, fontWeight:700, color:'var(--text)', lineHeight:1.2 }}>Welcome back</div>
                 <div style={{ fontSize:11, color:'var(--text-3)', marginTop:1, overflow:'hidden', textOverflow:'ellipsis', whiteSpace:'nowrap', maxWidth:'180px' }}>{user.email}</div>
               </div>
             </div>
 
             <div className="db-identity-actions" style={{ display:'flex', gap:8, flexWrap:'wrap', alignItems:'center' }}>
               <a href="/post-project" style={{ display:'inline-flex', alignItems:'center', gap:5, fontSize:12, fontWeight:700, color:'#fff', background:'var(--terra)', borderRadius:9, padding:'7px 14px', textDecoration:'none', whiteSpace:'nowrap' }}>
-                📋 ව්‍යාපෘතිය පලකරන්න
+                📋 Post a Project
               </a>
               <button
                 onClick={async () => { await signOut(); window.location.href = '/' }}
                 style={{ fontSize:12, color:'var(--text-3)', background:'var(--surface-2)', border:'1px solid var(--border)', borderRadius:8, padding:'6px 12px', cursor:'pointer', fontWeight:600, whiteSpace:'nowrap' }}
-              >ගිණුමෙන් ඉවත් වන්න</button>
+              >Sign Out</button>
             </div>
           </div>
 
@@ -622,16 +610,17 @@ function ConsumerDashboard({ user, projects, bids, submission, dataLoading, show
       <div className="db-content-pad" style={{ maxWidth:800, margin:'0 auto', padding:'20px 16px' }}>
         {dataLoading ? <Spinner /> : <ProjectsTab projects={projects} bids={bids} />}
 
-        {/* Become a provider CTA */}
-        <div style={{ marginTop:28, padding:'20px 22px', background:'var(--navy-50)', border:'1px solid var(--navy-100)', borderRadius:14 }}>
-          <div style={{ fontSize:13, fontWeight:700, color:'var(--navy)', marginBottom:4 }}>ඔබ ටයිලර් කෙනෙකු හෝ කොන්ත්‍රාත්කරුවෙකු ද?</div>
-          <p style={{ fontSize:12, color:'var(--text-3)', marginBottom:12, lineHeight:1.65 }}>
-            TilersHub හි ලිස්ට් වන්න — නිවාස හිමිකරුවන් WhatsApp හරහා ඔබ සොයා කෙළින්ම අමතති.
-          </p>
-          <a href="/join-tilershub" style={{ display:'inline-flex', alignItems:'center', gap:6, padding:'9px 18px', background:'var(--navy)', color:'#fff', borderRadius:9, fontSize:12, fontWeight:700, textDecoration:'none' }}>
-            ✅ සේවා සපයන්නෙකු ලෙස ඉල්ලුම් කරන්න
-          </a>
-        </div>
+        {!submission && (
+          <div style={{ marginTop:28, padding:'20px 22px', background:'var(--navy-50)', border:'1px solid var(--navy-100)', borderRadius:14 }}>
+            <div style={{ fontSize:13, fontWeight:700, color:'var(--navy)', marginBottom:4 }}>Are you a tiler or contractor?</div>
+            <p style={{ fontSize:12, color:'var(--text-3)', marginBottom:12, lineHeight:1.65 }}>
+              List your services on TilersHub — homeowners find you directly and contact you on WhatsApp.
+            </p>
+            <a href="/join-tilershub" style={{ display:'inline-flex', alignItems:'center', gap:6, padding:'9px 18px', background:'var(--navy)', color:'#fff', borderRadius:9, fontSize:12, fontWeight:700, textDecoration:'none' }}>
+              ✅ Apply as a Provider →
+            </a>
+          </div>
+        )}
       </div>
     </div>
   )
@@ -646,7 +635,7 @@ function Spinner({ full }) {
     <div style={{ ...(full ? { minHeight:'60vh' } : { padding:40 }), display:'flex', alignItems:'center', justifyContent:'center' }}>
       <div style={{ textAlign:'center' }}>
         <div className="spinner" style={{ margin:'0 auto 10px', borderColor:'rgba(26,43,74,0.15)', borderTopColor:'var(--navy)' }} />
-        <p style={{ fontSize:13, color:'var(--text-3)' }}>පූරණය වෙමින්…</p>
+        <p style={{ fontSize:13, color:'var(--text-3)' }}>Loading…</p>
       </div>
     </div>
   )
@@ -657,12 +646,12 @@ function SignInPrompt() {
     <div style={{ minHeight:'60vh', display:'flex', alignItems:'center', justifyContent:'center', padding:20 }}>
       <div style={{ textAlign:'center', maxWidth:380 }}>
         <div style={{ fontSize:56, marginBottom:14 }}>🔒</div>
-        <h2 style={{ fontFamily:"'Playfair Display',serif", fontSize:22, fontWeight:700, color:'var(--text)', marginBottom:10 }}>ඔබේ ගිණුමට ලොගිනය</h2>
+        <h2 style={{ fontFamily:"'Playfair Display',serif", fontSize:22, fontWeight:700, color:'var(--text)', marginBottom:10 }}>Sign in to your account</h2>
         <p style={{ fontSize:14, color:'var(--text-3)', lineHeight:1.7, marginBottom:24 }}>
-          සේවා සපයන්නන්: ව්‍යාපෘති සොයා ගෙන පැතිකඩ කළමනාකරණය කරන්න.<br/>නිවාස හිමිකරුවන්: ව්‍යාපෘති සහ ලංසු නිරීක්ෂණය කරන්න.
+          Providers: find projects and manage your profile.<br/>Homeowners: track your projects and quotes.
         </p>
         <a href="/login" style={{ display:'inline-flex', alignItems:'center', gap:6, padding:'12px 28px', background:'var(--navy)', color:'#fff', borderRadius:12, fontSize:14, fontWeight:700, textDecoration:'none' }}>
-          ලොගිනය →
+          Sign in →
         </a>
       </div>
     </div>
@@ -691,7 +680,7 @@ function BidsPanel({ projectBids }) {
 
   if (!projectBids?.length) return (
     <div style={{ marginTop:12, padding:'12px 14px', background:'#f8fafc', borderRadius:10, fontSize:12, color:'#94a3b8' }}>
-      💬 ලංසු නොමැත — ඔබේ ව්‍යාපෘතිය සජීවීය, සියලු සේවා සපයන්නන්ට දිස් වේ.
+      💬 No bids yet — your project is live and visible to all providers.
     </div>
   )
 
@@ -703,8 +692,8 @@ function BidsPanel({ projectBids }) {
         <span style={{ display:'inline-flex', alignItems:'center', justifyContent:'center', background: newCount > 0 ? '#f59e0b' : '#e2e8f0', color: newCount > 0 ? '#fff' : '#64748b', borderRadius:20, padding:'2px 8px', fontSize:11, fontWeight:700 }}>
           {projectBids.length}
         </span>
-        {projectBids.length} ලංසු ලැබිලා
-        {newCount > 0 && <span style={{ fontSize:11, color:'#f59e0b', fontWeight:700 }}>· {newCount} නව</span>}
+        {projectBids.length} bid{projectBids.length !== 1 ? 's' : ''} received
+        {newCount > 0 && <span style={{ fontSize:11, color:'#f59e0b', fontWeight:700 }}>· {newCount} new</span>}
         <span style={{ fontSize:14, color:'#94a3b8' }}>{open ? '▲' : '▼'}</span>
       </button>
 
@@ -713,7 +702,7 @@ function BidsPanel({ projectBids }) {
           {projectBids.map(bid => {
             const wa = bid.bidder_whatsapp?.replace(/\D/g,'')
             const norm = wa?.startsWith('94') ? wa : '94' + (wa?.replace(/^0/,'') || '')
-            const waLink = `https://wa.me/${norm}?text=${encodeURIComponent('ආයුබෝවන්! 🙏\n\nTilersHub හරහා ඔබේ bid දැක්කා. ඔබගේ quote / message ගැන කතා කරමු.\n\nස්තූතියි!')}`
+            const waLink = `https://wa.me/${norm}?text=${encodeURIComponent('Hi! 👋\n\nI saw your bid on TilersHub. Let\'s discuss your quote.\n\nThank you!')}`
             const prov = bid.provider_slug ? providerMap[bid.provider_slug] : null
             const profileUrl = bid.provider_slug ? `/providers/${bid.provider_slug}` : null
             return (
@@ -750,7 +739,7 @@ function BidsPanel({ projectBids }) {
                   {bid.message.length > 200 ? bid.message.slice(0,200)+'…' : bid.message}
                 </p>}
                 <a href={waLink} target="_blank" rel="noopener noreferrer" style={{ display:'inline-flex', alignItems:'center', gap:6, fontSize:12, fontWeight:700, background:'#25D366', color:'#fff', borderRadius:8, padding:'7px 14px', textDecoration:'none' }}>
-                  💬 WhatsApp හරහා අමතන්න
+                  💬 Contact via WhatsApp
                 </a>
               </div>
             )
@@ -763,23 +752,23 @@ function BidsPanel({ projectBids }) {
 
 function ProjectsTab({ projects, bids, isProvider }) {
   const STATUS_COLOR = {
-    pending_review: { bg:'#FEF3C7', color:'#92400E', label:'සමාලෝචනය යටතේ' },
-    active:         { bg:'#F0FDF4', color:'#166534', label:'ක්‍රියාකාරී'        },
-    matched:        { bg:'#EFF6FF', color:'#1E40AF', label:'ගලපා ගෙන'       },
-    completed:      { bg:'#F3F4F6', color:'#374151', label:'සම්පූර්ණ'     },
+    pending_review: { bg:'#FEF3C7', color:'#92400E', label:'Under Review' },
+    active:         { bg:'#F0FDF4', color:'#166534', label:'Active'        },
+    matched:        { bg:'#EFF6FF', color:'#1E40AF', label:'Matched'       },
+    completed:      { bg:'#F3F4F6', color:'#374151', label:'Completed'     },
   }
 
   if (projects.length === 0) return (
     <div style={{ textAlign:'center', padding:'48px 20px', background:'#fff', borderRadius:16, border:'1px solid var(--border)' }}>
       <div style={{ fontSize:40, marginBottom:12 }}>📋</div>
-      <div style={{ fontSize:15, fontWeight:700, color:'var(--text)', marginBottom:8 }}>ව්‍යාපෘති නොමැත</div>
+      <div style={{ fontSize:15, fontWeight:700, color:'var(--text)', marginBottom:8 }}>No projects yet</div>
       <p style={{ fontSize:13, color:'var(--text-3)', marginBottom:20, lineHeight:1.7 }}>
         {isProvider
-          ? "ඔබ ව්‍යාපෘති ලිය කර නැත. ඔබට ටයිලිං ව්‍යාපෘතියක් ලිය කර ලංසු ලබා ගත හැකිය."
-          : 'ටයිලිං ව්‍යාපෘතියක් පලකරන්න — සේවා සපයන්නන් ලංසු දෙති. ඔබ කා හා සම්බන්ධ වන්නද යන්න ඔබ තෝරා ගනී.'}
+          ? "You haven't posted any projects. Post a tiling project to receive quotes."
+          : 'Post a tiling project — providers will submit quotes and you choose who to work with.'}
       </p>
       <a href="/post-project" style={{ display:'inline-flex', alignItems:'center', gap:6, padding:'11px 22px', background:'var(--terra)', color:'#fff', borderRadius:10, fontSize:13, fontWeight:700, textDecoration:'none' }}>
-        📋 ව්‍යාපෘතිය පලකරන්න
+        📋 Post a Project
       </a>
     </div>
   )
@@ -798,14 +787,14 @@ function ProjectsTab({ projects, bids, isProvider }) {
               <span style={{ fontSize:11, fontWeight:700, padding:'3px 10px', borderRadius:20, background:s.bg, color:s.color, whiteSpace:'nowrap', flexShrink:0 }}>{s.label}</span>
             </div>
             <p style={{ fontSize:13, color:'var(--text-2)', lineHeight:1.6, margin:0 }}>{p.description}</p>
-            {p.budget_range && <div style={{ fontSize:11, color:'var(--text-4)', marginTop:8 }}>💰 අයවැය: {p.budget_range}</div>}
+            {p.budget_range && <div style={{ fontSize:11, color:'var(--text-4)', marginTop:8 }}>💰 Budget: {p.budget_range}</div>}
             {p.created_at   && <div style={{ fontSize:11, color:'var(--text-4)', marginTop:4 }}>Posted {new Date(p.created_at).toLocaleDateString('en-LK',{day:'numeric',month:'short',year:'numeric'})}</div>}
             <BidsPanel projectBids={bids[p.id] || []} />
           </div>
         )
       })}
       <div style={{ textAlign:'center', paddingTop:8 }}>
-        <a href="/post-project" style={{ fontSize:13, color:'var(--navy)', fontWeight:600, textDecoration:'none' }}>+ තවත් ව්‍යාපෘතියක් පලකරන්න</a>
+        <a href="/post-project" style={{ fontSize:13, color:'var(--navy)', fontWeight:600, textDecoration:'none' }}>+ Post Another Project</a>
       </div>
     </div>
   )
@@ -813,22 +802,22 @@ function ProjectsTab({ projects, bids, isProvider }) {
 
 function ListingTab({ submission }) {
   const STATUS = {
-    pending_review: { bg:'#FEF3C7', color:'#92400E', label:'සමාලෝචනය යටතේ', desc:'ඔබේ ඉල්ලුම සමාලෝචනය කෙරෙමින් ඇත. ව්‍යාපාරික දින 1-2 ඇතුළත WhatsApp හරහා සම්බන්ධ වෙමු.' },
-    approved:       { bg:'#F0FDF4', color:'#166534', label:'අනුමත',      desc:'ඔබේ ඉල්ලුම අනුමත කෙරිණ. ලිස්ටිං සකස් කෙරෙමින් ඇත.'                                   },
-    listed:         { bg:'#EFF6FF', color:'#1E40AF', label:'ලිස්ට් කෙරිණ',         desc:'ඔබ TilersHub හි සජීවී ය! ගනුදෙනුකරුවන්ට ඔබව සොයා සම්බන්ධ වීමට හැකිය.'                                },
-    rejected:       { bg:'#FEF2F2', color:'#991B1B', label:'අනුමත නොකෙරිණ',  desc:'ඔබේ ඉල්ලුම අනුමත නොකෙරිණ. විස්තර සඳහා අප අමතන්න.'                                    },
+    pending_review: { bg:'#FEF3C7', color:'#92400E', label:'Under Review', desc:"Your application is being reviewed. We'll contact you via WhatsApp within 1-2 business days." },
+    approved:       { bg:'#F0FDF4', color:'#166534', label:'Approved',      desc:'Your application has been approved. Your listing is being set up.'                            },
+    listed:         { bg:'#EFF6FF', color:'#1E40AF', label:'Listed',        desc:"You're live on TilersHub! Customers can find and contact you."                               },
+    rejected:       { bg:'#FEF2F2', color:'#991B1B', label:'Not Approved',  desc:'Your application was not approved. Contact us for details.'                                  },
   }
 
   if (!submission) return (
     <div style={{ textAlign:'center', padding:'48px 20px', background:'#fff', borderRadius:16, border:'1px solid var(--border)' }}>
       <div style={{ fontSize:40, marginBottom:12 }}>👷</div>
-      <div style={{ fontSize:15, fontWeight:700, color:'var(--text)', marginBottom:8 }}>ලිස්ට් කෙරී නැත</div>
+      <div style={{ fontSize:15, fontWeight:700, color:'var(--text)', marginBottom:8 }}>Not Listed</div>
       <p style={{ fontSize:13, color:'var(--text-3)', marginBottom:20, lineHeight:1.7 }}>
-        TilersHub හි නොමිලේ ලිස්ට් වී විමසීම් ලැබෙන්නට ඉල්ලුම් කරන්න.
+        Apply to list your services on TilersHub and start receiving enquiries for free.
       </p>
       <div style={{ display:'flex', gap:10, justifyContent:'center', flexWrap:'wrap' }}>
-        <a href="/join-tilershub" style={{ display:'inline-flex', alignItems:'center', gap:6, padding:'11px 22px', background:'var(--navy)', color:'#fff', borderRadius:10, fontSize:13, fontWeight:700, textDecoration:'none' }}>✅ සේවා සපයන්නෙකු ලෙස ඉල්ලුම් කරන්න</a>
-        <a href="/providers"      style={{ display:'inline-flex', alignItems:'center', gap:6, padding:'11px 22px', background:'var(--surface-3)', color:'var(--text-2)', border:'1px solid var(--border)', borderRadius:10, fontSize:13, fontWeight:600, textDecoration:'none' }}>නාමාවලිය</a>
+        <a href="/join-tilershub" style={{ display:'inline-flex', alignItems:'center', gap:6, padding:'11px 22px', background:'var(--navy)', color:'#fff', borderRadius:10, fontSize:13, fontWeight:700, textDecoration:'none' }}>✅ Apply as a Provider</a>
+        <a href="/providers"      style={{ display:'inline-flex', alignItems:'center', gap:6, padding:'11px 22px', background:'var(--surface-3)', color:'var(--text-2)', border:'1px solid var(--border)', borderRadius:10, fontSize:13, fontWeight:600, textDecoration:'none' }}>Browse Directory</a>
       </div>
     </div>
   )
@@ -849,7 +838,7 @@ function ListingTab({ submission }) {
       </div>
       {(submission.services||[]).length > 0 && (
         <div>
-          <div style={{ fontSize:11, fontWeight:700, color:'var(--text-3)', textTransform:'uppercase', letterSpacing:1, marginBottom:8 }}>සේවාවන්</div>
+          <div style={{ fontSize:11, fontWeight:700, color:'var(--text-3)', textTransform:'uppercase', letterSpacing:1, marginBottom:8 }}>Services</div>
           <div style={{ display:'flex', flexWrap:'wrap', gap:6 }}>
             {submission.services.map(sv => <span key={sv} className="chip chip-navy" style={{ fontSize:11 }}>{sv}</span>)}
           </div>
@@ -857,7 +846,7 @@ function ListingTab({ submission }) {
       )}
       <div style={{ marginTop:18, paddingTop:16, borderTop:'1px solid var(--border)' }}>
         <a href={`https://wa.me/94774503744?text=Hi TilersHub, I applied as a provider (${submission.name}) and want to check my listing status.`} target="_blank" rel="noopener" style={{ fontSize:12, fontWeight:600, color:'#16a34a', textDecoration:'none', display:'inline-flex', alignItems:'center', gap:5 }}>
-          💬 TilersHub WhatsApp හරහා අමතන්න
+          💬 Contact TilersHub via WhatsApp
         </a>
       </div>
     </div>
