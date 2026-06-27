@@ -177,7 +177,10 @@ function ProviderCard({ p }) {
   const chips = (p.services || []).slice(0, 3)
 
   return (
-    <div style={{ flexShrink: 0, width: 280, background: '#fff', borderRadius: 20, border: '1px solid #e8edf5', overflow: 'hidden', boxShadow: '0 2px 12px rgba(0,0,0,0.06)', display: 'flex' }}>
+    <div
+      onClick={() => href && (window.location.href = href)}
+      style={{ flexShrink: 0, width: 280, background: '#fff', borderRadius: 20, border: '1px solid #e8edf5', overflow: 'hidden', boxShadow: '0 2px 12px rgba(0,0,0,0.06)', display: 'flex', cursor: href ? 'pointer' : 'default' }}
+    >
       {/* Coloured avatar panel */}
       <div style={{ width: 90, flexShrink: 0, background: color, display: 'flex', alignItems: 'center', justifyContent: 'center', minHeight: 130, overflow: 'hidden' }}>
         {img
@@ -201,12 +204,12 @@ function ProviderCard({ p }) {
         {p.avg_rating > 0 && <div style={{ fontSize: 11, color: '#f59e0b', marginBottom: 8 }}>⭐ {Number(p.avg_rating).toFixed(1)}</div>}
         <div style={{ marginTop: 'auto' }}>
           {phone
-            ? <a href={waLink(phone, name)} target="_blank" rel="noopener noreferrer"
+            ? <a href={waLink(phone, name)} target="_blank" rel="noopener noreferrer" onClick={e => e.stopPropagation()}
                 style={{ display: 'inline-flex', alignItems: 'center', gap: 5, background: '#25D366', color: '#fff', borderRadius: 10, padding: '7px 14px', fontSize: 11, fontWeight: 700, textDecoration: 'none' }}>
                 💬 WhatsApp
               </a>
             : href
-              ? <a href={href} style={{ display: 'inline-flex', alignItems: 'center', gap: 5, background: '#1B3A6B', color: '#fff', borderRadius: 10, padding: '7px 14px', fontSize: 11, fontWeight: 700, textDecoration: 'none' }}>
+              ? <a href={href} onClick={e => e.stopPropagation()} style={{ display: 'inline-flex', alignItems: 'center', gap: 5, background: '#1B3A6B', color: '#fff', borderRadius: 10, padding: '7px 14px', fontSize: 11, fontWeight: 700, textDecoration: 'none' }}>
                   View Profile ›
                 </a>
               : null

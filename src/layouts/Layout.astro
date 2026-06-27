@@ -50,11 +50,8 @@ const orgSchema = JSON.stringify({
 })
 ---
 <!DOCTYPE html>
-<html lang="en" data-lang="si">
+<html lang="en">
 <head>
-  <script is:inline>
-    (function(){var l=localStorage.getItem('tilershub-lang')||'si';document.documentElement.setAttribute('data-lang',l);})()
-  </script>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover" />
   <title>{title}</title>
@@ -83,17 +80,10 @@ const orgSchema = JSON.stringify({
   <link rel="apple-touch-icon" href="/favicon.png" />
   <link rel="preconnect" href="https://fonts.googleapis.com" />
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
-  <link href="https://fonts.googleapis.com/css2?family=Noto+Sans+Sinhala:wght@300;400;500;600;700;800&family=Playfair+Display:ital,wght@0,400;0,600;0,700;1,400&display=swap" rel="stylesheet" />
+  <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,400;0,600;0,700;1,400&display=swap" rel="stylesheet" />
   <slot name="head" />
   <style is:global>
-    [data-lang="en"] .si-text { display: none !important; }
-    [data-lang="si"] .en-text { display: none !important; }
-    .lang-toggle {
-      font-size: 12px; font-weight: 600; padding: 6px 11px; border-radius: 8px;
-      background: transparent; color: var(--text-2); border: 1.5px solid var(--border);
-      cursor: pointer; white-space: nowrap; line-height: 1;
-    }
-    .lang-toggle:hover { background: var(--surface-2); }
+    .si-text { display: none !important; }
   </style>
   <!-- Google Tag Manager -->
   <script is:inline>(function(w,d,s,l,i){w[l]=w[l]||[];w[l].push({'gtm.start':new Date().getTime(),event:'gtm.js'});var f=d.getElementsByTagName(s)[0],j=d.createElement(s),dl=l!='dataLayer'?'&l='+l:'';j.async=true;j.src='https://www.googletagmanager.com/gtm.js?id='+i+dl;f.parentNode.insertBefore(j,f);})(window,document,'script','dataLayer','GTM-MX727MR5');</script>
@@ -115,14 +105,7 @@ const orgSchema = JSON.stringify({
       <a href="/providers" class="header-icon-btn header-search-hide" title="Search" aria-label="Search providers">🔍</a>
       <a href="/notifications" class="header-icon-btn" title="Notifications" aria-label="Notifications">🔔</a>
       <AuthButton initialUser={user} client:load />
-      <button class="lang-toggle" id="lang-toggle" aria-label="Switch language">
-        <span class="en-text">සිංහල</span>
-        <span class="si-text">English</span>
-      </button>
-      <a href="/post-project" class="header-cta">
-        <span class="en-text">Post Project</span>
-        <span class="si-text">ව්‍යාපෘතිය පලකරන්න</span>
-      </a>
+      <a href="/post-project" class="header-cta">Post Project</a>
       <button class="header-icon-btn" id="hamburger" aria-label="Menu">☰</button>
     </div>
   </header>
@@ -134,22 +117,21 @@ const orgSchema = JSON.stringify({
       <span style="font-family:'Playfair Display',serif;font-size:16px;font-weight:700;color:#fff;">TILERS<span style="color:#E05A2B;">HUB</span></span>
       <button id="close-drawer" style="background:transparent;border:none;color:rgba(255,255,255,0.5);font-size:22px;cursor:pointer;padding:4px;">✕</button>
     </div>
-    <a href="/" class={`drawer-link${path==='/'?' active':''}`}>🏠 මුල් පිටුව</a>
-    <a href="/providers?type=tiler" class={`drawer-link${path.startsWith('/providers')?' active':''}`}>👷 වෘත්තිකයෝ සොයන්න</a>
-    <a href="/jobs" class={`drawer-link${path==='/jobs'?' active':''}`}>💼 ව්‍යාපෘති බලන්න</a>
-    <a href="/estimator" class={`drawer-link${path==='/estimator'?' active':''}`}>📐 පිරිවැය ගණනය</a>
+    <a href="/" class={`drawer-link${path==='/'?' active':''}`}>🏠 Home</a>
+    <a href="/providers?type=tiler" class={`drawer-link${path.startsWith('/providers')?' active':''}`}>👷 Find Professionals</a>
+    <a href="/jobs" class={`drawer-link${path==='/jobs'?' active':''}`}>💼 View Projects</a>
+    <a href="/estimator" class={`drawer-link${path==='/estimator'?' active':''}`}>📐 Cost Estimator</a>
     <div class="drawer-divider"></div>
-    <a href="/post-project" class="drawer-link highlight">📋 ව්‍යාපෘතිය පලකරන්න — ලංසු ලබා ගන්න</a>
-    <a href="/join-tilershub" class="drawer-link" style="color:rgba(255,255,255,0.6);">✅ සේවා සපයන්නෙකු ලෙස එකතු වන්න</a>
+    <a href="/post-project" class="drawer-link highlight">📋 Post a Project — Get Quotes</a>
+    <a href="/join-tilershub" class="drawer-link" style="color:rgba(255,255,255,0.6);">✅ Join as a Provider</a>
     <div class="drawer-divider"></div>
-    <a href="/providers" class="drawer-link" style="color:rgba(255,255,255,0.5);font-size:13px;">🔍 සියලු සේවා සපයන්නන්</a>
+    <a href="/providers" class="drawer-link" style="color:rgba(255,255,255,0.5);font-size:13px;">🔍 All Providers</a>
     <div class="drawer-divider"></div>
-    <a href="/dashboard" class={`drawer-link${path==='/dashboard'?' active':''}`} style="color:rgba(255,255,255,0.5);font-size:13px;">👤 මගේ උපකරණ පුවරුව</a>
-    <a href="/about" class={`drawer-link${path==='/about'?' active':''}`} style="color:rgba(255,255,255,0.5);font-size:13px;">ℹ️ TilersHub ගැන</a>
-    <a href="/contact" class={`drawer-link${path==='/contact'?' active':''}`} style="color:rgba(255,255,255,0.5);font-size:13px;">📬 අප අමතන්න</a>
+    <a href="/about" class={`drawer-link${path==='/about'?' active':''}`} style="color:rgba(255,255,255,0.5);font-size:13px;">ℹ️ About TilersHub</a>
+    <a href="/contact" class={`drawer-link${path==='/contact'?' active':''}`} style="color:rgba(255,255,255,0.5);font-size:13px;">📬 Contact Us</a>
   </div>
 
-  <!-- Links anonymous drafts/claims to account after magic-link sign-in -->
+  <!-- Links anonymous drafts/claims to account after sign-in -->
   <DraftLinker client:load />
 
   <main class="page-wrap">
@@ -162,10 +144,10 @@ const orgSchema = JSON.stringify({
       <!-- Brand -->
       <div>
         <div style="display:flex;align-items:center;gap:8px;margin-bottom:10px;">
-          <div class="site-logo-grid">{[0,1,2,3,4,5,6,7,8].map(i=><div class={`site-logo-tile${i===8?' e':''}`}></div>)}</div>
+          <div class="site-logo-grid">{[0,1,2,3,4,5,6,7,8].map(()=><div class="site-logo-tile"></div>)}</div>
           <span style="font-family:'Playfair Display',serif;font-size:16px;font-weight:700;color:rgba(255,255,255,0.88);">TILERS<strong>HUB</strong></span>
         </div>
-        <p class="footer-brand-text">ශ්‍රී ලංකාවේ ටයිල් සහ නිවාස ප්‍රතිසංස්කරණ වෙළඳ පොළ — ව්‍යාපෘතිය පලකරන්න, ලංසු ලබා ගන්න, ඔබේ ප්‍රවීණයා තෝරා ගන්න. නිවාස හිමිකරුවන්ට නොමිලේ.</p>
+        <p class="footer-brand-text">Sri Lanka's tile &amp; home renovation marketplace — post a project, get quotes, choose your expert. Free for homeowners.</p>
         <div style="display:flex;gap:10px;margin-top:16px;">
           <a href="https://chat.whatsapp.com/IR9ZWyFj7ZN15KeOHqwG3Z" target="_blank" rel="noopener" style="display:inline-flex;align-items:center;gap:5px;font-size:11px;font-weight:700;color:#25D366;text-decoration:none;">💬 WhatsApp</a>
           <a href="https://www.facebook.com/share/g/1Dsc63BvXS/" target="_blank" rel="noopener" style="display:inline-flex;align-items:center;gap:5px;font-size:11px;font-weight:700;color:#60a5fa;text-decoration:none;">👥 Facebook</a>
@@ -173,38 +155,38 @@ const orgSchema = JSON.stringify({
       </div>
       <!-- Discover -->
       <div>
-        <div class="footer-col-head">සොයා ගන්න</div>
+        <div class="footer-col-head">Discover</div>
         <nav class="footer-links">
-          <a href="/providers?type=tiler">වෘත්තිකයෝ සොයන්න</a>
-          <a href="/jobs">ව්‍යාපෘති බලන්න</a>
-          <a href="/estimator">පිරිවැය ගණනය</a>
-          <a href="/providers">සියලු සේවා සපයන්නන්</a>
-          <a href="/services/bathroom-renovation">නාන කාමර ප්‍රතිසංස්කරණ</a>
-          <a href="/services/floor-tiling">බිම් ටයිල්</a>
+          <a href="/providers?type=tiler">Find Professionals</a>
+          <a href="/jobs">View Projects</a>
+          <a href="/estimator">Cost Estimator</a>
+          <a href="/providers">All Providers</a>
+          <a href="/services/bathroom-renovation">Bathroom Renovation</a>
+          <a href="/services/floor-tiling">Floor Tiling</a>
         </nav>
       </div>
       <!-- Get Started -->
       <div>
-        <div class="footer-col-head">ආරම්භ කරන්න</div>
+        <div class="footer-col-head">Get Started</div>
         <nav class="footer-links">
-          <a href="/post-project">ව්‍යාපෘතිය පලකරන්න</a>
-          <a href="/join-tilershub">සේවා සපයන්නෙකු ලෙස එකතු වන්න</a>
-          <a href="/dashboard">මගේ උපකරණ පුවරුව</a>
+          <a href="/post-project">Post a Project</a>
+          <a href="/join-tilershub">Join as a Provider</a>
+          <a href="/account">My Account</a>
         </nav>
       </div>
       <!-- Company -->
       <div>
-        <div class="footer-col-head">සමාගම</div>
+        <div class="footer-col-head">Company</div>
         <nav class="footer-links">
-          <a href="/blog">බ්ලොග් සහ ඉඟි</a>
-          <a href="/about">TilersHub ගැන</a>
-          <a href="/contact">අප අමතන්න</a>
+          <a href="/blog">Blog &amp; Tips</a>
+          <a href="/about">About TilersHub</a>
+          <a href="/contact">Contact Us</a>
         </nav>
       </div>
     </div>
     <div class="footer-bottom">
-      <span>© 2025 <strong>TilersHub</strong> · tilershub.lk · 🇱🇰 ශ්‍රී ලංකා</span>
-      <span style="color:rgba(245,158,11,0.5);font-weight:600;">♥ ශ්‍රී ලංකාවේ නිර්මාණය</span>
+      <span>© 2025 <strong>TilersHub</strong> · tilershub.lk · 🇱🇰 Sri Lanka</span>
+      <span style="color:rgba(245,158,11,0.5);font-weight:600;">♥ Made in Sri Lanka</span>
     </div>
   </footer>
 
@@ -213,11 +195,11 @@ const orgSchema = JSON.stringify({
     <div class="bottom-nav-inner">
       <a href="/" class={`bottom-nav-item${path==='/'?' active':''}`}>
         <span class="bottom-nav-icon">🏠</span>
-        මුල් පිටුව
+        Home
       </a>
       <a href="/providers" class={`bottom-nav-item${path.startsWith('/providers')?' active':''}`}>
         <span class="bottom-nav-icon">👥</span>
-        සේවා සපයන්නන්
+        Providers
       </a>
       <a href="/post-project" class="bottom-nav-post" aria-label="Post a project">
         +
@@ -229,24 +211,16 @@ const orgSchema = JSON.stringify({
             <span style="position:absolute;top:-5px;right:-8px;background:#E05A2B;color:#fff;font-size:8px;font-weight:800;border-radius:20px;padding:1px 4px;min-width:14px;text-align:center;line-height:14px;border:1.5px solid #fff;">{activeProjectCount > 99 ? '99+' : activeProjectCount}</span>
           )}
         </span>
-        ව්‍යාපෘති
+        Projects
       </a>
-      <a href="/dashboard" class={`bottom-nav-item${path==='/dashboard'?' active':''}`}>
+      <a href="/account" class={`bottom-nav-item${path==='/account'||path==='/provider'?' active':''}`}>
         <span class="bottom-nav-icon">👤</span>
-        පැතිකඩ
+        Account
       </a>
     </div>
   </nav>
 
   <script>
-    // Language toggle
-    const langToggle = document.getElementById('lang-toggle')
-    langToggle?.addEventListener('click', () => {
-      const next = document.documentElement.getAttribute('data-lang') === 'en' ? 'si' : 'en'
-      localStorage.setItem('tilershub-lang', next)
-      document.documentElement.setAttribute('data-lang', next)
-    })
-
     const hamburger = document.getElementById('hamburger')
     const bottomMenu = document.getElementById('bottom-menu-btn')
     const overlay = document.getElementById('drawer-overlay')
