@@ -6,6 +6,7 @@ import { SERVICES } from '../../lib/services.js'
 const { slug } = Astro.params
 const service = SERVICES.find(s => s.slug === slug)
 if (!service) return Astro.redirect('/providers')
+if (service.externalUrl) return Astro.redirect(service.externalUrl, 302)
 
 const supabase = Astro.locals.supabase
 
