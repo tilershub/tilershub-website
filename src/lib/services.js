@@ -1,5 +1,5 @@
 export const SERVICES = [
-  { slug: 'bathroom-renovation',     icon: '🚿', label: 'Bathroom Renovation',      externalUrl: 'https://luxehome.lk', terms: ['Bathroom Renovation', 'Bathroom Reno', 'Bathroom Tiling'] },
+  { slug: 'bathroom-renovation',     icon: '🚿', label: 'Bathroom Renovation',      externalUrl: 'https://luxehome.lk/services/bathroom/', terms: ['Bathroom Renovation', 'Bathroom Reno', 'Bathroom Tiling'] },
   { slug: 'bathroom-plumbing',       icon: '🚽', label: 'Bathroom Plumbing',         terms: ['Bathroom Plumbing', 'Plumbing'] },
   { slug: 'bathroom-lighting',       icon: '💡', label: 'Bathroom Lighting',         terms: ['Bathroom Lighting', 'Lighting'] },
   { slug: 'shower-cubicle',          icon: '🚿', label: 'Shower Cubicle',            terms: ['Shower Cubicle', 'Shower Installation', 'Shower'] },
