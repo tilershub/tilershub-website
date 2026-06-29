@@ -228,6 +228,83 @@ export const BLOG_POSTS = [
     cta: { text: 'Find Large Format Specialists', href: '/providers?q=Large+Format+Tiling' },
   },
   {
+    slug: 'tile-selection-guide-sri-lanka',
+    datePublished: '2026-06-29',
+    title: 'නිවැරදි ටයිල් එක තෝරාගන්නේ කොහොමද? — Material, Surface සහ ලංකාවේ Market එක ගැන Expert මතය',
+    excerpt: 'ලංකාවේ ඉදිකිරීම් ක්ෂේත්‍රයේ අවුරුදු 10ක් ගිය ශිල්පියෙකු ලෙස — Ceramic, Porcelain, Vitrified, Polished, Matte, Rocell, Mega Tiles, C2 Adhesive — ඔක්කොම ගැන honest breakdown.',
+    category: 'ටයිල් මාර්ගෝපදේශය',
+    readTime: 'මිනිත්තු 8',
+    icon: '🧱',
+    color: '#1B3A6B',
+    relatedSlugs: ['best-tiles-for-bathroom-floor', 'large-format-tiles-guide', 'waterproofing-bathroom-guide'],
+    sections: [
+      {
+        heading: 'ටයිල් එකක් ගන්නේ ලස්සනට විතරක් නෙමෙයි',
+        body: `ගෙයක් හදද්දී ගොඩක් අය කරන ලොකුම වැරැද්දක් තමයි ටයිල් එකක් තෝරද්දී ඒකේ ලස්සන, නැත්නම් "ඩිසයින් එක" විතරක්ම බලන එක. හැබැයි ඇත්ත කතාව නම්, ටයිල් එකක් තෝරන්න ඕනේ ඒකේ Material, කල්පැවැත්ම, ආරක්ෂාව සහ තාක්ෂණික ප්‍රමිතීන් ගැනත් හිතලායි. අපේ රටේ බහුතරයක් දෙනා දන්නේ Rocell සහ Lanka Tiles බ්‍රෑන්ඩ් දෙක විතරයි. හැබැයි ලංකාවේ Market එක ඇතුළේ සුපිරි ගණයේ Premium නිමාවෙ ඉඳලා සාක්කුවට ඔරොත්තු දෙන Budget විකල්ප වෙනකම් ලොකු පරාසයක් තියෙනවා. මේ ලිපියෙන් මම කියා දෙන්නේ අතරමං නොවී, තමන්ගේ නිවසට සහ Budget එකට ගැලපෙනම ටයිල් එක නිවැරදිව තෝරාගන්නේ කොහොමද කියලායි.`,
+      },
+      {
+        heading: 'Ceramic ටයිල් — Internal Walls වලට',
+        body: `Ceramic කියන්නේ ලංකාවේ "Affordable Tile" කියලා කෙලින්ම හඳුනාගන්නා ටයිල් වර්ගය. සාමාන්‍ය මැටි වලින් හදන නිසා සිදුරු (Porosity) වැඩියි. වතුර උරාගැනීමේ ප්‍රවණතාව වැඩි නිසා, සහ තදබව (Hardness) අඩු නිසා, බිමට දැම්මොත් සීරෙන්නත් කඩෙන්නත් ඉඩ වැඩියි. Water Absorption Rate 7%–15% ත් අතරේ. ඒ නිසා Bathroom Floor, Balcony, හෝ Outdoor ගාල Ceramic ගන්නේ Avoid කරන්න. Bathroom Wall, Kitchen Backsplash, Internal Wall ගාල නම් Excellent Value for Money.`,
+      },
+      {
+        heading: 'Porcelain ටයිල් — Gold Standard',
+        body: `Porcelain කියන්නේ Ceramic ගෙ Premium, Engineered Cousin. ඉතා පිරිසිදු සුදු මැටි සහ Quartz එකතු කරලා ඉහළ Temperature වල Furnace ගාලා Fire කරන නිසා අතිශය ශක්තිමත්. Water Absorption Rate < 0.5% — Practically Water-proof. ISO 13006 Standard ප්‍රකාරව A Group Tile. Bathroom Floor, Living Area, Outdoor, Commercial Space ගාල Porcelain ගෙ Performance Outstanding. Hardness Mohs Scale ~7 නිසා Scratch, Stain, Heavy Traffic ඔක්කොටම ඔරොත්තු දෙනවා. Budget Tight නම් Loan ගෙවලා හෝ Porcelain ගන්නා ගොල්ලෙකු — ඒ Investment ජීවිත කාලයකටම ආරක්ෂාව දෙනවා.`,
+      },
+      {
+        heading: 'Vitrified ටයිල් — Hall සහ Living Area ගාල',
+        body: `Vitrified කියන්නේ Hydraulic Pressing ක්‍රමයෙන් Silica Add කරලා Tile Body Glass-like Dense State ගාල Press කළ ටයිල් වර්ගයක්. Porcelain ට Parallel Water Absorption < 0.5%. Full Body Vitrified (FBV) නම් Tile ඇතුළටම Pattern Runs. Double Charge Vitrified නම් Surface Design Layer Thick. ඝර්ෂණයට, ගෙවීයාමට, බරට ඔරොත්තු දීම ඉහළයි. Large Living Areas, Bedrooms, Commercial Showrooms ගාල Ideal. ප්‍රවේශමක් — Polished Vitrified Outdoor Use ගාල Slip Hazard. Outdoor ගාල Glazed හෝ Matte Finish විතරයි.`,
+      },
+      {
+        heading: 'Terracotta — ස්වභාවික Rustic Look ට',
+        body: `Sri Lankan Heritage Homes, Boutique Hotels, Eco Resorts ගෙ Aesthetics ට Terracotta Perfect. Natural Clay, Unglazed, Kiln-fired. Water Absorption > 10%, ඒ කිව්වේ ඉතාමත් Porous. ඒ නිසා Install කළ ගමන්ම Penetrating Sealer ගාලා Seal කිරීම Mandatory. Properly Seal නොකළ Terracotta Stain ගන්නවා, Moss Grow කරනවා, Damp Issue Create කරනවා. Interior Decorative Walls, Proper Sealing කරපු Patios, Rustic-themed Dining Areas ගාල ලස්සනයි. ඒත් Annual Sealing Refresh Commitment ඕනේ.`,
+      },
+      {
+        heading: 'Polished Finish — සාලයේ දිලිසෙන නිමාව',
+        body: `කන්නාඩියක් වගේ Glossy Surface. Vitrified Tiles ගෙ Surface Mechanically Grind කරලා Buff Polish කිරීමෙන් Achieve කරනවා. Light Reflect කරන නිසා Rooms Bigger and Brighter Look. Elegant, Premium Aesthetic. Easy to Clean. හැබැයි Wet Conditions ගාල ඉතාමත් Slippery — Bathroom Floors, Balconies, Outdoors ගාල Polished Finish Use කරන්නම එපා. Living Areas, Bedrooms, Dry Corridors ගාල Perfect.`,
+      },
+      {
+        heading: 'Glazed, Matte සහ Lappato Finish',
+        body: `Glazed Finish: Tile Surface ඉහළ Liquid Glass Layer (Glaze) Apply කරලා Firing Process ගෙ Done. Wide Design Variety, Stain Protection. Bathroom Walls, Kitchen Backsplash ගාල හොඳයි. Matte Finish: Unpolished, Non-reflective Surface. Anti-slip Properties Built-in. Bathroom Floors, Kitchen Floors, Balconies ගාල Mandatory. R10 Minimum, R11 Recommended for Wet Areas. Semi-Matte / Lappato: Polished සහ Matte ගෙ Middle Ground — Slight Sheen but Not Full Mirror Gloss. Light Reflection Moderate. Living Areas, Bedrooms ගාල Increasingly Popular. Lappato ගෙ Practical Advantage — Polished ගෙ Dangerous Slip නැතිව Premium Look ලැබෙනවා.`,
+      },
+      {
+        heading: 'Granite, Marble සහ Quartz — ස්වභාවික සහ Engineered Stone',
+        body: `Granite: ස්වභාවික Igneous Rock. Extreme Hardness, Low Porosity. Pantry Tops, Staircases, Commercial Flooring ගාල Unmatched. Sealing Recommend, ඒත් Marble ට Compare කළොත් Maintenance ගොඩ අඩුයි. Marble: ලස්සන Luxury Look. ඒත් Highly Porous, Calcite-based. Bathroom Chemicals, Acid-based Cleaners, Soap Scum Marble Surface Etch කරනවා. Bathroom Floor ගාල Marble Use නොකරන්න — Dry Living Areas, Feature Walls, Powder Rooms ගාල Use කරන්න. Quartz (Engineered Stone): Natural Quartz 93% + Resin Binders. Non-porous by Design. Scratch, Stain, Heat Resistant. Modern Pantry Tops, Bathroom Vanity Tops ගාල Perfect Choice.`,
+      },
+      {
+        heading: 'කොතැනට කොන් ටයිල්? — Spatial Guide',
+        body: `Living Area සහ Rooms: Porcelain හෝ Vitrified, Polished හෝ Semi-Matte Finish. ඉඩකඩ ඇති Look සහ Cleaning Convenience. Bathroom Floor: Porcelain, Matte Finish, R10/R11 Anti-slip Rating අනිවාර්යයෙන්. Bathroom Wall: Ceramic හෝ Porcelain, Glazed Finish — Soap, Water Easily Wipe Off. Balcony / Outdoor: Outdoor-grade Porcelain, Rough Matte හෝ Rustic Terracotta — UV, Rain, Slip ගාල ඔරොත්තු දිය යුතුයි. Kitchen Floor: Matte Porcelain — Chemical Resistant. Staircase: Granite හෝ Anti-slip Porcelain, Nosing Edge Required. Pantry Top: Granite හෝ Quartz — Heat සහ Scratch Resistance.`,
+      },
+      {
+        heading: 'Rocell, Lanka Tiles — Premium Local Standard',
+        body: `Rocell සහ Lanka Tiles (1st Quality) ලංකාවේ Tile Market ගෙ Backbone. ISO Certified, Consistent Quality Control. 1st Quality (Grade 1) කිව්වේ Size Variation ±0.5mm ඇතුළත, Surface Defect Zero Tolerance, Shade Consistency Batch-to-batch Controlled, Full Warranty Coverage. Bathroom, Living Areas, ඕනෑම Visible Space ගාල 1st Quality Only — Hidden Cost Later ගෙවීමට වඩා Upfront Right Product ගන්නා එකයි Smart.`,
+      },
+      {
+        heading: 'Mega Tiles සහ Ideal Tiles — Large Format ප්‍රේමීන්ට',
+        body: `Mega Tiles: Industry Insiders දන්නා Brand. Production European Export Quality Standards Meet කරනවා. Middle Eastern Market ට Export කරන Same Quality Line ගෙ Tiles Locally Available. Large Format (120x60, 120x120, 80x160) Category ගාල Mega Tiles Performance Outstanding. Luxury Homes, Large Open-plan Living Areas, Developer Projects ගාල Excellent. Ideal Tiles (Wennappuwa): Authentic Italian Imported Large Format Tiles. Colombo ඇතුළේ Architects, Interior Designers ගොල්ලෝ Wennappuwa Drive කරනවා ඒ Showroom ගාල. European Certified Thickness, Flatness, Shade Consistency. Luxury Villa Projects, Five-star Hotel Specifications ගාල.`,
+      },
+      {
+        heading: 'Macktiles, Budget Range, සහ 2nd Quality ගැන Honest Truth',
+        body: `Macktiles: Highly Affordable Sri Lankan Brand. Market ගෙ ඇඩ් Indian Tiles, Lanka Tiles 2nd Quality, Rocell Cevilli (Rocell ගෙ Budget Sub-brand) ගෙ Comparable Tier. Rental Properties, Utility Rooms, Store Rooms ගාල Perfectly Acceptable. 2nd Quality (Grade 2) කිව්වේ Reject Tile නෙමෙයි — Minor Size Variation ±1-2mm, Slight Shade Difference, හෝ Tiny Surface Defect. Durable, ඒත් Consistency ගාල Minor Issues. Expert Tip: 2nd Quality ගෙ Size Variation Absorb කිරීමට Wider Tile Spacers (3mm) Use කරන්න. Same Batch Full Purchase. Behind Sofa, Inside Wardrobes, Cabinet Under Areas ගෙ Hidden Spaces ගාල Strategic Placement. Experienced Tiler Hand ගාල Flawless Finish Possible. 2nd Quality 30-50% Cheaper — Right Hands ගාල Worth It.`,
+      },
+      {
+        heading: 'කාමරයේ ප්‍රමාණයට ගැලපෙන Tile Size',
+        body: `Small Bathroom (4x5 ft to 6x6 ft): 300x300mm (1x1 ft) හෝ 600x300mm (2x1 ft). Small Tiles Bathroom Slope/Gradient Create කිරීමට Easier — Drain ගාලට ජලය Properly Flow වෙනවා. Large Format Tiles Small Bathroom ගාල Cut Waste High. Bedrooms (10x12 ft to 14x14 ft): 600x600mm (2x2 ft) — Room Proportion ට Balanced, Clean Look. Large Living Areas (15x20 ft+): 600x1200mm (2x4 ft), 800x800mm, හෝ Mega Format. Fewer Grout Joints — Seamless, Expansive Look. 20x20 ft Hall ගාල 600x600 ගාල Grout Joints 380+. Same Room 600x1200 ගාල Joints 190 ට අඩු — Visual Difference Dramatic.`,
+      },
+      {
+        heading: 'Pro Tip: C2 Adhesive — ලොකුම රහස',
+        body: `ලංකාවේ අදටත් සිදුවෙන ලොකුම වැරැද්ද: Porcelain Tiles සාමාන්‍ය Cement Mortar (Sand + OPC Cement Slurry) ගාල Install කිරීම. Ceramic ගාල ඒ Method OK — Ceramic ගෙ High Porosity Cement Moisture Absorb කරලා Mechanical Bond Create කරනවා. Porcelain ගෙ Water Absorption < 0.5% — Cement Slurry ට Bond Create කිරීමට Suction නැහැ. Result: Hollow Tile (Air Pocket Formation), Debonding, Tile Pop. Sri Lanka ගෙ Humidity, Temperature Swing (25°C–38°C) ගෙ Thermal Movement Failures Accelerate කරනවා. Solution: Porcelain, Large Format, ඕනෑම Premium Tile ගාල C2-grade Tile Adhesive (Polymer-modified) Mandatory. Notched Trowel (6mm V-notch Minimum), Back-buttering, Proper Spacers. C2 Adhesive Chemical Bond Create කරනවා — Suction ගාල Depend නෑ. Weber, Mapei, MasterTile, Lankatiles Adhesive Range ලංකාවේ Available. C2 Adhesive Extra Cost? Yes. ඒත් Re-tile Cost Compare කළොත් C2 Adhesive Price Nothing.`,
+      },
+    ],
+    tips: [
+      'Bathroom Floor ගාල Polished Tile කිසිසේත් ගන්නේ එපා — R10/R11 Matte Finish අනිවාර්යයි',
+      'Porcelain Tile ගාල C2 Adhesive Use නොකළොත් Hollow Tile Problem ගැරන්ටිද',
+      '2nd Quality ගෙ Size Variation Handle කිරීමට Always 3mm Wider Spacers Use කරන්න',
+      'Large Format Tiles (60x120+) ගාල Specialist Tiler ඕනෙමේ — Back-buttering Mandatory',
+      'Mega Tiles සහ Ideal Tiles (Wennappuwa) Premium Budget ගෙ Homeowners ගාල Hidden Gems',
+    ],
+    cta: { text: 'Verified Tilers සොයන්න', href: '/providers?q=Floor+Tiling' },
+  },
+  {
     slug: 'post-tiling-project-tilershub',
     datePublished: '2025-06-20',
     title: 'How to Post a Tiling Project on TilersHub and Get the Best Bids',
