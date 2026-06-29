@@ -14,7 +14,7 @@ export default function EditProfileButton({ ownerId, profileType, profileSlug })
 
   return (
     <a
-      href="/dashboard?tab=profile"
+      href="/provider?tab=profile"
       style={{
         display: 'inline-flex', alignItems: 'center', gap: 6,
         background: '#1B3A6B', color: '#fff', borderRadius: 12,

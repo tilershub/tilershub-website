@@ -26,6 +26,11 @@ if (joinReturn === '/join-tilershub') {
   return Astro.redirect('/join-tilershub')
 }
 
+const verifyReturn = Astro.url.searchParams.get('verify_return')
+if (verifyReturn?.startsWith('/verify-claim')) {
+  return Astro.redirect(verifyReturn)
+}
+
 const ADMIN_EMAILS = ['tilershub@gmail.com']
 if (ADMIN_EMAILS.includes(user.email ?? '')) {
   return Astro.redirect('/admin')
