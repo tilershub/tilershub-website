@@ -59,6 +59,23 @@ const faqSchema = post.sections?.length > 0 ? JSON.stringify({
     </div>
   </div>
 
+  <style is:global>
+    .blog-rich-content { color: #374151; font-size: 14px; line-height: 1.85; }
+    .blog-rich-content p { margin: 0 0 16px; }
+    .blog-rich-content h2 { font-family: 'Playfair Display', serif; font-size: 19px; font-weight: 700; color: #111827; margin: 32px 0 12px; padding-bottom: 8px; border-bottom: 2px solid #e2e8f0; }
+    .blog-rich-content h2:first-child { margin-top: 0; }
+    .blog-rich-content h3 { font-size: 15px; font-weight: 700; color: #1B3A6B; margin: 24px 0 10px; }
+    .blog-rich-content table { width: 100%; border-collapse: collapse; margin: 16px 0 20px; font-size: 13px; overflow-x: auto; display: block; }
+    .blog-rich-content th { background: #1B3A6B; color: #fff; padding: 10px 12px; text-align: left; font-weight: 700; white-space: nowrap; }
+    .blog-rich-content td { padding: 10px 12px; border-bottom: 1px solid #e2e8f0; vertical-align: top; }
+    .blog-rich-content tr:nth-child(even) td { background: #f8fafc; }
+    .blog-rich-content ul { margin: 0 0 16px; padding-left: 20px; }
+    .blog-rich-content li { margin-bottom: 8px; }
+    .blog-rich-content .img-placeholder { background: #f1f5f9; border: 2px dashed #cbd5e1; border-radius: 12px; padding: 16px 18px; margin: 20px 0; font-size: 12px; color: #64748b; font-style: italic; line-height: 1.6; }
+    .blog-rich-content .warning-box { background: #fffbeb; border: 1.5px solid #fcd34d; border-left: 4px solid #f59e0b; border-radius: 10px; padding: 16px 18px; margin: 16px 0; font-size: 13px; color: #78350f; line-height: 1.7; }
+    .blog-rich-content .disclaimer { font-size: 11px; color: #94a3b8; font-style: italic; border-top: 1px solid #e2e8f0; padding-top: 16px; margin-top: 8px; }
+  </style>
+
   <!-- Content -->
   <div style="background:#f8fafc;padding:28px 16px 64px;">
     <div style="max-width:760px;margin:0 auto;display:grid;grid-template-columns:1fr;gap:20px;">
@@ -66,13 +83,16 @@ const faqSchema = post.sections?.length > 0 ? JSON.stringify({
       <!-- Excerpt -->
       <p style="font-size:15px;color:#374151;line-height:1.85;font-weight:500;border-left:3px solid #E05A2B;padding-left:16px;margin:0;">{post.excerpt}</p>
 
-      <!-- Article sections -->
-      {post.sections?.map(s => (
-        <div style="background:#fff;border:1px solid #e2e8f0;border-radius:16px;padding:24px;">
-          <h2 style="font-family:'Playfair Display',serif;font-size:17px;font-weight:700;color:#111827;margin:0 0 12px;">{s.heading}</h2>
-          <p style="font-size:14px;color:#374151;line-height:1.85;margin:0;">{s.body}</p>
-        </div>
-      ))}
+      <!-- Rich HTML content or plain sections -->
+      {post.content
+        ? <div class="blog-rich-content" style="background:#fff;border:1px solid #e2e8f0;border-radius:16px;padding:24px 28px;" set:html={post.content} />
+        : post.sections?.map(s => (
+            <div style="background:#fff;border:1px solid #e2e8f0;border-radius:16px;padding:24px;">
+              <h2 style="font-family:'Playfair Display',serif;font-size:17px;font-weight:700;color:#111827;margin:0 0 12px;">{s.heading}</h2>
+              <p style="font-size:14px;color:#374151;line-height:1.85;margin:0;">{s.body}</p>
+            </div>
+          ))
+      }
 
       <!-- Quick tips -->
       <div style="background:linear-gradient(135deg,#0F1E35,#1A2B4A);border-radius:16px;padding:24px;">
