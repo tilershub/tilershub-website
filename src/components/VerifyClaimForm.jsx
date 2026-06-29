@@ -20,7 +20,8 @@ export default function VerifyClaimForm() {
         setStatus('awaiting_auth')
         return
       }
-      const { data } = await supabase.rpc('get_claim_status', { p_claim_id: id })
+      const { data, error: rpcErr } = await supabase.rpc('get_claim_status', { p_claim_id: id })
+      if (rpcErr) { setStatus('error'); return }
       if (!data) { setStatus('expired'); return }
       if (data.status === 'verified') { setStatus('verified'); return }
       if (data.status === 'pending_code') {
@@ -40,7 +41,7 @@ export default function VerifyClaimForm() {
     const { data: result, error } = await supabase.rpc('verify_claim', { p_claim_id: claimId, p_code: trimmed })
     setSubmitting(false)
     if (error) { setErr('Something went wrong. Please try again.'); return }
-    if (result === 'ok') { window.location.href = '/provider'; return }
+    if (result === 'ok') { window.location.href = '/provider?claimed=1'; return }
     if (result === 'wrong_code') { setErr('That code is incorrect. Check the WhatsApp message and try again.'); return }
     if (result === 'not_found') { setStatus('expired'); return }
     setErr('Unexpected error. Please try again.')
@@ -75,7 +76,20 @@ export default function VerifyClaimForm() {
     )
   }
 
-  if (status === 'expired' || status === 'error') {
+  if (status === 'error') {
+    return (
+      <div style={box}>
+        <div style={{ fontSize: 40, marginBottom: 12 }}>⚠️</div>
+        <h2 style={{ fontSize: 18, fontWeight: 700, color: '#0f172a', marginBottom: 8 }}>Something went wrong</h2>
+        <p style={{ fontSize: 13, color: '#64748b', marginBottom: 20, lineHeight: 1.7 }}>
+          We couldn't load your claim details. Please refresh and try again.
+        </p>
+        <button onClick={() => window.location.reload()} style={{ padding: '10px 22px', background: '#1B3A6B', color: '#fff', border: 'none', borderRadius: 10, fontSize: 13, fontWeight: 700, cursor: 'pointer' }}>Try Again →</button>
+      </div>
+    )
+  }
+
+  if (status === 'expired') {
     return (
       <div style={box}>
         <div style={{ fontSize: 40, marginBottom: 12 }}>⏱</div>

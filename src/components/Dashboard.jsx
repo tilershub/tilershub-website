@@ -113,8 +113,13 @@ export default function Dashboard({ initialUser, initialProjects, initialProvide
     new URLSearchParams(window.location.search).has('claimed') &&
     !!claimedProfile
 
+  const showWelcomeBanner =
+    typeof window !== 'undefined' &&
+    new URLSearchParams(window.location.search).has('welcome') &&
+    !claimedProfile
+
   return isProvider
-    ? <ProviderDashboard user={user} claimedProfile={claimedProfile} submission={submission} showClaimedBanner={showClaimedBanner} />
+    ? <ProviderDashboard user={user} claimedProfile={claimedProfile} submission={submission} showClaimedBanner={showClaimedBanner} showWelcomeBanner={showWelcomeBanner} />
     : <ConsumerDashboard user={user} projects={projects} bids={bids} submission={submission} dataLoading={dataLoading} showClaimedBanner={showClaimedBanner} />
 }
 
@@ -122,7 +127,7 @@ export default function Dashboard({ initialUser, initialProjects, initialProvide
 // PROVIDER DASHBOARD
 // ═══════════════════════════════════════════════════════════════════
 
-function ProviderDashboard({ user, claimedProfile, submission, showClaimedBanner }) {
+function ProviderDashboard({ user, claimedProfile, submission, showClaimedBanner, showWelcomeBanner }) {
   const lang = useLang()
   const initialTab = typeof window !== 'undefined'
     ? (new URLSearchParams(window.location.search).get('tab') || 'explore')
@@ -229,6 +234,13 @@ function ProviderDashboard({ user, claimedProfile, submission, showClaimedBanner
           {showClaimedBanner && (
             <div style={{ padding:'10px 14px', background:'rgba(22,163,74,0.15)', border:'1px solid rgba(22,163,74,0.3)', borderRadius:10, marginBottom:14 }}>
               <span style={{ fontSize:13, color:'#4ade80', fontWeight:600 }}>✓ Profile claimed! Edit your profile in the Profile tab.</span>
+            </div>
+          )}
+
+          {showWelcomeBanner && (
+            <div style={{ padding:'12px 16px', background:'rgba(22,163,74,0.15)', border:'1px solid rgba(22,163,74,0.3)', borderRadius:10, marginBottom:14 }}>
+              <div style={{ fontSize:13, color:'#4ade80', fontWeight:700, marginBottom:3 }}>🎉 Application submitted!</div>
+              <span style={{ fontSize:12, color:'rgba(255,255,255,0.65)' }}>Our team will review within 1–2 business days and contact you on WhatsApp. Go to the <strong style={{ color:'rgba(255,255,255,0.85)' }}>Profile tab</strong> to add photos and more details.</span>
             </div>
           )}
 
