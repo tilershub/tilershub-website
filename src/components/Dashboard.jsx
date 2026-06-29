@@ -385,7 +385,7 @@ function ExploreTab({ projects, user, lang }) {
           {filtered.map(p => {
             const icon  = TYPE_ICON[p.project_type] || '🏠'
             const isSaved = savedIds.has(p.id)
-            const phone = p.customer_whatsapp || p.whatsapp
+            const phone = p.whatsapp
             const excerpt = p.description?.length > 120 ? p.description.slice(0,120)+'…' : p.description
             return (
               <div key={p.id} style={{ background:'#fff', borderRadius:16, border:'1px solid var(--border)', padding:'16px 18px', boxShadow:'var(--shadow-sm)' }}>
@@ -485,7 +485,7 @@ function SavedTab({ savedProjects, user, setSavedProjects, lang }) {
       {savedProjects.map(sp => {
         const p = sp.projects || {}
         const icon = TYPE_ICON[p.project_type] || '🏠'
-        const phone = p.customer_whatsapp || p.whatsapp
+        const phone = p.whatsapp
         const excerpt = p.description?.length > 100 ? p.description.slice(0,100)+'…' : p.description
         return (
           <div key={sp.id} style={{ background:'#fff', borderRadius:16, border:'1px solid var(--border)', padding:'16px 18px', boxShadow:'var(--shadow-sm)' }}>

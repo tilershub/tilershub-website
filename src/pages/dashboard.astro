@@ -1,6 +1,8 @@
 ---
 import Layout from '../layouts/Layout.astro'
 import Dashboard from '../components/Dashboard.jsx'
+
+if (!Astro.locals.user) return Astro.redirect('/login')
 ---
 
 <Layout

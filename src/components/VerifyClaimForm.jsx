@@ -56,11 +56,25 @@ export default function VerifyClaimForm() {
   if (status === 'awaiting_auth') {
     return (
       <div style={box}>
-        <div style={{ fontSize: 40, marginBottom: 12 }}>📬</div>
-        <h2 style={{ fontSize: 18, fontWeight: 700, color: '#0f172a', marginBottom: 8 }}>Check your inbox</h2>
-        <p style={{ fontSize: 13, color: '#64748b', lineHeight: 1.7 }}>
-          Click the sign-in link we sent to your email to continue the claim process.
+        <div style={{ fontSize: 40, marginBottom: 12 }}>🔐</div>
+        <h2 style={{ fontSize: 18, fontWeight: 700, color: '#0f172a', marginBottom: 8 }}>Sign in to continue</h2>
+        <p style={{ fontSize: 13, color: '#64748b', lineHeight: 1.7, marginBottom: 20 }}>
+          You need to be signed in to complete this profile claim. Sign in with Google to pick up where you left off.
         </p>
+        <button
+          onClick={() => {
+            supabase.auth.signInWithOAuth({
+              provider: 'google',
+              options: {
+                redirectTo: `${window.location.origin}/auth/callback?verify_return=${encodeURIComponent(window.location.pathname + window.location.search)}`
+              }
+            })
+          }}
+          style={{ width: '100%', padding: '11px', background: '#1B3A6B', color: '#fff', border: 'none', borderRadius: 12, fontSize: 14, fontWeight: 700, cursor: 'pointer', marginBottom: 10 }}
+        >
+          Sign in with Google →
+        </button>
+        <a href="/providers" style={{ display: 'block', fontSize: 12, color: '#94a3b8', textDecoration: 'none', textAlign: 'center' }}>← Browse Profiles</a>
       </div>
     )
   }
@@ -146,7 +160,7 @@ export default function VerifyClaimForm() {
 
       <p style={{ fontSize: 11, color: '#94a3b8', textAlign: 'center', marginTop: 16, lineHeight: 1.6 }}>
         Didn't receive a code? Contact us at{' '}
-        <a href="https://wa.me/94XXXXXXXXX" style={{ color: '#64748b' }}>WhatsApp</a>.
+        <a href="https://wa.me/94774503744" style={{ color: '#64748b' }}>WhatsApp</a>.
         This link expires in 48 hours.
       </p>
     </div>
