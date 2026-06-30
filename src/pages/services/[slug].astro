@@ -13,7 +13,7 @@ const supabase = Astro.locals.supabase
 const [{ data: providersRaw }, { data: recentProjectsRaw }] = await Promise.all([
   supabase
     .from('providers')
-    .select('id,name,city,district,verification_status,slug,services,provider_type,whatsapp,phone,description,profile_image,avg_rating,experience_years')
+    .select('id,name,city,district,verification_status,slug,services,provider_type,whatsapp,phone,description,profile_image,avg_rating,experience_years,cover_image,daily_rate_min,review_count')
     .eq('status', 'active')
     .limit(200),
   supabase
@@ -123,58 +123,75 @@ const serviceSchema = JSON.stringify({
 
     ) : (
 
-      <div style="display:flex;flex-direction:column;gap:12px;max-width:640px;margin:0 auto;">
+      <div style="max-width:960px;margin:0 auto;">
 
-        <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:2px;">
+        <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:16px;">
           <span style="font-size:13px;font-weight:700;color:#374151;">{total} provider{total !== 1 ? 's' : ''} found</span>
           <a href="/providers" style="font-size:12px;color:#E05A2B;font-weight:600;text-decoration:none;">Browse all ›</a>
         </div>
 
+        <div style="display:grid;grid-template-columns:repeat(auto-fill,minmax(280px,1fr));gap:16px;">
         {providers.map(p => {
           const color = avatarColor(p.name || 'P')
           const inits = initials(p.name || 'P')
           const phone = p.whatsapp || p.phone
-          const chips = (p.services || []).slice(0, 3)
           const isVerified = ['th_master','th_certified_pro','th_verified'].includes(p.verification_status)
+          const coverSrc = p.cover_image || p.profile_image
           return (
-            <a href={p.slug ? `/providers/${p.slug}` : '#'} style="display:block;text-decoration:none;color:inherit;background:#fff;border-radius:20px;border:1px solid #e8edf5;overflow:hidden;box-shadow:0 2px 12px rgba(0,0,0,0.06);display:flex;">
-              <div style={`width:100px;flex-shrink:0;background:${color};display:flex;align-items:center;justify-content:center;min-height:130px;overflow:hidden;`}>
-                {p.profile_image
-                  ? <img src={p.profile_image} alt={p.name} style="width:100%;height:100%;object-fit:cover;" loading="lazy" />
-                  : <span style="font-size:32px;font-weight:800;color:rgba(255,255,255,0.85);">{inits}</span>
+            <a href={p.slug ? `/providers/${p.slug}` : '#'} style="display:flex;flex-direction:column;text-decoration:none;color:inherit;background:#fff;border-radius:20px;overflow:hidden;box-shadow:0 2px 16px rgba(0,0,0,0.08);">
+              <div style="position:relative;height:200px;overflow:hidden;flex-shrink:0;">
+                {coverSrc
+                  ? <img src={coverSrc} alt={p.name} style="width:100%;height:100%;object-fit:cover;" loading="lazy" />
+                  : <div style={`width:100%;height:100%;background:${color};display:flex;align-items:center;justify-content:center;`}>
+                      <span style="font-size:48px;font-weight:800;color:rgba(255,255,255,0.85);">{inits}</span>
+                    </div>
                 }
-              </div>
-              <div style="flex:1;padding:14px 16px;display:flex;flex-direction:column;min-width:0;">
-                <div style="display:flex;align-items:flex-start;gap:7px;margin-bottom:4px;flex-wrap:wrap;">
-                  <span style="font-size:15px;font-weight:700;color:#0f172a;line-height:1.25;">{p.name}</span>
-                  {isVerified && <span style="font-size:8px;font-weight:700;color:#16a34a;background:#f0fdf4;border:1px solid #bbf7d0;border-radius:20px;padding:2px 7px;flex-shrink:0;margin-top:2px;">✓ Pro</span>}
-                </div>
-                {(p.city || p.district) && <div style="font-size:11px;color:#64748b;margin-bottom:6px;">📍 {p.city || p.district}</div>}
-                {p.description && <div style="font-size:12px;color:#64748b;margin-bottom:8px;display:-webkit-box;-webkit-line-clamp:2;-webkit-box-orient:vertical;overflow:hidden;line-height:1.5;">{p.description}</div>}
-                {chips.length > 0 && (
-                  <div style="display:flex;flex-wrap:wrap;gap:4px;margin-bottom:10px;">
-                    {chips.map(s => <span style="font-size:9px;font-weight:600;padding:2px 7px;border-radius:20px;background:#eef3fb;color:#1B3A6B;border:1px solid #d5e2f5;">{s}</span>)}
-                  </div>
+                {isVerified && (
+                  <span style="position:absolute;top:10px;right:10px;background:#16a34a;color:#fff;font-size:10px;font-weight:700;border-radius:20px;padding:3px 9px;">✓ Verified</span>
                 )}
-                {p.avg_rating > 0 && <div style="font-size:11px;color:#f59e0b;margin-bottom:8px;">⭐ {Number(p.avg_rating).toFixed(1)}</div>}
-                <div style="display:flex;gap:8px;flex-wrap:wrap;margin-top:auto;">
-                  {phone
-                    ? <a href={waLink(phone, p.name)} target="_blank" rel="noopener noreferrer" onclick="event.stopPropagation()"
-                        style="display:inline-flex;align-items:center;gap:5px;background:#25D366;color:#fff;border-radius:10px;padding:8px 14px;font-size:12px;font-weight:700;text-decoration:none;">
-                        💬 WhatsApp
-                      </a>
-                    : p.slug
-                      ? <a href={`/providers/${p.slug}`} onclick="event.stopPropagation()"
-                          style="display:inline-flex;align-items:center;gap:5px;background:#1B3A6B;color:#fff;border-radius:10px;padding:8px 14px;font-size:12px;font-weight:700;text-decoration:none;">
-                          View Profile ›
-                        </a>
-                      : null
+              </div>
+              <div style="padding:14px 16px;display:flex;flex-direction:column;flex:1;">
+                <div style="display:flex;align-items:flex-start;justify-content:space-between;gap:8px;margin-bottom:5px;">
+                  <span style="font-size:16px;font-weight:700;color:#0f172a;line-height:1.25;">{p.name}</span>
+                  {p.daily_rate_min && (
+                    <span style="font-size:12px;font-weight:700;color:#E05A2B;white-space:nowrap;flex-shrink:0;">From Rs. {Number(p.daily_rate_min).toLocaleString()}/day</span>
+                  )}
+                </div>
+                <div style="font-size:12px;margin-bottom:8px;">
+                  {p.avg_rating > 0
+                    ? <span style="color:#f59e0b;">⭐ {Number(p.avg_rating).toFixed(1)}{p.review_count ? ` (${p.review_count} reviews)` : ''}</span>
+                    : <span style="color:#94a3b8;">New · No reviews yet</span>
                   }
+                </div>
+                {p.description && (
+                  <div style="font-size:12px;color:#64748b;margin-bottom:10px;display:-webkit-box;-webkit-line-clamp:2;-webkit-box-orient:vertical;overflow:hidden;line-height:1.5;">{p.description}</div>
+                )}
+                <div style="border-top:1px solid #f1f5f9;margin-top:auto;padding-top:10px;display:flex;align-items:center;gap:8px;flex-wrap:wrap;">
+                  {p.experience_years && (
+                    <span style="font-size:11px;font-weight:600;color:#16a34a;">🛡 {p.experience_years}+ yrs</span>
+                  )}
+                  {(p.city || p.district) && (
+                    <span style="font-size:11px;color:#64748b;">📍 {p.city || p.district}</span>
+                  )}
+                  <div style="margin-left:auto;display:flex;gap:6px;">
+                    {phone && (
+                      <a href={waLink(phone, p.name)} target="_blank" rel="noopener noreferrer" onclick="event.stopPropagation()"
+                        style="display:inline-flex;align-items:center;gap:4px;background:#25D366;color:#fff;border-radius:10px;padding:7px 12px;font-size:11px;font-weight:700;text-decoration:none;">
+                        💬
+                      </a>
+                    )}
+                    {p.slug && (
+                      <span style="display:inline-flex;align-items:center;gap:4px;background:#1B3A6B;color:#fff;border-radius:10px;padding:7px 12px;font-size:11px;font-weight:700;">
+                        View ›
+                      </span>
+                    )}
+                  </div>
                 </div>
               </div>
             </a>
           )
         })}
+        </div>
 
       </div>
     )}
