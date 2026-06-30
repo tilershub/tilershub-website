@@ -851,25 +851,26 @@ function BidsPanel({ projectBids }) {
             const waLink = `https://wa.me/${norm}?text=${encodeURIComponent('Hi! 👋\n\nI saw your bid on TilersHub. Let\'s discuss your quote.\n\nThank you!')}`
             const prov = bid.provider_slug ? providerMap[bid.provider_slug] : null
             const profileUrl = bid.provider_slug ? `/providers/${bid.provider_slug}` : null
+            const CardTag = profileUrl ? 'a' : 'div'
+            const cardStyle = { padding:'14px 16px', background:'#fff', borderRadius:12, border:`1.5px solid ${bid.status==='new'?'#fde68a':'#e2e8f0'}`, borderLeft:`4px solid ${bid.status==='new'?'#f59e0b':'#e2e8f0'}`, ...(profileUrl ? { cursor:'pointer', textDecoration:'none', color:'inherit', display:'block' } : {}) }
             return (
-              <div key={bid.id} style={{ padding:'14px 16px', background:'#fff', borderRadius:12, border:`1.5px solid ${bid.status==='new'?'#fde68a':'#e2e8f0'}`, borderLeft:`4px solid ${bid.status==='new'?'#f59e0b':'#e2e8f0'}` }}>
+              <CardTag
+                key={bid.id}
+                {...(profileUrl ? { href:profileUrl, target:'_blank', rel:'noopener' } : {})}
+                style={cardStyle}
+                onMouseOver={profileUrl ? e => { e.currentTarget.style.boxShadow='0 4px 16px rgba(0,0,0,0.1)'; e.currentTarget.style.background='#f8faff' } : undefined}
+                onMouseOut={profileUrl ? e => { e.currentTarget.style.boxShadow=''; e.currentTarget.style.background='#fff' } : undefined}
+              >
                 <div style={{ display:'flex', alignItems:'flex-start', justifyContent:'space-between', gap:10, marginBottom:8 }}>
                   <div style={{ display:'flex', alignItems:'center', gap:10, flex:1, minWidth:0 }}>
-                    {/* Provider avatar */}
-                    {profileUrl
-                      ? <a href={profileUrl} target="_blank" rel="noopener" style={{ flexShrink:0, textDecoration:'none' }}>
-                          {prov?.profile_image
-                            ? <img src={prov.profile_image} alt={bid.bidder_name} style={{ width:44, height:44, borderRadius:'50%', objectFit:'cover', border:'2px solid #e2e8f0' }} />
-                            : <div style={{ width:44, height:44, borderRadius:'50%', background:'#1B3A6B', display:'flex', alignItems:'center', justifyContent:'center', fontSize:16, color:'#fff', fontWeight:700, flexShrink:0 }}>{(bid.bidder_name||'?')[0].toUpperCase()}</div>
-                          }
-                        </a>
-                      : <div style={{ width:44, height:44, borderRadius:'50%', background:'#e2e8f0', display:'flex', alignItems:'center', justifyContent:'center', fontSize:16, color:'#64748b', fontWeight:700, flexShrink:0 }}>{(bid.bidder_name||'?')[0].toUpperCase()}</div>
-                    }
-                    <div style={{ minWidth:0 }}>
-                      {profileUrl
-                        ? <a href={profileUrl} target="_blank" rel="noopener" style={{ fontSize:13, fontWeight:700, color:'#1B3A6B', textDecoration:'none', display:'block' }}>{bid.bidder_name} ↗</a>
-                        : <div style={{ fontSize:13, fontWeight:700, color:'#0f172a' }}>{bid.bidder_name}</div>
+                    <div style={{ flexShrink:0 }}>
+                      {prov?.profile_image
+                        ? <img src={prov.profile_image} alt={bid.bidder_name} style={{ width:44, height:44, borderRadius:'50%', objectFit:'cover', border:'2px solid #e2e8f0' }} />
+                        : <div style={{ width:44, height:44, borderRadius:'50%', background: profileUrl ? '#1B3A6B' : '#e2e8f0', display:'flex', alignItems:'center', justifyContent:'center', fontSize:16, color: profileUrl ? '#fff' : '#64748b', fontWeight:700 }}>{(bid.bidder_name||'?')[0].toUpperCase()}</div>
                       }
+                    </div>
+                    <div style={{ minWidth:0 }}>
+                      <div style={{ fontSize:13, fontWeight:700, color: profileUrl ? '#1B3A6B' : '#0f172a' }}>{bid.bidder_name}{profileUrl ? ' ↗' : ''}</div>
                       <div style={{ fontSize:11, color:'#64748b', marginTop:2, display:'flex', flexWrap:'wrap', gap:'0 8px' }}>
                         {prov && (prov.avg_rating > 0
                           ? <span style={{ color:'#b45309' }}>⭐ {Number(prov.avg_rating).toFixed(1)} ({prov.review_count || 0})</span>
@@ -887,10 +888,13 @@ function BidsPanel({ projectBids }) {
                 {bid.message && <p style={{ fontSize:12, color:'#475569', lineHeight:1.6, margin:'0 0 10px' }}>
                   {bid.message.length > 200 ? bid.message.slice(0,200)+'…' : bid.message}
                 </p>}
-                <a href={waLink} target="_blank" rel="noopener noreferrer" style={{ display:'inline-flex', alignItems:'center', gap:6, fontSize:12, fontWeight:700, background:'#25D366', color:'#fff', borderRadius:8, padding:'7px 14px', textDecoration:'none' }}>
-                  💬 Contact via WhatsApp
-                </a>
-              </div>
+                <div style={{ display:'flex', alignItems:'center', gap:10, flexWrap:'wrap' }}>
+                  <a href={waLink} target="_blank" rel="noopener noreferrer" onClick={e => e.stopPropagation()} style={{ display:'inline-flex', alignItems:'center', gap:6, fontSize:12, fontWeight:700, background:'#25D366', color:'#fff', borderRadius:8, padding:'7px 14px', textDecoration:'none' }}>
+                    💬 Contact via WhatsApp
+                  </a>
+                  {profileUrl && <span style={{ fontSize:11, color:'#94a3b8' }}>Tap card to view profile ↗</span>}
+                </div>
+              </CardTag>
             )
           })}
         </div>
