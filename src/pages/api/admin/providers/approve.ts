@@ -1,7 +1,7 @@
 export const prerender = false
 
 import type { APIRoute } from 'astro'
-import { adminSupabase } from '../../../../lib/supabase.admin'
+import { createAdminSupabase } from '../../../../lib/supabase.admin'
 
 function slugify(text: string) {
   return text.toLowerCase().replace(/[^a-z0-9]+/g, '-').replace(/(^-|-$)/g, '')
@@ -12,6 +12,18 @@ export const POST: APIRoute = async ({ request, locals }) => {
   if (!user || user.email !== 'tilershub@gmail.com') {
     return json({ error: 'Forbidden' }, 403)
   }
+
+  // Cloudflare Worker secrets live in locals.runtime.env, not import.meta.env
+  const runtime = (locals as Record<string, unknown>).runtime as { env?: Record<string, string> } | undefined
+  const serviceRoleKey: string =
+    runtime?.env?.SUPABASE_SERVICE_ROLE_KEY ||
+    (import.meta.env.SUPABASE_SERVICE_ROLE_KEY as string)
+
+  if (!serviceRoleKey) {
+    return json({ error: 'Server misconfiguration: SUPABASE_SERVICE_ROLE_KEY not set' }, 500)
+  }
+
+  const adminSupabase = createAdminSupabase(serviceRoleKey)
 
   let sub: Record<string, unknown>
   try {
