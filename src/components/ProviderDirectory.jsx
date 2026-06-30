@@ -143,11 +143,33 @@ const TYPE_FEATURES = {
 const DEFAULT_FEATURES = [{icon:'✅',label:'Verified'},{icon:'💯',label:'Quality'},{icon:'📍',label:'Local'},{icon:'💬',label:'WhatsApp'}]
 
 // ProviderCard routes to the correct card design based on provider_type
-function ProviderCard({ provider, onClick, T }) {
+function ProviderCard({ provider, onClick, T, savedIds, savingId, onToggleSave }) {
   if (SHOP_TYPES.has(provider.provider_type)) {
-    return <ShopCard provider={provider} onClick={onClick} T={T} />
+    return <ShopCard provider={provider} onClick={onClick} T={T} savedIds={savedIds} savingId={savingId} onToggleSave={onToggleSave} />
   }
-  return <ContractorCard provider={provider} onClick={onClick} T={T} />
+  return <ContractorCard provider={provider} onClick={onClick} T={T} savedIds={savedIds} savingId={savingId} onToggleSave={onToggleSave} />
+}
+
+function SaveHeartButton({ providerId, savedIds, savingId, onToggleSave }) {
+  const isSaved = savedIds.has(providerId)
+  const isLoading = savingId === providerId
+  return (
+    <button
+      onClick={e => { e.stopPropagation(); onToggleSave(providerId) }}
+      disabled={isLoading}
+      style={{
+        display:'inline-flex', alignItems:'center', gap:4,
+        fontSize:11, fontWeight:700, padding:'5px 10px', borderRadius:8,
+        border: isSaved ? '1px solid #fecaca' : '1px solid #e2e8f0',
+        background: isSaved ? '#fef2f2' : '#f8fafc',
+        color: isSaved ? '#e05a2b' : '#94a3b8',
+        cursor: isLoading ? 'wait' : 'pointer',
+        transition:'all 0.15s',
+      }}
+    >
+      {isLoading ? '…' : isSaved ? '♥ Saved' : '♡ Save'}
+    </button>
+  )
 }
 
 // ─── Shop card ─────────────────────────────────────────────────────────────────
@@ -164,7 +186,7 @@ function shopTagline(type, services) {
   return hasBath ? 'Tiles & Bathware' : 'Tile Showroom'
 }
 
-function ShopCard({ provider, onClick, T }) {
+function ShopCard({ provider, onClick, T, savedIds, savingId, onToggleSave }) {
   const waPhone = provider.whatsapp || provider.phone
   const waLink = waPhone ? buildWhatsAppLink(waPhone, provider.name) : null
   const tagline = shopTagline(provider.provider_type, provider.services)
@@ -227,27 +249,30 @@ function ShopCard({ provider, onClick, T }) {
         </div>
       </div>
 
-      {/* Bottom strip: location + View Shop button */}
-      <div style={{ borderTop: '1px solid #f1f5f9', padding: '9px 14px', display: 'flex', alignItems: 'center', justifyContent: 'space-between', background: '#fafbfc' }}>
-        <span style={{ fontSize: 11, color: '#64748b' }}>📍 {provider.city || provider.district || 'Sri Lanka'}</span>
-        {provider.slug ? (
-          <a href={`/providers/${provider.slug}`} onClick={e => e.stopPropagation()}
-            style={{ fontSize: 11, fontWeight: 700, background: '#1A2B4A', color: '#fff', border: 'none', borderRadius: 8, padding: '5px 12px', cursor: 'pointer', textDecoration: 'none', whiteSpace: 'nowrap' }}>
-            {T.viewShop} ›
-          </a>
-        ) : waLink ? (
-          <a href={waLink} target="_blank" rel="noopener noreferrer" onClick={e => e.stopPropagation()}
-            style={{ fontSize: 11, fontWeight: 700, background: '#1A2B4A', color: '#fff', border: 'none', borderRadius: 8, padding: '5px 12px', cursor: 'pointer', textDecoration: 'none', whiteSpace: 'nowrap' }}>
-            {T.viewShop} ›
-          </a>
-        ) : null}
+      {/* Bottom strip: location + Save + View Shop button */}
+      <div style={{ borderTop: '1px solid #f1f5f9', padding: '9px 14px', display: 'flex', alignItems: 'center', justifyContent: 'space-between', background: '#fafbfc', gap: 8 }}>
+        <span style={{ fontSize: 11, color: '#64748b', flexShrink: 0 }}>📍 {provider.city || provider.district || 'Sri Lanka'}</span>
+        <div style={{ display: 'flex', gap: 6, alignItems: 'center' }}>
+          {onToggleSave && <SaveHeartButton providerId={provider.id} savedIds={savedIds} savingId={savingId} onToggleSave={onToggleSave} />}
+          {provider.slug ? (
+            <a href={`/providers/${provider.slug}`} onClick={e => e.stopPropagation()}
+              style={{ fontSize: 11, fontWeight: 700, background: '#1A2B4A', color: '#fff', border: 'none', borderRadius: 8, padding: '5px 12px', cursor: 'pointer', textDecoration: 'none', whiteSpace: 'nowrap' }}>
+              {T.viewShop} ›
+            </a>
+          ) : waLink ? (
+            <a href={waLink} target="_blank" rel="noopener noreferrer" onClick={e => e.stopPropagation()}
+              style={{ fontSize: 11, fontWeight: 700, background: '#1A2B4A', color: '#fff', border: 'none', borderRadius: 8, padding: '5px 12px', cursor: 'pointer', textDecoration: 'none', whiteSpace: 'nowrap' }}>
+              {T.viewShop} ›
+            </a>
+          ) : null}
+        </div>
       </div>
     </div>
   )
 }
 
 // ─── Tiler card (Card 1 — portrait, full-width image at top) ──────────────────
-function TilerCard({ tiler, onClick, T }) {
+function TilerCard({ tiler, onClick, T, savedIds, savingId, onToggleSave }) {
   const isVerified = tiler.is_verified
   const color = avatarColor(tiler.full_name)
   const inits = initials(tiler.full_name)
@@ -306,6 +331,7 @@ function TilerCard({ tiler, onClick, T }) {
             <span style={{ fontSize: 11, color: '#475569', overflow: 'hidden', whiteSpace: 'nowrap', textOverflow: 'ellipsis' }}>📍 {tiler.city || tiler.district}</span>
           )}
           <div style={{ marginLeft: 'auto', display: 'flex', gap: 6, flexShrink: 0 }}>
+            {onToggleSave && <SaveHeartButton providerId={tiler.id} savedIds={savedIds} savingId={savingId} onToggleSave={onToggleSave} />}
             {phone && (
               <a href={buildWhatsAppLink(phone, tiler.full_name)} target="_blank" rel="noopener noreferrer" onClick={e => e.stopPropagation()}
                 style={{ display: 'inline-flex', alignItems: 'center', background: '#dcfce7', color: '#16a34a', border: '1px solid #86efac', borderRadius: 8, padding: '6px 10px', fontSize: 13, fontWeight: 700, textDecoration: 'none' }}>
@@ -326,7 +352,7 @@ function TilerCard({ tiler, onClick, T }) {
 }
 
 // ─── Contractor card (Card 1 — portrait, full-width image at top) ─────────────
-function ContractorCard({ provider, onClick, T }) {
+function ContractorCard({ provider, onClick, T, savedIds, savingId, onToggleSave }) {
   const color = avatarColor(provider.name)
   const inits = initials(provider.name)
   const phone = provider.whatsapp || provider.phone
@@ -380,6 +406,7 @@ function ContractorCard({ provider, onClick, T }) {
             <span style={{ fontSize: 11, color: '#475569', overflow: 'hidden', whiteSpace: 'nowrap', textOverflow: 'ellipsis' }}>📍 {provider.city || provider.district}</span>
           )}
           <div style={{ marginLeft: 'auto', display: 'flex', gap: 6, flexShrink: 0 }}>
+            {onToggleSave && <SaveHeartButton providerId={provider.id} savedIds={savedIds} savingId={savingId} onToggleSave={onToggleSave} />}
             {phone && (
               <a href={buildWhatsAppLink(phone, provider.name)} target="_blank" rel="noopener noreferrer" onClick={e => e.stopPropagation()}
                 style={{ display: 'inline-flex', alignItems: 'center', background: '#dcfce7', color: '#16a34a', border: '1px solid #86efac', borderRadius: 8, padding: '6px 10px', fontSize: 13, fontWeight: 700, textDecoration: 'none' }}>
@@ -570,7 +597,7 @@ const TYPE_INFO_CARDS = {
   ],
 }
 
-function SuggestedContent({ type, providers, onSelectProvider, T }) {
+function SuggestedContent({ type, providers, onSelectProvider, T, savedIds, savingId, onToggleSave }) {
   const infoCards = TYPE_INFO_CARDS[type] || []
   const otherProviders = providers.filter(p => p.provider_type !== type).slice(0, 3)
   const typeLabel = TYPE_LABELS_EN[type] || type || 'Providers'
@@ -614,7 +641,7 @@ function SuggestedContent({ type, providers, onSelectProvider, T }) {
             <a href="/providers" style={{ fontSize: 12, color: '#1B3A6B', fontWeight: 600, textDecoration: 'none' }}>{T.seeAll}</a>
           </div>
           <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fill, minmax(280px, 1fr))', gap: 16 }}>
-            {otherProviders.map(p => <ProviderCard key={p.id} provider={p} onClick={onSelectProvider} T={T} />)}
+            {otherProviders.map(p => <ProviderCard key={p.id} provider={p} onClick={onSelectProvider} T={T} savedIds={savedIds} savingId={savingId} onToggleSave={onToggleSave} />)}
           </div>
         </div>
       )}
@@ -634,6 +661,8 @@ export default function ProviderDirectory({ initialType, initialSearch, initialP
   const [district,  setDistrict]  = useState('')
   const [type,      setType]      = useState(initialType || '')
   const [selected,  setSelected]  = useState(null)
+  const [savedIds,  setSavedIds]  = useState(new Set())
+  const [savingId,  setSavingId]  = useState(null)
   const debounceRef = useRef(null)
 
   useEffect(() => {
@@ -652,6 +681,28 @@ export default function ProviderDirectory({ initialType, initialSearch, initialP
     }
     load()
   }, [])
+
+  useEffect(() => {
+    supabase.auth.getUser().then(async ({ data: { user } }) => {
+      if (!user) return
+      const { data } = await supabase.from('saved_providers').select('provider_id').eq('user_id', user.id)
+      if (data) setSavedIds(new Set(data.map(r => r.provider_id)))
+    })
+  }, [])
+
+  async function toggleSaveProvider(providerId) {
+    const { data: { user } } = await supabase.auth.getUser()
+    if (!user) { window.location.href = '/login'; return }
+    setSavingId(providerId)
+    if (savedIds.has(providerId)) {
+      await supabase.from('saved_providers').delete().eq('user_id', user.id).eq('provider_id', providerId)
+      setSavedIds(prev => { const s = new Set(prev); s.delete(providerId); return s })
+    } else {
+      await supabase.from('saved_providers').insert({ user_id: user.id, provider_id: providerId })
+      setSavedIds(prev => new Set([...prev, providerId]))
+    }
+    setSavingId(null)
+  }
 
   const filteredProviders = providers.filter(p => {
     if (type && p.provider_type !== type && !(type === 'supplier' && SHOP_TYPES.has(p.provider_type))) return false
@@ -755,7 +806,7 @@ export default function ProviderDirectory({ initialType, initialSearch, initialP
             <SuggestedContent
               type={type} providers={providers}
               onSelectProvider={item => setSelected(item)}
-              T={T}
+              T={T} savedIds={savedIds} savingId={savingId} onToggleSave={toggleSaveProvider}
             />
           ) : (
             <div style={{ textAlign: 'center', padding: '80px 20px', background: '#fff', borderRadius: 16, border: '1px solid #e2e8f0' }}>
@@ -777,7 +828,7 @@ export default function ProviderDirectory({ initialType, initialSearch, initialP
         ) : (
           <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fill, minmax(300px, 1fr))', gap: 16 }}>
             {allCards.map(item => (
-              <ProviderCard key={item.id} provider={item} T={T} onClick={p => setSelected(p)} />
+              <ProviderCard key={item.id} provider={item} T={T} onClick={p => setSelected(p)} savedIds={savedIds} savingId={savingId} onToggleSave={toggleSaveProvider} />
             ))}
           </div>
         )}

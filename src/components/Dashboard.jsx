@@ -612,8 +612,91 @@ function ReviewsTab({ reviews, profileHref, lang }) {
 // CONSUMER DASHBOARD
 // ═══════════════════════════════════════════════════════════════════
 
+function SavedProvidersTab({ userId }) {
+  const [items, setItems] = useState(null)
+  const [removing, setRemoving] = useState(null)
+
+  useEffect(() => {
+    supabase.from('saved_providers')
+      .select('id, provider_id, providers(*)')
+      .eq('user_id', userId)
+      .order('created_at', { ascending: false })
+      .then(({ data }) => setItems(data || []))
+  }, [userId])
+
+  async function remove(savedId) {
+    setRemoving(savedId)
+    await supabase.from('saved_providers').delete().eq('id', savedId)
+    setItems(prev => prev.filter(i => i.id !== savedId))
+    setRemoving(null)
+  }
+
+  if (items === null) return <Spinner />
+
+  if (items.length === 0) return (
+    <div style={{ textAlign:'center', padding:'48px 20px', background:'#fff', borderRadius:16, border:'1px solid var(--border)' }}>
+      <div style={{ fontSize:40, marginBottom:12 }}>❤️</div>
+      <div style={{ fontSize:15, fontWeight:700, color:'var(--text)', marginBottom:8 }}>No saved providers yet</div>
+      <p style={{ fontSize:13, color:'var(--text-3)', marginBottom:20, lineHeight:1.7 }}>Browse providers and tap ❤️ to save them here.</p>
+      <a href="/providers" style={{ display:'inline-flex', alignItems:'center', gap:6, padding:'11px 22px', background:'var(--navy)', color:'#fff', borderRadius:10, fontSize:13, fontWeight:700, textDecoration:'none' }}>
+        Browse Providers →
+      </a>
+    </div>
+  )
+
+  return (
+    <div style={{ display:'flex', flexDirection:'column', gap:12 }}>
+      {items.map(item => {
+        const p = item.providers
+        if (!p) return null
+        const rating = p.avg_rating
+        return (
+          <div key={item.id} style={{ background:'#fff', borderRadius:14, border:'1px solid var(--border)', padding:'14px 16px', display:'flex', alignItems:'center', gap:14 }}>
+            <div style={{ width:48, height:48, borderRadius:12, background:'#1B3A6B', flexShrink:0, overflow:'hidden', display:'flex', alignItems:'center', justifyContent:'center', fontSize:18, fontWeight:700, color:'#fff' }}>
+              {p.profile_image
+                ? <img src={p.profile_image} alt={p.name} style={{ width:'100%', height:'100%', objectFit:'cover' }} />
+                : (p.name || '?')[0].toUpperCase()
+              }
+            </div>
+            <div style={{ flex:1, minWidth:0 }}>
+              <div style={{ fontSize:14, fontWeight:700, color:'var(--text)', overflow:'hidden', textOverflow:'ellipsis', whiteSpace:'nowrap' }}>{p.name}</div>
+              <div style={{ fontSize:11, color:'var(--text-3)', marginTop:2, display:'flex', flexWrap:'wrap', gap:'0 8px' }}>
+                {rating > 0
+                  ? <span style={{ color:'#b45309' }}>⭐ {Number(rating).toFixed(1)} ({p.review_count || 0})</span>
+                  : <span style={{ color:'#94a3b8' }}>⭐ New · No reviews yet</span>
+                }
+                {p.city && <span>📍 {p.city}</span>}
+              </div>
+            </div>
+            <div style={{ display:'flex', gap:8, flexShrink:0 }}>
+              {p.slug && (
+                <a href={`/providers/${p.slug}`} style={{ fontSize:12, fontWeight:700, color:'var(--navy)', background:'#eef3fb', borderRadius:8, padding:'6px 12px', textDecoration:'none', whiteSpace:'nowrap' }}>
+                  View →
+                </a>
+              )}
+              <button
+                onClick={() => remove(item.id)}
+                disabled={removing === item.id}
+                style={{ fontSize:12, fontWeight:700, color:'#dc2626', background:'#fef2f2', border:'1px solid #fecaca', borderRadius:8, padding:'6px 10px', cursor:'pointer' }}
+              >
+                {removing === item.id ? '…' : '✕'}
+              </button>
+            </div>
+          </div>
+        )
+      })}
+    </div>
+  )
+}
+
 function ConsumerDashboard({ user, projects, bids, submission, dataLoading, showClaimedBanner }) {
   const initials = (user.email || '?').split('@')[0].slice(0,2).toUpperCase()
+  const [consumerTab, setConsumerTab] = useState('projects')
+
+  const CONSUMER_TABS = [
+    { id:'projects', label:'📋 My Projects' },
+    { id:'saved',    label:'❤️ Saved Providers' },
+  ]
 
   return (
     <div style={{ minHeight:'100dvh', background:'#f8fafc', paddingBottom:80 }}>
@@ -653,24 +736,37 @@ function ConsumerDashboard({ user, projects, bids, submission, dataLoading, show
             </div>
           </div>
 
+          {/* Tab bar */}
+          <div style={{ display:'flex', gap:4, borderBottom:'none' }}>
+            {CONSUMER_TABS.map(t => (
+              <button key={t.id} onClick={() => setConsumerTab(t.id)} style={{ padding:'8px 16px', fontSize:13, fontWeight:700, border:'none', borderBottom: consumerTab === t.id ? '2px solid var(--terra)' : '2px solid transparent', background:'none', color: consumerTab === t.id ? 'var(--terra)' : 'var(--text-3)', cursor:'pointer', borderRadius:0, transition:'color 0.15s' }}>
+                {t.label}
+              </button>
+            ))}
+          </div>
+
         </div>
       </div>
 
       {/* ── Content ── */}
       <div className="db-content-pad" style={{ maxWidth:800, margin:'0 auto', padding:'20px 16px' }}>
-        {dataLoading ? <Spinner /> : <ProjectsTab projects={projects} bids={bids} />}
-
-        {!submission && (
-          <div style={{ marginTop:28, padding:'20px 22px', background:'var(--navy-50)', border:'1px solid var(--navy-100)', borderRadius:14 }}>
-            <div style={{ fontSize:13, fontWeight:700, color:'var(--navy)', marginBottom:4 }}>Are you a tiler or contractor?</div>
-            <p style={{ fontSize:12, color:'var(--text-3)', marginBottom:12, lineHeight:1.65 }}>
-              List your services on TilersHub — homeowners find you directly and contact you on WhatsApp.
-            </p>
-            <a href="/join-tilershub" style={{ display:'inline-flex', alignItems:'center', gap:6, padding:'9px 18px', background:'var(--navy)', color:'#fff', borderRadius:9, fontSize:12, fontWeight:700, textDecoration:'none' }}>
-              ✅ Apply as a Provider →
-            </a>
-          </div>
+        {consumerTab === 'projects' && (
+          <>
+            {dataLoading ? <Spinner /> : <ProjectsTab projects={projects} bids={bids} />}
+            {!submission && (
+              <div style={{ marginTop:28, padding:'20px 22px', background:'var(--navy-50)', border:'1px solid var(--navy-100)', borderRadius:14 }}>
+                <div style={{ fontSize:13, fontWeight:700, color:'var(--navy)', marginBottom:4 }}>Are you a tiler or contractor?</div>
+                <p style={{ fontSize:12, color:'var(--text-3)', marginBottom:12, lineHeight:1.65 }}>
+                  List your services on TilersHub — homeowners find you directly and contact you on WhatsApp.
+                </p>
+                <a href="/join-tilershub" style={{ display:'inline-flex', alignItems:'center', gap:6, padding:'9px 18px', background:'var(--navy)', color:'#fff', borderRadius:9, fontSize:12, fontWeight:700, textDecoration:'none' }}>
+                  ✅ Apply as a Provider →
+                </a>
+              </div>
+            )}
+          </>
         )}
+        {consumerTab === 'saved' && <SavedProvidersTab userId={user.id} />}
       </div>
     </div>
   )
@@ -775,7 +871,10 @@ function BidsPanel({ projectBids }) {
                         : <div style={{ fontSize:13, fontWeight:700, color:'#0f172a' }}>{bid.bidder_name}</div>
                       }
                       <div style={{ fontSize:11, color:'#64748b', marginTop:2, display:'flex', flexWrap:'wrap', gap:'0 8px' }}>
-                        {prov?.avg_rating > 0 && <span style={{ color:'#b45309' }}>⭐ {Number(prov.avg_rating).toFixed(1)} ({prov.review_count || 0})</span>}
+                        {prov && (prov.avg_rating > 0
+                          ? <span style={{ color:'#b45309' }}>⭐ {Number(prov.avg_rating).toFixed(1)} ({prov.review_count || 0})</span>
+                          : <span style={{ color:'#94a3b8' }}>⭐ New · No reviews yet</span>
+                        )}
                         {prov?.city && <span>📍 {prov.city}</span>}
                         {!prov && <span style={{ textTransform:'capitalize' }}>{bid.bidder_type}</span>}
                         {bid.quote_amount && <span style={{ color:'#166534', fontWeight:600 }}>Rs. {bid.quote_amount.toLocaleString()}</span>}
