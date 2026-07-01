@@ -1,7 +1,6 @@
 export const prerender = false
 
 import type { APIRoute } from 'astro'
-import { createAdminSupabase } from '../../../../lib/supabase.admin'
 
 function slugify(text: string) {
   return text.toLowerCase().replace(/[^a-z0-9]+/g, '-').replace(/(^-|-$)/g, '')
@@ -13,17 +12,10 @@ export const POST: APIRoute = async ({ request, locals }) => {
     return json({ error: 'Forbidden' }, 403)
   }
 
-  // Cloudflare Worker secrets live in locals.runtime.env, not import.meta.env
-  const runtime = (locals as Record<string, unknown>).runtime as { env?: Record<string, string> } | undefined
-  const serviceRoleKey: string =
-    runtime?.env?.SUPABASE_SERVICE_ROLE_KEY ||
-    (import.meta.env.SUPABASE_SERVICE_ROLE_KEY as string)
-
-  if (!serviceRoleKey) {
-    return json({ error: 'Server misconfiguration: SUPABASE_SERVICE_ROLE_KEY not set' }, 500)
-  }
-
-  const adminSupabase = createAdminSupabase(serviceRoleKey)
+  // Use the admin's own authenticated session.
+  // RLS policies grant tilershub@gmail.com full access via is_admin(),
+  // so no service-role key is needed.
+  const supabase = locals.supabase
 
   let sub: Record<string, unknown>
   try {
@@ -32,7 +24,7 @@ export const POST: APIRoute = async ({ request, locals }) => {
     return json({ error: 'Invalid JSON' }, 400)
   }
 
-  const { error: updateError } = await adminSupabase
+  const { error: updateError } = await supabase
     .from('provider_submissions')
     .update({ status: 'approved' })
     .eq('id', sub.id)
@@ -42,18 +34,18 @@ export const POST: APIRoute = async ({ request, locals }) => {
   // Duplicate check
   let existing = null
   if (sub.user_id) {
-    const { data } = await adminSupabase.from('providers').select('id').eq('user_id', sub.user_id).maybeSingle()
+    const { data } = await supabase.from('providers').select('id').eq('user_id', sub.user_id).maybeSingle()
     existing = data
   }
   if (!existing && sub.whatsapp) {
-    const { data } = await adminSupabase.from('providers').select('id')
+    const { data } = await supabase.from('providers').select('id')
       .eq('whatsapp', sub.whatsapp).eq('name', sub.name).maybeSingle()
     existing = data
   }
 
   if (!existing) {
     const slug = slugify(String(sub.name || 'provider')) + '-' + Math.random().toString(36).slice(2, 6)
-    const { error: insertError } = await adminSupabase.from('providers').insert({
+    const { error: insertError } = await supabase.from('providers').insert({
       name: sub.name, provider_type: sub.provider_type,
       city: sub.city, district: sub.district,
       whatsapp: sub.whatsapp, phone: sub.phone,
