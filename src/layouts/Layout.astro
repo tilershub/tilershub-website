@@ -78,6 +78,14 @@ const orgSchema = JSON.stringify({
   <link rel="icon" type="image/png" href="/favicon.png" />
   <link rel="apple-touch-icon" href="/icon-192.png" />
   <link rel="manifest" href="/manifest.webmanifest" />
+  <!-- iOS PWA startup images (prevents white flash on launch) -->
+  <link rel="apple-touch-startup-image" href="/splash/apple-splash-1290x2796.png" media="screen and (device-width:430px) and (device-height:932px) and (-webkit-device-pixel-ratio:3) and (orientation:portrait)" />
+  <link rel="apple-touch-startup-image" href="/splash/apple-splash-1179x2556.png" media="screen and (device-width:393px) and (device-height:852px) and (-webkit-device-pixel-ratio:3) and (orientation:portrait)" />
+  <link rel="apple-touch-startup-image" href="/splash/apple-splash-1284x2778.png" media="screen and (device-width:428px) and (device-height:926px) and (-webkit-device-pixel-ratio:3) and (orientation:portrait)" />
+  <link rel="apple-touch-startup-image" href="/splash/apple-splash-1170x2532.png" media="screen and (device-width:390px) and (device-height:844px) and (-webkit-device-pixel-ratio:3) and (orientation:portrait)" />
+  <link rel="apple-touch-startup-image" href="/splash/apple-splash-1080x2340.png" media="screen and (device-width:360px) and (device-height:780px) and (-webkit-device-pixel-ratio:3) and (orientation:portrait)" />
+  <link rel="apple-touch-startup-image" href="/splash/apple-splash-750x1334.png"  media="screen and (device-width:375px) and (device-height:667px) and (-webkit-device-pixel-ratio:2) and (orientation:portrait)" />
+  <link rel="apple-touch-startup-image" href="/splash/apple-splash-640x1136.png"  media="screen and (device-width:320px) and (device-height:568px) and (-webkit-device-pixel-ratio:2) and (orientation:portrait)" />
   <meta name="mobile-web-app-capable" content="yes" />
   <meta name="apple-mobile-web-app-capable" content="yes" />
   <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent" />
@@ -95,6 +103,40 @@ const orgSchema = JSON.stringify({
 <body>
   <!-- Google Tag Manager (noscript) -->
   <noscript is:raw><iframe src="https://www.googletagmanager.com/ns.html?id=GTM-MX727MR5" height="0" width="0" style="display:none;visibility:hidden"></iframe></noscript>
+
+  <!-- ═══ PWA SPLASH SCREEN ═══ -->
+  <div id="pwa-splash" style="position:fixed;inset:0;z-index:99999;background:#0F2444;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:20px;transition:opacity 0.45s ease;pointer-events:none;">
+    <div style="display:grid;grid-template-columns:repeat(3,1fr);gap:5px;width:78px;height:78px;">
+      {[0,1,2,3,4,5,6,7,8].map((i) => (
+        <div style={`border-radius:3px;background:${[1,3,4,5,7].includes(i)?'#8B5E3C':'#6B4A2E'};opacity:${[0,2,6,8].includes(i)?'0.55':'1'};`}></div>
+      ))}
+    </div>
+    <div style="font-family:'Playfair Display',Georgia,serif;font-size:20px;font-weight:700;color:rgba(255,255,255,0.9);letter-spacing:1.5px;">TILERS<span style="color:#E05A2B;">HUB</span></div>
+    <div style="width:32px;height:3px;border-radius:2px;background:rgba(255,255,255,0.15);overflow:hidden;margin-top:4px;">
+      <div id="pwa-splash-bar" style="height:100%;width:0;background:#E05A2B;border-radius:2px;transition:width 1.2s ease;"></div>
+    </div>
+  </div>
+  <script is:inline>
+    ;(function() {
+      var splash = document.getElementById('pwa-splash')
+      var bar    = document.getElementById('pwa-splash-bar')
+      if (!splash) return
+      // Start progress bar animation immediately
+      if (bar) requestAnimationFrame(function() { bar.style.width = '90%' })
+      function dismiss() {
+        if (!splash || splash._gone) return
+        splash._gone = true
+        if (bar) bar.style.width = '100%'
+        setTimeout(function() {
+          splash.style.opacity = '0'
+          setTimeout(function() { if (splash.parentNode) splash.parentNode.removeChild(splash) }, 450)
+        }, 120)
+      }
+      window.addEventListener('load', dismiss)
+      // Hard cap: always remove after 3 s even if load never fires
+      setTimeout(dismiss, 3000)
+    })()
+  </script>
 
   <!-- ═══ WHITE MARKETPLACE HEADER ═══ -->
   <header class="site-header">
