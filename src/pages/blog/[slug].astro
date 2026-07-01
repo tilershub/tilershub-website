@@ -60,7 +60,7 @@ const faqSchema = post.sections?.length > 0 ? JSON.stringify({
   </div>
 
   <style is:global>
-    .blog-rich-content { color: #374151; font-size: 14px; line-height: 1.85; word-break: break-word; }
+    .blog-rich-content { color: #374151; font-size: 14px; line-height: 1.85; word-break: break-word; overflow-x: hidden; max-width: 100%; }
     .blog-rich-content p { margin: 0 0 14px; }
     .blog-rich-content h2 {
       font-family: 'Playfair Display', serif;
@@ -75,10 +75,11 @@ const faqSchema = post.sections?.length > 0 ? JSON.stringify({
     .blog-rich-content li { margin-bottom: 10px; line-height: 1.7; }
     .blog-rich-content strong { color: #111827; }
 
-    /* Table: wrap in scroll container via JS */
-    .blog-table-wrap { overflow-x: auto; -webkit-overflow-scrolling: touch; margin: 14px 0 18px; border-radius: 10px; border: 1px solid #e2e8f0; }
-    .blog-rich-content table { width: 100%; border-collapse: collapse; font-size: 13px; min-width: 420px; }
-    .blog-rich-content th { background: #1B3A6B; color: #fff; padding: 9px 11px; text-align: left; font-weight: 700; font-size: 12px; line-height: 1.4; }
+    /* Table: wrap in scroll container via JS; also scroll via display:block as CSS fallback */
+    .blog-table-wrap { overflow-x: auto; -webkit-overflow-scrolling: touch; margin: 14px 0 18px; border-radius: 10px; border: 1px solid #e2e8f0; max-width: 100%; }
+    .blog-rich-content table { display: block; overflow-x: auto; -webkit-overflow-scrolling: touch; border-collapse: collapse; font-size: 13px; min-width: 320px; width: max-content; max-width: 100%; }
+    .blog-table-wrap table { display: table; overflow-x: unset; width: 100%; max-width: unset; }
+    .blog-rich-content th { background: #1B3A6B; color: #fff; padding: 9px 11px; text-align: left; font-weight: 700; font-size: 12px; line-height: 1.4; white-space: nowrap; }
     .blog-rich-content td { padding: 9px 11px; border-bottom: 1px solid #e2e8f0; vertical-align: top; }
     .blog-rich-content tr:last-child td { border-bottom: none; }
     .blog-rich-content tr:nth-child(even) td { background: #f8fafc; }
@@ -119,7 +120,7 @@ const faqSchema = post.sections?.length > 0 ? JSON.stringify({
   </style>
 
   <!-- Content -->
-  <div style="background:#f8fafc;padding:18px 12px 80px;">
+  <div style="background:#f8fafc;padding:18px 12px 80px;overflow-x:hidden;">
     <div style="max-width:760px;margin:0 auto;display:grid;grid-template-columns:1fr;gap:14px;">
 
       <!-- Excerpt -->

@@ -83,7 +83,7 @@ const posts = [
   </div>
 
   <!-- Post grid -->
-  <div style="background:#f8fafc;min-height:400px;padding:24px 16px 80px;">
+  <div style="background:#f8fafc;min-height:400px;padding:24px 16px 80px;overflow-x:hidden;">
     <div style="max-width:720px;margin:0 auto;display:flex;flex-direction:column;gap:12px;">
       {posts.slice(0,2).map(post => (
         <a href={`/blog/${post.slug}`}
@@ -108,13 +108,13 @@ const posts = [
 
       <!-- Post project CTA card -->
       <a href="/post-project"
-        style="display:flex;align-items:center;gap:16px;background:#E05A2B;border-radius:14px;padding:18px 20px;text-decoration:none;box-shadow:0 4px 18px rgba(224,90,43,0.25);">
-        <div style="font-size:32px;flex-shrink:0;">🏠</div>
-        <div style="flex:1;">
-          <div style="font-size:14px;font-weight:800;color:#fff;margin-bottom:3px;">ව්‍යාපෘතිය ආරම්භ කිරීමට සූදානම්ද?</div>
-          <div style="font-size:12px;color:rgba(255,255,255,0.78);line-height:1.5;">නොමිලේ පලකරන්න, WhatsApp හරහා සත්‍යාපිත වෘත්තිකයන්ගේ ලංසු ලබා ගන්න. ලොගිනයක් අවශ්‍ය නැත.</div>
+        style="display:flex;align-items:center;gap:12px;flex-wrap:wrap;background:#E05A2B;border-radius:14px;padding:16px 18px;text-decoration:none;box-shadow:0 4px 18px rgba(224,90,43,0.25);">
+        <div style="font-size:28px;flex-shrink:0;">🏠</div>
+        <div style="flex:1;min-width:160px;">
+          <div style="font-size:13px;font-weight:800;color:#fff;margin-bottom:3px;">ව්‍යාපෘතිය ආරම්භ කිරීමට සූදානම්ද?</div>
+          <div style="font-size:11px;color:rgba(255,255,255,0.78);line-height:1.5;">නොමිලේ පලකරන්න, WhatsApp හරහා සත්‍යාපිත වෘත්තිකයන්ගේ ලංසු ලබා ගන්න.</div>
         </div>
-        <div style="flex-shrink:0;background:rgba(255,255,255,0.15);color:#fff;border-radius:10px;padding:10px 18px;font-size:13px;font-weight:800;white-space:nowrap;">
+        <div style="background:rgba(255,255,255,0.18);color:#fff;border-radius:10px;padding:9px 16px;font-size:12px;font-weight:800;white-space:nowrap;flex-shrink:0;">
           නොමිලේ පලකරන්න →
         </div>
       </a>
