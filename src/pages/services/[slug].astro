@@ -137,11 +137,12 @@ const serviceSchema = JSON.stringify({
           const phone = p.whatsapp || p.phone
           const isVerified = ['th_master','th_certified_pro','th_verified'].includes(p.verification_status)
           const coverSrc = p.cover_image || p.profile_image
+          const cardHref = p.slug ? `/providers/${p.slug}` : null
           return (
-            <a href={p.slug ? `/providers/${p.slug}` : '#'} style="display:flex;flex-direction:column;text-decoration:none;color:inherit;background:#fff;border-radius:20px;overflow:hidden;box-shadow:0 2px 16px rgba(0,0,0,0.08);">
-              <div style="position:relative;height:200px;overflow:hidden;flex-shrink:0;">
+            <div onclick={cardHref ? `location.href='${cardHref}'` : undefined} style={`display:flex;flex-direction:column;background:#fff;border-radius:20px;overflow:hidden;box-shadow:0 2px 16px rgba(0,0,0,0.08);${cardHref ? 'cursor:pointer;' : ''}`}>
+              <div style="position:relative;height:200px;flex-shrink:0;">
                 {coverSrc
-                  ? <img src={coverSrc} alt={p.name} style="width:100%;height:100%;object-fit:cover;" loading="lazy" />
+                  ? <img src={coverSrc} alt={p.name} style="width:100%;height:100%;object-fit:cover;display:block;" loading="lazy" />
                   : <div style={`width:100%;height:100%;background:${color};display:flex;align-items:center;justify-content:center;`}>
                       <span style="font-size:48px;font-weight:800;color:rgba(255,255,255,0.85);">{inits}</span>
                     </div>
@@ -167,7 +168,7 @@ const serviceSchema = JSON.stringify({
                   <div style="font-size:12px;color:#64748b;margin-bottom:10px;display:-webkit-box;-webkit-line-clamp:2;-webkit-box-orient:vertical;overflow:hidden;line-height:1.5;">{p.description}</div>
                 )}
                 <div style="border-top:1px solid #f1f5f9;margin-top:auto;padding-top:10px;display:flex;align-items:center;gap:8px;flex-wrap:wrap;">
-                  {p.experience_years && (
+                  {p.experience_years > 0 && (
                     <span style="font-size:11px;font-weight:600;color:#16a34a;">🛡 {p.experience_years}+ yrs</span>
                   )}
                   {(p.city || p.district) && (
@@ -180,15 +181,16 @@ const serviceSchema = JSON.stringify({
                         💬
                       </a>
                     )}
-                    {p.slug && (
-                      <span style="display:inline-flex;align-items:center;gap:4px;background:#1B3A6B;color:#fff;border-radius:10px;padding:7px 12px;font-size:11px;font-weight:700;">
+                    {cardHref && (
+                      <a href={cardHref} onclick="event.stopPropagation()"
+                        style="display:inline-flex;align-items:center;gap:4px;background:#1B3A6B;color:#fff;border-radius:10px;padding:7px 12px;font-size:11px;font-weight:700;text-decoration:none;">
                         View ›
-                      </span>
+                      </a>
                     )}
                   </div>
                 </div>
               </div>
-            </a>
+            </div>
           )
         })}
         </div>
