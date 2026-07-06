@@ -5,8 +5,8 @@ export const GUIDES = [
     title: 'How to Choose the Right Tile Size for Your Room',
     excerpt: 'Larger tiles make rooms look bigger, but installation requires more precision. Learn the pros and cons of each size before you buy.',
     icon: '📐',
-    bg: 'linear-gradient(135deg,#1A2B4A,#2B4275)',
-    accentColor: '#1A2B4A',
+    bg: 'linear-gradient(135deg,#3A2416,#6B4A2E)',
+    accentColor: '#3A2416',
     readTime: '5 min read',
     sections: [
       {

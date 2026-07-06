@@ -21,7 +21,7 @@ const JOB_TYPES = [
 const RATING_LABELS = { 5: 'ඉතා හොඳ', 4: 'හොඳ', 3: 'සාධාරණ', 2: 'යෝග්‍ය', 1: 'දුර්වල' }
 const RATING_COLORS = { 5: '#16a34a', 4: '#65a30d', 3: '#d97706', 2: '#ea580c', 1: '#dc2626' }
 
-const AVATAR_COLORS = ['#1B3A6B','#0f766e','#7c3aed','#b45309','#0369a1','#E05A2B','#15803d','#be185d']
+const AVATAR_COLORS = ['#4A2E17','#0f766e','#7c3aed','#b45309','#0369a1','#A9713C','#15803d','#be185d']
 function avatarColor(name) {
   let h = 0
   for (const c of (name || '')) h = (h * 31 + c.charCodeAt(0)) >>> 0
@@ -137,7 +137,7 @@ function ReviewForm({ tilerId, providerId, onSubmitted }) {
             placeholder="නිදසුන: නිමල් සිල්වා"
             maxLength={60}
             style={inp}
-            onFocus={e => e.target.style.borderColor = '#1B3A6B'}
+            onFocus={e => e.target.style.borderColor = '#4A2E17'}
             onBlur={e  => e.target.style.borderColor = '#e2e8f0'}
           />
         </div>
@@ -147,7 +147,7 @@ function ReviewForm({ tilerId, providerId, onSubmitted }) {
             value={form.job_type}
             onChange={e => set('job_type', e.target.value)}
             style={{ ...inp, cursor: 'pointer' }}
-            onFocus={e => e.target.style.borderColor = '#1B3A6B'}
+            onFocus={e => e.target.style.borderColor = '#4A2E17'}
             onBlur={e  => e.target.style.borderColor = '#e2e8f0'}
           >
             <option value="">තෝරන්න…</option>
@@ -168,7 +168,7 @@ function ReviewForm({ tilerId, providerId, onSubmitted }) {
           placeholder="කාර්යයේ ගුණාත්මකභාවය, කාලානුරූපභාවය, පිරිසිදුකම සහ මුදල් වටිනාකම ගැන ලියන්න"
           rows={4}
           style={{ ...inp, resize: 'vertical', lineHeight: 1.65 }}
-          onFocus={e => e.target.style.borderColor = '#1B3A6B'}
+          onFocus={e => e.target.style.borderColor = '#4A2E17'}
           onBlur={e  => e.target.style.borderColor = '#e2e8f0'}
         />
         {charCount > 0 && !charOk && (
@@ -185,7 +185,7 @@ function ReviewForm({ tilerId, providerId, onSubmitted }) {
       <button
         type="submit"
         disabled={loading}
-        style={{ padding: '12px', background: loading ? '#94a3b8' : '#1B3A6B', color: '#fff', border: 'none', borderRadius: 10, fontSize: 13, fontWeight: 700, cursor: loading ? 'not-allowed' : 'pointer', transition: 'background 0.15s' }}
+        style={{ padding: '12px', background: loading ? '#94a3b8' : '#4A2E17', color: '#fff', border: 'none', borderRadius: 10, fontSize: 13, fontWeight: 700, cursor: loading ? 'not-allowed' : 'pointer', transition: 'background 0.15s' }}
       >
         {loading ? '⏳ ඉදිරිපත් කෙරෙමින්…' : '⭐ සමාලෝචනය ඉදිරිපත් කරන්න'}
       </button>
@@ -209,7 +209,7 @@ function ReviewCard({ r }) {
             <div style={{ fontSize: 13, fontWeight: 700, color: '#0f172a', lineHeight: 1.2 }}>{r.reviewer_name}</div>
             <div style={{ display: 'flex', alignItems: 'center', gap: 6, marginTop: 3 }}>
               {r.job_type && (
-                <span style={{ fontSize: 9, fontWeight: 700, color: '#1B3A6B', background: '#eef3fb', border: '1px solid #d5e2f5', borderRadius: 20, padding: '1px 7px' }}>
+                <span style={{ fontSize: 9, fontWeight: 700, color: '#4A2E17', background: '#eef3fb', border: '1px solid #d5e2f5', borderRadius: 20, padding: '1px 7px' }}>
                   {r.job_type}
                 </span>
               )}
@@ -314,7 +314,7 @@ export default function ReviewsSection({ tilerId, providerId }) {
         {!submitted && !showForm && (
           <button
             onClick={() => setShowForm(true)}
-            style={{ fontSize: 12, fontWeight: 700, color: '#1B3A6B', background: '#eef3fb', border: '1.5px solid #d5e2f5', borderRadius: 8, padding: '7px 14px', cursor: 'pointer' }}
+            style={{ fontSize: 12, fontWeight: 700, color: '#4A2E17', background: '#eef3fb', border: '1.5px solid #d5e2f5', borderRadius: 8, padding: '7px 14px', cursor: 'pointer' }}
           >
             + සමාලෝචනයක් ලියන්න
           </button>
@@ -336,7 +336,7 @@ export default function ReviewsSection({ tilerId, providerId }) {
               <p style={{ fontSize: 12, color: '#94a3b8', marginBottom: 20 }}>ඔබේ අත්දැකීම පළමුව බෙදා ගන්න.</p>
               <button
                 onClick={() => setShowForm(true)}
-                style={{ fontSize: 13, fontWeight: 700, color: '#fff', background: '#1B3A6B', border: 'none', borderRadius: 10, padding: '10px 24px', cursor: 'pointer' }}
+                style={{ fontSize: 13, fontWeight: 700, color: '#fff', background: '#4A2E17', border: 'none', borderRadius: 10, padding: '10px 24px', cursor: 'pointer' }}
               >
                 ⭐ සමාලෝචනයක් ලියන්න
               </button>

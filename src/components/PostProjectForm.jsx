@@ -14,7 +14,7 @@ function Field({ label, id, req, error, hint, children }) {
   return (
     <div style={{ marginBottom: 18 }}>
       <label htmlFor={id} style={{ display: 'block', fontSize: 12, fontWeight: 700, color: '#334155', textTransform: 'uppercase', letterSpacing: '0.5px', marginBottom: 6 }}>
-        {label} {req && <span style={{ color: '#E05A2B' }}>*</span>}
+        {label} {req && <span style={{ color: '#A9713C' }}>*</span>}
       </label>
       {children}
       {hint && !error && <p style={{ fontSize: 11, color: '#94a3b8', marginTop: 4 }}>{hint}</p>}
@@ -74,7 +74,7 @@ function MagicLinkForm({ label, hint }) {
           autoFocus
           style={{ flex: 1, padding: '10px 14px', border: `1.5px solid ${err ? '#fca5a5' : '#e2e8f0'}`, borderRadius: 10, fontSize: 13, outline: 'none', fontFamily: 'inherit', background: err ? '#fef2f2' : '#fff', boxSizing: 'border-box' }}
         />
-        <button type="submit" disabled={loading} style={{ padding: '10px 18px', background: loading ? '#94a3b8' : '#1B3A6B', color: '#fff', border: 'none', borderRadius: 10, fontSize: 13, fontWeight: 700, cursor: loading ? 'not-allowed' : 'pointer', whiteSpace: 'nowrap' }}>
+        <button type="submit" disabled={loading} style={{ padding: '10px 18px', background: loading ? '#94a3b8' : '#4A2E17', color: '#fff', border: 'none', borderRadius: 10, fontSize: 13, fontWeight: 700, cursor: loading ? 'not-allowed' : 'pointer', whiteSpace: 'nowrap' }}>
           {loading ? '⏳' : 'Link යවන්න →'}
         </button>
       </div>
@@ -168,7 +168,7 @@ export default function PostProjectForm() {
           /* Signed-in user: simple success with manage link */
           <div style={{ background: '#fff', border: '1px solid #e2e8f0', borderTop: '1px solid #f1f5f9', borderRadius: '0 0 20px 20px', padding: '20px 24px' }}>
             <div style={{ display: 'flex', gap: 10, justifyContent: 'center', flexWrap: 'wrap' }}>
-              <a href="/dashboard" style={{ padding: '11px 22px', background: '#1B3A6B', color: '#fff', borderRadius: 12, fontSize: 14, fontWeight: 600, textDecoration: 'none' }}>Dashboard බලන්න →</a>
+              <a href="/dashboard" style={{ padding: '11px 22px', background: '#4A2E17', color: '#fff', borderRadius: 12, fontSize: 14, fontWeight: 600, textDecoration: 'none' }}>Dashboard බලන්න →</a>
               <button onClick={() => { setSuccess(false); setForm({ project_type: '', city: '', district: '', description: '', budget_range: '', customer_name: '', whatsapp: '' }) }}
                 style={{ padding: '11px 22px', background: '#f1f5f9', color: '#334155', borderRadius: 12, fontSize: 14, fontWeight: 600, border: 'none', cursor: 'pointer' }}>
                 Post Another
@@ -178,7 +178,7 @@ export default function PostProjectForm() {
         ) : (
           /* Anonymous user: auth prompt to finalize */
           <div style={{ background: '#fff', border: '1px solid #e2e8f0', borderTop: 'none', borderRadius: '0 0 20px 20px', overflow: 'hidden' }}>
-            <div style={{ background: 'linear-gradient(135deg, #1B3A6B, #0F2444)', padding: '20px 24px' }}>
+            <div style={{ background: 'linear-gradient(135deg, #4A2E17, #1C120A)', padding: '20px 24px' }}>
               <div style={{ fontSize: 11, fontWeight: 700, color: 'rgba(245,158,11,0.8)', letterSpacing: 2, textTransform: 'uppercase', marginBottom: 8 }}>
                 තවත් පියවරක්
               </div>
@@ -273,7 +273,7 @@ export default function PostProjectForm() {
       </div>
 
       <button type="submit" disabled={submitting}
-        style={{ width: '100%', padding: '13px', background: submitting ? '#94a3b8' : '#E05A2B', color: '#fff', border: 'none', borderRadius: 12, fontSize: 15, fontWeight: 700, cursor: submitting ? 'not-allowed' : 'pointer', display: 'flex', alignItems: 'center', justifyContent: 'center', gap: 8, transition: 'background 0.2s' }}>
+        style={{ width: '100%', padding: '13px', background: submitting ? '#94a3b8' : '#A9713C', color: '#fff', border: 'none', borderRadius: 12, fontSize: 15, fontWeight: 700, cursor: submitting ? 'not-allowed' : 'pointer', display: 'flex', alignItems: 'center', justifyContent: 'center', gap: 8, transition: 'background 0.2s' }}>
         {submitting ? '⏳ ඉදිරිපත් කරමින්...' : '📋 මගේ ව්‍යාපෘතිය පලකරන්න'}
       </button>
 

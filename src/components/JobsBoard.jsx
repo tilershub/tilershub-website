@@ -8,9 +8,9 @@ const TYPE_ICONS = {
 }
 
 const TYPE_COLORS = {
-  'Floor Tiling': '#1B3A6B', 'Bathroom Tiling': '#0f766e', 'Bathroom Renovation': '#0f766e',
+  'Floor Tiling': '#4A2E17', 'Bathroom Tiling': '#0f766e', 'Bathroom Renovation': '#0f766e',
   'Granite Works': '#7c3aed', 'Tile Cutting': '#b45309', 'Routering': '#b45309',
-  'Waterproofing': '#0369a1', 'Tile Shop Inquiry': '#E05A2B',
+  'Waterproofing': '#0369a1', 'Tile Shop Inquiry': '#A9713C',
 }
 
 function timeAgo(ts) {
@@ -32,7 +32,7 @@ function selectStyle() {
 
 function JobCard({ project, bidCount, blurred }) {
   const icon  = TYPE_ICONS[project.project_type] || '🏠'
-  const color = TYPE_COLORS[project.project_type] || '#1B3A6B'
+  const color = TYPE_COLORS[project.project_type] || '#4A2E17'
   const excerpt = project.description?.length > 120 ? project.description.slice(0, 120) + '…' : project.description
 
   return (
@@ -58,7 +58,7 @@ function JobCard({ project, bidCount, blurred }) {
         )}
       </div>
       <div style={{ borderTop: '1px solid #f1f5f9', paddingTop: 12, marginTop: 2 }}>
-        <a href={`/job?id=${project.id}`} style={{ display: 'inline-flex', alignItems: 'center', gap: 7, background: '#E05A2B', color: '#fff', borderRadius: 10, padding: '9px 18px', fontSize: 13, fontWeight: 700, textDecoration: 'none' }}>
+        <a href={`/job?id=${project.id}`} style={{ display: 'inline-flex', alignItems: 'center', gap: 7, background: '#A9713C', color: '#fff', borderRadius: 10, padding: '9px 18px', fontSize: 13, fontWeight: 700, textDecoration: 'none' }}>
           බලන්න සහ ලංසු →
         </a>
       </div>
@@ -97,7 +97,7 @@ function ProviderGate({ previewProjects, bidCounts }) {
 
       {/* Gate card */}
       <div style={{ maxWidth: 480, margin: '0 auto', background: '#fff', borderRadius: 20, border: '1.5px solid #e2e8f0', boxShadow: '0 8px 32px rgba(0,0,0,0.08)', overflow: 'hidden' }}>
-        <div style={{ background: 'linear-gradient(135deg, #1B3A6B, #0F2444)', padding: '24px 28px' }}>
+        <div style={{ background: 'linear-gradient(135deg, #4A2E17, #1C120A)', padding: '24px 28px' }}>
           <div style={{ fontSize: 28, marginBottom: 10 }}>🔒</div>
           <div style={{ fontFamily: "'Playfair Display', serif", fontSize: 18, fontWeight: 700, color: '#fff', marginBottom: 6 }}>
             ව්‍යාපෘති බැලීමට සහ ලංසු දැමීමට ලොගිනය
@@ -115,10 +115,10 @@ function ProviderGate({ previewProjects, bidCounts }) {
                 ))}
               </div>
               <div style={{ display: 'flex', gap: 10, flexWrap: 'wrap' }}>
-                <button onClick={() => setShowAuth(true)} style={{ flex: 1, padding: '12px', background: '#E05A2B', color: '#fff', border: 'none', borderRadius: 12, fontSize: 14, fontWeight: 700, cursor: 'pointer', minWidth: 140 }}>
+                <button onClick={() => setShowAuth(true)} style={{ flex: 1, padding: '12px', background: '#A9713C', color: '#fff', border: 'none', borderRadius: 12, fontSize: 14, fontWeight: 700, cursor: 'pointer', minWidth: 140 }}>
                   ලොගිනය →
                 </button>
-                <a href="/join-tilershub" style={{ flex: 1, display: 'flex', alignItems: 'center', justifyContent: 'center', padding: '12px', background: '#f1f5f9', color: '#1B3A6B', border: '1.5px solid #d5e2f5', borderRadius: 12, fontSize: 13, fontWeight: 700, textDecoration: 'none', minWidth: 140 }}>
+                <a href="/join-tilershub" style={{ flex: 1, display: 'flex', alignItems: 'center', justifyContent: 'center', padding: '12px', background: '#f1f5f9', color: '#4A2E17', border: '1.5px solid #d5e2f5', borderRadius: 12, fontSize: 13, fontWeight: 700, textDecoration: 'none', minWidth: 140 }}>
                   සේවා සපයන්නෙකු ලෙස එකතු වන්න
                 </a>
               </div>
@@ -139,7 +139,7 @@ function ProviderGate({ previewProjects, bidCounts }) {
               {err && <p style={{ fontSize: 11, color: '#dc2626', marginBottom: 8 }}>⚠ {err}</p>}
               <div style={{ display: 'flex', gap: 8 }}>
                 <button type="submit" disabled={loading}
-                  style={{ flex: 1, padding: '11px', background: loading ? '#94a3b8' : '#1B3A6B', color: '#fff', border: 'none', borderRadius: 10, fontSize: 13, fontWeight: 700, cursor: loading ? 'not-allowed' : 'pointer' }}>
+                  style={{ flex: 1, padding: '11px', background: loading ? '#94a3b8' : '#4A2E17', color: '#fff', border: 'none', borderRadius: 10, fontSize: 13, fontWeight: 700, cursor: loading ? 'not-allowed' : 'pointer' }}>
                   {loading ? '⏳ යවමින්…' : '✉️ Magic Link යවන්න'}
                 </button>
                 <button type="button" onClick={() => setShowAuth(false)}
@@ -229,7 +229,7 @@ export default function JobsBoard() {
             <div style={{ fontSize: 48, marginBottom: 16 }}>🏗️</div>
             <h3 style={{ fontSize: 18, fontWeight: 700, color: '#0f172a', marginBottom: 8 }}>දැනට විවෘත ව්‍යාපෘති නොමැත</h3>
             <p style={{ fontSize: 14, color: '#64748b', marginBottom: 24 }}>ප්‍රථමයෙන් ව්‍යාපෘතිය පලකරන්න — සත්‍යාපිත ටයිලර්ලා ලංසු ඉදිරිපත් කරනු ඇත.</p>
-            <a href="/post-project" style={{ display: 'inline-flex', alignItems: 'center', gap: 8, background: '#E05A2B', color: '#fff', borderRadius: 12, padding: '11px 24px', fontSize: 14, fontWeight: 700, textDecoration: 'none' }}>
+            <a href="/post-project" style={{ display: 'inline-flex', alignItems: 'center', gap: 8, background: '#A9713C', color: '#fff', borderRadius: 12, padding: '11px 24px', fontSize: 14, fontWeight: 700, textDecoration: 'none' }}>
               📋 ව්‍යාපෘතිය පලකරන්න
             </a>
           </div>
@@ -242,12 +242,12 @@ export default function JobsBoard() {
         )}
 
         {!loading && user && filtered.length > 0 && (
-          <div style={{ marginTop: 48, padding: '28px 32px', background: 'linear-gradient(135deg, #1B3A6B, #0F2444)', borderRadius: 16, display: 'flex', alignItems: 'center', justifyContent: 'space-between', flexWrap: 'wrap', gap: 16 }}>
+          <div style={{ marginTop: 48, padding: '28px 32px', background: 'linear-gradient(135deg, #4A2E17, #1C120A)', borderRadius: 16, display: 'flex', alignItems: 'center', justifyContent: 'space-between', flexWrap: 'wrap', gap: 16 }}>
             <div>
               <div style={{ fontSize: 16, fontWeight: 700, color: '#fff', marginBottom: 4 }}>ටයිලිං ව්‍යාපෘතියක් තිබේද?</div>
               <div style={{ fontSize: 13, color: 'rgba(255,255,255,0.6)' }}>නොමිලේ පලකරන්න — සේවා සපයන්නන් ලංසු ඉදිරිපත් කරති, ඔබ තෝරා ගන්න.</div>
             </div>
-            <a href="/post-project" style={{ display: 'inline-flex', alignItems: 'center', gap: 8, background: '#E05A2B', color: '#fff', borderRadius: 12, padding: '11px 22px', fontSize: 13, fontWeight: 700, textDecoration: 'none', whiteSpace: 'nowrap' }}>
+            <a href="/post-project" style={{ display: 'inline-flex', alignItems: 'center', gap: 8, background: '#A9713C', color: '#fff', borderRadius: 12, padding: '11px 22px', fontSize: 13, fontWeight: 700, textDecoration: 'none', whiteSpace: 'nowrap' }}>
               📋 මගේ ව්‍යාපෘතිය පලකරන්න
             </a>
           </div>

@@ -3,7 +3,7 @@ import { generatePosts, ANGLES } from '../lib/claudeApi.js'
 import { saveToLocalQueue, copyRowToClipboard, copyAllToClipboard } from '../lib/contentQueue.js'
 import { useSupabaseStats } from '../hooks/useSupabaseStats.js'
 
-const NAVY  = '#1B3A6B'
+const NAVY  = '#4A2E17'
 const GOLD  = '#E8B341'
 const ORANGE = '#E8580A'
 

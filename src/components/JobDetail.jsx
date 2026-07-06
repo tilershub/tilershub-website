@@ -15,9 +15,9 @@ const TYPE_ICONS = {
 }
 
 const TYPE_COLORS = {
-  'Floor Tiling': '#1B3A6B', 'Bathroom Tiling': '#0f766e', 'Bathroom Renovation': '#0f766e',
+  'Floor Tiling': '#4A2E17', 'Bathroom Tiling': '#0f766e', 'Bathroom Renovation': '#0f766e',
   'Granite Works': '#7c3aed', 'Tile Cutting': '#b45309', 'Waterproofing': '#0369a1',
-  'Tile Shop Inquiry': '#E05A2B', 'Large Format Tiling': '#7c3aed', 'Mosaic Tiling': '#7c3aed',
+  'Tile Shop Inquiry': '#A9713C', 'Large Format Tiling': '#7c3aed', 'Mosaic Tiling': '#7c3aed',
   'House Painting': '#b45309', 'Landscaping & Gardening': '#15803d', 'Carpentry Works': '#92400e',
   'Glass Railing': '#0891b2', 'Aluminium & Glass Works': '#374151', 'Electrical Repairs': '#7c3aed',
   'House Wiring': '#7c3aed', 'Gypsum Ceiling': '#166534', 'IPanel Ceiling': '#166534',
@@ -140,8 +140,8 @@ function BidForm({ jobId, bidCount, onSuccess }) {
           {BIDDER_TYPES.map(t => (
             <button key={t.value} type="button" onClick={() => set('bidder_type', t.value)}
               style={{ display: 'flex', flexDirection: 'column', alignItems: 'center', gap: 4, padding: '10px 4px', borderRadius: 12, cursor: 'pointer', border: '1.5px solid', transition: 'all 0.15s',
-                background: form.bidder_type === t.value ? '#1B3A6B' : '#f8fafc',
-                borderColor: form.bidder_type === t.value ? '#1B3A6B' : '#e2e8f0',
+                background: form.bidder_type === t.value ? '#4A2E17' : '#f8fafc',
+                borderColor: form.bidder_type === t.value ? '#4A2E17' : '#e2e8f0',
               }}
             >
               <span style={{ fontSize: 18 }}>{t.icon}</span>
@@ -190,7 +190,7 @@ function BidForm({ jobId, bidCount, onSuccess }) {
       )}
 
       <button type="submit" disabled={loading}
-        style={{ padding: '15px', background: loading ? '#94a3b8' : 'linear-gradient(135deg,#1B3A6B,#2B4A8A)', color: '#fff', border: 'none', borderRadius: 12, fontSize: 15, fontWeight: 700, cursor: loading ? 'not-allowed' : 'pointer', boxShadow: loading ? 'none' : '0 4px 14px rgba(27,58,107,0.3)', transition: 'all 0.2s' }}>
+        style={{ padding: '15px', background: loading ? '#94a3b8' : 'linear-gradient(135deg,#4A2E17,#6B4A2E)', color: '#fff', border: 'none', borderRadius: 12, fontSize: 15, fontWeight: 700, cursor: loading ? 'not-allowed' : 'pointer', boxShadow: loading ? 'none' : '0 4px 14px rgba(74,46,23,0.3)', transition: 'all 0.2s' }}>
         {loading ? '⏳ Submitting your bid…' : '📨 Submit Bid Now'}
       </button>
 
@@ -213,10 +213,10 @@ function BidSuccess({ projectType, city }) {
         Your bid for the <strong>{projectType}</strong> in <strong>{city}</strong> has been received. If the homeowner selects you, they'll contact you directly on WhatsApp.
       </p>
       <div style={{ display: 'flex', gap: 10, justifyContent: 'center', flexWrap: 'wrap' }}>
-        <a href="/jobs" style={{ display: 'inline-flex', alignItems: 'center', gap: 6, fontSize: 13, fontWeight: 700, color: '#1B3A6B', textDecoration: 'none', background: '#eef3fb', border: '1.5px solid #1B3A6B22', borderRadius: 10, padding: '11px 20px' }}>
+        <a href="/jobs" style={{ display: 'inline-flex', alignItems: 'center', gap: 6, fontSize: 13, fontWeight: 700, color: '#4A2E17', textDecoration: 'none', background: '#eef3fb', border: '1.5px solid #4A2E1722', borderRadius: 10, padding: '11px 20px' }}>
           ← Browse More Projects
         </a>
-        <a href="/providers?type=tiler" style={{ display: 'inline-flex', alignItems: 'center', gap: 6, fontSize: 13, fontWeight: 700, color: '#fff', textDecoration: 'none', background: '#1B3A6B', borderRadius: 10, padding: '11px 20px' }}>
+        <a href="/providers?type=tiler" style={{ display: 'inline-flex', alignItems: 'center', gap: 6, fontSize: 13, fontWeight: 700, color: '#fff', textDecoration: 'none', background: '#4A2E17', borderRadius: 10, padding: '11px 20px' }}>
           ✅ Create Your Profile
         </a>
       </div>
@@ -226,7 +226,7 @@ function BidSuccess({ projectType, city }) {
 
 function SimilarJobCard({ job }) {
   const icon = TYPE_ICONS[job.project_type] || '🏠'
-  const color = TYPE_COLORS[job.project_type] || '#1B3A6B'
+  const color = TYPE_COLORS[job.project_type] || '#4A2E17'
   return (
     <a href={`/job?id=${job.id}`}
       style={{ display: 'flex', alignItems: 'center', gap: 0, background: '#fff', borderRadius: 12, overflow: 'hidden', border: '1px solid #e2e8f0', textDecoration: 'none', color: 'inherit', boxShadow: '0 1px 4px rgba(0,0,0,0.04)' }}
@@ -286,7 +286,7 @@ export default function JobDetail() {
         <div style={{ fontSize: 52, marginBottom: 16 }}>🔍</div>
         <h2 style={{ fontSize: 20, fontWeight: 700, color: '#0f172a', marginBottom: 8 }}>Project not found</h2>
         <p style={{ fontSize: 14, color: '#64748b', marginBottom: 24 }}>It may have been removed or the link is incorrect.</p>
-        <a href="/jobs" style={{ display: 'inline-flex', alignItems: 'center', gap: 6, background: '#1B3A6B', color: '#fff', borderRadius: 10, padding: '11px 22px', fontSize: 13, fontWeight: 700, textDecoration: 'none' }}>
+        <a href="/jobs" style={{ display: 'inline-flex', alignItems: 'center', gap: 6, background: '#4A2E17', color: '#fff', borderRadius: 10, padding: '11px 22px', fontSize: 13, fontWeight: 700, textDecoration: 'none' }}>
           ← Browse All Projects
         </a>
       </div>
@@ -294,7 +294,7 @@ export default function JobDetail() {
   }
 
   const icon = TYPE_ICONS[job.project_type] || '🏠'
-  const color = TYPE_COLORS[job.project_type] || '#1B3A6B'
+  const color = TYPE_COLORS[job.project_type] || '#4A2E17'
   const pageUrl = typeof window !== 'undefined' ? window.location.href : ''
   const isActive = job.status === 'active' || !job.status
 
@@ -383,7 +383,7 @@ export default function JobDetail() {
           {/* Bid form card */}
           <div style={{ background: '#fff', border: '1px solid #e2e8f0', borderRadius: 20, overflow: 'hidden', boxShadow: '0 2px 10px rgba(0,0,0,0.05)' }}>
             {/* Form header */}
-            <div style={{ background: 'linear-gradient(135deg,#0F1E35,#1B3A6B)', padding: '20px 24px' }}>
+            <div style={{ background: 'linear-gradient(135deg,#1C120A,#4A2E17)', padding: '20px 24px' }}>
               <h2 style={{ fontSize: 17, fontWeight: 700, color: '#fff', margin: '0 0 4px' }}>Submit Your Bid</h2>
               <p style={{ fontSize: 12, color: 'rgba(255,255,255,0.55)', margin: 0 }}>No login required · Free · Homeowner contacts you on WhatsApp if interested</p>
             </div>
@@ -400,7 +400,7 @@ export default function JobDetail() {
             <div>
               <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', marginBottom: 12 }}>
                 <div style={{ fontSize: 13, fontWeight: 700, color: '#111827' }}>More in {job.district || job.city}</div>
-                <a href="/jobs" style={{ fontSize: 12, fontWeight: 600, color: '#E05A2B', textDecoration: 'none' }}>View all →</a>
+                <a href="/jobs" style={{ fontSize: 12, fontWeight: 600, color: '#A9713C', textDecoration: 'none' }}>View all →</a>
               </div>
               <div style={{ display: 'flex', flexDirection: 'column', gap: 8 }}>
                 {similar.map(s => <SimilarJobCard key={s.id} job={s} />)}
@@ -409,12 +409,12 @@ export default function JobDetail() {
           )}
 
           {/* CTA for homeowners */}
-          <div style={{ background: '#E05A2B', borderRadius: 16, padding: '20px 24px', display: 'flex', alignItems: 'center', justifyContent: 'space-between', gap: 16, flexWrap: 'wrap' }}>
+          <div style={{ background: '#A9713C', borderRadius: 16, padding: '20px 24px', display: 'flex', alignItems: 'center', justifyContent: 'space-between', gap: 16, flexWrap: 'wrap' }}>
             <div>
               <div style={{ fontSize: 9, fontWeight: 700, color: 'rgba(255,255,255,0.6)', letterSpacing: 2, textTransform: 'uppercase', marginBottom: 3 }}>Have a project?</div>
               <div style={{ fontSize: 14, fontWeight: 700, color: '#fff' }}>Post your project free — get competitive bids</div>
             </div>
-            <a href="/post-project" style={{ display: 'inline-flex', alignItems: 'center', gap: 6, background: '#fff', color: '#E05A2B', borderRadius: 10, padding: '11px 20px', fontSize: 13, fontWeight: 800, textDecoration: 'none', flexShrink: 0 }}>
+            <a href="/post-project" style={{ display: 'inline-flex', alignItems: 'center', gap: 6, background: '#fff', color: '#A9713C', borderRadius: 10, padding: '11px 20px', fontSize: 13, fontWeight: 800, textDecoration: 'none', flexShrink: 0 }}>
               📋 Post Free
             </a>
           </div>

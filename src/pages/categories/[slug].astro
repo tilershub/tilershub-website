@@ -32,7 +32,7 @@ const providers = (providersRaw||[]).filter((p:any) => matchesCat(p.services, p.
 const blogMap  = Object.fromEntries(BLOG_POSTS.map((p:any) => [p.slug, p]))
 const blogs    = cat.blogSlugs.map((s:string) => blogMap[s]).filter(Boolean)
 
-const AVATAR_COLORS = ['#1B3A6B','#0f766e','#7c3aed','#b45309','#0369a1','#E05A2B','#15803d','#be185d']
+const AVATAR_COLORS = ['#4A2E17','#0f766e','#7c3aed','#b45309','#0369a1','#A9713C','#15803d','#be185d']
 function avatarColor(name: string) {
   let h = 0; for (const c of name) h = (h*31+c.charCodeAt(0))>>>0
   return AVATAR_COLORS[h % AVATAR_COLORS.length]
@@ -75,12 +75,12 @@ const total     = providers.length
 <Layout title={pageTitle} description={cat.desc}>
 
   <!-- Header -->
-  <div style={`background:linear-gradient(135deg,#0F1E35,#1A2B4A);padding:24px 20px 22px;text-align:center;`}>
+  <div style={`background:linear-gradient(135deg,#1C120A,#3A2416);padding:24px 20px 22px;text-align:center;`}>
     <a href="/" style="font-size:11px;color:rgba(255,255,255,0.4);text-decoration:none;display:inline-block;margin-bottom:12px;">← Home</a>
     <div style={`width:56px;height:56px;border-radius:16px;background:${cat.bg};border:2px solid ${cat.border};display:flex;align-items:center;justify-content:center;font-size:28px;margin:0 auto 12px;`}>{cat.icon}</div>
     <h1 style="font-family:'Playfair Display',serif;font-size:22px;font-weight:700;color:#fff;margin:0 0 8px;">{cat.label}</h1>
     <p style="font-size:12px;color:rgba(255,255,255,0.5);margin:0 0 18px;line-height:1.6;max-width:360px;margin-left:auto;margin-right:auto;">{cat.desc}</p>
-    <a href={`/post-project`} style="display:inline-flex;align-items:center;gap:7px;background:#E05A2B;color:#fff;border-radius:22px;padding:11px 22px;font-size:13px;font-weight:700;text-decoration:none;">
+    <a href={`/post-project`} style="display:inline-flex;align-items:center;gap:7px;background:#A9713C;color:#fff;border-radius:22px;padding:11px 22px;font-size:13px;font-weight:700;text-decoration:none;">
       📋 Post a {cat.label.replace(' Services','')} Project
     </a>
   </div>
@@ -111,14 +111,14 @@ const total     = providers.length
         {total > 0 && <span style="font-size:11px;color:#94a3b8;margin-left:7px;">{total} found</span>}
       </div>
       <a href={`/providers?q=${encodeURIComponent(cat.label.replace(' Services',''))}`}
-        style="font-size:12px;font-weight:600;color:#E05A2B;text-decoration:none;">View All ›</a>
+        style="font-size:12px;font-weight:600;color:#A9713C;text-decoration:none;">View All ›</a>
     </div>
 
     {total === 0
       ? (
         <div style="text-align:center;padding:32px 20px;color:#94a3b8;font-size:13px;">
           No providers listed yet for this category. <br />
-          <a href="/join-tilershub" style="color:#E05A2B;text-decoration:none;font-weight:600;">Join TilersHub →</a>
+          <a href="/join-tilershub" style="color:#A9713C;text-decoration:none;font-weight:600;">Join TilersHub →</a>
         </div>
       )
       : (
@@ -191,7 +191,7 @@ const total     = providers.length
                           💬
                         </a>
                       )}
-                      {p.slug && <span style="display:inline-flex;align-items:center;gap:4px;background:#1B3A6B;color:#fff;border-radius:10px;padding:7px 14px;font-size:12px;font-weight:700;white-space:nowrap;">View Profile ›</span>}
+                      {p.slug && <span style="display:inline-flex;align-items:center;gap:4px;background:#4A2E17;color:#fff;border-radius:10px;padding:7px 14px;font-size:12px;font-weight:700;white-space:nowrap;">View Profile ›</span>}
                     </div>
                   </div>
                 </div>
@@ -208,7 +208,7 @@ const total     = providers.length
     <section style="background:#fff;padding:20px 0 24px;border-top:1px solid #f1f5f9;">
       <div style="padding:0 16px 12px;display:flex;align-items:center;justify-content:space-between;">
         <span style="font-size:15px;font-weight:700;color:#111827;">📰 Tips &amp; Guides</span>
-        <a href="/blog" style="font-size:12px;font-weight:600;color:#E05A2B;text-decoration:none;">View All ›</a>
+        <a href="/blog" style="font-size:12px;font-weight:600;color:#A9713C;text-decoration:none;">View All ›</a>
       </div>
       <div style="display:flex;flex-direction:column;gap:8px;padding:0 16px;">
         {blogs.map((post:any) => (
@@ -216,7 +216,7 @@ const total     = providers.length
             style="display:flex;align-items:center;gap:0;background:#f8fafc;border-radius:14px;overflow:hidden;border:1px solid #e2e8f0;text-decoration:none;color:inherit;">
             <div style={`width:64px;height:64px;background:${post.color};flex-shrink:0;display:flex;align-items:center;justify-content:center;font-size:24px;`}>{post.icon}</div>
             <div style="flex:1;padding:11px 13px;min-width:0;">
-              <span style="font-size:9px;font-weight:700;color:#E05A2B;background:#fff4f0;border:1px solid #fcd5c0;border-radius:20px;padding:1px 7px;">{post.category}</span>
+              <span style="font-size:9px;font-weight:700;color:#A9713C;background:#F8F1E8;border:1px solid #E9D5BC;border-radius:20px;padding:1px 7px;">{post.category}</span>
               <div style="font-size:12px;font-weight:700;color:#111827;line-height:1.4;margin-top:5px;overflow:hidden;display:-webkit-box;-webkit-line-clamp:2;-webkit-box-orient:vertical;">{post.title}</div>
             </div>
             <div style="padding:0 14px;font-size:18px;color:#cbd5e1;flex-shrink:0;">›</div>
@@ -227,13 +227,13 @@ const total     = providers.length
   )}
 
   <!-- Post project CTA -->
-  <section style="background:#E05A2B;padding:24px 20px;">
+  <section style="background:#A9713C;padding:24px 20px;">
     <div style="max-width:480px;margin:0 auto;display:flex;align-items:center;justify-content:space-between;gap:16px;flex-wrap:wrap;">
       <div>
         <div style="font-size:15px;font-weight:800;color:#fff;margin-bottom:4px;">Need a {cat.label.replace(' Services','')} specialist?</div>
         <div style="font-size:12px;color:rgba(255,255,255,0.72);">Post a project free — get bids on WhatsApp.</div>
       </div>
-      <a href="/post-project" style="display:inline-flex;align-items:center;gap:7px;background:#fff;color:#E05A2B;border-radius:12px;padding:11px 20px;font-size:13px;font-weight:800;text-decoration:none;white-space:nowrap;flex-shrink:0;">
+      <a href="/post-project" style="display:inline-flex;align-items:center;gap:7px;background:#fff;color:#A9713C;border-radius:12px;padding:11px 20px;font-size:13px;font-weight:800;text-decoration:none;white-space:nowrap;flex-shrink:0;">
         📋 Post Free
       </a>
     </div>

@@ -15,11 +15,11 @@ if (brand.dedicated_page_url) return Astro.redirect(brand.dedicated_page_url, 30
 >
 
   <!-- Hero -->
-  <div style="background:linear-gradient(135deg,#0F2444,#1B3A6B);padding:56px 20px 48px;position:relative;overflow:hidden;text-align:center;">
+  <div style="background:linear-gradient(135deg,#1C120A,#4A2E17);padding:56px 20px 48px;position:relative;overflow:hidden;text-align:center;">
     <div style="position:absolute;inset:0;opacity:0.04;background-image:repeating-linear-gradient(45deg,transparent,transparent 20px,rgba(255,255,255,0.8) 20px,rgba(255,255,255,0.8) 21px);pointer-events:none;"></div>
     <div style="position:relative;max-width:680px;margin:0 auto;">
       <a href="/brands" style="display:inline-flex;align-items:center;gap:5px;font-size:11px;color:rgba(255,255,255,0.4);letter-spacing:1px;font-weight:600;margin-bottom:24px;text-decoration:none;">← All Brands</a>
-      <div style="font-size:9px;font-weight:700;color:rgba(224,90,43,0.7);letter-spacing:3px;text-transform:uppercase;margin-bottom:16px;">Brand Profile</div>
+      <div style="font-size:9px;font-weight:700;color:rgba(169,113,60,0.7);letter-spacing:3px;text-transform:uppercase;margin-bottom:16px;">Brand Profile</div>
       <div style="width:72px;height:72px;border-radius:18px;background:rgba(255,255,255,0.1);border:1px solid rgba(255,255,255,0.15);display:flex;align-items:center;justify-content:center;font-size:36px;margin:0 auto 20px;">🏷️</div>
       <h1 style="font-family:'Playfair Display',serif;font-size:clamp(28px,5vw,48px);font-weight:700;color:#fff;margin-bottom:12px;">{brand.name}</h1>
       {brand.description && <p style="font-size:15px;color:rgba(255,255,255,0.6);max-width:520px;margin:0 auto 28px;line-height:1.8;">{brand.description}</p>}
@@ -30,7 +30,7 @@ if (brand.dedicated_page_url) return Astro.redirect(brand.dedicated_page_url, 30
       </div>
       <div style="display:flex;gap:12px;justify-content:center;flex-wrap:wrap;">
         {brand.website_url && (
-          <a href={brand.website_url} target="_blank" rel="noopener noreferrer" style="display:inline-flex;align-items:center;gap:8px;background:var(--terra);color:#fff;border-radius:12px;padding:12px 24px;font-size:13px;font-weight:700;text-decoration:none;box-shadow:0 4px 16px rgba(224,90,43,0.4);">
+          <a href={brand.website_url} target="_blank" rel="noopener noreferrer" style="display:inline-flex;align-items:center;gap:8px;background:var(--terra);color:#fff;border-radius:12px;padding:12px 24px;font-size:13px;font-weight:700;text-decoration:none;box-shadow:0 4px 16px rgba(169,113,60,0.4);">
             🌐 Visit Official Website
           </a>
         )}

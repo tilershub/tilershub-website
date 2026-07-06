@@ -7,7 +7,7 @@ function Field({ label, id, req, error, hint, children }) {
   return (
     <div style={{ marginBottom: 20 }}>
       <label htmlFor={id} style={{ display: 'block', fontSize: 11, fontWeight: 700, color: '#334155', textTransform: 'uppercase', letterSpacing: '0.6px', marginBottom: 7 }}>
-        {label}{req && <span style={{ color: '#E05A2B', marginLeft: 3 }}>*</span>}
+        {label}{req && <span style={{ color: '#A9713C', marginLeft: 3 }}>*</span>}
       </label>
       {children}
       {hint && !error && <p style={{ fontSize: 11, color: '#94a3b8', marginTop: 5, lineHeight: 1.5 }}>{hint}</p>}
@@ -134,7 +134,7 @@ export default function JoinForm() {
               type="button"
               onClick={() => setCategory(prof)}
               style={{ display: 'flex', flexDirection: 'column', alignItems: 'center', gap: 8, padding: '18px 12px', borderRadius: 14, border: '2px solid #e2e8f0', background: '#fff', cursor: 'pointer', textAlign: 'center', transition: 'all 0.15s', boxShadow: '0 1px 4px rgba(0,0,0,0.04)' }}
-              onMouseOver={e => { e.currentTarget.style.borderColor = '#1B3A6B'; e.currentTarget.style.boxShadow = '0 4px 16px rgba(27,58,107,0.12)'; e.currentTarget.style.background = '#eef3fb' }}
+              onMouseOver={e => { e.currentTarget.style.borderColor = '#4A2E17'; e.currentTarget.style.boxShadow = '0 4px 16px rgba(74,46,23,0.12)'; e.currentTarget.style.background = '#eef3fb' }}
               onMouseOut={e => { e.currentTarget.style.borderColor = '#e2e8f0'; e.currentTarget.style.boxShadow = '0 1px 4px rgba(0,0,0,0.04)'; e.currentTarget.style.background = '#fff' }}
             >
               <span style={{ fontSize: 30 }}>{prof.icon}</span>
@@ -154,7 +154,7 @@ export default function JoinForm() {
         <button
           type="button"
           onClick={() => setCategory(null)}
-          style={{ display: 'inline-flex', alignItems: 'center', gap: 8, background: '#eef3fb', border: '1.5px solid #d5e2f5', borderRadius: 10, padding: '7px 14px', cursor: 'pointer', fontSize: 12, fontWeight: 700, color: '#1B3A6B' }}
+          style={{ display: 'inline-flex', alignItems: 'center', gap: 8, background: '#eef3fb', border: '1.5px solid #d5e2f5', borderRadius: 10, padding: '7px 14px', cursor: 'pointer', fontSize: 12, fontWeight: 700, color: '#4A2E17' }}
         >
           {category.icon} {category.label} <span style={{ fontSize: 10, color: '#94a3b8', fontWeight: 400 }}>· Change</span>
         </button>
@@ -190,7 +190,7 @@ export default function JoinForm() {
       <button
         type="submit"
         disabled={submitting}
-        style={{ width: '100%', padding: 14, background: submitting ? '#94a3b8' : '#1B3A6B', color: '#fff', border: 'none', borderRadius: 12, fontSize: 15, fontWeight: 700, cursor: submitting ? 'not-allowed' : 'pointer', display: 'flex', alignItems: 'center', justifyContent: 'center', gap: 8, transition: 'background 0.2s' }}
+        style={{ width: '100%', padding: 14, background: submitting ? '#94a3b8' : '#4A2E17', color: '#fff', border: 'none', borderRadius: 12, fontSize: 15, fontWeight: 700, cursor: submitting ? 'not-allowed' : 'pointer', display: 'flex', alignItems: 'center', justifyContent: 'center', gap: 8, transition: 'background 0.2s' }}
       >
         {submitting ? '⏳ Submitting...' : '✅ Get Listed Free →'}
       </button>
