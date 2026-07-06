@@ -13,12 +13,17 @@ import PostProjectForm from '../components/PostProjectForm.jsx'
     <div style="position:absolute;inset:0;opacity:0.04;background-image:repeating-linear-gradient(45deg,transparent,transparent 20px,rgba(255,255,255,0.8) 20px,rgba(255,255,255,0.8) 21px);pointer-events:none;"></div>
     <div style="position:relative;max-width:600px;margin:0 auto;">
       <a href="/" style="display:inline-flex;align-items:center;gap:5px;font-size:11px;color:rgba(255,255,255,0.4);letter-spacing:1px;text-transform:uppercase;font-weight:600;margin-bottom:24px;text-decoration:none;">← TilersHub</a>
-      <div style="font-size:9px;font-weight:700;color:rgba(224,90,43,0.7);letter-spacing:3px;text-transform:uppercase;margin-bottom:14px;">නොමිලේ · ලොගිනයක් අවශ්‍ය නැත</div>
+      <div style="font-size:9px;font-weight:700;color:rgba(169,113,60,0.7);letter-spacing:3px;text-transform:uppercase;margin-bottom:14px;">
+        <span class="si-text">නොමිලේ · ලොගිනයක් අවශ්‍ය නැත</span>
+        <span class="en-text">Free · No login required</span>
+      </div>
       <h1 style="font-family:'Playfair Display',serif;font-size:clamp(26px,4vw,42px);font-weight:700;color:#fff;margin-bottom:12px;line-height:1.2;">
-        ඔබේ <span style="color:var(--terra);">ටයිලිං ව්‍යාපෘතිය</span> පලකරන්න
+        <span class="si-text">ඔබේ <span style="color:var(--terra);">ටයිලිං ව්‍යාපෘතිය</span> පලකරන්න</span>
+        <span class="en-text">Post your <span style="color:var(--terra);">tiling project</span></span>
       </h1>
       <p style="font-size:14px;color:rgba(255,255,255,0.5);max-width:420px;margin:0 auto;line-height:1.9;">
-        ඔබේ ව්‍යාපෘතිය විස්තර කරන්න — ආසන්නයේ සිටින සත්‍යාපිත වෘත්තිකයන් WhatsApp හරහා සම්බන්ධ වනු ඇත.
+        <span class="si-text">ඔබේ ව්‍යාපෘතිය විස්තර කරන්න — ආසන්නයේ සිටින සත්‍යාපිත වෘත්තිකයන් WhatsApp හරහා සම්බන්ධ වනු ඇත.</span>
+        <span class="en-text">Describe your project — verified professionals near you will reach out on WhatsApp.</span>
       </p>
     </div>
   </div>
@@ -27,13 +32,16 @@ import PostProjectForm from '../components/PostProjectForm.jsx'
   <div style="background:var(--surface-2);border-bottom:1px solid var(--border);padding:20px;">
     <div style="max-width:700px;margin:0 auto;display:grid;grid-template-columns:repeat(3,1fr);gap:12px;text-align:center;">
       {[
-        { icon: '📋', step: '1.', text: 'ව්‍යාපෘතිය විස්තර කරන්න' },
-        { icon: '✅', step: '2.', text: 'සුදුසු අය සොයා ගනිමු' },
-        { icon: '💬', step: '3.', text: 'WhatsApp හරහා සම්බන්ධ වන්න' },
+        { icon: '📋', si: 'ව්‍යාපෘතිය විස්තර කරන්න', en: 'Describe your project' },
+        { icon: '✅', si: 'සුදුසු අය සොයා ගනිමු', en: 'We match the right pros' },
+        { icon: '💬', si: 'WhatsApp හරහා සම්බන්ධ වන්න', en: 'Connect on WhatsApp' },
       ].map(s => (
         <div style="padding:12px 8px;">
           <div style="font-size:22px;margin-bottom:4px;">{s.icon}</div>
-          <div style="font-size:12px;color:var(--text-3);">{s.text}</div>
+          <div style="font-size:12px;color:var(--text-3);">
+            <span class="si-text">{s.si}</span>
+            <span class="en-text">{s.en}</span>
+          </div>
         </div>
       ))}
     </div>

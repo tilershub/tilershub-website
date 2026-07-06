@@ -57,7 +57,7 @@ const orgSchema = JSON.stringify({
   <title>{title}</title>
   <meta name="description" content={description} />
   <meta name="robots" content={noindex ? 'noindex, nofollow' : 'index, follow'} />
-  <meta name="theme-color" content="#1B3A6B" />
+  <meta name="theme-color" content="#4A2E17" />
   <link rel="canonical" href={canonicalUrl} />
   <link rel="sitemap" href="/sitemap.xml" />
   <!-- Open Graph -->
@@ -95,8 +95,13 @@ const orgSchema = JSON.stringify({
   <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,400;0,600;0,700;1,400&display=swap" rel="stylesheet" />
   <slot name="head" />
   <style is:global>
-    .si-text { display: none !important; }
+    html:not([data-lang="si"]) .si-text { display: none; }
+    html[data-lang="si"] .en-text { display: none; }
   </style>
+  <!-- Pre-paint language init: apply stored choice before first render -->
+  <script is:inline>
+    ;(function(){try{var l=localStorage.getItem('th_lang');if(l)document.documentElement.setAttribute('data-lang',l)}catch(e){}})()
+  </script>
   <!-- Google Tag Manager -->
   <script is:inline>(function(w,d,s,l,i){w[l]=w[l]||[];w[l].push({'gtm.start':new Date().getTime(),event:'gtm.js'});var f=d.getElementsByTagName(s)[0],j=d.createElement(s),dl=l!='dataLayer'?'&l='+l:'';j.async=true;j.src='https://www.googletagmanager.com/gtm.js?id='+i+dl;f.parentNode.insertBefore(j,f);})(window,document,'script','dataLayer','GTM-MX727MR5');</script>
 </head>
@@ -105,15 +110,15 @@ const orgSchema = JSON.stringify({
   <noscript is:raw><iframe src="https://www.googletagmanager.com/ns.html?id=GTM-MX727MR5" height="0" width="0" style="display:none;visibility:hidden"></iframe></noscript>
 
   <!-- ═══ PWA SPLASH SCREEN ═══ -->
-  <div id="pwa-splash" style="position:fixed;inset:0;z-index:99999;background:#0F2444;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:20px;transition:opacity 0.45s ease;pointer-events:none;">
+  <div id="pwa-splash" style="position:fixed;inset:0;z-index:99999;background:#1C120A;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:20px;transition:opacity 0.45s ease;pointer-events:none;">
     <div style="display:grid;grid-template-columns:repeat(3,1fr);gap:5px;width:78px;height:78px;">
       {[0,1,2,3,4,5,6,7,8].map((i) => (
         <div style={`border-radius:3px;background:${[1,3,4,5,7].includes(i)?'#8B5E3C':'#6B4A2E'};opacity:${[0,2,6,8].includes(i)?'0.55':'1'};`}></div>
       ))}
     </div>
-    <div style="font-family:'Playfair Display',Georgia,serif;font-size:20px;font-weight:700;color:rgba(255,255,255,0.9);letter-spacing:1.5px;">TILERS<span style="color:#E05A2B;">HUB</span></div>
+    <div style="font-family:'Playfair Display',Georgia,serif;font-size:20px;font-weight:700;color:rgba(255,255,255,0.9);letter-spacing:1.5px;">TILERS<span style="color:#A9713C;">HUB</span></div>
     <div style="width:32px;height:3px;border-radius:2px;background:rgba(255,255,255,0.15);overflow:hidden;margin-top:4px;">
-      <div id="pwa-splash-bar" style="height:100%;width:0;background:#E05A2B;border-radius:2px;transition:width 1.2s ease;"></div>
+      <div id="pwa-splash-bar" style="height:100%;width:0;background:#A9713C;border-radius:2px;transition:width 1.2s ease;"></div>
     </div>
   </div>
   <script is:inline>
@@ -148,6 +153,7 @@ const orgSchema = JSON.stringify({
     </a>
 
     <div class="header-actions">
+      <button class="header-icon-btn" id="lang-toggle" aria-label="Switch language" style="font-size:11px;font-weight:800;letter-spacing:0.5px;">සිං</button>
       <a href="/providers" class="header-icon-btn header-search-hide" title="Search" aria-label="Search providers">🔍</a>
       <a href="/notifications" class="header-icon-btn" title="Notifications" aria-label="Notifications">🔔</a>
       <AuthButton initialUser={user} client:load />
@@ -160,7 +166,7 @@ const orgSchema = JSON.stringify({
   <div class="mobile-drawer-overlay" id="drawer-overlay"></div>
   <div class="mobile-drawer" id="mobile-drawer">
     <div class="drawer-header">
-      <span style="font-family:'Playfair Display',serif;font-size:16px;font-weight:700;color:#fff;">TILERS<span style="color:#E05A2B;">HUB</span></span>
+      <span style="font-family:'Playfair Display',serif;font-size:16px;font-weight:700;color:#fff;">TILERS<span style="color:#A9713C;">HUB</span></span>
       <button id="close-drawer" style="background:transparent;border:none;color:rgba(255,255,255,0.5);font-size:22px;cursor:pointer;padding:4px;">✕</button>
     </div>
     <a href="/" class={`drawer-link${path==='/'?' active':''}`}>🏠 Home</a>
@@ -254,7 +260,7 @@ const orgSchema = JSON.stringify({
         <span class="bottom-nav-icon" style="position:relative;display:inline-block;">
           📋
           {activeProjectCount != null && activeProjectCount > 0 && (
-            <span style="position:absolute;top:-5px;right:-8px;background:#E05A2B;color:#fff;font-size:8px;font-weight:800;border-radius:20px;padding:1px 4px;min-width:14px;text-align:center;line-height:14px;border:1.5px solid #fff;">{activeProjectCount > 99 ? '99+' : activeProjectCount}</span>
+            <span style="position:absolute;top:-5px;right:-8px;background:#A9713C;color:#fff;font-size:8px;font-weight:800;border-radius:20px;padding:1px 4px;min-width:14px;text-align:center;line-height:14px;border:1.5px solid #fff;">{activeProjectCount > 99 ? '99+' : activeProjectCount}</span>
           )}
         </span>
         Projects
@@ -289,6 +295,70 @@ const orgSchema = JSON.stringify({
     overlay?.addEventListener('click', closeDrawer)
     closeBtn?.addEventListener('click', closeDrawer)
   </script>
+  <!-- ═══ FIRST-VISIT LANGUAGE CHOOSER ═══ -->
+  <div id="lang-chooser" hidden style="position:fixed;inset:0;z-index:9999;">
+    <div id="lang-chooser-bg" style="position:absolute;inset:0;background:rgba(20,13,7,0.55);opacity:0;transition:opacity 0.3s;"></div>
+    <div id="lang-chooser-sheet" style="position:absolute;left:0;right:0;bottom:0;background:#fff;border-radius:22px 22px 0 0;padding:26px 22px calc(26px + env(safe-area-inset-bottom,0px));box-shadow:0 -8px 40px rgba(0,0,0,0.2);transform:translateY(100%);transition:transform 0.3s ease;max-width:480px;margin:0 auto;">
+      <div style="text-align:center;margin-bottom:18px;">
+        <div style="font-size:30px;margin-bottom:8px;">🇱🇰</div>
+        <div style="font-size:16px;font-weight:800;color:#0f172a;margin-bottom:4px;">භාෂාව තෝරන්න · Choose your language</div>
+        <div style="font-size:12px;color:#64748b;">ඕනෑම වේලාවක ඉහළින් වෙනස් කළ හැක · Change anytime from the top bar</div>
+      </div>
+      <div style="display:flex;gap:10px;">
+        <button data-pick="si" style="flex:1;background:#4A2E17;color:#fff;border:none;border-radius:14px;padding:16px 10px;font-size:16px;font-weight:800;cursor:pointer;font-family:inherit;">සිංහල</button>
+        <button data-pick="en" style="flex:1;background:#fff;color:#4A2E17;border:2px solid #EADDCB;border-radius:14px;padding:16px 10px;font-size:16px;font-weight:800;cursor:pointer;font-family:inherit;">English</button>
+      </div>
+    </div>
+  </div>
+
+  <script is:inline>
+    ;(function(){
+      function setLang(l){
+        try{localStorage.setItem('th_lang',l)}catch(e){}
+        document.documentElement.setAttribute('data-lang',l)
+        window.dispatchEvent(new CustomEvent('th-lang',{detail:l}))
+        var t=document.getElementById('lang-toggle')
+        if(t) t.textContent = l==='si' ? 'EN' : 'සිං'
+      }
+      window.__thSetLang = setLang
+
+      // Header toggle
+      var toggle=document.getElementById('lang-toggle')
+      if(toggle){
+        var cur=document.documentElement.getAttribute('data-lang')||'en'
+        toggle.textContent = cur==='si' ? 'EN' : 'සිං'
+        toggle.addEventListener('click',function(){
+          var now=document.documentElement.getAttribute('data-lang')||'en'
+          setLang(now==='si' ? 'en' : 'si')
+        })
+      }
+
+      // First-visit chooser
+      var stored=null
+      try{stored=localStorage.getItem('th_lang')}catch(e){return}
+      if(stored) return
+      var box=document.getElementById('lang-chooser')
+      if(!box) return
+      box.hidden=false
+      requestAnimationFrame(function(){
+        var bg=document.getElementById('lang-chooser-bg')
+        var sheet=document.getElementById('lang-chooser-sheet')
+        if(bg) bg.style.opacity='1'
+        if(sheet) sheet.style.transform='translateY(0)'
+      })
+      box.querySelectorAll('[data-pick]').forEach(function(btn){
+        btn.addEventListener('click',function(){
+          setLang(btn.getAttribute('data-pick'))
+          var bg=document.getElementById('lang-chooser-bg')
+          var sheet=document.getElementById('lang-chooser-sheet')
+          if(bg) bg.style.opacity='0'
+          if(sheet) sheet.style.transform='translateY(100%)'
+          setTimeout(function(){ if(box.parentNode) box.parentNode.removeChild(box) },320)
+        })
+      })
+    })()
+  </script>
+
   <script>
     if ('serviceWorker' in navigator) {
       window.addEventListener('load', () => {

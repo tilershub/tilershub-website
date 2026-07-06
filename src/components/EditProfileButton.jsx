@@ -17,10 +17,10 @@ export default function EditProfileButton({ ownerId, profileType, profileSlug })
       href="/provider?tab=profile"
       style={{
         display: 'inline-flex', alignItems: 'center', gap: 6,
-        background: '#1B3A6B', color: '#fff', borderRadius: 12,
+        background: '#4A2E17', color: '#fff', borderRadius: 12,
         padding: '10px 18px', fontSize: 13, fontWeight: 700,
         textDecoration: 'none', marginTop: 12,
-        boxShadow: '0 2px 10px rgba(27,58,107,0.25)',
+        boxShadow: '0 2px 10px rgba(74,46,23,0.25)',
       }}
     >
       ✏️ Edit My Profile

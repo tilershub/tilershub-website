@@ -2,7 +2,7 @@
 import Layout from '../layouts/Layout.astro'
 
 const CATS = [
-  { icon: '👷', label: 'ටයිලර්',                    desc: 'සත්‍යාපිත ටයිලිං වෘත්තිකයන්',              href: '/providers?type=tiler',      bg: '#1A2B4A' },
+  { icon: '👷', label: 'ටයිලර්',                    desc: 'සත්‍යාපිත ටයිලිං වෘත්තිකයන්',              href: '/providers?type=tiler',      bg: '#3A2416' },
   { icon: '🚿', label: 'නාන කාමර කොන්ත්‍රාත්',      desc: 'සම්පූර්ණ නාන කාමර ප්‍රතිසංස්කරණය',        href: '/providers?type=contractor', bg: '#0369a1' },
   { icon: '🏪', label: 'ටයිල් සාප්පු',              desc: 'ටයිල් ෂෝරූම් සහ සිල්ලර වෙළෙඳාම',        href: '/providers?type=tile_shop',  bg: '#C1603A' },
   { icon: '🏷️', label: 'බ්‍රෑන්ඩ්',                  desc: 'ටයිල් සහ නාන කාමර නිෂ්පාදකයන්',         href: '/tile',                      bg: '#D4AF37' },
@@ -15,7 +15,7 @@ const CATS = [
   { icon: '💧', label: 'ජල නිරෝධ',                desc: 'ජල නිරෝධ membrane සහ යෙදීම',             href: '/providers?type=contractor', bg: '#1e3a5f' },
   { icon: '🪨', label: 'ග්‍රැනයිට් වැඩ',           desc: 'ග්‍රැනයිට් කැපීම, ඔප දැමීම, සවි කිරීම',   href: '/providers?type=workshop',   bg: '#4b5563' },
   { icon: '🔲', label: 'ඇලුමිනියම් වැඩ',          desc: 'ඇලුමිනියම් රාමු, ජනෙල් සහ දොරවල්',      href: '/providers',                  bg: '#374151' },
-  { icon: '✂️', label: 'ටයිල් කැපීම සහ රවුට',     desc: 'නිශ්චිත කැපීම සහ දාර සකස් කිරීම',       href: '/providers?type=workshop',   bg: '#0f2444' },
+  { icon: '✂️', label: 'ටයිල් කැපීම සහ රවුට',     desc: 'නිශ්චිත කැපීම සහ දාර සකස් කිරීම',       href: '/providers?type=workshop',   bg: '#1C120A' },
   { icon: '🚚', label: 'බෙදාහැරීමේ සේවා',         desc: 'ටයිල් සහ ද්‍රව්‍ය island-wide බෙදාහැරීම', href: '/providers',                  bg: '#166534' },
 ]
 ---
@@ -26,7 +26,7 @@ const CATS = [
 >
 
   <!-- Hero -->
-  <div style="background:linear-gradient(135deg,#1A2B4A,#2B4275);padding:48px 20px 40px;text-align:center;position:relative;overflow:hidden;">
+  <div style="background:linear-gradient(135deg,#3A2416,#6B4A2E);padding:48px 20px 40px;text-align:center;position:relative;overflow:hidden;">
     <div style="position:absolute;inset:0;opacity:0.04;background-image:repeating-linear-gradient(0deg,transparent,transparent 39px,rgba(255,255,255,0.8) 39px,rgba(255,255,255,0.8) 40px),repeating-linear-gradient(90deg,transparent,transparent 39px,rgba(255,255,255,0.8) 39px,rgba(255,255,255,0.8) 40px);pointer-events:none;"></div>
     <div style="position:relative;max-width:540px;margin:0 auto;">
       <span style="font-size:9px;font-weight:700;color:rgba(245,158,11,0.7);letter-spacing:3px;text-transform:uppercase;display:block;margin-bottom:12px;">☰ සියලු වර්ග</span>
@@ -45,7 +45,7 @@ const CATS = [
       {CATS.map(c => (
         <a href={c.href}
           style="display:flex;flex-direction:column;align-items:center;gap:12px;padding:22px 14px 18px;background:#fff;border:1.5px solid var(--border);border-radius:18px;text-decoration:none;color:inherit;text-align:center;transition:all 0.2s;box-shadow:0 2px 8px rgba(0,0,0,0.04);"
-          onmouseover="this.style.borderColor='#1A2B4A';this.style.transform='translateY(-4px)';this.style.boxShadow='0 12px 32px rgba(0,0,0,0.1)'"
+          onmouseover="this.style.borderColor='#3A2416';this.style.transform='translateY(-4px)';this.style.boxShadow='0 12px 32px rgba(0,0,0,0.1)'"
           onmouseout="this.style.borderColor='';this.style.transform='';this.style.boxShadow='0 2px 8px rgba(0,0,0,0.04)'">
           <div style={`width:60px;height:60px;border-radius:16px;background:${c.bg};display:flex;align-items:center;justify-content:center;font-size:26px;box-shadow:0 4px 12px rgba(0,0,0,0.2);`}>
             {c.icon}

@@ -307,7 +307,7 @@ export default function BlogEditor({ mode = 'create', blogId = null }) {
           <div style={{ fontSize: 48, marginBottom: 12 }}>🔒</div>
           <div style={{ fontSize: 16, fontWeight: 700, marginBottom: 8, color: '#0f172a' }}>Access denied</div>
           <div style={{ fontSize: 13, color: '#64748b', marginBottom: 20 }}>Admin privileges required.</div>
-          <a href="/admin" style={{ color: '#1B3A6B', fontWeight: 600, fontSize: 13 }}>← Go to Admin</a>
+          <a href="/admin" style={{ color: '#4A2E17', fontWeight: 600, fontSize: 13 }}>← Go to Admin</a>
         </div>
       </Centred>
     )
@@ -340,7 +340,7 @@ export default function BlogEditor({ mode = 'create', blogId = null }) {
                 href={`/blog/${slug}`}
                 target="_blank"
                 rel="noopener"
-                style={{ fontSize: 12, color: '#1B3A6B', textDecoration: 'none', display: 'flex', alignItems: 'center', gap: 4 }}
+                style={{ fontSize: 12, color: '#4A2E17', textDecoration: 'none', display: 'flex', alignItems: 'center', gap: 4 }}
               >
                 👁 Preview ↗
               </a>
@@ -351,7 +351,7 @@ export default function BlogEditor({ mode = 'create', blogId = null }) {
 
         {/* ── AI Optimizer banner ─────────────────────────────────── */}
         <div style={{
-          background: 'linear-gradient(135deg, #1B3A6B 0%, #0f172a 100%)',
+          background: 'linear-gradient(135deg, #4A2E17 0%, #0f172a 100%)',
           borderRadius: 14,
           padding: '18px 22px',
           marginBottom: 24,
@@ -375,7 +375,7 @@ export default function BlogEditor({ mode = 'create', blogId = null }) {
             disabled={aiLoading}
             style={{
               padding: '10px 22px',
-              background: aiLoading ? '#475569' : '#E05A2B',
+              background: aiLoading ? '#475569' : '#A9713C',
               color: '#fff',
               border: 'none',
               borderRadius: 10,
@@ -661,7 +661,7 @@ export default function BlogEditor({ mode = 'create', blogId = null }) {
               disabled={saving}
               style={{
                 padding: '11px 28px',
-                background: saving ? '#94a3b8' : '#1B3A6B',
+                background: saving ? '#94a3b8' : '#4A2E17',
                 color: '#fff',
                 border: 'none',
                 borderRadius: 10,

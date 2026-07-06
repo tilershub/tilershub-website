@@ -51,7 +51,7 @@ export default function Notifications() {
           time: proj.created_at,
           href: `/job?id=${proj.id}`,
           cta: 'Bid →',
-          ctaBg: '#E05A2B',
+          ctaBg: '#A9713C',
         })))
       } else {
         // Homeowner: show bids received on their projects
@@ -84,7 +84,7 @@ export default function Notifications() {
               time: b.created_at,
               href: '/dashboard',
               cta: 'View',
-              ctaBg: '#1B3A6B',
+              ctaBg: '#4A2E17',
             }
           }))
         }
@@ -105,7 +105,7 @@ export default function Notifications() {
         <p style={{ fontSize:14, color:'#64748b', marginBottom:24, lineHeight:1.7 }}>
           Sign in to see your notifications — bid alerts, project updates, and more.
         </p>
-        <a href="/login" style={{ display:'inline-flex', alignItems:'center', gap:8, background:'#E05A2B', color:'#fff', borderRadius:12, padding:'12px 28px', fontSize:14, fontWeight:700, textDecoration:'none', boxShadow:'0 4px 16px rgba(224,90,43,0.35)' }}>
+        <a href="/login" style={{ display:'inline-flex', alignItems:'center', gap:8, background:'#A9713C', color:'#fff', borderRadius:12, padding:'12px 28px', fontSize:14, fontWeight:700, textDecoration:'none', boxShadow:'0 4px 16px rgba(169,113,60,0.35)' }}>
           Sign In →
         </a>
       </div>
@@ -152,7 +152,7 @@ export default function Notifications() {
           </p>
         </div>
         {items.length > 0 && (
-          <span style={{ fontSize:11, fontWeight:700, color:'#E05A2B', background:'#fff4f0', border:'1px solid #fcd5c0', borderRadius:20, padding:'3px 10px' }}>
+          <span style={{ fontSize:11, fontWeight:700, color:'#A9713C', background:'#F8F1E8', border:'1px solid #E9D5BC', borderRadius:20, padding:'3px 10px' }}>
             {items.length} new
           </span>
         )}
@@ -163,7 +163,7 @@ export default function Notifications() {
         <div style={{ textAlign:'center', padding:'48px 20px' }}>
           <div style={{ fontSize:40, marginBottom:12 }}>🔔</div>
           <p style={{ fontSize:14, color:'#94a3b8', marginBottom:20 }}>{emptyMsg}</p>
-          <a href={emptyCta.href} style={{ display:'inline-flex', alignItems:'center', gap:6, background:'#1B3A6B', color:'#fff', borderRadius:10, padding:'10px 22px', fontSize:13, fontWeight:700, textDecoration:'none' }}>
+          <a href={emptyCta.href} style={{ display:'inline-flex', alignItems:'center', gap:6, background:'#4A2E17', color:'#fff', borderRadius:10, padding:'10px 22px', fontSize:13, fontWeight:700, textDecoration:'none' }}>
             {emptyCta.label} →
           </a>
         </div>

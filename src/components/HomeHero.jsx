@@ -10,9 +10,9 @@ const TYPE_ICONS = {
   'Waterproofing':'💧','Tile Shop Inquiry':'🏪',
 }
 const TYPE_COLORS = {
-  'Floor Tiling':'#1B3A6B','Bathroom Tiling':'#0f766e','Bathroom Renovation':'#0f766e',
+  'Floor Tiling':'#4A2E17','Bathroom Tiling':'#0f766e','Bathroom Renovation':'#0f766e',
   'Granite Works':'#7c3aed','Tile Cutting':'#b45309','Routering':'#b45309',
-  'Waterproofing':'#0369a1','Tile Shop Inquiry':'#E05A2B',
+  'Waterproofing':'#0369a1','Tile Shop Inquiry':'#A9713C',
 }
 
 function timeAgo(ts) {
@@ -96,7 +96,7 @@ function ProviderHero({ name }) {
   }, [])
 
   return (
-    <div style={{ position:'relative', overflow:'hidden', padding:'24px 20px 20px', background:'linear-gradient(135deg,#0F1E35 0%,#1A2B4A 100%)' }}>
+    <div style={{ position:'relative', overflow:'hidden', padding:'24px 20px 20px', background:'linear-gradient(135deg,#1C120A 0%,#3A2416 100%)' }}>
       <div style={{ position:'absolute', inset:0, opacity:0.035, backgroundImage:'repeating-linear-gradient(0deg,transparent,transparent 39px,rgba(255,255,255,0.8) 39px,rgba(255,255,255,0.8) 40px),repeating-linear-gradient(90deg,transparent,transparent 39px,rgba(255,255,255,0.8) 39px,rgba(255,255,255,0.8) 40px)', pointerEvents:'none' }} />
       <div style={{ position:'absolute', top:'-60px', left:'50%', transform:'translateX(-50%)', width:500, height:260, background:'radial-gradient(ellipse,rgba(212,175,55,0.09) 0%,transparent 70%)', pointerEvents:'none' }} />
 
@@ -135,9 +135,9 @@ function ProviderHero({ name }) {
 
 function ProviderActions() {
   const ACTIONS = [
-    { icon:'✏️', label:'මගේ පැතිකඩ',  sub:'ලිස්ටිං සංස්කරණය',      href:'/dashboard',  bg:'#eef2fb', ibg:'rgba(26,43,74,0.12)'   },
+    { icon:'✏️', label:'මගේ පැතිකඩ',  sub:'ලිස්ටිං සංස්කරණය',      href:'/dashboard',  bg:'#F7F1EA', ibg:'rgba(58,36,22,0.12)'   },
     { icon:'📋', label:'මගේ ලිස්ටිං',  sub:'තත්ත්වය සහ ලංසු',     href:'/dashboard',  bg:'#fffbeb', ibg:'rgba(245,158,11,0.14)' },
-    { icon:'📐', label:'ගණනය',   sub:'පිරිවැය ගණනය',   href:'/estimator',  bg:'#fff4f0', ibg:'rgba(224,90,43,0.12)'  },
+    { icon:'📐', label:'ගණනය',   sub:'පිරිවැය ගණනය',   href:'/estimator',  bg:'#F8F1E8', ibg:'rgba(169,113,60,0.12)'  },
     { icon:'💼', label:'සියලු ව්‍යාපෘති',    sub:'සම්පූර්ණ ව්‍යාපෘති', href:'/jobs',       bg:'#f0fdf4', ibg:'rgba(22,163,74,0.14)'  },
   ]
   return <QuickActionsGrid actions={ACTIONS} />
@@ -188,7 +188,7 @@ function ProviderProjectsFeed() {
             </span>
           )}
         </div>
-        <a href="/jobs" style={{ fontSize:12, fontWeight:600, color:'#1B3A6B', textDecoration:'none' }}>සියල්ල බලන්න →</a>
+        <a href="/jobs" style={{ fontSize:12, fontWeight:600, color:'#4A2E17', textDecoration:'none' }}>සියල්ල බලන්න →</a>
       </div>
 
       <div style={{ maxWidth:860, margin:'0 auto', padding:'10px 16px 16px', display:'flex', flexDirection:'column', gap:8 }}>
@@ -206,7 +206,7 @@ function ProviderProjectsFeed() {
             ))
           : projects.map(p => {
               const icon  = TYPE_ICONS[p.project_type]  || '🏠'
-              const color = TYPE_COLORS[p.project_type] || '#1B3A6B'
+              const color = TYPE_COLORS[p.project_type] || '#4A2E17'
               const bids  = bidCounts[p.id] || 0
               const excerpt = p.description?.length > 100
                 ? p.description.slice(0, 100) + '…'
@@ -240,7 +240,7 @@ function ProviderProjectsFeed() {
                     </div>
                   </div>
 
-                  <div style={{ flexShrink:0, background:'#E05A2B', color:'#fff', borderRadius:10, padding:'8px 14px', fontSize:12, fontWeight:700 }}>
+                  <div style={{ flexShrink:0, background:'#A9713C', color:'#fff', borderRadius:10, padding:'8px 14px', fontSize:12, fontWeight:700 }}>
                     ලංසු →
                   </div>
                 </a>
@@ -256,7 +256,7 @@ function ProviderProjectsFeed() {
 
         {!loading && projects.length > 0 && (
           <a href="/jobs" style={{ display:'flex', alignItems:'center', justifyContent:'center', gap:6, padding:'12px', borderRadius:12, border:'1.5px dashed #cbd5e1', color:'#64748b', fontSize:13, fontWeight:600, textDecoration:'none', background:'transparent', transition:'border-color 0.15s,color 0.15s' }}
-            onMouseOver={e => { e.currentTarget.style.borderColor='#1B3A6B'; e.currentTarget.style.color='#1B3A6B' }}
+            onMouseOver={e => { e.currentTarget.style.borderColor='#4A2E17'; e.currentTarget.style.color='#4A2E17' }}
             onMouseOut={e  => { e.currentTarget.style.borderColor='#cbd5e1'; e.currentTarget.style.color='#64748b' }}
           >
             💼 සියලු {total} ව්‍යාපෘති බලන්න →
@@ -276,7 +276,7 @@ function GuestHero({ heroImg }) {
         style={{ position:'absolute', inset:0, width:'100%', height:'100%', objectFit:'cover', objectPosition:'center 30%', opacity:0.32 }}
         loading="eager" fetchpriority="high" decoding="sync"
       />
-      <div style={{ position:'absolute', inset:0, background:'linear-gradient(175deg,rgba(8,15,28,0.72) 0%,rgba(20,35,65,0.68) 100%)', pointerEvents:'none' }} />
+      <div style={{ position:'absolute', inset:0, background:'linear-gradient(175deg,rgba(20,13,7,0.72) 0%,rgba(20,35,65,0.68) 100%)', pointerEvents:'none' }} />
 
       <div style={{ position:'relative', textAlign:'center', maxWidth:520, width:'100%' }}>
         <h1 style={{ fontFamily:"'Playfair Display',serif", fontSize:'clamp(26px,5.5vw,42px)', fontWeight:700, color:'#fff', lineHeight:1.15, marginBottom:10 }}>
@@ -288,7 +288,7 @@ function GuestHero({ heroImg }) {
         </p>
 
         {/* Single primary CTA */}
-        <a href="/post-project" style={{ display:'flex', alignItems:'center', justifyContent:'center', gap:8, background:'#E05A2B', color:'#fff', borderRadius:24, padding:'14px 28px', fontSize:15, fontWeight:800, textDecoration:'none', boxShadow:'0 4px 20px rgba(224,90,43,0.45)', marginBottom:14 }}>
+        <a href="/post-project" style={{ display:'flex', alignItems:'center', justifyContent:'center', gap:8, background:'#A9713C', color:'#fff', borderRadius:24, padding:'14px 28px', fontSize:15, fontWeight:800, textDecoration:'none', boxShadow:'0 4px 20px rgba(169,113,60,0.45)', marginBottom:14 }}>
           📋 නොමිලේ ව්‍යාපෘතිය පලකරන්න
         </a>
 
@@ -324,13 +324,13 @@ function GuestActions() {
     <div style={{ background:'#fff', borderBottom:'1px solid #f1f5f9', padding:'16px 16px 12px' }}>
       <div style={{ display:'flex', alignItems:'center', justifyContent:'space-between', marginBottom:14 }}>
         <span style={{ fontSize:15, fontWeight:700, color:'#111827' }}>ජනප්‍රිය සේවාවන්</span>
-        <a href="/providers" style={{ fontSize:12, fontWeight:600, color:'#E05A2B', textDecoration:'none' }}>සියල්ල &rsaquo;</a>
+        <a href="/providers" style={{ fontSize:12, fontWeight:600, color:'#A9713C', textDecoration:'none' }}>සියල්ල &rsaquo;</a>
       </div>
       <div style={{ display:'grid', gridTemplateColumns:'repeat(4,1fr)', gap:10 }}>
         {SERVICES.map(s => (
           <a key={s.href} href={s.href}
             style={{ display:'flex', flexDirection:'column', alignItems:'center', gap:7, padding:'12px 4px 10px', borderRadius:14, background:'#f8fafc', textDecoration:'none', border:'1px solid #f1f5f9', transition:'background 0.15s' }}
-            onMouseOver={e => e.currentTarget.style.background='#eef2fb'}
+            onMouseOver={e => e.currentTarget.style.background='#F7F1EA'}
             onMouseOut={e  => e.currentTarget.style.background='#f8fafc'}
           >
             <div style={{ width:46, height:46, borderRadius:13, background:'#fff', border:'1px solid #e2e8f0', boxShadow:'0 1px 4px rgba(0,0,0,0.06)', display:'flex', alignItems:'center', justifyContent:'center', fontSize:22 }}>{s.icon}</div>

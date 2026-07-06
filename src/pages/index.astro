@@ -8,7 +8,7 @@ const HERO_IMG = 'https://images.unsplash.com/photo-1552321554-5fefe8c9ef14?auto
 const serviceBySlug = Object.fromEntries(SERVICES.map(s => [s.slug, s]))
 
 const BLOG_POSTS = [
-  { slug: 'how-to-choose-a-tiler',             icon: '👷', color: '#1B3A6B', category: 'Hiring Tips',          titleEn: 'How to Choose the Right Tiler for Your Project',                      titleSi: 'ඔබේ ව්‍යාපෘතිය සඳහා නිවැරදි ටයිලර් කෙනෙකු තෝරා ගන්නේ කෙසේද' },
+  { slug: 'how-to-choose-a-tiler',             icon: '👷', color: '#4A2E17', category: 'Hiring Tips',          titleEn: 'How to Choose the Right Tiler for Your Project',                      titleSi: 'ඔබේ ව්‍යාපෘතිය සඳහා නිවැරදි ටයිලර් කෙනෙකු තෝරා ගන්නේ කෙසේද' },
   { slug: 'bathroom-renovation-cost-sri-lanka', icon: '💰', color: '#0f766e', category: 'Cost Guide',           titleEn: 'Bathroom Renovation Cost in Sri Lanka (2025 Guide)',                    titleSi: 'ශ්‍රී ලංකාවේ නාන කාමර ප්‍රතිසංස්කරණ පිරිවැය (2025 මාර්ගෝපදේශ)' },
   { slug: 'waterproofing-bathroom-guide',       icon: '💧', color: '#0369a1', category: 'How-to Guide',         titleEn: 'Why Waterproofing Is the Most Important Step',                         titleSi: 'ජලනිරෝධය වඩාත්ම වැදගත් පියවර වන්නේ ඇයි' },
   { slug: 'large-format-tiles-guide',           icon: '📏', color: '#b45309', category: 'Tile Guide',           titleEn: 'Large Format Tiles: Pros, Cons & Installation Tips',                   titleSi: 'විශාල ෆෝමැට් ටයිල්: වාසි, අවාසි සහ ස්ථාපන ඉඟි' },
@@ -20,9 +20,9 @@ const PROJECT_TYPE_ICONS: Record<string,string> = {
   'Waterproofing':'💧','Tile Shop Inquiry':'🏪',
 }
 const PROJECT_TYPE_COLORS: Record<string,string> = {
-  'Floor Tiling':'#1B3A6B','Bathroom Tiling':'#0f766e','Bathroom Renovation':'#0f766e',
+  'Floor Tiling':'#4A2E17','Bathroom Tiling':'#0f766e','Bathroom Renovation':'#0f766e',
   'Granite Works':'#7c3aed','Tile Cutting':'#b45309','Routering':'#b45309',
-  'Waterproofing':'#0369a1','Tile Shop Inquiry':'#E05A2B',
+  'Waterproofing':'#0369a1','Tile Shop Inquiry':'#A9713C',
 }
 
 const { data: recentProjectsRaw } = await Astro.locals.supabase
@@ -72,7 +72,7 @@ const WHY_ITEMS = [
     <img src={HERO_IMG} alt="" width="1400" height="800"
       style="position:absolute;inset:0;width:100%;height:100%;object-fit:cover;object-position:center 30%;opacity:0.32;"
       loading="eager" fetchpriority="high" decoding="sync" />
-    <div style="position:absolute;inset:0;background:linear-gradient(175deg,rgba(8,15,28,0.72) 0%,rgba(20,35,65,0.68) 100%);pointer-events:none;"></div>
+    <div style="position:absolute;inset:0;background:linear-gradient(175deg,rgba(20,13,7,0.72) 0%,rgba(20,35,65,0.68) 100%);pointer-events:none;"></div>
     <div style="position:relative;text-align:center;max-width:560px;width:100%;">
       <h1 style="font-family:'Playfair Display',serif;font-size:clamp(24px,5vw,40px);font-weight:700;color:#fff;line-height:1.15;margin-bottom:10px;">
         <span class="en-text">Find the Right Professional for Your Home</span>
@@ -88,13 +88,13 @@ const WHY_ITEMS = [
           style="flex:1;padding:13px 16px;border-radius:24px;border:none;font-size:14px;outline:none;color:#0f172a;"
           aria-label="Search services" />
         <button type="submit"
-          style="flex-shrink:0;background:#E05A2B;color:#fff;border:none;border-radius:24px;padding:13px 22px;font-size:14px;font-weight:700;cursor:pointer;white-space:nowrap;">
+          style="flex-shrink:0;background:#A9713C;color:#fff;border:none;border-radius:24px;padding:13px 22px;font-size:14px;font-weight:700;cursor:pointer;white-space:nowrap;">
           <span class="en-text">Search</span>
           <span class="si-text">සොයන්න</span>
         </button>
       </form>
       <div>
-        <a href="/post-project" style="display:inline-flex;align-items:center;gap:8px;background:#E05A2B;color:#fff;border-radius:24px;padding:13px 26px;font-size:14px;font-weight:800;text-decoration:none;box-shadow:0 4px 20px rgba(224,90,43,0.45);margin-bottom:14px;">
+        <a href="/post-project" style="display:inline-flex;align-items:center;gap:8px;background:#A9713C;color:#fff;border-radius:24px;padding:13px 26px;font-size:14px;font-weight:800;text-decoration:none;box-shadow:0 4px 20px rgba(169,113,60,0.45);margin-bottom:14px;">
           📋
           <span class="en-text">Post Your Project Free</span>
           <span class="si-text">ව්‍යාපෘතිය නොමිලේ පලකරන්න</span>
@@ -141,7 +141,7 @@ const WHY_ITEMS = [
                 <span class="si-text">{group.labelSi}</span>
               </span>
             </div>
-            <a href={group.viewAllHref} style="font-size:12px;font-weight:600;color:#E05A2B;text-decoration:none;">
+            <a href={group.viewAllHref} style="font-size:12px;font-weight:600;color:#A9713C;text-decoration:none;">
               <span class="en-text">View all ›</span>
               <span class="si-text">සියල්ල ›</span>
             </a>
@@ -164,7 +164,7 @@ const WHY_ITEMS = [
   </section>
 
   <!-- ══ HOW IT WORKS ══ -->
-  <section style="background:linear-gradient(135deg,#0F1E35,#1A2B4A);padding:28px 16px 24px;">
+  <section style="background:linear-gradient(135deg,#1C120A,#3A2416);padding:28px 16px 24px;">
     <div style="max-width:480px;margin:0 auto;">
       <p style="font-size:9px;font-weight:700;color:rgba(255,255,255,0.4);letter-spacing:3px;text-transform:uppercase;text-align:center;margin:0 0 18px;">
         <span class="en-text">HOW IT WORKS</span>
@@ -174,7 +174,7 @@ const WHY_ITEMS = [
         { n:'1', icon:'📋',
           titleEn:'Post Your Project', titleSi:'ව්‍යාපෘතිය පලකරන්න',
           descEn:'Free — no login needed. Takes 2 minutes.', descSi:'නොමිලේ — ලොගිනය අවශ්‍ය නැත. මිනිත්තු 2 ක් ගනී.',
-          c:'#E05A2B' },
+          c:'#A9713C' },
         { n:'2', icon:'💬',
           titleEn:'Receive Quotes',    titleSi:'ලංසු ලැබේ',
           descEn:'Verified specialists send quotes via WhatsApp.', descSi:'සත්‍යාපිත ශිල්පීවරු WhatsApp ට ලංසු යවති.',
@@ -208,7 +208,7 @@ const WHY_ITEMS = [
         <span class="en-text">Recent Projects</span>
         <span class="si-text">මෑත ව්‍යාපෘති</span>
       </span>
-      <a href="/jobs" style="font-size:12px;font-weight:600;color:#E05A2B;text-decoration:none;">
+      <a href="/jobs" style="font-size:12px;font-weight:600;color:#A9713C;text-decoration:none;">
         <span class="en-text">View all ›</span>
         <span class="si-text">සියල්ල ›</span>
       </a>
@@ -219,7 +219,7 @@ const WHY_ITEMS = [
           <div style="padding:20px 0;font-size:13px;color:#94a3b8;text-align:center;">
             <span class="en-text">No projects yet — </span>
             <span class="si-text">දැනට ව්‍යාපෘති නොමැත — </span>
-            <a href="/post-project" style="color:#E05A2B;font-weight:600;text-decoration:none;">
+            <a href="/post-project" style="color:#A9713C;font-weight:600;text-decoration:none;">
               <span class="en-text">post yours free →</span>
               <span class="si-text">නොමිලේ පලකරන්න →</span>
             </a>
@@ -227,7 +227,7 @@ const WHY_ITEMS = [
         )
         : recentProjects.map((p: any) => {
           const icon  = PROJECT_TYPE_ICONS[p.project_type]  || '🏠'
-          const color = PROJECT_TYPE_COLORS[p.project_type] || '#1B3A6B'
+          const color = PROJECT_TYPE_COLORS[p.project_type] || '#4A2E17'
           const excerpt = p.description?.length > 90 ? p.description.slice(0, 90) + '…' : p.description
           return (
             <a href={`/job?id=${p.id}`}
@@ -256,7 +256,7 @@ const WHY_ITEMS = [
   <!-- ══ ESTIMATOR TEASER ══ -->
   <div style="padding:14px 16px;background:#fff;border-top:1px solid #f1f5f9;">
     <a href="/estimator"
-      style="display:flex;align-items:center;justify-content:space-between;gap:12px;background:linear-gradient(120deg,#1B3A6B,#2B4A8A);border-radius:18px;padding:16px 20px;text-decoration:none;">
+      style="display:flex;align-items:center;justify-content:space-between;gap:12px;background:linear-gradient(120deg,#4A2E17,#6B4A2E);border-radius:18px;padding:16px 20px;text-decoration:none;">
       <div style="display:flex;align-items:center;gap:14px;">
         <div style="font-size:28px;flex-shrink:0;">📐</div>
         <div>
@@ -270,7 +270,7 @@ const WHY_ITEMS = [
           </div>
         </div>
       </div>
-      <div style="background:#fff;color:#1B3A6B;border-radius:12px;padding:9px 16px;font-size:12px;font-weight:800;white-space:nowrap;flex-shrink:0;">
+      <div style="background:#fff;color:#4A2E17;border-radius:12px;padding:9px 16px;font-size:12px;font-weight:800;white-space:nowrap;flex-shrink:0;">
         <span class="en-text">Free ›</span>
         <span class="si-text">නොමිලේ ›</span>
       </div>
@@ -309,7 +309,7 @@ const WHY_ITEMS = [
         <span class="en-text">📰 Tips & Guides</span>
         <span class="si-text">📰 ඉඟි සහ මාර්ගෝපදේශ</span>
       </span>
-      <a href="/blog" style="font-size:12px;font-weight:600;color:#E05A2B;text-decoration:none;">
+      <a href="/blog" style="font-size:12px;font-weight:600;color:#A9713C;text-decoration:none;">
         <span class="en-text">View all ›</span>
         <span class="si-text">සියල්ල ›</span>
       </a>
@@ -320,7 +320,7 @@ const WHY_ITEMS = [
           style="display:flex;align-items:center;gap:0;background:#fff;border-radius:14px;overflow:hidden;border:1px solid #e2e8f0;text-decoration:none;color:inherit;">
           <div style={`width:64px;height:64px;background:${post.color};flex-shrink:0;display:flex;align-items:center;justify-content:center;font-size:24px;`}>{post.icon}</div>
           <div style="flex:1;padding:11px 13px;min-width:0;">
-            <span style="font-size:9px;font-weight:700;color:#E05A2B;background:#fff4f0;border:1px solid #fcd5c0;border-radius:20px;padding:1px 7px;">{post.category}</span>
+            <span style="font-size:9px;font-weight:700;color:#A9713C;background:#F8F1E8;border:1px solid #E9D5BC;border-radius:20px;padding:1px 7px;">{post.category}</span>
             <div style="font-size:12px;font-weight:700;color:#111827;line-height:1.4;margin-top:5px;overflow:hidden;display:-webkit-box;-webkit-line-clamp:2;-webkit-box-orient:vertical;">
               <span class="en-text">{post.titleEn}</span>
               <span class="si-text">{post.titleSi}</span>
@@ -333,7 +333,7 @@ const WHY_ITEMS = [
   </section>
 
   <!-- ══ BOTTOM CTA ══ -->
-  <section style="background:linear-gradient(135deg,#0F1E35,#1A2B4A);padding:36px 20px;">
+  <section style="background:linear-gradient(135deg,#1C120A,#3A2416);padding:36px 20px;">
     <div style="max-width:480px;margin:0 auto;text-align:center;">
       <div style="font-size:32px;margin-bottom:12px;">🏠</div>
       <h2 style="font-family:'Playfair Display',serif;font-size:20px;font-weight:700;color:#fff;margin:0 0 10px;line-height:1.3;">
@@ -345,7 +345,7 @@ const WHY_ITEMS = [
         <span class="si-text">නොමිලේ පලකරන්න — ශ්‍රී ලංකාව පුරා සත්‍යාපිත ශිල්පීන්ගේ ලංසු ලබා ගන්න.</span>
       </p>
       <div style="display:flex;gap:12px;justify-content:center;flex-wrap:wrap;">
-        <a href="/post-project" style="display:inline-flex;align-items:center;gap:8px;background:#E05A2B;color:#fff;border-radius:14px;padding:14px 28px;font-size:14px;font-weight:800;text-decoration:none;box-shadow:0 4px 20px rgba(224,90,43,0.35);">
+        <a href="/post-project" style="display:inline-flex;align-items:center;gap:8px;background:#A9713C;color:#fff;border-radius:14px;padding:14px 28px;font-size:14px;font-weight:800;text-decoration:none;box-shadow:0 4px 20px rgba(169,113,60,0.35);">
           📋
           <span class="en-text">Post Your Project Free</span>
           <span class="si-text">ව්‍යාපෘතිය නොමිලේ පලකරන්න</span>

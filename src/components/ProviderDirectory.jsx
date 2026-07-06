@@ -95,7 +95,7 @@ const TYPE_LABELS_EN = { tiler: 'Professionals', contractor: 'Contractors', supp
 const TYPE_LABELS_SI = { tiler: 'වෘත්තිකයෝ', contractor: 'කොන්ත්‍රාත්කරුවන්', supplier: 'සැපයුම්කරුවන්' }
 
 // ─── Shared helpers ────────────────────────────────────────────────────────────
-const AVATAR_COLORS = ['#1B3A6B','#0f766e','#7c3aed','#b45309','#0369a1','#E05A2B','#15803d','#be185d']
+const AVATAR_COLORS = ['#4A2E17','#0f766e','#7c3aed','#b45309','#0369a1','#A9713C','#15803d','#be185d']
 function avatarColor(name) {
   let h = 0
   for (const c of (name || '')) h = (h * 31 + c.charCodeAt(0)) >>> 0
@@ -162,7 +162,7 @@ function SaveHeartButton({ providerId, savedIds, savingId, onToggleSave }) {
         fontSize:11, fontWeight:700, padding:'5px 10px', borderRadius:8,
         border: isSaved ? '1px solid #fecaca' : '1px solid #e2e8f0',
         background: isSaved ? '#fef2f2' : '#f8fafc',
-        color: isSaved ? '#e05a2b' : '#94a3b8',
+        color: isSaved ? '#A9713C' : '#94a3b8',
         cursor: isLoading ? 'wait' : 'pointer',
         transition:'all 0.15s',
       }}
@@ -256,12 +256,12 @@ function ShopCard({ provider, onClick, T, savedIds, savingId, onToggleSave }) {
           {onToggleSave && <SaveHeartButton providerId={provider.id} savedIds={savedIds} savingId={savingId} onToggleSave={onToggleSave} />}
           {provider.slug ? (
             <a href={`/providers/${provider.slug}`} onClick={e => e.stopPropagation()}
-              style={{ fontSize: 11, fontWeight: 700, background: '#1A2B4A', color: '#fff', border: 'none', borderRadius: 8, padding: '5px 12px', cursor: 'pointer', textDecoration: 'none', whiteSpace: 'nowrap' }}>
+              style={{ fontSize: 11, fontWeight: 700, background: '#3A2416', color: '#fff', border: 'none', borderRadius: 8, padding: '5px 12px', cursor: 'pointer', textDecoration: 'none', whiteSpace: 'nowrap' }}>
               {T.viewShop} ›
             </a>
           ) : waLink ? (
             <a href={waLink} target="_blank" rel="noopener noreferrer" onClick={e => e.stopPropagation()}
-              style={{ fontSize: 11, fontWeight: 700, background: '#1A2B4A', color: '#fff', border: 'none', borderRadius: 8, padding: '5px 12px', cursor: 'pointer', textDecoration: 'none', whiteSpace: 'nowrap' }}>
+              style={{ fontSize: 11, fontWeight: 700, background: '#3A2416', color: '#fff', border: 'none', borderRadius: 8, padding: '5px 12px', cursor: 'pointer', textDecoration: 'none', whiteSpace: 'nowrap' }}>
               {T.viewShop} ›
             </a>
           ) : null}
@@ -340,7 +340,7 @@ function TilerCard({ tiler, onClick, T, savedIds, savingId, onToggleSave }) {
             )}
             {tiler.slug && (
               <a href={`/providers/${tiler.slug}`} onClick={e => e.stopPropagation()}
-                style={{ display: 'inline-flex', alignItems: 'center', gap: 4, background: '#1B3A6B', color: '#fff', borderRadius: 10, padding: '7px 14px', fontSize: 12, fontWeight: 700, textDecoration: 'none', whiteSpace: 'nowrap' }}>
+                style={{ display: 'inline-flex', alignItems: 'center', gap: 4, background: '#4A2E17', color: '#fff', borderRadius: 10, padding: '7px 14px', fontSize: 12, fontWeight: 700, textDecoration: 'none', whiteSpace: 'nowrap' }}>
                 {T.viewProfile} ›
               </a>
             )}
@@ -415,7 +415,7 @@ function ContractorCard({ provider, onClick, T, savedIds, savingId, onToggleSave
             )}
             {provider.slug && (
               <a href={`/providers/${provider.slug}`} onClick={e => e.stopPropagation()}
-                style={{ display: 'inline-flex', alignItems: 'center', gap: 4, background: '#1B3A6B', color: '#fff', borderRadius: 10, padding: '7px 14px', fontSize: 12, fontWeight: 700, textDecoration: 'none', whiteSpace: 'nowrap' }}>
+                style={{ display: 'inline-flex', alignItems: 'center', gap: 4, background: '#4A2E17', color: '#fff', borderRadius: 10, padding: '7px 14px', fontSize: 12, fontWeight: 700, textDecoration: 'none', whiteSpace: 'nowrap' }}>
                 {T.viewProfile} ›
               </a>
             )}
@@ -443,7 +443,7 @@ function ProviderModal({ item, onClose, T }) {
           {coverImage
             ? <img src={coverImage} alt={name} style={{ width: '100%', height: '100%', objectFit: 'cover' }} />
             : <>
-                <div style={{ position: 'absolute', inset: 0, background: 'linear-gradient(135deg, #0F2444 0%, #1B3A6B 100%)' }} />
+                <div style={{ position: 'absolute', inset: 0, background: 'linear-gradient(135deg, #1C120A 0%, #4A2E17 100%)' }} />
                 <div style={{ position: 'absolute', inset: 0, opacity: 0.04, backgroundImage: 'repeating-linear-gradient(0deg,transparent,transparent 19px,rgba(255,255,255,0.8) 19px,rgba(255,255,255,0.8) 20px),repeating-linear-gradient(90deg,transparent,transparent 19px,rgba(255,255,255,0.8) 19px,rgba(255,255,255,0.8) 20px)' }} />
               </>
           }
@@ -452,7 +452,7 @@ function ProviderModal({ item, onClose, T }) {
         </div>
 
         <div style={{ position: 'relative' }}>
-          <div style={{ position: 'absolute', top: -32, left: 24, width: 64, height: 64, borderRadius: '50%', border: '3px solid #fff', background: '#1B3A6B', display: 'flex', alignItems: 'center', justifyContent: 'center', fontSize: 22, fontWeight: 700, color: '#fff', overflow: 'hidden', boxShadow: '0 2px 12px rgba(0,0,0,0.18)' }}>
+          <div style={{ position: 'absolute', top: -32, left: 24, width: 64, height: 64, borderRadius: '50%', border: '3px solid #fff', background: '#4A2E17', display: 'flex', alignItems: 'center', justifyContent: 'center', fontSize: 22, fontWeight: 700, color: '#fff', overflow: 'hidden', boxShadow: '0 2px 12px rgba(0,0,0,0.18)' }}>
             {avatarImage ? <img src={avatarImage} alt={name} style={{ width: '100%', height: '100%', objectFit: 'cover' }} /> : initials(name)}
           </div>
         </div>
@@ -464,7 +464,7 @@ function ProviderModal({ item, onClose, T }) {
           </div>
 
           <div style={{ display: 'flex', flexWrap: 'wrap', gap: 6, marginBottom: 16 }}>
-            {pts && <span style={{ fontSize: 11, fontWeight: 700, padding: '3px 10px', borderRadius: 20, background: '#eef3fb', color: '#1B3A6B' }}>{pts.icon} {pts.label}</span>}
+            {pts && <span style={{ fontSize: 11, fontWeight: 700, padding: '3px 10px', borderRadius: 20, background: '#eef3fb', color: '#4A2E17' }}>{pts.icon} {pts.label}</span>}
             <VerificationBadge status={item.verification_status} />
           </div>
 
@@ -484,13 +484,13 @@ function ProviderModal({ item, onClose, T }) {
             <div style={{ display: 'flex', gap: 10, marginBottom: 18, flexWrap: 'wrap' }}>
               {item.experience_years > 0 && (
                 <div style={{ padding: '10px 16px', background: '#f8fafc', borderRadius: 10, border: '1px solid #e2e8f0', textAlign: 'center', flex: 1 }}>
-                  <div style={{ fontSize: 17, fontWeight: 700, color: '#1B3A6B' }}>{item.experience_years}+</div>
+                  <div style={{ fontSize: 17, fontWeight: 700, color: '#4A2E17' }}>{item.experience_years}+</div>
                   <div style={{ fontSize: 10, color: '#94a3b8' }}>{T.yearsExpLabel}</div>
                 </div>
               )}
               {item.daily_rate_min && (
                 <div style={{ padding: '10px 16px', background: '#f8fafc', borderRadius: 10, border: '1px solid #e2e8f0', textAlign: 'center', flex: 1 }}>
-                  <div style={{ fontSize: 13, fontWeight: 700, color: '#1B3A6B' }}>Rs.{item.daily_rate_min}–{item.daily_rate_max || '?'}</div>
+                  <div style={{ fontSize: 13, fontWeight: 700, color: '#4A2E17' }}>Rs.{item.daily_rate_min}–{item.daily_rate_max || '?'}</div>
                   <div style={{ fontSize: 10, color: '#94a3b8' }}>{T.perSqftLabel}</div>
                 </div>
               )}
@@ -508,7 +508,7 @@ function ProviderModal({ item, onClose, T }) {
               <div style={{ fontSize: 11, fontWeight: 700, color: '#94a3b8', letterSpacing: 1, textTransform: 'uppercase', marginBottom: 8 }}>{T.servicesLabel}</div>
               <div style={{ display: 'flex', flexWrap: 'wrap', gap: 6 }}>
                 {(item.services || []).map(s => (
-                  <span key={s} style={{ fontSize: 12, padding: '4px 10px', borderRadius: 20, background: '#eef3fb', color: '#1B3A6B', border: '1px solid #d5e2f5' }}>{s}</span>
+                  <span key={s} style={{ fontSize: 12, padding: '4px 10px', borderRadius: 20, background: '#eef3fb', color: '#4A2E17', border: '1px solid #d5e2f5' }}>{s}</span>
                 ))}
               </div>
             </div>
@@ -612,7 +612,7 @@ function SuggestedContent({ type, providers, onSelectProvider, T, savedIds, savi
         <p style={{ fontSize: 13, color: '#64748b', marginBottom: 20, maxWidth: 360, margin: '0 auto 20px' }}>
           {T.noTypeHint(typeLabel)}
         </p>
-        <a href="/join-tilershub" style={{ display: 'inline-flex', alignItems: 'center', gap: 7, background: '#E05A2B', color: '#fff', borderRadius: 10, padding: '10px 22px', fontSize: 13, fontWeight: 700, textDecoration: 'none' }}>
+        <a href="/join-tilershub" style={{ display: 'inline-flex', alignItems: 'center', gap: 7, background: '#A9713C', color: '#fff', borderRadius: 10, padding: '10px 22px', fontSize: 13, fontWeight: 700, textDecoration: 'none' }}>
           {T.joinAs(typeLabel)}
         </a>
       </div>
@@ -638,7 +638,7 @@ function SuggestedContent({ type, providers, onSelectProvider, T, savedIds, savi
         <div>
           <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', marginBottom: 14 }}>
             <div style={{ fontSize: 12, fontWeight: 700, color: '#94a3b8', textTransform: 'uppercase', letterSpacing: 1 }}>{T.otherProviders}</div>
-            <a href="/providers" style={{ fontSize: 12, color: '#1B3A6B', fontWeight: 600, textDecoration: 'none' }}>{T.seeAll}</a>
+            <a href="/providers" style={{ fontSize: 12, color: '#4A2E17', fontWeight: 600, textDecoration: 'none' }}>{T.seeAll}</a>
           </div>
           <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fill, minmax(280px, 1fr))', gap: 16 }}>
             {otherProviders.map(p => <ProviderCard key={p.id} provider={p} onClick={onSelectProvider} T={T} savedIds={savedIds} savingId={savingId} onToggleSave={onToggleSave} />)}
@@ -742,7 +742,7 @@ export default function ProviderDirectory({ initialType, initialSearch, initialP
               }}
               placeholder={T.searchPh}
               style={{ width: '100%', padding: '9px 12px 9px 32px', border: '1.5px solid #e2e8f0', borderRadius: 10, fontSize: 13, outline: 'none', fontFamily: 'inherit' }}
-              onFocus={e => e.target.style.borderColor = '#1B3A6B'}
+              onFocus={e => e.target.style.borderColor = '#4A2E17'}
               onBlur={e => e.target.style.borderColor = '#e2e8f0'}
             />
           </div>
@@ -797,7 +797,7 @@ export default function ProviderDirectory({ initialType, initialSearch, initialP
             <div style={{ fontSize: 40, marginBottom: 12 }}>⚠️</div>
             <h3 style={{ fontSize: 16, fontWeight: 700, color: '#dc2626', marginBottom: 8 }}>Could not load providers</h3>
             <p style={{ fontSize: 13, color: '#64748b', marginBottom: 20 }}>{loadError}</p>
-            <button onClick={() => window.location.reload()} style={{ padding: '10px 24px', background: '#1B3A6B', color: '#fff', border: 'none', borderRadius: 10, fontSize: 14, fontWeight: 600, cursor: 'pointer' }}>
+            <button onClick={() => window.location.reload()} style={{ padding: '10px 24px', background: '#4A2E17', color: '#fff', border: 'none', borderRadius: 10, fontSize: 14, fontWeight: 600, cursor: 'pointer' }}>
               Try Again
             </button>
           </div>
@@ -815,7 +815,7 @@ export default function ProviderDirectory({ initialType, initialSearch, initialP
               <p style={{ color: '#64748b', marginBottom: 24 }}>{T.noResultsHint}</p>
               <div style={{ display: 'flex', gap: 10, justifyContent: 'center', flexWrap: 'wrap' }}>
                 {(search || district) && (
-                  <button onClick={() => { setSearch(''); setInputValue(''); setDistrict('') }} style={{ padding: '10px 20px', background: '#1B3A6B', color: '#fff', border: 'none', borderRadius: 10, fontSize: 14, fontWeight: 600, cursor: 'pointer' }}>
+                  <button onClick={() => { setSearch(''); setInputValue(''); setDistrict('') }} style={{ padding: '10px 20px', background: '#4A2E17', color: '#fff', border: 'none', borderRadius: 10, fontSize: 14, fontWeight: 600, cursor: 'pointer' }}>
                     {T.clearSearch}
                   </button>
                 )}
