@@ -1,7 +1,7 @@
 ---
 import Layout from '../layouts/Layout.astro'
 import Breadcrumbs from '../components/Breadcrumbs.astro'
-import { LABOUR, ADHESIVE_TIERS, EXTRAS, TILE_SIZES, TILE_PRICE_RANGES, WASTE_FACTOR, tilesNeeded } from '../lib/costData.js'
+import { LABOUR, ADHESIVE_TIERS, EXTRAS, TILE_SIZES, TILE_PRICE_RANGES, WASTE_FACTOR, COVERAGE, tilesNeeded } from '../lib/costData.js'
 import { DISTRICT_INFO, districtPath } from '../lib/locations.js'
 
 const year = new Date().getFullYear()
@@ -247,19 +247,31 @@ const topDistricts = DISTRICT_INFO.filter(d => ['colombo','gampaha','kandy','gal
             <span id="res-labour" style="font-size:13px;font-weight:700;color:#fff;">—</span>
           </div>
           <div id="row-adhesive" style="display:flex;justify-content:space-between;align-items:center;padding:11px 16px;border-bottom:1px solid rgba(255,255,255,0.06);">
-            <span id="res-adhesive-label" style="font-size:13px;color:rgba(255,255,255,0.6);">🧱 ඇලවුම (C1)</span>
+            <span style="display:flex;flex-direction:column;">
+              <span id="res-adhesive-label" style="font-size:13px;color:rgba(255,255,255,0.6);">🧱 ඇලවුම (C1)</span>
+              <span id="res-adhesive-qty" style="font-size:10px;color:rgba(255,255,255,0.35);margin-top:2px;"></span>
+            </span>
             <span id="res-adhesive" style="font-size:13px;font-weight:700;color:#fff;">—</span>
           </div>
           <div id="row-clips" style="display:flex;justify-content:space-between;align-items:center;padding:11px 16px;border-bottom:1px solid rgba(255,255,255,0.06);">
-            <span style="font-size:13px;color:rgba(255,255,255,0.6);">📏 Level Clips</span>
+            <span style="display:flex;flex-direction:column;">
+              <span style="font-size:13px;color:rgba(255,255,255,0.6);">📏 Level Clips</span>
+              <span id="res-clips-qty" style="font-size:10px;color:rgba(255,255,255,0.35);margin-top:2px;"></span>
+            </span>
             <span id="res-clips" style="font-size:13px;font-weight:700;color:#fff;">—</span>
           </div>
           <div id="row-grout" style="display:flex;justify-content:space-between;align-items:center;padding:11px 16px;border-bottom:1px solid rgba(255,255,255,0.06);">
-            <span style="font-size:13px;color:rgba(255,255,255,0.6);">🪣 Grout</span>
+            <span style="display:flex;flex-direction:column;">
+              <span style="font-size:13px;color:rgba(255,255,255,0.6);">🪣 Grout</span>
+              <span id="res-grout-qty" style="font-size:10px;color:rgba(255,255,255,0.35);margin-top:2px;"></span>
+            </span>
             <span id="res-grout" style="font-size:13px;font-weight:700;color:#fff;">—</span>
           </div>
           <div id="row-screed" style="display:flex;justify-content:space-between;align-items:center;padding:11px 16px;">
-            <span style="font-size:13px;color:rgba(255,255,255,0.6);">🏗️ Screed ස්තරය</span>
+            <span style="display:flex;flex-direction:column;">
+              <span style="font-size:13px;color:rgba(255,255,255,0.6);">🏗️ Screed ස්තරය</span>
+              <span id="res-screed-qty" style="font-size:10px;color:rgba(255,255,255,0.35);margin-top:2px;"></span>
+            </span>
             <span id="res-screed" style="font-size:13px;font-weight:700;color:#fff;">—</span>
           </div>
         </div>
@@ -358,7 +370,35 @@ const topDistricts = DISTRICT_INFO.filter(d => ['colombo','gampaha','kandy','gal
           </tbody>
         </table>
         <p style="font-size:12px;color:#64748b;margin:10px 0 0;line-height:1.7;">
-          Typical tile prices: {TILE_PRICE_RANGES.map((r, i) => `${r.size} ${r.range}${i < TILE_PRICE_RANGES.length - 1 ? ' · ' : ''}`)}
+          Typical tile prices: {TILE_PRICE_RANGES.map((r, i) => `${r.size} ${r.range}${i < TILE_PRICE_RANGES.length - 1 ? ' · ' : ''}`)} —
+          see the full <a href="/guides/tile-prices-sri-lanka" style="color:#A9713C;font-weight:700;">tile price list</a> and
+          <a href="/guides/tiling-labour-charges-sri-lanka" style="color:#A9713C;font-weight:700;">labour charges guide</a>.
+        </p>
+      </div>
+
+      <!-- Material quantities per 100 sqft -->
+      <div style="background:#fff;border:1px solid #e2e8f0;border-radius:16px;padding:20px;overflow-x:auto;">
+        <h2 style="font-size:16px;font-weight:800;color:#0f172a;margin:0 0 12px;">Material quantities needed per 100 sq.ft</h2>
+        <table style="width:100%;border-collapse:collapse;font-size:13px;min-width:380px;">
+          <thead>
+            <tr>
+              <th style="background:#4A2E17;color:#fff;padding:9px 12px;text-align:left;font-size:12px;">Material</th>
+              <th style="background:#4A2E17;color:#fff;padding:9px 12px;text-align:left;font-size:12px;">Quantity / 100 sq.ft</th>
+              <th style="background:#4A2E17;color:#fff;padding:9px 12px;text-align:left;font-size:12px;">Basis</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr><td style="padding:9px 12px;border-bottom:1px solid #e2e8f0;font-weight:600;">Adhesive C1 (20kg bags)</td><td style="padding:9px 12px;border-bottom:1px solid #e2e8f0;font-weight:700;color:#A9713C;">{Math.ceil(100 / COVERAGE.adhesiveBagSqft.c1)} bags</td><td style="padding:9px 12px;border-bottom:1px solid #e2e8f0;">1 bag ≈ {COVERAGE.adhesiveBagSqft.c1} sq.ft (standard bed)</td></tr>
+            <tr><td style="padding:9px 12px;border-bottom:1px solid #e2e8f0;font-weight:600;">Adhesive C2 (20kg bags)</td><td style="padding:9px 12px;border-bottom:1px solid #e2e8f0;font-weight:700;color:#A9713C;">{Math.ceil(100 / COVERAGE.adhesiveBagSqft.c2)} bags</td><td style="padding:9px 12px;border-bottom:1px solid #e2e8f0;">1 bag ≈ {COVERAGE.adhesiveBagSqft.c2} sq.ft</td></tr>
+            <tr><td style="padding:9px 12px;border-bottom:1px solid #e2e8f0;font-weight:600;">Adhesive C2TE (20kg bags)</td><td style="padding:9px 12px;border-bottom:1px solid #e2e8f0;font-weight:700;color:#A9713C;">{Math.ceil(100 / COVERAGE.adhesiveBagSqft.c2te)} bags</td><td style="padding:9px 12px;border-bottom:1px solid #e2e8f0;">1 bag ≈ {COVERAGE.adhesiveBagSqft.c2te} sq.ft (large format, thicker bed)</td></tr>
+            <tr><td style="padding:9px 12px;border-bottom:1px solid #e2e8f0;font-weight:600;">Grout</td><td style="padding:9px 12px;border-bottom:1px solid #e2e8f0;font-weight:700;color:#A9713C;">~{Math.ceil(100 / COVERAGE.groutSqftPerKg)} kg</td><td style="padding:9px 12px;border-bottom:1px solid #e2e8f0;">1 kg ≈ {COVERAGE.groutSqftPerKg} sq.ft at 3mm joints</td></tr>
+            <tr><td style="padding:9px 12px;border-bottom:1px solid #e2e8f0;font-weight:600;">Level clips</td><td style="padding:9px 12px;border-bottom:1px solid #e2e8f0;font-weight:700;color:#A9713C;">{tilesNeeded(100, 3.875) * COVERAGE.clipsPerTile} clips</td><td style="padding:9px 12px;border-bottom:1px solid #e2e8f0;">~{COVERAGE.clipsPerTile} per tile (60×60 cm); wedges are reusable</td></tr>
+            <tr><td style="padding:9px 12px;border-bottom:1px solid #e2e8f0;font-weight:600;">Screed cement (50kg bags)</td><td style="padding:9px 12px;border-bottom:1px solid #e2e8f0;font-weight:700;color:#A9713C;">{Math.ceil(100 * COVERAGE.screedCementBagsPerSqft)} bags</td><td style="padding:9px 12px;border-bottom:1px solid #e2e8f0;">40mm bed, 1:4 cement:sand mix</td></tr>
+            <tr><td style="padding:9px 12px;font-weight:600;">Screed sand</td><td style="padding:9px 12px;font-weight:700;color:#A9713C;">~{Math.ceil(100 * COVERAGE.screedSandCuftPerSqft)} cu.ft</td><td style="padding:9px 12px;">River or manufactured sand</td></tr>
+          </tbody>
+        </table>
+        <p style="font-size:12px;color:#64748b;margin:10px 0 0;line-height:1.7;">
+          The calculator above shows these exact quantities for your area — bags of adhesive, kg of grout, clip count, and cement/sand for screed.
         </p>
       </div>
 
@@ -420,9 +460,9 @@ const topDistricts = DISTRICT_INFO.filter(d => ['colombo','gampaha','kandy','gal
     }
 
     const ADHESIVE = {
-      c1:   { label: 'Adhesive (C1)',       rate: 50,  rateLabel: 'රු. 50 / sq.ft',  sub: 'C1 adhesive — 60×60 cm දක්වා ටයිල්',              hint: '✓ C1 Adhesive අදාළ වේ — 60×60 cm දක්වා' },
-      c2:   { label: 'Adhesive (C2)',       rate: 80,  rateLabel: 'රු. 80 / sq.ft',  sub: 'C2 adhesive — 90×45 cm සිට 120×80 cm දක්වා ටයිල්', hint: '✓ C2 Adhesive අදාළ වේ — 90×45 cm සිට 120×80 cm දක්වා' },
-      c2te: { label: 'Adhesive (C2TE S1)', rate: 120, rateLabel: 'රු. 120 / sq.ft', sub: 'C2TE S1 adhesive — 120×80 cm ඉක්මවූ විශාල ටයිල්', hint: '✓ C2TE S1 Adhesive අදාළ වේ — 120×80 cm ඉක්මවූ විශාල ටයිල්' },
+      c1:   { label: 'Adhesive (C1)',       rate: 50,  bagSqft: 50, rateLabel: 'රු. 50 / sq.ft',  sub: 'C1 adhesive — 60×60 cm දක්වා ටයිල්',              hint: '✓ C1 Adhesive අදාළ වේ — 60×60 cm දක්වා' },
+      c2:   { label: 'Adhesive (C2)',       rate: 80,  bagSqft: 45, rateLabel: 'රු. 80 / sq.ft',  sub: 'C2 adhesive — 90×45 cm සිට 120×80 cm දක්වා ටයිල්', hint: '✓ C2 Adhesive අදාළ වේ — 90×45 cm සිට 120×80 cm දක්වා' },
+      c2te: { label: 'Adhesive (C2TE S1)', rate: 120, bagSqft: 35, rateLabel: 'රු. 120 / sq.ft', sub: 'C2TE S1 adhesive — 120×80 cm ඉක්මවූ විශාල ටයිල්', hint: '✓ C2TE S1 Adhesive අදාළ වේ — 120×80 cm ඉක්මවූ විශාල ටයිල්' },
     }
 
     function updateAdhesive() {
@@ -457,11 +497,18 @@ const topDistricts = DISTRICT_INFO.filter(d => ['colombo','gampaha','kandy','gal
       const tilesNeeded   = Math.ceil((area / tileSqft) * 1.12)
       const tileCost      = pricePerTile > 0 ? tilesNeeded * pricePerTile : null
       const labourCost    = area * labourRate
-      const adhesiveRate  = ADHESIVE[adhesiveTier()].rate
-      const adhesiveCost  = incAdhesive ? area * adhesiveRate : 0
+      const tier          = ADHESIVE[adhesiveTier()]
+      const adhesiveCost  = incAdhesive ? area * tier.rate : 0
       const clipsCost     = incClips    ? area * 20 : 0
       const groutCost     = incGrout    ? area * 10 : 0
       const screedCost    = incScreed   ? area * screedRate : 0
+
+      // Material quantities
+      const adhesiveBags  = Math.ceil(area / tier.bagSqft)          // 20kg bags
+      const groutKg       = Math.ceil(area / 35)                    // 1kg ≈ 35 sq.ft (3mm joints)
+      const clipsCount    = tilesNeeded * 4                         // ~4 clips per tile
+      const cementBags    = Math.ceil(area * 0.03)                  // 50kg bags, 40mm bed 1:4
+      const sandCuft      = Math.ceil(area * 0.14)                  // cubic feet of sand
 
       const extrasCost    = labourCost + adhesiveCost + clipsCost + groutCost + screedCost
       const total         = (tileCost || 0) + extrasCost
@@ -475,15 +522,19 @@ const topDistricts = DISTRICT_INFO.filter(d => ['colombo','gampaha','kandy','gal
 
       document.getElementById('row-adhesive').style.display = incAdhesive ? 'flex' : 'none'
       document.getElementById('res-adhesive').textContent   = fmt(adhesiveCost)
+      document.getElementById('res-adhesive-qty').textContent = incAdhesive ? `20kg bags × ${adhesiveBags}` : ''
 
       document.getElementById('row-clips').style.display = incClips ? 'flex' : 'none'
       document.getElementById('res-clips').textContent   = fmt(clipsCost)
+      document.getElementById('res-clips-qty').textContent = incClips ? `clips × ${clipsCount.toLocaleString('si-LK')} (+ wedges)` : ''
 
       document.getElementById('row-grout').style.display = incGrout ? 'flex' : 'none'
       document.getElementById('res-grout').textContent   = fmt(groutCost)
+      document.getElementById('res-grout-qty').textContent = incGrout ? `~${groutKg} kg` : ''
 
       document.getElementById('row-screed').style.display = incScreed ? 'flex' : 'none'
       document.getElementById('res-screed').textContent   = fmt(screedCost)
+      document.getElementById('res-screed-qty').textContent = incScreed ? `cement 50kg × ${cementBags} · වැලි ${sandCuft} cu.ft` : ''
 
       document.getElementById('res-total').textContent     = tileCost ? fmt(total) : fmt(extrasCost)
       document.getElementById('res-total-note').textContent = tileCost

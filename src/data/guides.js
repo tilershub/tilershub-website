@@ -260,6 +260,166 @@ export const GUIDES = [
       'Post your project on TilersHub to get competitive quotes from verified tilers',
     ],
   },
+
+  {
+    slug: 'tile-prices-sri-lanka',
+    cat: 'Price Guide',
+    title: 'Tile Prices in Sri Lanka (2026): Ceramic, Porcelain & Large Format',
+    excerpt: 'Current tile price ranges by size and type — ceramic, porcelain, vitrified and large format — plus what drives the price up or down.',
+    icon: '🏷️',
+    bg: 'linear-gradient(135deg,#4A2E17,#A9713C)',
+    accentColor: '#4A2E17',
+    readTime: '6 min read',
+    sections: [
+      {
+        h: 'How Much Do Tiles Cost in Sri Lanka Right Now?',
+        p: [
+          'Tile prices in Sri Lanka vary enormously — from under Rs. 100 for a small ceramic tile to over Rs. 10,000 for a premium large-format porcelain slab. The price per tile depends on size, body type (ceramic vs porcelain), surface finish, and whether it is locally made (Rocell, Lanka Tiles, Macktiles) or imported (mainly from India and China).',
+          'Because tiles are sold per piece or per box but projects are measured in square feet, always convert to a price per square foot before comparing. A "cheap" small tile can cost more per square foot than a mid-range 60×60.',
+        ],
+      },
+      {
+        h: 'Tile Price List by Size (2026)',
+        p: ['These are typical retail ranges across Sri Lankan tile shops. Festival discounts of 10–20% are common, and B-grade stock is cheaper but may vary in shade and size.'],
+        table: [
+          { size: '30×30 cm ceramic (floor)', pricePerTile: 'Rs. 90 – 250', perSqFt: 'Rs. 95 – 260' },
+          { size: '30×60 cm ceramic (wall)', pricePerTile: 'Rs. 250 – 600', perSqFt: 'Rs. 130 – 310' },
+          { size: '40×40 cm ceramic', pricePerTile: 'Rs. 200 – 450', perSqFt: 'Rs. 115 – 260' },
+          { size: '60×60 cm porcelain / vitrified', pricePerTile: 'Rs. 550 – 1,800', perSqFt: 'Rs. 140 – 465' },
+          { size: '60×120 cm porcelain', pricePerTile: 'Rs. 1,800 – 4,500', perSqFt: 'Rs. 230 – 580' },
+          { size: '80×80 cm porcelain', pricePerTile: 'Rs. 1,600 – 4,000', perSqFt: 'Rs. 230 – 580' },
+          { size: '120×120 cm large format', pricePerTile: 'Rs. 4,500 – 12,000', perSqFt: 'Rs. 290 – 775' },
+        ],
+      },
+      {
+        h: 'What Makes One Tile More Expensive Than Another',
+        bullets: [
+          'Body type — full-body porcelain costs more than ceramic but wears far better',
+          'Surface — polished/glossy and sugar finishes cost more than matte',
+          'Rectified edges — precision-cut edges allow thin joints and cost 10–20% more',
+          'Brand — local brands (Rocell, Lanka Tiles) are competitive; imported premium lines cost most',
+          'Grade — A-grade is uniform; B-grade is cheaper with minor shade/size variation',
+        ],
+        p: ['Anti-slip rating matters for wet areas: R10 or higher for bathrooms and outdoor areas is worth the small premium — slipping accidents cost far more than tiles.'],
+      },
+      {
+        h: 'Don\'t Forget the Installation Cost',
+        p: [
+          'The tile itself is typically only 40–60% of your total project cost. Labour (Rs. 100–250/sq.ft), adhesive (Rs. 50–120/sq.ft depending on tile size), grout, clips and possibly screed make up the rest.',
+          'Use the free TilersHub tile calculator to get a complete estimate including material quantities — bags of adhesive, kilograms of grout and cement for screed — then post your project to get real quotes from verified tilers.',
+        ],
+      },
+    ],
+    takeaways: [
+      'Always compare tiles on price per square foot, not price per tile',
+      '60×60 cm porcelain (Rs. 550–1,800/tile) is the best value for most rooms',
+      'Large format looks premium but needs C2TE adhesive and expert installation',
+      'Budget for installation: it adds Rs. 160–400/sq.ft on top of the tiles',
+      'Use the TilersHub calculator for a full cost and quantity estimate',
+    ],
+  },
+
+  {
+    slug: 'tiling-labour-charges-sri-lanka',
+    cat: 'Price Guide',
+    title: 'Tiling Labour Charges in Sri Lanka (2026): Rates Per Square Foot',
+    excerpt: 'What tilers actually charge in 2026 — floor vs wall rates, large-format premiums, Colombo vs regional prices, and how to avoid overpaying.',
+    icon: '👷',
+    bg: 'linear-gradient(135deg,#0f766e,#134e4a)',
+    accentColor: '#0f766e',
+    readTime: '5 min read',
+    sections: [
+      {
+        h: 'Current Tiling Labour Rates (2026)',
+        p: [
+          'Tiling labour in Sri Lanka is charged per square foot, and the rate depends mainly on tile size, surface (floor vs wall), pattern complexity and location. The national range is Rs. 100–250 per sq.ft, with Colombo and suburbs at the higher end.',
+        ],
+        table: [
+          { work: 'Floor tiling — 30×30 to 60×60 cm', rate: 'Rs. 100 – 160 / sq.ft', notes: 'Standard straight-lay' },
+          { work: 'Floor tiling — large format (80×80+)', rate: 'Rs. 180 – 250 / sq.ft', notes: 'Needs skill + levelling system' },
+          { work: 'Wall tiling — bathrooms/kitchens', rate: 'Rs. 150 – 250 / sq.ft', notes: 'Slower, more cuts' },
+          { work: 'Diagonal / pattern laying', rate: '+20 – 30% premium', notes: 'More cutting waste too' },
+          { work: 'Staircase tiling', rate: 'Rs. 250 – 400 / step', notes: 'Often priced per step' },
+          { work: 'Skirting', rate: 'Rs. 80 – 150 / linear ft', notes: 'Usually priced per foot' },
+          { work: 'Tile removal (old floor)', rate: 'Rs. 40 – 80 / sq.ft', notes: 'Plus debris removal' },
+        ],
+      },
+      {
+        h: 'Why Rates Vary So Much',
+        bullets: [
+          'Location — Colombo, Gampaha and tourist areas command 30–60% more than regional towns',
+          'Tile size — large-format tiles take longer and carry breakage risk',
+          'Floor condition — uneven slabs need screeding first (Rs. 100–120/sq.ft extra)',
+          'Job size — bigger jobs get better per-sq.ft rates; tiny jobs may have a minimum charge',
+          'Who supplies materials — labour-only vs labour+materials quotes are not comparable',
+        ],
+      },
+      {
+        h: 'How to Compare Quotes Fairly',
+        p: [
+          'Always ask whether the quote is labour-only or includes adhesive, grout and clips. Ask for the rate per square foot in writing, whether screeding is included, and who pays for tile cutting blades. A cheap headline rate that excludes materials often ends up costlier.',
+          'The fastest way to see the real market rate for your job: post it free on TilersHub. Verified tilers in your district send WhatsApp quotes you can compare side by side — no commission added.',
+        ],
+      },
+    ],
+    takeaways: [
+      'Standard floor tiling: Rs. 100–160/sq.ft; large format: Rs. 180–250/sq.ft',
+      'Wall tiling costs more than floor tiling — more cuts, slower work',
+      'Confirm labour-only vs materials-included before comparing quotes',
+      'Uneven floors add screed cost: Rs. 100–120/sq.ft',
+      'Get 3+ quotes via TilersHub to see your district\'s real rate',
+    ],
+  },
+
+  {
+    slug: 'gypsum-ceiling-prices-sri-lanka',
+    cat: 'Price Guide',
+    title: 'Gypsum & iPanel Ceiling Prices in Sri Lanka (2026)',
+    excerpt: 'Ceiling cost per square foot in 2026 — gypsum board, iPanel/PVC and 2×2 suspended ceilings — with material and labour breakdowns.',
+    icon: '🏛️',
+    bg: 'linear-gradient(135deg,#166534,#14532d)',
+    accentColor: '#166534',
+    readTime: '5 min read',
+    sections: [
+      {
+        h: 'Ceiling Options and What They Cost',
+        p: [
+          'The three most popular ceiling systems in Sri Lankan homes are gypsum board (smooth, paintable, premium look), iPanel/PVC strip ceilings (waterproof, low maintenance) and 2×2 suspended tile ceilings (cheapest, common in commercial spaces).',
+          'Prices below are complete installed rates — frame, boards/panels and labour — as of 2026. Complex designs, bulkheads and cove lighting recesses cost more.',
+        ],
+        table: [
+          { type: 'Gypsum board ceiling (plain)', installed: 'Rs. 380 – 550 / sq.ft', notes: 'Paint extra; premium smooth finish' },
+          { type: 'Gypsum with design/bulkheads', installed: 'Rs. 550 – 900 / sq.ft', notes: 'Cove lighting, steps, curves' },
+          { type: 'iPanel / PVC ceiling', installed: 'Rs. 280 – 420 / sq.ft', notes: 'Waterproof — good for kitchens, bathrooms' },
+          { type: '2×2 suspended ceiling', installed: 'Rs. 220 – 320 / sq.ft', notes: 'Offices, shops; easy access to wiring' },
+          { type: 'Moisture-resistant gypsum (green board)', installed: 'Rs. 450 – 650 / sq.ft', notes: 'For bathrooms and humid areas' },
+        ],
+      },
+      {
+        h: 'Gypsum vs iPanel: Which Should You Choose?',
+        bullets: [
+          'Gypsum: seamless painted finish, best looks, allows recessed lighting — but damaged by leaks',
+          'iPanel/PVC: fully waterproof, no painting, quick install — visible joints, fewer design options',
+          'Humid areas (bathrooms, kitchens): iPanel or moisture-resistant gypsum only',
+          'Living rooms/bedrooms: gypsum gives the cleanest architectural result',
+        ],
+      },
+      {
+        h: 'What Affects Your Final Price',
+        p: [
+          'Ceiling height (scaffolding above 12 ft costs more), room shape, the frame system used (metal furring vs timber), the board brand, and access for wiring all move the price. Always get the rate per square foot in writing with the frame specification.',
+          'Post your ceiling project free on TilersHub — verified gypsum and iPanel installers in your district will quote via WhatsApp so you can compare complete installed rates.',
+        ],
+      },
+    ],
+    takeaways: [
+      'Plain gypsum ceilings run Rs. 380–550/sq.ft installed in 2026',
+      'iPanel/PVC (Rs. 280–420/sq.ft) is the practical choice for wet areas',
+      'Design features like bulkheads and cove lighting nearly double gypsum costs',
+      'Always confirm the frame system and board brand in the quote',
+      'Compare installer quotes free on TilersHub',
+    ],
+  },
 ]
 
 export function getGuide(slug) {

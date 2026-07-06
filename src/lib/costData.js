@@ -17,6 +17,15 @@ export const EXTRAS = {
   screed: { min: 100, max: 120, default: 110 }, // Rs / sq.ft
 }
 
+// Material consumption for quantity estimates
+export const COVERAGE = {
+  adhesiveBagSqft: { c1: 50, c2: 45, c2te: 35 }, // sq.ft covered per 20kg bag
+  groutSqftPerKg: 35,      // sq.ft per 1kg of grout (3mm joints)
+  clipsPerTile: 4,         // levelling clips per tile (wedges reusable)
+  screedCementBagsPerSqft: 0.03, // 50kg bags per sq.ft (40mm bed, 1:4 mix)
+  screedSandCuftPerSqft: 0.14,   // cubic feet of sand per sq.ft
+}
+
 // label → coverage of one tile in sq.ft
 export const TILE_SIZES = [
   { label: '30 × 30 cm', sqft: 0.969 },
