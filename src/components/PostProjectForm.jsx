@@ -1,7 +1,103 @@
 import { useState, useEffect } from 'react'
 import { supabase, signInWithOtp, DISTRICTS_EN } from '../lib/supabase.js'
+import { useLang } from '../lib/useLang.js'
 
 const DRAFT_KEY = 'tilershub_draft_token'
+
+const T = {
+  si: {
+    required: 'අවශ්‍යයි',
+    descMin: 'ව්‍යාපෘතිය අවම අකුරු 10කින් විස්තර කරන්න',
+    phoneInvalid: 'වලංගු දුරකථන අංකයක් ඇතුළු කරන්න (උදා: +94771234567)',
+    submitError: 'දෝෂයක් ඇති විය. නැවත උත්සාහ කරන්න.',
+    emailInvalid: 'වලංගු ඊමේල් ලිපිනයක් ඇතුළු කරන්න',
+    checkEmail: 'ඔබේ ඊමේල් බලන්න',
+    sentBody: 'ට sign-in link එකක් යැවූවෙමු. ඔබේ dashboard බැලීමට සහ ව්‍යාපෘතිය කළමනාකරණයට ඒ link click කරන්න.',
+    sendLink: 'Link යවන්න →',
+    noPassword: 'මුරපදයක් නොමැත — ආරක්ෂිත magic link භාවිතා කරමු.',
+    successTitle: 'ව්‍යාපෘතිය පල කෙරිණි!',
+    successBody: 'ඔබේ ව්‍යාපෘතිය live වී ඇත. ලියාපදිංචි සේවා සපයන්නන්ට දැන් එය දැකිය හැකිය.',
+    whatsappNote: 'WhatsApp හරහා ඔබව දැනුවත් කරන්නෙමු —',
+    nextTitle: 'ඊළඟට සිදුවන්නේ:',
+    nextSteps: ['1️⃣ සත්‍යාපිත ශිල්පීන් ඔබේ ව්‍යාපෘතිය දකිති', '2️⃣ ඔවුන් WhatsApp හරහා ලංසු එවති', '3️⃣ සසඳා හොඳම තැනැත්තා තෝරන්න'],
+    shareWhatsApp: '💬 WhatsApp හි බෙදාගන්න',
+    shareText: 'මම TilersHub හි ටයිලිං ව්‍යාපෘතියක් පලකළා — නොමිලේ ලංසු ලබාගන්න: https://www.tilershub.lk',
+    viewDashboard: 'Dashboard බලන්න →',
+    postAnother: 'තවත් ව්‍යාපෘතියක් පලකරන්න',
+    oneMoreStep: 'තවත් පියවරක්',
+    createAccount: 'ව්‍යාපෘතිය කළමනාකරණයට නොමිලේ ගිණුමක් සාදන්න',
+    benefits: ['📊 Dashboard හිදී ලංසු නිරීක්ෂණය කරන්න', '💬 සේවා සපයන්නන් ප්‍රතිචාර දැක්වූ විට දැනුවත් වන්න', '✏️ ව්‍යාපෘතිය ඕනෑ වෙලාවක සංස්කරණය හෝ වසා දමන්න'],
+    emailLabel: 'නොමිලේ ගිණුමක් සාදීමට ඊමේල් ඇතුළු කරන්න',
+    viewProviders: 'සේවා සපයන්නන් බලන්න →',
+    projectName: 'ව්‍යාපෘති නාමය',
+    projectHint: 'උදා: නාන කාමර ටයිලිං, බිම ටයිලිං, නාන කාමර ප්‍රතිසංස්කරණය, ජල නිරෝධ…',
+    projectPh: 'උදා: නාන කාමර ටයිලිං සහ ප්‍රතිසංස්කරණය',
+    city: 'නගරය / ගම',
+    cityPh: 'උදා: කොළඹ 03',
+    district: 'දිස්ත්‍රික්කය',
+    districtPh: 'දිස්ත්‍රික්කය තෝරන්න...',
+    description: 'ව්‍යාපෘති විස්තරය',
+    descHint: 'ව්‍යාපෘතිය විස්තර කරන්න: ප්‍රදේශ ප්‍රමාණය, ටයිල් වර්ගය, කාලය, විශේෂ ඉල්ලීම්.',
+    descPh: 'උදා: නාන කාමර ප්‍රතිසංස්කරණය — sq.ft 80 ක් පමණ බිම සහ බිත්ති ටයිලිං. anti-slip ටයිල් සහ සුදු wall ටයිල් අවශ්‍ය. සති 2ක් ඇතුළත ආරම්භ කළ යුතුය...',
+    budget: 'අයවැය පරාසය',
+    budgetHint: 'අත්‍යවශ්‍ය නොවේ — උදා: රු. 50,000, රු. 150,000–250,000, සාකච්ඡා කළ හැකි',
+    budgetPh: 'උදා: රු. 150,000 හෝ සාකච්ඡා කළ හැකි',
+    privacy: '🔒 ඔබේ සම්බන්ධතා විස්තර රහසිගතව තබා ගන්නෙමු, ගැළපෙන සේවා සපයන්නන්ට පමණක් ලබා දෙන්නෙමු.',
+    yourName: 'ඔබේ නම',
+    namePh: 'උදා: නුවන් පෙරේරා',
+    whatsapp: 'WhatsApp අංකය',
+    whatsappHint: 'උදා: +94771234567',
+    submit: '📋 මගේ ව්‍යාපෘතිය පලකරන්න',
+    submitting: '⏳ ඉදිරිපත් කරමින්...',
+    footer: 'නොමිලේ සේවාව · ලොගිනයක් අවශ්‍ය නැත · සේවා සපයන්නන් ලංසු ඉදිරිපත් කරති',
+  },
+  en: {
+    required: 'Required',
+    descMin: 'Please describe your project in at least 10 characters',
+    phoneInvalid: 'Enter a valid phone number (e.g. +94771234567)',
+    submitError: 'Something went wrong. Please try again.',
+    emailInvalid: 'Enter a valid email address',
+    checkEmail: 'Check your email',
+    sentBody: '— we sent a sign-in link. Click it to view your dashboard and manage your project.',
+    sendLink: 'Send link →',
+    noPassword: 'No password needed — we use a secure magic link.',
+    successTitle: 'Project posted!',
+    successBody: 'Your project is live. Registered providers can see it now.',
+    whatsappNote: "We'll notify you on WhatsApp —",
+    nextTitle: 'What happens next:',
+    nextSteps: ['1️⃣ Verified professionals see your project', '2️⃣ They send quotes via WhatsApp', '3️⃣ Compare and pick the best one'],
+    shareWhatsApp: '💬 Share on WhatsApp',
+    shareText: 'I just posted a tiling project on TilersHub — get free quotes: https://www.tilershub.lk',
+    viewDashboard: 'View Dashboard →',
+    postAnother: 'Post another project',
+    oneMoreStep: 'One more step',
+    createAccount: 'Create a free account to manage your project',
+    benefits: ['📊 Track bids from your dashboard', '💬 Get notified when providers respond', '✏️ Edit or close your project anytime'],
+    emailLabel: 'Enter your email to create a free account',
+    viewProviders: 'Browse providers →',
+    projectName: 'Project title',
+    projectHint: 'E.g. bathroom tiling, floor tiling, bathroom renovation, waterproofing…',
+    projectPh: 'E.g. Bathroom tiling and renovation',
+    city: 'City / Town',
+    cityPh: 'E.g. Colombo 03',
+    district: 'District',
+    districtPh: 'Select district...',
+    description: 'Project description',
+    descHint: 'Describe the project: area size, tile type, timeline, special requests.',
+    descPh: 'E.g. Bathroom renovation — around 80 sq.ft of floor and wall tiling. Need anti-slip floor tiles and white wall tiles. Must start within 2 weeks...',
+    budget: 'Budget range',
+    budgetHint: 'Optional — e.g. Rs. 50,000, Rs. 150,000–250,000, negotiable',
+    budgetPh: 'E.g. Rs. 150,000 or negotiable',
+    privacy: '🔒 Your contact details are kept private and shared only with matching providers.',
+    yourName: 'Your name',
+    namePh: 'E.g. Nuwan Perera',
+    whatsapp: 'WhatsApp number',
+    whatsappHint: 'E.g. +94771234567',
+    submit: '📋 Post my project',
+    submitting: '⏳ Submitting...',
+    footer: 'Free service · No login required · Providers send you quotes',
+  },
+}
 
 function genToken() {
   return 'xxxxxxxx-xxxx-4xxx-yxxx-xxxxxxxxxxxx'.replace(/[xy]/g, c => {
@@ -33,7 +129,7 @@ function inp(hasError) {
   }
 }
 
-function MagicLinkForm({ label, hint }) {
+function MagicLinkForm({ label, hint, t }) {
   const [email, setEmail] = useState('')
   const [sent, setSent] = useState(false)
   const [loading, setLoading] = useState(false)
@@ -41,7 +137,7 @@ function MagicLinkForm({ label, hint }) {
 
   async function send(e) {
     e.preventDefault()
-    if (!email.trim() || !email.includes('@')) { setErr('වලංගු ඊමේල් ලිපිනයක් ඇතුළු කරන්න'); return }
+    if (!email.trim() || !email.includes('@')) { setErr(t.emailInvalid); return }
     setLoading(true); setErr('')
     const { error } = await signInWithOtp(email.trim())
     setLoading(false)
@@ -53,9 +149,9 @@ function MagicLinkForm({ label, hint }) {
     return (
       <div style={{ textAlign: 'center', padding: '16px 0' }}>
         <div style={{ fontSize: 32, marginBottom: 8 }}>📬</div>
-        <div style={{ fontSize: 14, fontWeight: 700, color: '#0f172a', marginBottom: 6 }}>ඔබේ ඊමේල් බලන්න</div>
+        <div style={{ fontSize: 14, fontWeight: 700, color: '#0f172a', marginBottom: 6 }}>{t.checkEmail}</div>
         <p style={{ fontSize: 12, color: '#64748b', lineHeight: 1.7 }}>
-          <strong>{email}</strong> ට sign-in link එකක් යැවූවෙමු. ඔබේ dashboard බැලීමට සහ ව්‍යාපෘතිය කළමනාකරණයට ඒ link click කරන්න.
+          <strong>{email}</strong> {t.sentBody}
         </p>
       </div>
     )
@@ -75,16 +171,18 @@ function MagicLinkForm({ label, hint }) {
           style={{ flex: 1, padding: '10px 14px', border: `1.5px solid ${err ? '#fca5a5' : '#e2e8f0'}`, borderRadius: 10, fontSize: 13, outline: 'none', fontFamily: 'inherit', background: err ? '#fef2f2' : '#fff', boxSizing: 'border-box' }}
         />
         <button type="submit" disabled={loading} style={{ padding: '10px 18px', background: loading ? '#94a3b8' : '#4A2E17', color: '#fff', border: 'none', borderRadius: 10, fontSize: 13, fontWeight: 700, cursor: loading ? 'not-allowed' : 'pointer', whiteSpace: 'nowrap' }}>
-          {loading ? '⏳' : 'Link යවන්න →'}
+          {loading ? '⏳' : t.sendLink}
         </button>
       </div>
       {err && <p style={{ fontSize: 11, color: '#dc2626', marginTop: 4 }}>⚠ {err}</p>}
-      <p style={{ fontSize: 11, color: '#94a3b8', marginTop: 8 }}>මුරපදයක් නොමැත — ආරක්ෂිත magic link භාවිතා කරමු.</p>
+      <p style={{ fontSize: 11, color: '#94a3b8', marginTop: 8 }}>{t.noPassword}</p>
     </form>
   )
 }
 
 export default function PostProjectForm() {
+  const lang = useLang()
+  const t = T[lang] || T.en
   const [form, setForm] = useState({
     project_type: '', city: '', district: '', description: '',
     budget_range: '', customer_name: '', whatsapp: ''
@@ -106,13 +204,13 @@ export default function PostProjectForm() {
 
   function validate() {
     const e = {}
-    if (!form.project_type.trim()) e.project_type = 'අවශ්‍යයි'
-    if (!form.city.trim()) e.city = 'අවශ්‍යයි'
-    if (!form.description.trim()) e.description = 'අවශ්‍යයි'
-    if (form.description.trim().length < 20) e.description = 'ව්‍යාපෘතිය අවම අකුරු 20කින් විස්තර කරන්න'
-    if (!form.customer_name.trim()) e.customer_name = 'අවශ්‍යයි'
-    if (!form.whatsapp.trim()) e.whatsapp = 'අවශ්‍යයි'
-    if (!/^\+?[0-9]{9,15}$/.test(form.whatsapp.replace(/\s/g, ''))) e.whatsapp = 'වලංගු දුරකථන අංකයක් ඇතුළු කරන්න (උදා: +94771234567)'
+    if (!form.project_type.trim()) e.project_type = t.required
+    if (!form.city.trim()) e.city = t.required
+    if (!form.description.trim()) e.description = t.required
+    if (form.description.trim() && form.description.trim().length < 10) e.description = t.descMin
+    if (!form.customer_name.trim()) e.customer_name = t.required
+    if (!form.whatsapp.trim()) e.whatsapp = t.required
+    if (!/^\+?[0-9]{9,15}$/.test(form.whatsapp.replace(/\s/g, ''))) e.whatsapp = t.phoneInvalid
     return e
   }
 
@@ -143,10 +241,15 @@ export default function PostProjectForm() {
       if (error) throw error
       setSuccess(true)
     } catch (err) {
-      setErrors({ submit: err?.message || 'දෝෂයක් ඇති විය. නැවත උත්සාහ කරන්න.' })
+      setErrors({ submit: err?.message || t.submitError })
     } finally {
       setSubmitting(false)
     }
+  }
+
+  function resetForm() {
+    setSuccess(false)
+    setForm({ project_type: '', city: '', district: '', description: '', budget_range: '', customer_name: '', whatsapp: '' })
   }
 
   if (success) {
@@ -155,23 +258,34 @@ export default function PostProjectForm() {
         {/* Success header */}
         <div style={{ textAlign: 'center', padding: '32px 20px 24px', background: '#fff', borderRadius: '20px 20px 0 0', border: '1px solid #e2e8f0', borderBottom: 'none' }}>
           <div style={{ fontSize: 52, marginBottom: 12 }}>🎉</div>
-          <h2 style={{ fontFamily: "'Playfair Display', serif", fontSize: 24, fontWeight: 700, color: '#0f172a', marginBottom: 8 }}>ව්‍යාපෘතිය පල කෙරිණි!</h2>
+          <h2 style={{ fontFamily: "'Playfair Display', serif", fontSize: 24, fontWeight: 700, color: '#0f172a', marginBottom: 8 }}>{t.successTitle}</h2>
           <p style={{ fontSize: 13, color: '#64748b', lineHeight: 1.8, maxWidth: 340, margin: '0 auto 16px' }}>
-            ඔබේ ව්‍යාපෘතිය live වී ඇත. ලියාපදිංචි සේවා සපයන්නන්ට දැන් එය දැකිය හැකිය.
+            {t.successBody}
           </p>
-          <div style={{ display: 'inline-flex', alignItems: 'center', gap: 6, background: '#f0fdf4', border: '1px solid #bbf7d0', borderRadius: 10, padding: '8px 14px' }}>
-            <span style={{ fontSize: 13, color: '#15803d' }}>✓ WhatsApp හරහා ඔබව දැනුවත් කරන්නෙමු — <strong>{form.whatsapp}</strong></span>
+          <div style={{ display: 'inline-flex', alignItems: 'center', gap: 6, background: '#f0fdf4', border: '1px solid #bbf7d0', borderRadius: 10, padding: '8px 14px', marginBottom: 14 }}>
+            <span style={{ fontSize: 13, color: '#15803d' }}>✓ {t.whatsappNote} <strong>{form.whatsapp}</strong></span>
           </div>
+          {/* What happens next */}
+          <div style={{ textAlign: 'left', background: '#F8F1E8', border: '1px solid #EADDCB', borderRadius: 12, padding: '14px 16px', margin: '0 auto', maxWidth: 360 }}>
+            <div style={{ fontSize: 12, fontWeight: 800, color: '#4A2E17', marginBottom: 8 }}>{t.nextTitle}</div>
+            {t.nextSteps.map(s => (
+              <div key={s} style={{ fontSize: 12, color: '#6B4A2E', lineHeight: 1.9 }}>{s}</div>
+            ))}
+          </div>
+          <a href={`https://wa.me/?text=${encodeURIComponent(t.shareText)}`} target="_blank" rel="noopener noreferrer"
+            style={{ display: 'inline-flex', alignItems: 'center', gap: 6, marginTop: 14, background: '#25D366', color: '#fff', borderRadius: 12, padding: '10px 20px', fontSize: 13, fontWeight: 700, textDecoration: 'none' }}>
+            {t.shareWhatsApp}
+          </a>
         </div>
 
         {userId ? (
           /* Signed-in user: simple success with manage link */
           <div style={{ background: '#fff', border: '1px solid #e2e8f0', borderTop: '1px solid #f1f5f9', borderRadius: '0 0 20px 20px', padding: '20px 24px' }}>
             <div style={{ display: 'flex', gap: 10, justifyContent: 'center', flexWrap: 'wrap' }}>
-              <a href="/dashboard" style={{ padding: '11px 22px', background: '#4A2E17', color: '#fff', borderRadius: 12, fontSize: 14, fontWeight: 600, textDecoration: 'none' }}>Dashboard බලන්න →</a>
-              <button onClick={() => { setSuccess(false); setForm({ project_type: '', city: '', district: '', description: '', budget_range: '', customer_name: '', whatsapp: '' }) }}
+              <a href="/dashboard" style={{ padding: '11px 22px', background: '#4A2E17', color: '#fff', borderRadius: 12, fontSize: 14, fontWeight: 600, textDecoration: 'none' }}>{t.viewDashboard}</a>
+              <button onClick={resetForm}
                 style={{ padding: '11px 22px', background: '#f1f5f9', color: '#334155', borderRadius: 12, fontSize: 14, fontWeight: 600, border: 'none', cursor: 'pointer' }}>
-                Post Another
+                {t.postAnother}
               </button>
             </div>
           </div>
@@ -180,26 +294,23 @@ export default function PostProjectForm() {
           <div style={{ background: '#fff', border: '1px solid #e2e8f0', borderTop: 'none', borderRadius: '0 0 20px 20px', overflow: 'hidden' }}>
             <div style={{ background: 'linear-gradient(135deg, #4A2E17, #1C120A)', padding: '20px 24px' }}>
               <div style={{ fontSize: 11, fontWeight: 700, color: 'rgba(245,158,11,0.8)', letterSpacing: 2, textTransform: 'uppercase', marginBottom: 8 }}>
-                තවත් පියවරක්
+                {t.oneMoreStep}
               </div>
-              <div style={{ fontSize: 16, fontWeight: 700, color: '#fff', marginBottom: 6 }}>ව්‍යාපෘතිය කළමනාකරණයට නොමිලේ ගිණුමක් සාදන්න</div>
+              <div style={{ fontSize: 16, fontWeight: 700, color: '#fff', marginBottom: 6 }}>{t.createAccount}</div>
               <div style={{ display: 'flex', flexDirection: 'column', gap: 4, marginBottom: 4 }}>
-                {['📊 Dashboard හිදී ලංසු නිරීක්ෂණය කරන්න', '💬 සේවා සපයන්නන් ප්‍රතිචාර දැක්වූ විට දැනුවත් වන්න', '✏️ ව්‍යාපෘතිය ඕනෑ වෙලාවක සංස්කරණය හෝ වසා දමන්න'].map(b => (
+                {t.benefits.map(b => (
                   <div key={b} style={{ fontSize: 12, color: 'rgba(255,255,255,0.7)' }}>{b}</div>
                 ))}
               </div>
             </div>
             <div style={{ padding: '20px 24px' }}>
-              <MagicLinkForm
-                label="නොමිලේ ගිණුමක් සාදීමට ඊමේල් ඇතුළු කරන්න"
-                hint={null}
-              />
+              <MagicLinkForm label={t.emailLabel} hint={null} t={t} />
               <div style={{ marginTop: 20, paddingTop: 16, borderTop: '1px solid #f1f5f9', display: 'flex', gap: 10, justifyContent: 'center', flexWrap: 'wrap' }}>
-                <a href="/providers" style={{ fontSize: 13, color: '#64748b', textDecoration: 'none', fontWeight: 600 }}>සේවා සපයන්නන් බලන්න →</a>
+                <a href="/providers" style={{ fontSize: 13, color: '#64748b', textDecoration: 'none', fontWeight: 600 }}>{t.viewProviders}</a>
                 <span style={{ color: '#e2e8f0' }}>·</span>
-                <button onClick={() => { setSuccess(false); setForm({ project_type: '', city: '', district: '', description: '', budget_range: '', customer_name: '', whatsapp: '' }) }}
+                <button onClick={resetForm}
                   style={{ fontSize: 13, color: '#64748b', background: 'none', border: 'none', cursor: 'pointer', fontWeight: 600, padding: 0 }}>
-                  තවත් ව්‍යාපෘතියක් පලකරන්න
+                  {t.postAnother}
                 </button>
               </div>
             </div>
@@ -217,68 +328,66 @@ export default function PostProjectForm() {
         </div>
       )}
 
-      <Field label="ව්‍යාපෘති නාමය" id="project_type" req error={errors.project_type}
-        hint="උදා: නාන කාමර ටයිලිං, බිම ටයිලිං, නාන කාමර ප්‍රතිසංස්කරණය, ජල නිරෝධ…">
+      <Field label={t.projectName} id="project_type" req error={errors.project_type} hint={t.projectHint}>
         <input
           id="project_type"
           value={form.project_type}
           onChange={e => set('project_type', e.target.value)}
-          placeholder="උදා: නාන කාමර ටයිලිං සහ ප්‍රතිසංස්කරණය"
+          placeholder={t.projectPh}
           style={inp(!!errors.project_type)}
         />
       </Field>
 
       <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: 14 }}>
-        <Field label="නගරය / ගම" id="city" req error={errors.city}>
-          <input id="city" value={form.city} onChange={e => set('city', e.target.value)} placeholder="උදා: කොළඹ 03" style={inp(!!errors.city)} />
+        <Field label={t.city} id="city" req error={errors.city}>
+          <input id="city" value={form.city} onChange={e => set('city', e.target.value)} placeholder={t.cityPh} style={inp(!!errors.city)} />
         </Field>
-        <Field label="දිස්ත්‍රික්කය" id="district">
+        <Field label={t.district} id="district">
           <select id="district" value={form.district} onChange={e => set('district', e.target.value)}
             style={{ ...inp(false), WebkitAppearance: 'none', appearance: 'none', cursor: 'pointer' }}>
-            <option value="">දිස්ත්‍රික්කය තෝරන්න...</option>
+            <option value="">{t.districtPh}</option>
             {DISTRICTS_EN.map(d => <option key={d} value={d}>{d}</option>)}
           </select>
         </Field>
       </div>
 
-      <Field label="ව්‍යාපෘති විස්තරය" id="description" req error={errors.description}
-        hint="ව්‍යාපෘතිය විස්තර කරන්න: ප්‍රදේශ ප්‍රමාණය, ටයිල් වර්ගය, කාලය, විශේෂ ඉල්ලීම්.">
+      <Field label={t.description} id="description" req error={errors.description} hint={t.descHint}>
         <textarea id="description" value={form.description} onChange={e => set('description', e.target.value)}
-          placeholder="උදා: නාන කාමර ප්‍රතිසංස්කරණය — sq.ft 80 ක් පමණ බිම සහ බිත්ති ටයිලිං. anti-slip ටයිල් සහ සුදු wall ටයිල් අවශ්‍ය. සති 2ක් ඇතුළත ආරම්භ කළ යුතුය..."
+          placeholder={t.descPh}
           rows={4} style={{ ...inp(!!errors.description), resize: 'vertical', minHeight: 100 }} />
       </Field>
 
-      <Field label="අයවැය පරාසය" id="budget_range" hint="අත්‍යවශ්‍ය නොවේ — උදා: රු. 50,000, රු. 150,000–250,000, සාකච්ඡා කළ හැකි">
+      <Field label={t.budget} id="budget_range" hint={t.budgetHint}>
         <input
           id="budget_range"
           value={form.budget_range}
           onChange={e => set('budget_range', e.target.value)}
-          placeholder="උදා: රු. 150,000 හෝ සාකච්ඡා කළ හැකි"
+          placeholder={t.budgetPh}
           style={inp(false)}
         />
       </Field>
 
       <div style={{ height: 1, background: '#f1f5f9', margin: '8px 0 20px' }} />
       <p style={{ fontSize: 12, color: '#64748b', marginBottom: 18, display: 'flex', alignItems: 'center', gap: 6 }}>
-        🔒 ඔබේ සම්බන්ධතා විස්තර රහසිගතව තබා ගන්නෙමු, ගැළපෙන සේවා සපයන්නන්ට පමණක් ලබා දෙන්නෙමු.
+        {t.privacy}
       </p>
 
       <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: 14 }}>
-        <Field label="ඔබේ නම" id="customer_name" req error={errors.customer_name}>
-          <input id="customer_name" value={form.customer_name} onChange={e => set('customer_name', e.target.value)} placeholder="උදා: නුවන් පෙරේරා" style={inp(!!errors.customer_name)} />
+        <Field label={t.yourName} id="customer_name" req error={errors.customer_name}>
+          <input id="customer_name" value={form.customer_name} onChange={e => set('customer_name', e.target.value)} placeholder={t.namePh} style={inp(!!errors.customer_name)} />
         </Field>
-        <Field label="WhatsApp අංකය" id="whatsapp" req error={errors.whatsapp} hint="උදා: +94771234567">
+        <Field label={t.whatsapp} id="whatsapp" req error={errors.whatsapp} hint={t.whatsappHint}>
           <input id="whatsapp" value={form.whatsapp} onChange={e => set('whatsapp', e.target.value)} placeholder="+94771234567" type="tel" style={inp(!!errors.whatsapp)} />
         </Field>
       </div>
 
       <button type="submit" disabled={submitting}
         style={{ width: '100%', padding: '13px', background: submitting ? '#94a3b8' : '#A9713C', color: '#fff', border: 'none', borderRadius: 12, fontSize: 15, fontWeight: 700, cursor: submitting ? 'not-allowed' : 'pointer', display: 'flex', alignItems: 'center', justifyContent: 'center', gap: 8, transition: 'background 0.2s' }}>
-        {submitting ? '⏳ ඉදිරිපත් කරමින්...' : '📋 මගේ ව්‍යාපෘතිය පලකරන්න'}
+        {submitting ? t.submitting : t.submit}
       </button>
 
       <p style={{ fontSize: 11, color: '#94a3b8', textAlign: 'center', marginTop: 12 }}>
-        නොමිලේ සේවාව · ලොගිනයක් අවශ්‍ය නැත · සේවා සපයන්නන් ලංසු ඉදිරිපත් කරති
+        {t.footer}
       </p>
     </form>
   )
