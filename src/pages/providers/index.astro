@@ -20,6 +20,7 @@ const BLOG_TIPS = [
 const rawType = Astro.url.searchParams.get('type') || ''
 const type = rawType  // keep empty for "all" but default label is Tilers
 const q = Astro.url.searchParams.get('q') || ''
+const districtParam = Astro.url.searchParams.get('district') || ''
 
 const TYPE_LABELS = {
   tiler: 'Professionals', workshop: 'Workshops', supplier: 'Suppliers',
@@ -74,6 +75,6 @@ const pageTitle = type ? `${TYPE_LABELS[type] || 'Providers'} in Sri Lanka` : 'F
     </div>
   </div>
 
-  <ProviderDirectory client:only="react" initialProviders={initialProviders ?? []} initialType={type} initialSearch={q} />
+  <ProviderDirectory client:only="react" initialProviders={initialProviders ?? []} initialType={type} initialSearch={q} initialDistrict={districtParam} />
 
 </Layout>

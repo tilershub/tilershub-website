@@ -1,6 +1,8 @@
 import { SERVICES } from '../lib/services.js'
 import { BLOG_POSTS } from '../lib/blog-posts.js'
 import { jobPath } from '../lib/jobs.js'
+import { GUIDES } from '../data/guides.js'
+import { DISTRICT_INFO, LOCATION_SERVICE_SLUGS, districtPath, serviceDistrictPath } from '../lib/locations.js'
 
 export const prerender = false
 
@@ -14,6 +16,7 @@ const STATIC = [
   { loc: '/post-project',   priority: '0.8', changefreq: 'monthly' },
   { loc: '/join-tilershub', priority: '0.7', changefreq: 'monthly' },
   { loc: '/categories',     priority: '0.7', changefreq: 'weekly'  },
+  { loc: '/guides',         priority: '0.7', changefreq: 'weekly'  },
   { loc: '/estimator',      priority: '0.6', changefreq: 'monthly' },
   { loc: '/bathrooms',      priority: '0.6', changefreq: 'weekly'  },
   { loc: '/tile',           priority: '0.6', changefreq: 'weekly'  },
@@ -47,6 +50,11 @@ export async function GET({ locals }) {
     ),
     ...(projectRows || []).map(p =>
       url(jobPath(p), p.created_at ? p.created_at.split('T')[0] : today, 'daily', '0.7')
+    ),
+    ...GUIDES.map(g => url(`/guides/${g.slug}`, today, 'monthly', '0.7')),
+    ...DISTRICT_INFO.map(d => url(districtPath(d), today, 'weekly', '0.8')),
+    ...DISTRICT_INFO.flatMap(d =>
+      LOCATION_SERVICE_SLUGS.map(s => url(serviceDistrictPath(s, d), today, 'weekly', '0.7'))
     ),
   ]
 

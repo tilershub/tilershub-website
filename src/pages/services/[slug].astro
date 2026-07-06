@@ -1,7 +1,10 @@
 ---
 export const prerender = false
 import Layout from '../../layouts/Layout.astro'
+import Breadcrumbs from '../../components/Breadcrumbs.astro'
 import { SERVICES } from '../../lib/services.js'
+import { DISTRICT_INFO, LOCATION_SERVICE_SLUGS, serviceDistrictPath } from '../../lib/locations.js'
+import { LABOUR, typicalCostPerSqft } from '../../lib/costData.js'
 
 const { slug } = Astro.params
 const service = SERVICES.find(s => s.slug === slug)
@@ -79,15 +82,36 @@ const serviceSchema = JSON.stringify({
   areaServed: { '@type': 'Country', name: 'Sri Lanka' },
   url: `https://www.tilershub.lk/services/${service.slug}`,
 })
+
+const hasDistrictPages = LOCATION_SERVICE_SLUGS.includes(service.slug)
+const topDistricts = DISTRICT_INFO.filter(d => ['colombo','gampaha','kandy','galle','kurunegala','kalutara','matara','puttalam'].includes(d.slug))
+const cost = typicalCostPerSqft()
+
+const SERVICE_FAQS = [
+  { q: `How much does ${service.label.toLowerCase()} cost in Sri Lanka?`,
+    a: `Labour for ${service.label.toLowerCase()} typically runs Rs. ${LABOUR.min}–${LABOUR.max} per sq.ft; with materials expect roughly Rs. ${cost.low}–${cost.high}/sq.ft before tiles or fittings. Use the free TilersHub calculator for an itemised estimate.` },
+  { q: `How do I get quotes for ${service.label.toLowerCase()}?`,
+    a: 'Post your project free on TilersHub with the area size and location. Verified professionals send quotes straight to your WhatsApp — compare and choose with no commission or obligation.' },
+  { q: 'Are the professionals on TilersHub verified?',
+    a: 'Every provider application is reviewed before the profile goes live, and verified badges are shown on profiles that completed identity checks. Reviews from past customers appear on each profile.' },
+]
+
+const serviceFaqSchema = JSON.stringify({
+  '@context': 'https://schema.org',
+  '@type': 'FAQPage',
+  mainEntity: SERVICE_FAQS.map(f => ({ '@type': 'Question', name: f.q, acceptedAnswer: { '@type': 'Answer', text: f.a } })),
+})
 ---
 
 <Layout title={pageTitle} description={pageDesc}>
   <script slot="head" type="application/ld+json" set:html={serviceSchema} />
+  <script slot="head" type="application/ld+json" set:html={serviceFaqSchema} />
 
   <!-- Service header -->
   <div style="background:linear-gradient(135deg,#1C120A 0%,#3A2416 100%);padding:28px 20px 24px;text-align:center;position:relative;overflow:hidden;">
     <div style="position:absolute;inset:0;opacity:0.03;background-image:repeating-linear-gradient(0deg,transparent,transparent 39px,rgba(255,255,255,0.8) 39px,rgba(255,255,255,0.8) 40px),repeating-linear-gradient(90deg,transparent,transparent 39px,rgba(255,255,255,0.8) 39px,rgba(255,255,255,0.8) 40px);pointer-events:none;"></div>
     <div style="position:relative;">
+      <div style="text-align:left;max-width:960px;margin:0 auto;"><Breadcrumbs items={[{ name: 'Services', href: '/categories' }, { name: service.label }]} light /></div>
       <div style="font-size:48px;margin-bottom:10px;">{service.icon}</div>
       <h1 style="font-family:'Playfair Display',serif;font-size:clamp(20px,4.5vw,30px);font-weight:700;color:#fff;margin:0 0 8px;">{service.label}</h1>
       <p style="font-size:13px;color:rgba(255,255,255,0.55);margin:0 0 20px;line-height:1.6;">
@@ -232,6 +256,33 @@ const serviceSchema = JSON.stringify({
       </div>
     </div>
   )}
+
+  <!-- FAQ + district links -->
+  <div style="background:#f8fafc;padding:28px 16px 36px;border-top:1px solid #f1f5f9;">
+    <div style="max-width:720px;margin:0 auto;display:flex;flex-direction:column;gap:20px;">
+      <div>
+        <h2 style="font-size:15px;font-weight:800;color:#0f172a;margin:0 0 12px;">{service.label} — FAQ</h2>
+        <div style="display:flex;flex-direction:column;gap:10px;">
+          {SERVICE_FAQS.map(f => (
+            <details style="background:#fff;border:1px solid #e2e8f0;border-radius:12px;padding:14px 16px;">
+              <summary style="font-size:13px;font-weight:700;color:#0f172a;cursor:pointer;">{f.q}</summary>
+              <p style="font-size:13px;color:#475569;line-height:1.8;margin:10px 0 0;">{f.a}</p>
+            </details>
+          ))}
+        </div>
+      </div>
+      {hasDistrictPages && (
+        <div>
+          <h2 style="font-size:14px;font-weight:800;color:#0f172a;margin:0 0 10px;">{service.label} by district</h2>
+          <div style="display:flex;flex-wrap:wrap;gap:8px;">
+            {topDistricts.map(d => (
+              <a href={serviceDistrictPath(service.slug, d)} style="font-size:12px;font-weight:700;color:#4A2E17;background:#fff;border:1px solid #EADDCB;border-radius:20px;padding:7px 14px;text-decoration:none;">{service.label} in {d.name}</a>
+            ))}
+          </div>
+        </div>
+      )}
+    </div>
+  </div>
 
   <!-- Post Project CTA -->
   <div style="background:linear-gradient(135deg,#3A2416 0%,#1C120A 100%);padding:40px 20px;text-align:center;">

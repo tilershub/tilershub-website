@@ -3,6 +3,7 @@ import Layout from '../layouts/Layout.astro'
 import HomeHero from '../components/HomeHero.jsx'
 import { HOME_GROUPS, SERVICES } from '../lib/services.js'
 import { jobPath } from '../lib/jobs.js'
+import { DISTRICT_INFO, districtPath } from '../lib/locations.js'
 
 const HERO_IMG = 'https://images.unsplash.com/photo-1552321554-5fefe8c9ef14?auto=format&fit=crop&w=1400&q=75'
 
@@ -328,6 +329,25 @@ const WHY_ITEMS = [
             </div>
           </div>
           <div style="padding:0 14px;font-size:18px;color:#cbd5e1;flex-shrink:0;">›</div>
+        </a>
+      ))}
+    </div>
+  </section>
+
+  <!-- ══ FIND TILERS BY DISTRICT ══ -->
+  <section style="background:#f8fafc;padding:24px 16px 28px;border-top:1px solid #f1f5f9;">
+    <h2 style="font-size:15px;font-weight:700;color:#111827;margin:0 0 4px;">
+      <span class="en-text">📍 Find Tilers by District</span>
+      <span class="si-text">📍 දිස්ත්‍රික්කය අනුව ටයිලර්වරු</span>
+    </h2>
+    <p style="font-size:12px;color:#64748b;margin:0 0 14px;">
+      <span class="en-text">Verified tiling professionals across all 25 districts of Sri Lanka</span>
+      <span class="si-text">ශ්‍රී ලංකාවේ දිස්ත්‍රික්ක 25 පුරා සත්‍යාපිත ටයිලර්වරු</span>
+    </p>
+    <div style="display:flex;flex-wrap:wrap;gap:8px;">
+      {DISTRICT_INFO.map(d => (
+        <a href={districtPath(d)} style="font-size:12px;font-weight:600;color:#4A2E17;background:#fff;border:1px solid #EADDCB;border-radius:20px;padding:6px 13px;text-decoration:none;">
+          {d.name}
         </a>
       ))}
     </div>
