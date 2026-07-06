@@ -1,6 +1,26 @@
 ---
 import Layout from '../layouts/Layout.astro'
 import JobsBoard from '../components/JobsBoard.jsx'
+
+// SSR seed: the island's server-rendered HTML then contains real job cards
+// with crawlable /jobs/<slug> links instead of a loading skeleton.
+const supabase = Astro.locals.supabase
+const { data: initialProjectsRaw } = await supabase
+  .from('projects')
+  .select('id, project_type, city, district, description, budget_range, created_at')
+  .eq('status', 'active')
+  .order('created_at', { ascending: false })
+  .limit(30)
+const initialProjects = initialProjectsRaw || []
+
+let initialBidCounts = {}
+if (initialProjects.length > 0) {
+  const { data: bids } = await supabase
+    .from('bids')
+    .select('job_id')
+    .in('job_id', initialProjects.map(j => j.id))
+  for (const b of bids || []) initialBidCounts[b.job_id] = (initialBidCounts[b.job_id] || 0) + 1
+}
 ---
 
 <Layout
@@ -23,6 +43,6 @@ import JobsBoard from '../components/JobsBoard.jsx'
     </div>
   </div>
 
-  <JobsBoard client:load />
+  <JobsBoard initialProjects={initialProjects} initialBidCounts={initialBidCounts} client:load />
 
 </Layout>

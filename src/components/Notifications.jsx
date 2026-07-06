@@ -1,5 +1,6 @@
 import { useState, useEffect } from 'react'
 import { supabase, getUser } from '../lib/supabase.js'
+import { jobPath } from '../lib/jobs.js'
 
 function timeAgo(ts) {
   const diff = Math.floor((Date.now() - new Date(ts)) / 1000)
@@ -49,7 +50,7 @@ export default function Notifications() {
           title: `New project: ${proj.project_type}`,
           subtitle: `${proj.city}${proj.district && proj.district !== proj.city ? `, ${proj.district}` : ''}${proj.budget_range ? ` · ${proj.budget_range}` : ''}`,
           time: proj.created_at,
-          href: `/job?id=${proj.id}`,
+          href: jobPath(proj),
           cta: 'Bid →',
           ctaBg: '#A9713C',
         })))

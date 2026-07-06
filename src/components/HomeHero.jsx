@@ -1,5 +1,6 @@
 import { useState, useEffect } from 'react'
 import { supabase, getUser } from '../lib/supabase.js'
+import { jobPath } from '../lib/jobs.js'
 
 const CACHE_KEY = 'tilershub_role'
 const NAME_KEY  = 'tilershub_pname'
@@ -213,7 +214,7 @@ function ProviderProjectsFeed() {
                 : p.description
 
               return (
-                <a key={p.id} href={`/job?id=${p.id}`}
+                <a key={p.id} href={jobPath(p)}
                   style={{ display:'flex', alignItems:'center', gap:12, background:'#fff', borderRadius:12, border:'1px solid #e2e8f0', padding:'14px 16px', textDecoration:'none', color:'inherit', transition:'box-shadow 0.15s,border-color 0.15s' }}
                   onMouseOver={e => { e.currentTarget.style.boxShadow='0 4px 14px rgba(0,0,0,0.07)'; e.currentTarget.style.borderColor='#cbd5e1' }}
                   onMouseOut={e  => { e.currentTarget.style.boxShadow=''; e.currentTarget.style.borderColor='#e2e8f0' }}

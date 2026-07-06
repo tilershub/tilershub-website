@@ -1,5 +1,6 @@
 import { SERVICES } from '../lib/services.js'
 import { BLOG_POSTS } from '../lib/blog-posts.js'
+import { jobPath } from '../lib/jobs.js'
 
 export const prerender = false
 
@@ -28,9 +29,10 @@ function url(loc, lastmod, changefreq, priority) {
 export async function GET({ locals }) {
   const today = new Date().toISOString().split('T')[0]
 
-  const [{ data: tilerRows }, { data: providerRows }] = await Promise.all([
+  const [{ data: tilerRows }, { data: providerRows }, { data: projectRows }] = await Promise.all([
     locals.supabase.from('tilers').select('slug,updated_at').eq('is_verified', true).not('slug', 'is', null),
     locals.supabase.from('providers').select('slug,updated_at').not('slug', 'is', null),
+    locals.supabase.from('projects').select('id,project_type,city,district,created_at').eq('status', 'active').order('created_at', { ascending: false }).limit(500),
   ])
 
   const urls = [
@@ -43,11 +45,17 @@ export async function GET({ locals }) {
     ...(providerRows || []).filter(r => r.slug).map(p =>
       url(`/providers/${p.slug}`, p.updated_at ? p.updated_at.split('T')[0] : today, 'weekly', '0.7')
     ),
+    ...(projectRows || []).map(p =>
+      url(jobPath(p), p.created_at ? p.created_at.split('T')[0] : today, 'daily', '0.7')
+    ),
   ]
 
   const xml = `<?xml version="1.0" encoding="UTF-8"?>\n<urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">\n${urls.join('\n')}\n</urlset>`
 
   return new Response(xml, {
-    headers: { 'Content-Type': 'application/xml; charset=utf-8' },
+    headers: {
+      'Content-Type': 'application/xml; charset=utf-8',
+      'Cache-Control': 'public, max-age=3600',
+    },
   })
 }
