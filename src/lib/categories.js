@@ -1,6 +1,7 @@
 export const CATEGORIES = [
   {
     slug: 'flooring',
+    longDesc: 'Whether you\'re tiling a new house, replacing old floors or installing epoxy in a garage, flooring is the highest-impact upgrade a Sri Lankan home can get. TilersHub lists verified floor tiling specialists, parquet and laminate installers, and epoxy contractors across all 25 districts. Compare experience and reviews, then contact directly on WhatsApp — labour rates currently run Rs. 100–250 per sq.ft depending on tile size.',
     label: 'Flooring Services',
     icon: '⬜',
     color: '#0f766e',
@@ -13,6 +14,7 @@ export const CATEGORIES = [
   },
   {
     slug: 'bathroom',
+    longDesc: 'Bathrooms are the most technically demanding room in a Sri Lankan home — poor waterproofing is the #1 cause of renovation failure within 2–3 years. TilersHub connects you with verified bathroom renovators, plumbers and waterproofing specialists who follow proper membrane and screed practice. Post your project free and compare itemised quotes before committing.',
     label: 'Bathroom Services',
     icon: '🚿',
     color: '#0369a1',
@@ -25,6 +27,7 @@ export const CATEGORIES = [
   },
   {
     slug: 'kitchen',
+    longDesc: 'A kitchen renovation combines tiling, cabinetry and splashback work that must be sequenced correctly. The contractors listed here handle pantry cupboard installation, granite worktops and kitchen wall tiling across Sri Lanka. Get multiple WhatsApp quotes free through TilersHub before starting.',
     label: 'Kitchen Services',
     icon: '🍳',
     color: '#b45309',
@@ -37,6 +40,7 @@ export const CATEGORIES = [
   },
   {
     slug: 'glass',
+    longDesc: 'Glass railings, aluminium doors and windows, gypsum and IPanel ceilings are precision trades where installation quality decides longevity. TilersHub lists verified glass and aluminium fabricators across Sri Lanka with photos of past work — compare and contact directly on WhatsApp.',
     label: 'Glass & Aluminium',
     icon: '🪟',
     color: '#7c3aed',
@@ -49,6 +53,7 @@ export const CATEGORIES = [
   },
   {
     slug: 'construction',
+    longDesc: 'From roofing and plastering to partition walls and full builds, these verified contractors cover structural and finishing work across Sri Lanka. Post your project on TilersHub to get competing quotes — free, with no commission added to your price.',
     label: 'Construction Services',
     icon: '🏗️',
     color: '#374151',
@@ -61,6 +66,7 @@ export const CATEGORIES = [
   },
   {
     slug: 'outdoor',
+    longDesc: 'Outdoor work — landscaping, pool construction, paving and pergolas — needs contractors who understand Sri Lankan monsoon drainage and sun exposure. The specialists listed here have verified profiles and past-project photos. Compare quotes free on TilersHub.',
     label: 'Outdoor Services',
     icon: '🌿',
     color: '#15803d',
@@ -73,6 +79,7 @@ export const CATEGORIES = [
   },
   {
     slug: 'trades',
+    longDesc: 'House painting, electrical wiring, air conditioning, solar and smart-home installation round out any renovation. Every tradesperson listed on TilersHub is reviewed before listing goes live — post your job free and pick from competing WhatsApp quotes.',
     label: 'Trades & More',
     icon: '🎨',
     color: '#c2410c',

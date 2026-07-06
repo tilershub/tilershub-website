@@ -1,0 +1,252 @@
+---
+// /services/<service>/<district> — programmatic SEO landing page,
+// e.g. /services/floor-tiling/colombo. Only LOCATION_SERVICE_SLUGS ×
+// DISTRICT_INFO combinations render; anything else redirects.
+export const prerender = false
+import Layout from '../../../layouts/Layout.astro'
+import Breadcrumbs from '../../../components/Breadcrumbs.astro'
+import { SERVICES } from '../../../lib/services.js'
+import { districtBySlug, districtPath, serviceDistrictPath, neighborDistricts, LOCATION_SERVICE_SLUGS } from '../../../lib/locations.js'
+import { LABOUR, ADHESIVE_TIERS, EXTRAS, typicalCostPerSqft } from '../../../lib/costData.js'
+import { jobPath, timeAgo } from '../../../lib/jobs.js'
+
+const { slug, district: districtSlug } = Astro.params
+const service = SERVICES.find(s => s.slug === slug)
+const district = districtBySlug(districtSlug)
+
+if (!service) return Astro.redirect('/providers', 302)
+if (!district || !LOCATION_SERVICE_SLUGS.includes(service.slug)) return Astro.redirect(`/services/${service.slug}`, 302)
+
+const supabase = Astro.locals.supabase
+
+const [{ data: providersRaw }, { data: jobsRaw }] = await Promise.all([
+  supabase
+    .from('providers')
+    .select('id,name,city,district,verification_status,slug,services,whatsapp,phone,description,profile_image,avg_rating,experience_years,cover_image,daily_rate_min,review_count,service_areas')
+    .eq('status', 'active')
+    .limit(200),
+  supabase
+    .from('projects')
+    .select('id,project_type,city,district,created_at,description')
+    .eq('status', 'active')
+    .eq('district', district.name)
+    .ilike('project_type', `%${service.terms[0]}%`)
+    .order('created_at', { ascending: false })
+    .limit(4),
+])
+
+const inDistrict = p =>
+  p.district === district.name ||
+  (p.service_areas || []).includes(district.name) ||
+  (p.city || '').toLowerCase().includes(district.name.toLowerCase())
+
+const matchesService = p =>
+  (p.services || []).some(s => service.terms.some(t => String(s).toLowerCase().includes(t.toLowerCase()))) ||
+  service.terms.some(t => (p.description || '').toLowerCase().includes(t.toLowerCase()))
+
+const providers = (providersRaw || []).filter(p => inDistrict(p) && matchesService(p)).slice(0, 18)
+const jobs = jobsRaw || []
+const total = providers.length
+const neighbors = neighborDistricts(district.slug)
+const cost = typicalCostPerSqft()
+const year = new Date().getFullYear()
+
+const AVATAR_COLORS = ['#4A2E17','#0f766e','#7c3aed','#b45309','#0369a1','#A9713C','#15803d','#be185d']
+function avatarColor(name) {
+  let h = 0
+  for (const c of name) h = (h * 31 + c.charCodeAt(0)) >>> 0
+  return AVATAR_COLORS[h % AVATAR_COLORS.length]
+}
+function initials(name) {
+  return name.split(' ').slice(0, 2).map(w => w[0] || '').join('').toUpperCase() || '?'
+}
+function waLink(phone) {
+  const cleaned = phone.replace(/\D/g, '')
+  const intl = cleaned.startsWith('0') ? '94' + cleaned.slice(1) : cleaned
+  return `https://wa.me/${intl}?text=${encodeURIComponent(`Hi, I found you on TilersHub. I need ${service.label} in ${district.name}.`)}`
+}
+
+const SITE = 'https://www.tilershub.lk'
+const pageUrl = `${SITE}${serviceDistrictPath(service.slug, district)}`
+const pageTitle = `${service.label} in ${district.name} — Prices & Verified Pros (${year}) | TilersHub`
+const pageDesc = `Hire verified ${service.label.toLowerCase()} professionals in ${district.name}, Sri Lanka. ${year} rates from Rs. ${LABOUR.min}/sq.ft labour. Compare free WhatsApp quotes on TilersHub.`
+
+const FAQS = [
+  { q: `How much does ${service.label.toLowerCase()} cost in ${district.name}?`,
+    a: `Labour for ${service.label.toLowerCase()} in ${district.name} typically runs Rs. ${LABOUR.min}–${LABOUR.max} per sq.ft, with materials (adhesive Rs. ${ADHESIVE_TIERS[0].rate}–${ADHESIVE_TIERS[2].rate}/sq.ft, grout Rs. ${EXTRAS.grout}/sq.ft) adding roughly Rs. ${cost.low}–${cost.high}/sq.ft total before tiles. Use the free TilersHub calculator for a detailed estimate.` },
+  { q: `How do I hire a ${service.label.toLowerCase()} professional in ${district.name}?`,
+    a: `Post your project free on TilersHub — verified professionals serving ${district.towns.slice(0, 3).join(', ')} and the rest of ${district.name} district will send quotes directly to your WhatsApp. No commission, no obligation.` },
+  { q: `Which towns in ${district.name} are covered?`,
+    a: `TilersHub providers serve ${district.towns.join(', ')} and surrounding areas of ${district.name} district.` },
+]
+
+const faqSchema = JSON.stringify({
+  '@context': 'https://schema.org',
+  '@type': 'FAQPage',
+  mainEntity: FAQS.map(f => ({ '@type': 'Question', name: f.q, acceptedAnswer: { '@type': 'Answer', text: f.a } })),
+})
+
+const serviceSchema = JSON.stringify({
+  '@context': 'https://schema.org',
+  '@type': 'Service',
+  name: `${service.label} in ${district.name}`,
+  description: pageDesc,
+  provider: { '@type': 'Organization', name: 'TilersHub', url: SITE },
+  areaServed: { '@type': 'AdministrativeArea', name: `${district.name} District, Sri Lanka` },
+  url: pageUrl,
+})
+
+Astro.response.headers.set('Cache-Control', 'public, max-age=0, s-maxage=600')
+---
+
+<Layout title={pageTitle} description={pageDesc}>
+  <script slot="head" type="application/ld+json" set:html={faqSchema} />
+  <script slot="head" type="application/ld+json" set:html={serviceSchema} />
+
+  <!-- Hero -->
+  <div style="background:linear-gradient(135deg,#1C120A 0%,#3A2416 100%);padding:30px 20px 28px;position:relative;overflow:hidden;">
+    <div style="position:relative;max-width:960px;margin:0 auto;">
+      <Breadcrumbs items={[{ name: service.label, href: `/services/${service.slug}` }, { name: district.name }]} light />
+      <div style="font-size:40px;margin-bottom:8px;">{service.icon}</div>
+      <h1 style="font-family:'Playfair Display',serif;font-size:clamp(21px,4.5vw,30px);font-weight:700;color:#fff;margin:0 0 8px;">
+        {service.label} in {district.name}
+      </h1>
+      <p style="font-size:13px;color:rgba(255,255,255,0.6);margin:0 0 18px;line-height:1.7;max-width:620px;">
+        Verified {service.label.toLowerCase()} professionals serving {district.towns.slice(0, 4).join(', ')} and all of {district.name} district.
+        Labour from Rs. {LABOUR.min}/sq.ft · Free WhatsApp quotes.
+      </p>
+      <a href={`/post-project?type=${encodeURIComponent(service.label)}&district=${encodeURIComponent(district.name)}`}
+        style="display:inline-flex;align-items:center;gap:8px;background:#A9713C;color:#fff;border-radius:24px;padding:12px 26px;font-size:14px;font-weight:700;text-decoration:none;box-shadow:0 4px 20px rgba(169,113,60,0.4);">
+        📋 Post a {service.label} Project
+      </a>
+    </div>
+  </div>
+
+  <!-- Providers -->
+  <div style="background:#f8fafc;padding:24px 16px 36px;">
+    <div style="max-width:960px;margin:0 auto;">
+      <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:16px;">
+        <h2 style="font-size:15px;font-weight:800;color:#0f172a;margin:0;">{total > 0 ? `${total} pro${total !== 1 ? 's' : ''} for ${service.label} in ${district.name}` : `${service.label} pros near ${district.name}`}</h2>
+        <a href={`/services/${service.slug}`} style="font-size:12px;color:#A9713C;font-weight:600;text-decoration:none;">All {service.label} ›</a>
+      </div>
+
+      {total === 0 ? (
+        <div style="text-align:center;padding:32px 20px;background:#fff;border-radius:16px;border:1px solid #e2e8f0;">
+          <div style="font-size:36px;margin-bottom:10px;">{service.icon}</div>
+          <p style="font-size:13px;color:#64748b;margin:0 0 16px;line-height:1.7;">
+            No {service.label.toLowerCase()} specialists listed in {district.name} yet — post your project and nearby professionals will bid.
+          </p>
+          <a href={`/post-project?type=${encodeURIComponent(service.label)}`} style="display:inline-flex;background:#A9713C;color:#fff;border-radius:12px;padding:10px 20px;font-size:13px;font-weight:700;text-decoration:none;">📋 Post a Project</a>
+        </div>
+      ) : (
+        <div style="display:grid;grid-template-columns:repeat(auto-fill,minmax(280px,1fr));gap:16px;">
+          {providers.map(p => {
+            const color = avatarColor(p.name || 'P')
+            const inits = initials(p.name || 'P')
+            const phone = p.whatsapp || p.phone
+            const isVerified = ['th_master','th_certified_pro','th_verified'].includes(p.verification_status)
+            const coverSrc = p.cover_image || p.profile_image
+            const cardHref = p.slug ? `/providers/${p.slug}` : null
+            return (
+              <div onclick={cardHref ? `location.href='${cardHref}'` : undefined} style={`display:flex;flex-direction:column;background:#fff;border-radius:20px;overflow:hidden;box-shadow:0 2px 16px rgba(0,0,0,0.08);${cardHref ? 'cursor:pointer;' : ''}`}>
+                <div style="position:relative;height:150px;flex-shrink:0;">
+                  {coverSrc
+                    ? <img src={coverSrc} alt={`${p.name} — ${service.label} in ${district.name}`} style="width:100%;height:100%;object-fit:cover;display:block;" loading="lazy" />
+                    : <div style={`width:100%;height:100%;background:${color};display:flex;align-items:center;justify-content:center;`}>
+                        <span style="font-size:40px;font-weight:800;color:rgba(255,255,255,0.85);">{inits}</span>
+                      </div>
+                  }
+                  {isVerified && (
+                    <span style="position:absolute;top:10px;right:10px;background:#16a34a;color:#fff;font-size:10px;font-weight:700;border-radius:20px;padding:3px 9px;">✓ Verified</span>
+                  )}
+                </div>
+                <div style="padding:14px 16px;display:flex;flex-direction:column;flex:1;">
+                  <span style="font-size:15px;font-weight:700;color:#0f172a;line-height:1.25;margin-bottom:5px;">{p.name}</span>
+                  <div style="font-size:12px;margin-bottom:8px;">
+                    {p.avg_rating > 0
+                      ? <span style="color:#f59e0b;">⭐ {Number(p.avg_rating).toFixed(1)}{p.review_count ? ` (${p.review_count})` : ''}</span>
+                      : <span style="color:#94a3b8;">New · No reviews yet</span>
+                    }
+                  </div>
+                  <div style="border-top:1px solid #f1f5f9;margin-top:auto;padding-top:10px;display:flex;align-items:center;gap:8px;flex-wrap:wrap;">
+                    {p.experience_years > 0 && <span style="font-size:11px;font-weight:600;color:#16a34a;">🛡 {p.experience_years}+ yrs</span>}
+                    <span style="font-size:11px;color:#64748b;">📍 {p.city || p.district}</span>
+                    <div style="margin-left:auto;display:flex;gap:6px;">
+                      {phone && (
+                        <a href={waLink(phone)} target="_blank" rel="noopener noreferrer" onclick="event.stopPropagation()"
+                          style="display:inline-flex;background:#25D366;color:#fff;border-radius:10px;padding:7px 12px;font-size:11px;font-weight:700;text-decoration:none;">💬</a>
+                      )}
+                      {cardHref && (
+                        <a href={cardHref} onclick="event.stopPropagation()"
+                          style="display:inline-flex;background:#4A2E17;color:#fff;border-radius:10px;padding:7px 12px;font-size:11px;font-weight:700;text-decoration:none;">View ›</a>
+                      )}
+                    </div>
+                  </div>
+                </div>
+              </div>
+            )
+          })}
+        </div>
+      )}
+    </div>
+  </div>
+
+  <!-- Recent matching jobs -->
+  {jobs.length > 0 && (
+    <div style="background:#fff;padding:24px 16px;border-top:1px solid #f1f5f9;">
+      <div style="max-width:720px;margin:0 auto;">
+        <h2 style="font-size:15px;font-weight:800;color:#0f172a;margin:0 0 12px;">Recent {service.label.toLowerCase()} projects in {district.name}</h2>
+        <div style="display:flex;flex-direction:column;gap:10px;">
+          {jobs.map(j => (
+            <a href={jobPath(j)} style="display:block;background:#f8fafc;border:1px solid #e8edf5;border-radius:14px;padding:14px 16px;text-decoration:none;color:inherit;">
+              <div style="display:flex;justify-content:space-between;gap:8px;margin-bottom:4px;">
+                <span style="font-size:13px;font-weight:700;color:#0f172a;">{j.project_type}</span>
+                <span style="font-size:10px;color:#94a3b8;white-space:nowrap;">{timeAgo(j.created_at)}</span>
+              </div>
+              {j.description && <p style="font-size:12px;color:#64748b;margin:0;line-height:1.5;display:-webkit-box;-webkit-line-clamp:2;-webkit-box-orient:vertical;overflow:hidden;">{j.description}</p>}
+            </a>
+          ))}
+        </div>
+      </div>
+    </div>
+  )}
+
+  <!-- Cost + FAQ + cross links -->
+  <div style="background:#f8fafc;padding:28px 16px 40px;border-top:1px solid #f1f5f9;">
+    <div style="max-width:720px;margin:0 auto;display:flex;flex-direction:column;gap:22px;">
+
+      <div>
+        <h2 style="font-size:15px;font-weight:800;color:#0f172a;margin:0 0 8px;">{service.label} rates in {district.name} ({year})</h2>
+        <p style="font-size:13px;color:#475569;line-height:1.9;margin:0 0 12px;">
+          Labour runs <strong>Rs. {LABOUR.min}–{LABOUR.max}/sq.ft</strong>; with adhesive, grout and clips expect
+          <strong> Rs. {cost.low}–{cost.high}/sq.ft</strong> before materials. Get an itemised estimate with the free calculator.
+        </p>
+        <a href="/estimator" style="display:inline-flex;align-items:center;gap:7px;background:#4A2E17;color:#fff;border-radius:12px;padding:10px 20px;font-size:13px;font-weight:700;text-decoration:none;">📐 Tiling cost calculator →</a>
+      </div>
+
+      <div>
+        <h2 style="font-size:15px;font-weight:800;color:#0f172a;margin:0 0 12px;">FAQ</h2>
+        <div style="display:flex;flex-direction:column;gap:10px;">
+          {FAQS.map(f => (
+            <details style="background:#fff;border:1px solid #e2e8f0;border-radius:12px;padding:14px 16px;">
+              <summary style="font-size:13px;font-weight:700;color:#0f172a;cursor:pointer;">{f.q}</summary>
+              <p style="font-size:13px;color:#475569;line-height:1.8;margin:10px 0 0;">{f.a}</p>
+            </details>
+          ))}
+        </div>
+      </div>
+
+      <div>
+        <h2 style="font-size:14px;font-weight:800;color:#0f172a;margin:0 0 10px;">{service.label} in nearby districts</h2>
+        <div style="display:flex;flex-wrap:wrap;gap:8px;">
+          {neighbors.map(n => (
+            <a href={serviceDistrictPath(service.slug, n)} style="font-size:12px;font-weight:700;color:#475569;background:#fff;border:1px solid #e2e8f0;border-radius:20px;padding:7px 14px;text-decoration:none;">{service.label} in {n.name}</a>
+          ))}
+          <a href={districtPath(district)} style="font-size:12px;font-weight:700;color:#4A2E17;background:#F8F1E8;border:1px solid #EADDCB;border-radius:20px;padding:7px 14px;text-decoration:none;">All tilers in {district.name}</a>
+        </div>
+      </div>
+
+    </div>
+  </div>
+
+</Layout>

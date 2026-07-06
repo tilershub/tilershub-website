@@ -9,12 +9,36 @@ export function getStaticPaths() {
 
 const { guide } = Astro.props
 const otherGuides = GUIDES.filter(g => g.slug !== guide.slug)
+
+const SITE = 'https://www.tilershub.lk'
+const articleSchema = JSON.stringify({
+  '@context': 'https://schema.org',
+  '@type': 'Article',
+  headline: guide.title,
+  description: guide.excerpt,
+  author: { '@type': 'Organization', name: 'TilersHub', url: SITE },
+  publisher: { '@type': 'Organization', name: 'TilersHub', logo: { '@type': 'ImageObject', url: `${SITE}/favicon.svg` } },
+  mainEntityOfPage: { '@type': 'WebPage', '@id': `${SITE}/guides/${guide.slug}` },
+  articleSection: guide.cat,
+})
+
+const faqSchema = guide.sections?.length > 1 ? JSON.stringify({
+  '@context': 'https://schema.org',
+  '@type': 'FAQPage',
+  mainEntity: guide.sections.filter(s => (s.p || []).length > 0).map(s => ({
+    '@type': 'Question',
+    name: s.h,
+    acceptedAnswer: { '@type': 'Answer', text: (s.p || []).join(' ') },
+  })),
+}) : null
 ---
 
 <Layout
   title={`${guide.title} · TilersHub Guides`}
   description={guide.excerpt}
 >
+  <script slot="head" type="application/ld+json" set:html={articleSchema} />
+  {faqSchema && <script slot="head" type="application/ld+json" set:html={faqSchema} />}
 
   <!-- Hero -->
   <div style={`background:${guide.bg};padding:56px 20px 48px;text-align:center;position:relative;overflow:hidden;`}>

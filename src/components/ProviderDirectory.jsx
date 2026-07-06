@@ -650,7 +650,7 @@ function SuggestedContent({ type, providers, onSelectProvider, T, savedIds, savi
 }
 
 // ─── Main component ────────────────────────────────────────────────────────────
-export default function ProviderDirectory({ initialType, initialSearch, initialProviders }) {
+export default function ProviderDirectory({ initialType, initialSearch, initialProviders, initialDistrict }) {
   const T = TRANS.en
 
   const [providers, setProviders] = useState(initialProviders || [])
@@ -658,7 +658,7 @@ export default function ProviderDirectory({ initialType, initialSearch, initialP
   const [loadError, setLoadError] = useState(null)
   const [inputValue, setInputValue] = useState(initialSearch || '')
   const [search,    setSearch]    = useState(initialSearch || '')
-  const [district,  setDistrict]  = useState('')
+  const [district,  setDistrict]  = useState(initialDistrict || '')
   const [type,      setType]      = useState(initialType || '')
   const [selected,  setSelected]  = useState(null)
   const [savedIds,  setSavedIds]  = useState(new Set())
