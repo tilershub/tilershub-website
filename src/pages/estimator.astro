@@ -388,13 +388,12 @@ const topDistricts = DISTRICT_INFO.filter(d => ['colombo','gampaha','kandy','gal
             </tr>
           </thead>
           <tbody>
-            <tr><td style="padding:9px 12px;border-bottom:1px solid #e2e8f0;font-weight:600;">Adhesive C1 (20kg bags)</td><td style="padding:9px 12px;border-bottom:1px solid #e2e8f0;font-weight:700;color:#A9713C;">{Math.ceil(100 / COVERAGE.adhesiveBagSqft.c1)} bags</td><td style="padding:9px 12px;border-bottom:1px solid #e2e8f0;">1 bag ≈ {COVERAGE.adhesiveBagSqft.c1} sq.ft (standard bed)</td></tr>
-            <tr><td style="padding:9px 12px;border-bottom:1px solid #e2e8f0;font-weight:600;">Adhesive C2 (20kg bags)</td><td style="padding:9px 12px;border-bottom:1px solid #e2e8f0;font-weight:700;color:#A9713C;">{Math.ceil(100 / COVERAGE.adhesiveBagSqft.c2)} bags</td><td style="padding:9px 12px;border-bottom:1px solid #e2e8f0;">1 bag ≈ {COVERAGE.adhesiveBagSqft.c2} sq.ft</td></tr>
-            <tr><td style="padding:9px 12px;border-bottom:1px solid #e2e8f0;font-weight:600;">Adhesive C2TE (20kg bags)</td><td style="padding:9px 12px;border-bottom:1px solid #e2e8f0;font-weight:700;color:#A9713C;">{Math.ceil(100 / COVERAGE.adhesiveBagSqft.c2te)} bags</td><td style="padding:9px 12px;border-bottom:1px solid #e2e8f0;">1 bag ≈ {COVERAGE.adhesiveBagSqft.c2te} sq.ft (large format, thicker bed)</td></tr>
-            <tr><td style="padding:9px 12px;border-bottom:1px solid #e2e8f0;font-weight:600;">Grout</td><td style="padding:9px 12px;border-bottom:1px solid #e2e8f0;font-weight:700;color:#A9713C;">~{Math.ceil(100 / COVERAGE.groutSqftPerKg)} kg</td><td style="padding:9px 12px;border-bottom:1px solid #e2e8f0;">1 kg ≈ {COVERAGE.groutSqftPerKg} sq.ft at 3mm joints</td></tr>
-            <tr><td style="padding:9px 12px;border-bottom:1px solid #e2e8f0;font-weight:600;">Level clips</td><td style="padding:9px 12px;border-bottom:1px solid #e2e8f0;font-weight:700;color:#A9713C;">{tilesNeeded(100, 3.875) * COVERAGE.clipsPerTile} clips</td><td style="padding:9px 12px;border-bottom:1px solid #e2e8f0;">~{COVERAGE.clipsPerTile} per tile (60×60 cm); wedges are reusable</td></tr>
-            <tr><td style="padding:9px 12px;border-bottom:1px solid #e2e8f0;font-weight:600;">Screed cement (50kg bags)</td><td style="padding:9px 12px;border-bottom:1px solid #e2e8f0;font-weight:700;color:#A9713C;">{Math.ceil(100 * COVERAGE.screedCementBagsPerSqft)} bags</td><td style="padding:9px 12px;border-bottom:1px solid #e2e8f0;">40mm bed, 1:4 cement:sand mix</td></tr>
-            <tr><td style="padding:9px 12px;font-weight:600;">Screed sand</td><td style="padding:9px 12px;font-weight:700;color:#A9713C;">~{Math.ceil(100 * COVERAGE.screedSandCuftPerSqft)} cu.ft</td><td style="padding:9px 12px;">River or manufactured sand</td></tr>
+            <tr><td style="padding:9px 12px;border-bottom:1px solid #e2e8f0;font-weight:600;">Adhesive C1 / C2 (25kg bags)</td><td style="padding:9px 12px;border-bottom:1px solid #e2e8f0;font-weight:700;color:#A9713C;">3 bags</td><td style="padding:9px 12px;border-bottom:1px solid #e2e8f0;">1 bag ≈ 30–35 sq.ft</td></tr>
+            <tr><td style="padding:9px 12px;border-bottom:1px solid #e2e8f0;font-weight:600;">Adhesive C2TE (25kg bags)</td><td style="padding:9px 12px;border-bottom:1px solid #e2e8f0;font-weight:700;color:#A9713C;">3 – 4 bags</td><td style="padding:9px 12px;border-bottom:1px solid #e2e8f0;">Large format needs a thicker bed</td></tr>
+            <tr><td style="padding:9px 12px;border-bottom:1px solid #e2e8f0;font-weight:600;">Grout</td><td style="padding:9px 12px;border-bottom:1px solid #e2e8f0;font-weight:700;color:#A9713C;">2 – 4 kg</td><td style="padding:9px 12px;border-bottom:1px solid #e2e8f0;">Depends on tile size and joint width</td></tr>
+            <tr><td style="padding:9px 12px;border-bottom:1px solid #e2e8f0;font-weight:600;">Level clips</td><td style="padding:9px 12px;border-bottom:1px solid #e2e8f0;font-weight:700;color:#A9713C;">Depends on tile size</td><td style="padding:9px 12px;border-bottom:1px solid #e2e8f0;">~3–8 per tile; wedges are reusable</td></tr>
+            <tr><td style="padding:9px 12px;border-bottom:1px solid #e2e8f0;font-weight:600;">Screed cement (50kg bags)</td><td style="padding:9px 12px;border-bottom:1px solid #e2e8f0;font-weight:700;color:#A9713C;">2 – 3 bags</td><td style="padding:9px 12px;border-bottom:1px solid #e2e8f0;">2 bags standard screed · 3 bags premium screed</td></tr>
+            <tr><td style="padding:9px 12px;font-weight:600;">Screed sand</td><td style="padding:9px 12px;font-weight:700;color:#A9713C;">20 cu.ft</td><td style="padding:9px 12px;">River or manufactured sand</td></tr>
           </tbody>
         </table>
         <p style="font-size:12px;color:#64748b;margin:10px 0 0;line-height:1.7;">
@@ -460,9 +459,17 @@ const topDistricts = DISTRICT_INFO.filter(d => ['colombo','gampaha','kandy','gal
     }
 
     const ADHESIVE = {
-      c1:   { label: 'Adhesive (C1)',       rate: 50,  bagSqft: 50, rateLabel: 'රු. 50 / sq.ft',  sub: 'C1 adhesive — 60×60 cm දක්වා ටයිල්',              hint: '✓ C1 Adhesive අදාළ වේ — 60×60 cm දක්වා' },
-      c2:   { label: 'Adhesive (C2)',       rate: 80,  bagSqft: 45, rateLabel: 'රු. 80 / sq.ft',  sub: 'C2 adhesive — 90×45 cm සිට 120×80 cm දක්වා ටයිල්', hint: '✓ C2 Adhesive අදාළ වේ — 90×45 cm සිට 120×80 cm දක්වා' },
-      c2te: { label: 'Adhesive (C2TE S1)', rate: 120, bagSqft: 35, rateLabel: 'රු. 120 / sq.ft', sub: 'C2TE S1 adhesive — 120×80 cm ඉක්මවූ විශාල ටයිල්', hint: '✓ C2TE S1 Adhesive අදාළ වේ — 120×80 cm ඉක්මවූ විශාල ටයිල්' },
+      c1:   { label: 'Adhesive (C1)',       rate: 50,  bagSqft: 35, rateLabel: 'රු. 50 / sq.ft',  sub: 'C1 adhesive — 60×60 cm දක්වා ටයිල්',              hint: '✓ C1 Adhesive අදාළ වේ — 60×60 cm දක්වා' },
+      c2:   { label: 'Adhesive (C2)',       rate: 80,  bagSqft: 35, rateLabel: 'රු. 80 / sq.ft',  sub: 'C2 adhesive — 90×45 cm සිට 120×80 cm දක්වා ටයිල්', hint: '✓ C2 Adhesive අදාළ වේ — 90×45 cm සිට 120×80 cm දක්වා' },
+      c2te: { label: 'Adhesive (C2TE S1)', rate: 120, bagSqft: 30, rateLabel: 'රු. 120 / sq.ft', sub: 'C2TE S1 adhesive — 120×80 cm ඉක්මවූ විශාල ටයිල්', hint: '✓ C2TE S1 Adhesive අදාළ වේ — 120×80 cm ඉක්මවූ විශාල ටයිල්' },
+    }
+
+    // Levelling clips per tile depend on tile size (wedges reusable)
+    function clipsPerTile(tileSqft) {
+      if (tileSqft <= 2) return 3
+      if (tileSqft <= 4) return 4
+      if (tileSqft <= 11) return 6
+      return 8
     }
 
     function updateAdhesive() {
@@ -504,11 +511,12 @@ const topDistricts = DISTRICT_INFO.filter(d => ['colombo','gampaha','kandy','gal
       const screedCost    = incScreed   ? area * screedRate : 0
 
       // Material quantities
-      const adhesiveBags  = Math.ceil(area / tier.bagSqft)          // 20kg bags
-      const groutKg       = Math.ceil(area / 35)                    // 1kg ≈ 35 sq.ft (3mm joints)
-      const clipsCount    = tilesNeeded * 4                         // ~4 clips per tile
-      const cementBags    = Math.ceil(area * 0.03)                  // 50kg bags, 40mm bed 1:4
-      const sandCuft      = Math.ceil(area * 0.14)                  // cubic feet of sand
+      const adhesiveBags    = Math.ceil(area / tier.bagSqft)        // 25kg bags (~3 per 100 sq.ft; 3–4 large format)
+      const groutKg         = Math.ceil(area / 35)                  // 2–4 kg per 100 sq.ft
+      const clipsCount      = tilesNeeded * clipsPerTile(tileSqft)  // depends on tile size
+      const isPremiumScreed = screedRate >= 115                     // premium screed uses more cement
+      const cementBags      = Math.ceil(area * (isPremiumScreed ? 0.03 : 0.02)) // 2–3 bags per 100 sq.ft
+      const sandCuft        = Math.ceil(area * 0.20)                // 20 cu.ft per 100 sq.ft
 
       const extrasCost    = labourCost + adhesiveCost + clipsCost + groutCost + screedCost
       const total         = (tileCost || 0) + extrasCost
@@ -522,7 +530,7 @@ const topDistricts = DISTRICT_INFO.filter(d => ['colombo','gampaha','kandy','gal
 
       document.getElementById('row-adhesive').style.display = incAdhesive ? 'flex' : 'none'
       document.getElementById('res-adhesive').textContent   = fmt(adhesiveCost)
-      document.getElementById('res-adhesive-qty').textContent = incAdhesive ? `20kg bags × ${adhesiveBags}` : ''
+      document.getElementById('res-adhesive-qty').textContent = incAdhesive ? `25kg bags × ${adhesiveBags}` : ''
 
       document.getElementById('row-clips').style.display = incClips ? 'flex' : 'none'
       document.getElementById('res-clips').textContent   = fmt(clipsCost)
@@ -534,7 +542,7 @@ const topDistricts = DISTRICT_INFO.filter(d => ['colombo','gampaha','kandy','gal
 
       document.getElementById('row-screed').style.display = incScreed ? 'flex' : 'none'
       document.getElementById('res-screed').textContent   = fmt(screedCost)
-      document.getElementById('res-screed-qty').textContent = incScreed ? `cement 50kg × ${cementBags} · වැලි ${sandCuft} cu.ft` : ''
+      document.getElementById('res-screed-qty').textContent = incScreed ? `${isPremiumScreed ? 'premium' : 'standard'} · cement 50kg × ${cementBags} · වැලි ${sandCuft} cu.ft` : ''
 
       document.getElementById('res-total').textContent     = tileCost ? fmt(total) : fmt(extrasCost)
       document.getElementById('res-total-note').textContent = tileCost

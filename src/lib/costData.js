@@ -19,11 +19,19 @@ export const EXTRAS = {
 
 // Material consumption for quantity estimates
 export const COVERAGE = {
-  adhesiveBagSqft: { c1: 50, c2: 45, c2te: 35 }, // sq.ft covered per 20kg bag
-  groutSqftPerKg: 35,      // sq.ft per 1kg of grout (3mm joints)
-  clipsPerTile: 4,         // levelling clips per tile (wedges reusable)
-  screedCementBagsPerSqft: 0.03, // 50kg bags per sq.ft (40mm bed, 1:4 mix)
-  screedSandCuftPerSqft: 0.14,   // cubic feet of sand per sq.ft
+  adhesiveBagKg: 25,
+  adhesiveBagSqft: { c1: 35, c2: 35, c2te: 30 }, // sq.ft covered per 25kg bag (~3 bags/100 sq.ft; 3–4 for large format)
+  groutSqftPerKg: 35,      // sq.ft per 1kg of grout (2–4 kg per 100 sq.ft)
+  screedCementBagsPerSqft: { standard: 0.02, premium: 0.03 }, // 50kg bags: 2 (standard) / 3 (premium) per 100 sq.ft
+  screedSandCuftPerSqft: 0.20,   // 20 cu.ft of sand per 100 sq.ft
+}
+
+// Levelling clips depend on tile size (wedges are reusable)
+export function clipsPerTile(tileSqft) {
+  if (tileSqft <= 2) return 3
+  if (tileSqft <= 4) return 4
+  if (tileSqft <= 11) return 6
+  return 8
 }
 
 // label → coverage of one tile in sq.ft
