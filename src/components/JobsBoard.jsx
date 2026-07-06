@@ -1,5 +1,6 @@
 import { useState, useEffect } from 'react'
 import { supabase, PROJECT_TYPES, DISTRICTS_EN } from '../lib/supabase.js'
+import { jobPath } from '../lib/jobs.js'
 
 const TYPE_ICONS = {
   'Floor Tiling': '🪨', 'Bathroom Tiling': '🚿', 'Bathroom Renovation': '🛁',
@@ -58,7 +59,7 @@ function JobCard({ project, bidCount, blurred }) {
         )}
       </div>
       <div style={{ borderTop: '1px solid #f1f5f9', paddingTop: 12, marginTop: 2 }}>
-        <a href={`/job?id=${project.id}`} style={{ display: 'inline-flex', alignItems: 'center', gap: 7, background: '#A9713C', color: '#fff', borderRadius: 10, padding: '9px 18px', fontSize: 13, fontWeight: 700, textDecoration: 'none' }}>
+        <a href={jobPath(project)} style={{ display: 'inline-flex', alignItems: 'center', gap: 7, background: '#A9713C', color: '#fff', borderRadius: 10, padding: '9px 18px', fontSize: 13, fontWeight: 700, textDecoration: 'none' }}>
           බලන්න සහ ලංසු →
         </a>
       </div>
@@ -156,11 +157,11 @@ function ProviderGate({ previewProjects, bidCounts }) {
   )
 }
 
-export default function JobsBoard() {
-  const [projects, setProjects]   = useState([])
-  const [loading, setLoading]     = useState(true)
+export default function JobsBoard({ initialProjects = null, initialBidCounts = null }) {
+  const [projects, setProjects]   = useState(initialProjects || [])
+  const [loading, setLoading]     = useState(!initialProjects)
   const [filters, setFilters]     = useState({ type: '', district: '' })
-  const [bidCounts, setBidCounts] = useState({})
+  const [bidCounts, setBidCounts] = useState(initialBidCounts || {})
   const [user, setUser]           = useState(null)
 
   useEffect(() => {
@@ -177,6 +178,7 @@ export default function JobsBoard() {
       .order('created_at', { ascending: false })
       .then(({ data }) => {
         const jobs = data || []
+        // Refresh past the SSR seed (seed is capped; this is the full list)
         setProjects(jobs)
         setLoading(false)
         if (jobs.length > 0) {

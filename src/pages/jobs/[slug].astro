@@ -1,0 +1,250 @@
+---
+export const prerender = false
+import Layout from '../../layouts/Layout.astro'
+import BidForm from '../../components/BidForm.jsx'
+import { jobPath, extractJobId, timeAgo, JOB_TYPE_ICONS, JOB_TYPE_COLORS } from '../../lib/jobs.js'
+
+const { slug } = Astro.params
+const id = extractJobId(slug)
+if (!id) return Astro.redirect('/jobs', 302)
+
+const supabase = Astro.locals.supabase
+
+const [{ data: job }, { count: bidCountRaw }] = await Promise.all([
+  supabase.from('projects').select('id,project_type,city,district,description,budget_range,created_at,status').eq('id', id).single(),
+  supabase.from('bids').select('job_id', { count: 'exact', head: true }).eq('job_id', id),
+])
+
+if (!job) return Astro.redirect('/jobs', 302)
+
+// Enforce the canonical slug: /jobs/foo-<uuid> 301s to the real path
+const canonicalPath = jobPath(job)
+if (`/jobs/${slug}` !== canonicalPath) return Astro.redirect(canonicalPath, 301)
+
+const bidCount = bidCountRaw || 0
+
+const { data: similarRaw } = job.district
+  ? await supabase.from('projects').select('id,project_type,city,district,created_at').eq('status', 'active').eq('district', job.district).neq('id', id).limit(4)
+  : { data: [] }
+const similar = similarRaw || []
+
+const icon = JOB_TYPE_ICONS[job.project_type] || '🏠'
+const color = JOB_TYPE_COLORS[job.project_type] || '#4A2E17'
+const isActive = job.status === 'active' || !job.status
+const locationLabel = job.city || job.district || 'Sri Lanka'
+
+const SITE = 'https://www.tilershub.lk'
+const pageUrl = `${SITE}${canonicalPath}`
+const descText = (job.description || '').trim()
+const metaDescription = (descText
+  ? `${job.project_type} in ${locationLabel}: ${descText}`
+  : `${job.project_type} project in ${locationLabel}, Sri Lanka. Submit your bid free on TilersHub — no login, no commission.`
+).slice(0, 155)
+const pageTitle = `${job.project_type} in ${locationLabel} — Tiling Job | TilersHub`
+
+const datePosted = new Date(job.created_at)
+const validThrough = new Date(datePosted.getTime() + 30 * 24 * 3600 * 1000)
+
+// budget_range is free text ("Rs. 150,000 or negotiable") — only emit
+// baseSalary when it contains a parseable amount
+const budgetMatch = (job.budget_range || '').replace(/,/g, '').match(/\d{4,9}/)
+const budgetValue = budgetMatch ? parseInt(budgetMatch[0], 10) : null
+
+const jobSchema = JSON.stringify({
+  '@context': 'https://schema.org',
+  '@type': 'JobPosting',
+  title: `${job.project_type} — ${locationLabel}`,
+  description: descText || `${job.project_type} project in ${locationLabel}, Sri Lanka. Posted by a homeowner on TilersHub.`,
+  datePosted: datePosted.toISOString(),
+  validThrough: validThrough.toISOString(),
+  employmentType: 'CONTRACTOR',
+  directApply: true,
+  hiringOrganization: {
+    '@type': 'Organization',
+    name: 'TilersHub',
+    sameAs: SITE,
+    logo: `${SITE}/favicon.svg`,
+  },
+  identifier: { '@type': 'PropertyValue', name: 'TilersHub', value: job.id },
+  jobLocation: {
+    '@type': 'Place',
+    address: {
+      '@type': 'PostalAddress',
+      addressLocality: job.city || job.district,
+      addressRegion: job.district || undefined,
+      addressCountry: 'LK',
+    },
+  },
+  applicantLocationRequirements: { '@type': 'Country', name: 'Sri Lanka' },
+  ...(budgetValue ? {
+    baseSalary: {
+      '@type': 'MonetaryAmount',
+      currency: 'LKR',
+      value: { '@type': 'QuantitativeValue', value: budgetValue, unitText: 'PROJECT' },
+    },
+  } : {}),
+  url: pageUrl,
+})
+
+Astro.response.headers.set('Cache-Control', 'public, max-age=0, s-maxage=300')
+
+const waShare = `https://wa.me/?text=${encodeURIComponent(`🏠 ${job.project_type} in ${locationLabel} — submit your bid on TilersHub: ${pageUrl}`)}`
+---
+
+<Layout title={pageTitle} description={metaDescription} noindex={!isActive}>
+  <script slot="head" type="application/ld+json" set:html={jobSchema} />
+
+  <!-- ── Hero banner ── -->
+  <div style={`background:linear-gradient(135deg,${color}f0 0%,${color} 100%);padding:36px 20px 32px;position:relative;overflow:hidden;`}>
+    <div style="position:absolute;inset:0;opacity:0.05;background-image:repeating-linear-gradient(0deg,transparent,transparent 29px,rgba(255,255,255,0.8) 29px,rgba(255,255,255,0.8) 30px),repeating-linear-gradient(90deg,transparent,transparent 29px,rgba(255,255,255,0.8) 29px,rgba(255,255,255,0.8) 30px);pointer-events:none;"></div>
+    <div style="max-width:760px;margin:0 auto;position:relative;">
+      <a href="/jobs" style="display:inline-flex;align-items:center;gap:5px;font-size:11px;color:rgba(255,255,255,0.6);letter-spacing:1px;font-weight:600;margin-bottom:20px;text-decoration:none;">← All Projects</a>
+      <div style="display:flex;align-items:flex-start;gap:18px;flex-wrap:wrap;">
+        <div style="width:72px;height:72px;border-radius:18px;background:rgba(255,255,255,0.15);border:2px solid rgba(255,255,255,0.25);display:flex;align-items:center;justify-content:center;font-size:34px;flex-shrink:0;">{icon}</div>
+        <div style="flex:1;min-width:0;">
+          <div style="display:flex;flex-wrap:wrap;gap:6px;margin-bottom:10px;">
+            {isActive
+              ? <span style="font-size:9px;font-weight:700;padding:3px 10px;border-radius:20px;background:#25D366;color:#fff;letter-spacing:1px;">● OPEN</span>
+              : <span style="font-size:9px;font-weight:700;padding:3px 10px;border-radius:20px;background:rgba(255,255,255,0.2);color:rgba(255,255,255,0.7);letter-spacing:1px;">● CLOSED</span>
+            }
+            <span style="font-size:9px;font-weight:700;padding:3px 10px;border-radius:20px;background:rgba(255,255,255,0.12);color:rgba(255,255,255,0.75);border:1px solid rgba(255,255,255,0.2);">
+              💬 {bidCount} bid{bidCount !== 1 ? 's' : ''}
+            </span>
+            <span style="font-size:9px;font-weight:700;padding:3px 10px;border-radius:20px;background:rgba(255,255,255,0.12);color:rgba(255,255,255,0.75);border:1px solid rgba(255,255,255,0.2);">
+              ⏱ {timeAgo(job.created_at)}
+            </span>
+          </div>
+          <h1 style="font-family:'Playfair Display',serif;font-size:clamp(22px,4vw,32px);font-weight:700;color:#fff;margin:0 0 8px;line-height:1.2;">{job.project_type}</h1>
+          <div style="font-size:14px;color:rgba(255,255,255,0.7);">📍 {job.city}{job.district ? `, ${job.district} District` : ''}</div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- ── Main content ── -->
+  <div style="background:#f8fafc;padding:24px 16px 80px;">
+    <div style="max-width:760px;margin:0 auto;display:flex;flex-direction:column;gap:16px;">
+
+      <!-- Project details card -->
+      <div style="background:#fff;border:1px solid #e2e8f0;border-radius:20px;padding:24px;box-shadow:0 2px 10px rgba(0,0,0,0.05);">
+
+        <!-- Chips row -->
+        <div style="display:flex;flex-wrap:wrap;gap:8px;margin-bottom:18px;">
+          <span style={`font-size:11px;padding:5px 13px;border-radius:20px;background:${color}10;color:${color};font-weight:700;border:1px solid ${color}22;`}>{icon} {job.project_type}</span>
+          {job.budget_range && (
+            <span style="font-size:11px;padding:5px 13px;border-radius:20px;background:#f0fdf4;color:#15803d;font-weight:700;border:1px solid #bbf7d0;">💰 {job.budget_range}</span>
+          )}
+          <span style="font-size:11px;padding:5px 13px;border-radius:20px;background:#F8F1E8;color:#6B4A2E;font-weight:700;border:1px solid #EADDCB;">💬 {bidCount} bid{bidCount !== 1 ? 's' : ''} received</span>
+        </div>
+
+        <!-- Description -->
+        <div style="margin-bottom:20px;">
+          <div style="font-size:11px;font-weight:700;color:#94a3b8;text-transform:uppercase;letter-spacing:1.2px;margin-bottom:8px;">Project Description</div>
+          <p style="font-size:14px;color:#374151;line-height:1.85;margin:0;border-left:3px solid #e2e8f0;padding-left:14px;">
+            {descText || 'No description provided — contact the poster for full details.'}
+          </p>
+        </div>
+
+        <!-- Info grid -->
+        <div style="display:grid;grid-template-columns:repeat(auto-fill,minmax(140px,1fr));gap:10px;margin-bottom:20px;">
+          <div style="background:#f8fafc;border-radius:12px;border:1px solid #e2e8f0;padding:12px 14px;">
+            <div style="font-size:9px;font-weight:700;color:#94a3b8;text-transform:uppercase;letter-spacing:1px;margin-bottom:4px;">Location</div>
+            <div style="font-size:13px;font-weight:600;color:#0f172a;">📍 {locationLabel}</div>
+          </div>
+          {job.budget_range && (
+            <div style="background:#f0fdf4;border-radius:12px;border:1px solid #bbf7d0;padding:12px 14px;">
+              <div style="font-size:9px;font-weight:700;color:#94a3b8;text-transform:uppercase;letter-spacing:1px;margin-bottom:4px;">Budget</div>
+              <div style="font-size:13px;font-weight:700;color:#15803d;">{job.budget_range}</div>
+            </div>
+          )}
+          <div style="background:#f8fafc;border-radius:12px;border:1px solid #e2e8f0;padding:12px 14px;">
+            <div style="font-size:9px;font-weight:700;color:#94a3b8;text-transform:uppercase;letter-spacing:1px;margin-bottom:4px;">Posted</div>
+            <div style="font-size:13px;font-weight:600;color:#0f172a;">⏱ {timeAgo(job.created_at)}</div>
+          </div>
+          <div style="background:#F8F1E8;border-radius:12px;border:1px solid #EADDCB;padding:12px 14px;">
+            <div style="font-size:9px;font-weight:700;color:#94a3b8;text-transform:uppercase;letter-spacing:1px;margin-bottom:4px;">Competition</div>
+            <div style="font-size:13px;font-weight:700;color:#6B4A2E;">💬 {bidCount} bid{bidCount !== 1 ? 's' : ''}</div>
+          </div>
+        </div>
+
+        <!-- Share -->
+        <div style="border-top:1px solid #f1f5f9;padding-top:16px;">
+          <div style="font-size:11px;font-weight:700;color:#94a3b8;text-transform:uppercase;letter-spacing:1px;margin-bottom:10px;">Share this project</div>
+          <div style="display:flex;gap:8px;flex-wrap:wrap;">
+            <button id="copy-link-btn" data-url={pageUrl} style="display:inline-flex;align-items:center;gap:6px;font-size:12px;font-weight:600;padding:8px 16px;border-radius:20px;background:#f8fafc;color:#374151;border:1px solid #e2e8f0;cursor:pointer;font-family:inherit;">
+              🔗 Copy Link
+            </button>
+            <a href={waShare} target="_blank" rel="noopener noreferrer"
+              style="display:inline-flex;align-items:center;gap:6px;font-size:12px;font-weight:600;padding:8px 16px;border-radius:20px;background:#f0fdf4;color:#16a34a;border:1px solid #bbf7d0;text-decoration:none;">
+              💬 Share via WhatsApp
+            </a>
+          </div>
+        </div>
+      </div>
+
+      <!-- Bid form card -->
+      <div style="background:#fff;border:1px solid #e2e8f0;border-radius:20px;overflow:hidden;box-shadow:0 2px 10px rgba(0,0,0,0.05);">
+        <div style="background:linear-gradient(135deg,#1C120A,#4A2E17);padding:20px 24px;">
+          <h2 style="font-size:17px;font-weight:700;color:#fff;margin:0 0 4px;">Submit Your Bid</h2>
+          <p style="font-size:12px;color:rgba(255,255,255,0.55);margin:0;">No login required · Free · Homeowner contacts you on WhatsApp if interested</p>
+        </div>
+        <div style="padding:24px;">
+          <BidForm jobId={job.id} bidCount={bidCount} projectType={job.project_type} city={locationLabel} client:load />
+        </div>
+      </div>
+
+      <!-- Similar jobs -->
+      {similar.length > 0 && (
+        <div>
+          <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:12px;">
+            <div style="font-size:13px;font-weight:700;color:#111827;">More in {job.district || job.city}</div>
+            <a href="/jobs" style="font-size:12px;font-weight:600;color:#A9713C;text-decoration:none;">View all →</a>
+          </div>
+          <div style="display:flex;flex-direction:column;gap:8px;">
+            {similar.map(s => {
+              const sIcon = JOB_TYPE_ICONS[s.project_type] || '🏠'
+              const sColor = JOB_TYPE_COLORS[s.project_type] || '#4A2E17'
+              return (
+                <a href={jobPath(s)}
+                  style="display:flex;align-items:center;gap:0;background:#fff;border-radius:12px;overflow:hidden;border:1px solid #e2e8f0;text-decoration:none;color:inherit;box-shadow:0 1px 4px rgba(0,0,0,0.04);">
+                  <div style={`width:60px;height:60px;background:${sColor};flex-shrink:0;display:flex;align-items:center;justify-content:center;font-size:24px;`}>{sIcon}</div>
+                  <div style="flex:1;padding:10px 12px;min-width:0;">
+                    <div style="font-size:13px;font-weight:700;color:#0f172a;overflow:hidden;white-space:nowrap;text-overflow:ellipsis;">{s.project_type}</div>
+                    <div style="font-size:11px;color:#64748b;margin-top:2px;">📍 {s.city || s.district}</div>
+                  </div>
+                  <div style="padding:0 12px;font-size:18px;color:#cbd5e1;flex-shrink:0;">›</div>
+                </a>
+              )
+            })}
+          </div>
+        </div>
+      )}
+
+      <!-- CTA for homeowners -->
+      <div style="background:#A9713C;border-radius:16px;padding:20px 24px;display:flex;align-items:center;justify-content:space-between;gap:16px;flex-wrap:wrap;">
+        <div>
+          <div style="font-size:9px;font-weight:700;color:rgba(255,255,255,0.6);letter-spacing:2px;text-transform:uppercase;margin-bottom:3px;">Have a project?</div>
+          <div style="font-size:14px;font-weight:700;color:#fff;">Post your project free — get competitive bids</div>
+        </div>
+        <a href="/post-project" style="display:inline-flex;align-items:center;gap:6px;background:#fff;color:#A9713C;border-radius:10px;padding:11px 20px;font-size:13px;font-weight:800;text-decoration:none;flex-shrink:0;">
+          📋 Post Free
+        </a>
+      </div>
+
+    </div>
+  </div>
+
+  <script>
+    const btn = document.getElementById('copy-link-btn')
+    btn?.addEventListener('click', async () => {
+      try {
+        const url = btn.getAttribute('data-url') || location.href
+        if (navigator.share) { await navigator.share({ url }); return }
+        await navigator.clipboard.writeText(url)
+        btn.textContent = '✓ Copied!'
+        setTimeout(() => { btn.textContent = '🔗 Copy Link' }, 2000)
+      } catch {}
+    })
+  </script>
+
+</Layout>

@@ -1,5 +1,6 @@
 import { useState, useEffect } from 'react'
 import { supabase } from '../lib/supabase.js'
+import { jobPath } from '../lib/jobs.js'
 
 const ALL_SERVICES = [
   { slug: 'floor-tiling',               icon: '⬜', label: 'Floor Tiling',              cat: 'flooring' },
@@ -241,7 +242,7 @@ function ProjectCard({ proj }) {
   const icon = Object.entries(TYPE_ICONS).find(([k]) => (proj.project_type || '').includes(k))?.[1] || '📋'
 
   return (
-    <a href={`/job?id=${proj.id}`}
+    <a href={jobPath(proj)}
       style={{ flexShrink: 0, width: 172, background: '#fff', borderRadius: 16, border: '1px solid #e8edf5', padding: '11px 12px', textDecoration: 'none', display: 'flex', flexDirection: 'column', gap: 5, boxShadow: '0 2px 8px rgba(0,0,0,0.04)' }}>
       <div style={{ display: 'flex', alignItems: 'flex-start', gap: 7 }}>
         <span style={{ fontSize: 20, lineHeight: 1.2, flexShrink: 0 }}>{icon}</span>

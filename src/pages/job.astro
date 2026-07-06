@@ -1,11 +1,17 @@
 ---
-import Layout from '../layouts/Layout.astro'
-import JobDetail from '../components/JobDetail.jsx'
----
+// Legacy /job?id=<uuid> URLs 301 to the canonical /jobs/<slug>-<uuid> path.
+export const prerender = false
+import { jobPath } from '../lib/jobs.js'
 
-<Layout
-  title="View Project · TilersHub"
-  description="Browse this tiling project and submit your bid on TilersHub."
->
-  <JobDetail client:load />
-</Layout>
+const id = Astro.url.searchParams.get('id')
+if (!id) return Astro.redirect('/jobs', 302)
+
+const { data: job } = await Astro.locals.supabase
+  .from('projects')
+  .select('id,project_type,city,district')
+  .eq('id', id)
+  .single()
+
+if (!job) return Astro.redirect('/jobs', 302)
+return Astro.redirect(jobPath(job), 301)
+---
