@@ -1,6 +1,8 @@
 ---
 import Layout from '../layouts/Layout.astro'
 import JoinForm from '../components/JoinForm.jsx'
+
+const user = Astro.locals.user
 ---
 
 <Layout
@@ -43,7 +45,7 @@ import JoinForm from '../components/JoinForm.jsx'
 
   <!-- Form -->
   <section style="background:var(--surface);padding:48px 20px 64px;">
-    <JoinForm client:load />
+    <JoinForm initialUser={user} client:load />
   </section>
 
 </Layout>

@@ -60,7 +60,7 @@ export default function BidForm({ jobId, bidCount = 0, projectType = '', city = 
     const { error: err } = await supabase.from('bids').insert({
       job_id: jobId,
       bidder_name: form.name.trim(),
-      bidder_whatsapp: form.whatsapp.trim(),
+      bidder_whatsapp: form.whatsapp.replace(/\s/g, ''),
       bidder_type: form.bidder_type.toLowerCase(),
       message: form.message.trim(),
       quote_amount: form.quote_amount ? parseInt(form.quote_amount, 10) : null,
