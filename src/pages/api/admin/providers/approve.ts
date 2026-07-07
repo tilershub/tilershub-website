@@ -53,7 +53,7 @@ export const POST: APIRoute = async ({ request, locals }) => {
       profile_image: sub.profile_image, cover_image: sub.cover_image,
       gallery: sub.photo_urls || null,
       service_areas: sub.service_areas, services: sub.services,
-      user_id: sub.user_id, slug, status: 'active', verification_status: 'none',
+      user_id: sub.user_id, slug, status: 'active', verification_status: 'listed',
     })
     if (insertError) return json({ error: insertError.message }, 400)
   }
