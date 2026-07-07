@@ -4,12 +4,9 @@ import AuthButton from '../components/AuthButton.jsx'
 import DraftLinker from '../components/DraftLinker.jsx'
 
 const user = Astro.locals.user
-const supabase = Astro.locals.supabase
 
-const { count: activeProjectCount } = await supabase
-  .from('projects')
-  .select('id', { count: 'exact', head: true })
-  .eq('status', 'active')
+// Active-project badge count is fetched client-side (see script near the
+// bottom nav) so no page blocks on a DB round trip just to render the shell.
 
 const {
   title = "TilersHub · Sri Lanka's Tile & Bathroom Marketplace",
@@ -92,7 +89,8 @@ const orgSchema = JSON.stringify({
   <meta name="apple-mobile-web-app-title" content="TilersHub" />
   <link rel="preconnect" href="https://fonts.googleapis.com" />
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
-  <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,400;0,600;0,700;1,400&display=swap" rel="stylesheet" />
+  <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,400;0,600;0,700;1,400&display=swap" rel="stylesheet" media="print" onload="this.media='all'" />
+  <noscript><link href="https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,400;0,600;0,700;1,400&display=swap" rel="stylesheet" /></noscript>
   <slot name="head" />
   <style is:global>
     html:not([data-lang="si"]) .si-text { display: none; }
@@ -109,8 +107,14 @@ const orgSchema = JSON.stringify({
   <!-- Google Tag Manager (noscript) -->
   <noscript is:raw><iframe src="https://www.googletagmanager.com/ns.html?id=GTM-MX727MR5" height="0" width="0" style="display:none;visibility:hidden"></iframe></noscript>
 
-  <!-- ═══ PWA SPLASH SCREEN ═══ -->
-  <div id="pwa-splash" style="position:fixed;inset:0;z-index:99999;background:#1C120A;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:20px;transition:opacity 0.45s ease;pointer-events:none;">
+  <!-- ═══ PWA SPLASH SCREEN (installed-app launches only — hidden for web/search visitors) ═══ -->
+  <style>
+    #pwa-splash { display: none; }
+    @media all and (display-mode: standalone) {
+      #pwa-splash { display: flex; }
+    }
+  </style>
+  <div id="pwa-splash" style="position:fixed;inset:0;z-index:99999;background:#1C120A;flex-direction:column;align-items:center;justify-content:center;gap:20px;transition:opacity 0.45s ease;pointer-events:none;">
     <div style="display:grid;grid-template-columns:repeat(3,1fr);gap:5px;width:78px;height:78px;">
       {[0,1,2,3,4,5,6,7,8].map((i) => (
         <div style={`border-radius:3px;background:${[1,3,4,5,7].includes(i)?'#8B5E3C':'#6B4A2E'};opacity:${[0,2,6,8].includes(i)?'0.55':'1'};`}></div>
@@ -271,9 +275,7 @@ const orgSchema = JSON.stringify({
       <a href="/jobs" class={`bottom-nav-item${path==='/jobs'?' active':''}`}>
         <span class="bottom-nav-icon" style="position:relative;display:inline-block;">
           📋
-          {activeProjectCount != null && activeProjectCount > 0 && (
-            <span style="position:absolute;top:-5px;right:-8px;background:#A9713C;color:#fff;font-size:8px;font-weight:800;border-radius:20px;padding:1px 4px;min-width:14px;text-align:center;line-height:14px;border:1.5px solid #fff;">{activeProjectCount > 99 ? '99+' : activeProjectCount}</span>
-          )}
+          <span id="jobs-badge" style="display:none;position:absolute;top:-5px;right:-8px;background:#A9713C;color:#fff;font-size:8px;font-weight:800;border-radius:20px;padding:1px 4px;min-width:14px;text-align:center;line-height:14px;border:1.5px solid #fff;"></span>
         </span>
         Projects
       </a>
@@ -376,6 +378,20 @@ const orgSchema = JSON.stringify({
       window.addEventListener('load', () => {
         navigator.serviceWorker.register('/sw.js').catch(() => {})
       })
+    }
+  </script>
+  <script>
+    // Active-projects badge — fetched client-side so SSR never blocks on it
+    import { supabase } from '../lib/supabase.js'
+    const badge = document.getElementById('jobs-badge')
+    if (badge) {
+      supabase.from('projects').select('id', { count: 'exact', head: true }).eq('status', 'active')
+        .then(({ count }) => {
+          if (count && count > 0) {
+            badge.textContent = count > 99 ? '99+' : String(count)
+            badge.style.display = 'block'
+          }
+        })
     }
   </script>
 </body>
