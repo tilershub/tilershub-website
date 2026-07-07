@@ -92,6 +92,24 @@ export const BUDGET_RANGES = [
   'Above Rs. 2,000,000',
 ]
 
+// Build the common stored formats of a Sri Lankan phone number so bids/records
+// saved in different shapes ("0771…", "+94771…", "94771…", with/without spaces)
+// can be matched with a single `.in()` query. Returns a de-duped array.
+export function phoneVariants(raw) {
+  const digits = String(raw || '').replace(/\D/g, '')
+  if (digits.length < 9) return raw ? [String(raw).trim()] : []
+  const local9 = digits.slice(-9)            // 771234567
+  const set = new Set([
+    String(raw).trim(),                       // exactly as stored/entered
+    digits,                                    // all digits
+    local9,                                    // 9-digit core
+    '0' + local9,                              // 0771234567
+    '94' + local9,                             // 94771234567
+    '+94' + local9,                            // +94771234567
+  ])
+  return [...set].filter(Boolean)
+}
+
 export function buildWhatsAppLink(phone, name) {
   const n = (phone || '').replace(/\D/g, '')
   const normalized = n.startsWith('94') ? n : '94' + n.replace(/^0/, '')

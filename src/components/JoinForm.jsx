@@ -2,15 +2,17 @@ import { useState, useEffect } from 'react'
 import { supabase, PROFESSIONS } from '../lib/supabase.js'
 import { useLang } from '../lib/useLang.js'
 
-const PENDING_KEY = 'tilershub_pending_join'
-
 const T = {
   si: {
     required: 'අවශ්‍යයි',
     phoneInvalid: 'වලංගු දුරකථන අංකයක් ඇතුළු කරන්න',
     submitError: 'දෝෂයක් ඇති විය. නැවත උත්සාහ කරන්න.',
-    successTitle: 'අයදුම්පත ලැබුණි!',
-    successBody: 'ඔබේ dashboard වෙත ගෙන යමින්…',
+    // Google sign-in screen
+    gateTitle: 'සේවා සපයන්නෙකු ලෙස එකතු වන්න',
+    gateSub: 'ආරම්භ කිරීමට Google ගිණුමෙන් පිවිසෙන්න — ආරක්ෂිතයි, නොමිලේ, මුරපද අවශ්‍ය නැත.',
+    googleBtn: 'Google සමඟ ඉදිරියට →',
+    gateSteps: ['1️⃣ Google වලින් පිවිසෙන්න', '2️⃣ ඔබේ විස්තර පුරවන්න', '3️⃣ admin අනුමැතියෙන් ලැයිස්තුගත වන්න'],
+    // Registration form
     pickTitle: 'ඔබේ වෘත්තිය / සේවාව තෝරන්න',
     pickSub: 'ඔබව හොඳින්ම විස්තර කරන්නේ කුමක්ද?',
     change: '· වෙනස් කරන්න',
@@ -21,17 +23,24 @@ const T = {
     whatsapp: 'WhatsApp අංකය',
     whatsappHint: 'ගනුදෙනුකරුවන් ඔබව මෙතැනින් සම්බන්ධ කරගනී.',
     freeNote: '✓ නොමිලේ ලැයිස්තුගත වීම · WhatsApp හරහා leads · කොමිස් නැත · ඡායාරූප පසුව එක් කළ හැක.',
-    googleNote: '🔐 ඉදිරියට යාමට Google ගිණුමෙන් sign in වේ — ආරක්ෂිතයි, නොමිලේ, මුරපද අවශ්‍ය නැත.',
-    submit: '✅ නොමිලේ ලියාපදිංචි වන්න →',
+    submit: '✅ ලියාපදිංචිය ඉදිරිපත් කරන්න →',
     submitting: '⏳ ඉදිරිපත් කරමින්...',
-    review: 'වැඩ කරන දින 1–2ක් ඇතුළත සමාලෝචනය කර WhatsApp හරහා දැනුම් දෙන්නෙමු.',
+    // Pending screen
+    pendingTitle: 'අයදුම්පත ලැබුණි! 🎉',
+    pendingBody: 'ඔබේ ලියාපදිංචිය admin විසින් සමාලෝචනය කරයි. අනුමත වූ පසු ඔබ TilersHub හි ලැයිස්තුගත වේ — WhatsApp හරහා දැනුම් දෙන්නෙමු.',
+    goDashboard: 'මගේ Dashboard →',
+    signedInAs: 'පිවිසී ඇත:',
   },
   en: {
     required: 'Required',
     phoneInvalid: 'Enter a valid phone number',
     submitError: 'Something went wrong. Please try again.',
-    successTitle: 'Application Submitted!',
-    successBody: 'Taking you to your dashboard…',
+    // Google sign-in screen
+    gateTitle: 'Join as a Provider',
+    gateSub: 'Sign in with your Google account to get started — safe, free, no passwords needed.',
+    googleBtn: 'Continue with Google →',
+    gateSteps: ['1️⃣ Sign in with Google', '2️⃣ Fill in your details', '3️⃣ Get listed once admin approves'],
+    // Registration form
     pickTitle: 'Select your profession / service',
     pickSub: 'What best describes you?',
     change: '· Change',
@@ -42,10 +51,13 @@ const T = {
     whatsapp: 'WhatsApp Number',
     whatsappHint: 'Customers will contact you here.',
     freeNote: '✓ Free listing · Direct WhatsApp leads · No commission · Add photos & details after joining.',
-    googleNote: "🔐 You'll sign in with your Google account to continue — safe, free, no passwords needed.",
-    submit: '✅ Get Listed Free →',
+    submit: '✅ Submit Registration →',
     submitting: '⏳ Submitting...',
-    review: "We'll review within 1–2 business days and contact you on WhatsApp.",
+    // Pending screen
+    pendingTitle: 'Application Received! 🎉',
+    pendingBody: "Your registration is being reviewed by our admin. Once approved you'll be listed on TilersHub — we'll notify you on WhatsApp.",
+    goDashboard: 'Go to my Dashboard →',
+    signedInAs: 'Signed in as:',
   },
 }
 
@@ -71,44 +83,38 @@ function inputStyle(hasError) {
   }
 }
 
-export default function JoinForm() {
+export default function JoinForm({ initialUser = null }) {
   const lang = useLang()
   const t = T[lang] || T.en
+  const [user, setUser] = useState(initialUser)
+  const [authReady, setAuthReady] = useState(!!initialUser)
   const [category, setCategory] = useState(null)
   const [form, setForm] = useState({ name: '', city: '', whatsapp: '' })
   const [errors, setErrors] = useState({})
   const [submitting, setSubmitting] = useState(false)
   const [success, setSuccess] = useState(false)
-  const [signedIn, setSignedIn] = useState(false)
 
   useEffect(() => {
-    async function trySubmitPending(user) {
-      const raw = localStorage.getItem(PENDING_KEY)
-      if (!raw) return
-      try {
-        const payload = JSON.parse(raw)
-        const { error } = await supabase.from('provider_submissions').insert({ ...payload, user_id: user.id })
-        if (!error) {
-          localStorage.removeItem(PENDING_KEY)
-          setSuccess(true)
-          setTimeout(() => { window.location.href = '/provider?welcome=1' }, 1500)
-        }
-      } catch {}
-    }
-
-    supabase.auth.getUser().then(({ data: { user } }) => {
-      setSignedIn(!!user)
-      if (user) trySubmitPending(user)
-    })
-
-    const { data: { subscription } } = supabase.auth.onAuthStateChange((event, session) => {
-      if ((event === 'SIGNED_IN' || event === 'TOKEN_REFRESHED') && session?.user) {
-        setSignedIn(true)
-        trySubmitPending(session.user)
+    supabase.auth.getUser().then(({ data: { user: u } }) => {
+      setUser(u)
+      setAuthReady(true)
+      if (u && !form.name) {
+        const n = u.user_metadata?.full_name || u.user_metadata?.name || ''
+        if (n) setForm(f => ({ ...f, name: n }))
       }
+    })
+    const { data: { subscription } } = supabase.auth.onAuthStateChange((event, session) => {
+      if (session?.user) { setUser(session.user); setAuthReady(true) }
     })
     return () => subscription.unsubscribe()
   }, [])
+
+  async function signInGoogle() {
+    await supabase.auth.signInWithOAuth({
+      provider: 'google',
+      options: { redirectTo: `${window.location.origin}/join-tilershub` },
+    })
+  }
 
   const set = (k, v) => setForm(f => ({ ...f, [k]: v }))
 
@@ -127,32 +133,19 @@ export default function JoinForm() {
     if (Object.keys(errs).length) { setErrors(errs); return }
     setSubmitting(true)
     setErrors({})
-
-    const payload = {
-      name: form.name.trim(),
-      provider_type: category?.value || 'tiler',
-      city: form.city.trim(),
-      district: null,
-      whatsapp: form.whatsapp.replace(/\s/g, ''),
-      services: [category?.label || 'General Services'],
-      status: 'pending_review',
-    }
-
     try {
-      const { data: { user } } = await supabase.auth.getUser()
-
-      if (user) {
-        const { error } = await supabase.from('provider_submissions').insert({ ...payload, user_id: user.id })
-        if (error) throw error
-        setSuccess(true)
-        setTimeout(() => { window.location.href = '/provider?welcome=1' }, 1500)
-      } else {
-        localStorage.setItem(PENDING_KEY, JSON.stringify(payload))
-        await supabase.auth.signInWithOAuth({
-          provider: 'google',
-          options: { redirectTo: `${window.location.origin}/auth/callback?join_return=/join-tilershub` },
-        })
-      }
+      const { error } = await supabase.from('provider_submissions').insert({
+        name: form.name.trim(),
+        provider_type: category?.value || 'tiler',
+        city: form.city.trim(),
+        district: null,
+        whatsapp: form.whatsapp.replace(/\s/g, ''),
+        services: [category?.label || 'General Services'],
+        status: 'pending_review',
+        user_id: user.id,
+      })
+      if (error) throw error
+      setSuccess(true)
     } catch {
       setErrors({ submit: t.submitError })
     } finally {
@@ -160,22 +153,50 @@ export default function JoinForm() {
     }
   }
 
+  // ── Success / pending-approval screen ──────────────────────────────────────
   if (success) {
     return (
-      <div style={{ textAlign: 'center', padding: '60px 24px', background: '#fff', borderRadius: 20, border: '1px solid #e2e8f0', maxWidth: 520, margin: '0 auto' }}>
+      <div style={{ textAlign: 'center', padding: '48px 24px', background: '#fff', borderRadius: 20, border: '1px solid #e2e8f0', maxWidth: 520, margin: '0 auto' }}>
         <div style={{ fontSize: 56, marginBottom: 16 }}>🎉</div>
-        <h2 style={{ fontFamily: "'Playfair Display', serif", fontSize: 26, fontWeight: 700, color: '#0f172a', marginBottom: 12 }}>{t.successTitle}</h2>
-        <p style={{ fontSize: 14, color: '#64748b', lineHeight: 1.8, maxWidth: 380, margin: '0 auto' }}>
-          {t.successBody}
-        </p>
+        <h2 style={{ fontFamily: "'Playfair Display', serif", fontSize: 24, fontWeight: 700, color: '#0f172a', marginBottom: 12 }}>{t.pendingTitle}</h2>
+        <p style={{ fontSize: 14, color: '#64748b', lineHeight: 1.8, maxWidth: 400, margin: '0 auto 24px' }}>{t.pendingBody}</p>
+        <a href="/provider" style={{ display: 'inline-flex', alignItems: 'center', gap: 8, background: '#4A2E17', color: '#fff', borderRadius: 12, padding: '12px 24px', fontSize: 14, fontWeight: 700, textDecoration: 'none' }}>
+          {t.goDashboard}
+        </a>
       </div>
     )
   }
 
-  // ── Step 1: Profession picker ──────────────────────────────────────────────
+  // ── Step 1: Google sign-in gate (shown until authenticated) ────────────────
+  if (!user) {
+    return (
+      <div style={{ maxWidth: 480, margin: '0 auto', background: '#fff', border: '1px solid #e2e8f0', borderRadius: 20, padding: '32px 28px', textAlign: 'center' }}>
+        <div style={{ fontSize: 44, marginBottom: 14 }}>👷</div>
+        <h2 style={{ fontFamily: "'Playfair Display', serif", fontSize: 22, fontWeight: 700, color: '#0f172a', marginBottom: 8 }}>{t.gateTitle}</h2>
+        <p style={{ fontSize: 13, color: '#64748b', lineHeight: 1.7, marginBottom: 22 }}>{t.gateSub}</p>
+
+        <button onClick={signInGoogle} disabled={!authReady}
+          style={{ width: '100%', display: 'flex', alignItems: 'center', justifyContent: 'center', gap: 10, padding: '13px', background: '#fff', color: '#0f172a', border: '1.5px solid #e2e8f0', borderRadius: 12, fontSize: 15, fontWeight: 700, cursor: authReady ? 'pointer' : 'wait', boxShadow: '0 1px 4px rgba(0,0,0,0.05)' }}>
+          <svg width="18" height="18" viewBox="0 0 24 24" aria-hidden="true"><path fill="#4285F4" d="M22.56 12.25c0-.78-.07-1.53-.2-2.25H12v4.26h5.92a5.06 5.06 0 0 1-2.2 3.32v2.77h3.57c2.08-1.92 3.28-4.74 3.28-8.1z"/><path fill="#34A853" d="M12 23c2.97 0 5.46-.98 7.28-2.66l-3.57-2.77c-.98.66-2.23 1.06-3.71 1.06-2.86 0-5.29-1.93-6.16-4.53H2.18v2.84A11 11 0 0 0 12 23z"/><path fill="#FBBC05" d="M5.84 14.1a6.6 6.6 0 0 1 0-4.2V7.06H2.18a11 11 0 0 0 0 9.88l3.66-2.84z"/><path fill="#EA4335" d="M12 5.38c1.62 0 3.06.56 4.21 1.64l3.15-3.15C17.45 2.09 14.97 1 12 1 7.7 1 3.99 3.47 2.18 7.06l3.66 2.84C6.71 7.31 9.14 5.38 12 5.38z"/></svg>
+          {t.googleBtn}
+        </button>
+
+        <div style={{ marginTop: 22, display: 'flex', flexDirection: 'column', gap: 8, textAlign: 'left' }}>
+          {t.gateSteps.map(s => (
+            <div key={s} style={{ fontSize: 12, color: '#475569', fontWeight: 600 }}>{s}</div>
+          ))}
+        </div>
+      </div>
+    )
+  }
+
+  // ── Step 2a: Profession picker ─────────────────────────────────────────────
   if (!category) {
     return (
       <div style={{ maxWidth: 600, margin: '0 auto' }}>
+        <div style={{ textAlign: 'center', marginBottom: 8, fontSize: 11, color: '#94a3b8' }}>
+          {t.signedInAs} <strong style={{ color: '#475569' }}>{user.email}</strong>
+        </div>
         <div style={{ textAlign: 'center', marginBottom: 24 }}>
           <div style={{ fontSize: 14, fontWeight: 700, color: '#374151', marginBottom: 4 }}>{t.pickTitle}</div>
           <div style={{ fontSize: 12, color: '#94a3b8' }}>{t.pickSub}</div>
@@ -199,7 +220,7 @@ export default function JoinForm() {
     )
   }
 
-  // ── Step 2: Minimal form ───────────────────────────────────────────────────
+  // ── Step 2b: Minimal registration form ─────────────────────────────────────
   return (
     <form onSubmit={handleSubmit} noValidate style={{ maxWidth: 520, margin: '0 auto' }}>
 
@@ -228,19 +249,9 @@ export default function JoinForm() {
           placeholder="+94771234567" type="tel" style={inputStyle(!!errors.whatsapp)} />
       </Field>
 
-      <div style={{ padding: '13px 16px', background: '#f0fdf4', borderRadius: 12, border: '1px solid #bbf7d0', marginBottom: 12 }}>
-        <p style={{ fontSize: 12, color: '#15803d', margin: 0, lineHeight: 1.6 }}>
-          {t.freeNote}
-        </p>
+      <div style={{ padding: '13px 16px', background: '#f0fdf4', borderRadius: 12, border: '1px solid #bbf7d0', marginBottom: 22 }}>
+        <p style={{ fontSize: 12, color: '#15803d', margin: 0, lineHeight: 1.6 }}>{t.freeNote}</p>
       </div>
-
-      {!signedIn && (
-        <div style={{ padding: '13px 16px', background: '#F8F1E8', borderRadius: 12, border: '1px solid #EADDCB', marginBottom: 22 }}>
-          <p style={{ fontSize: 12, color: '#6B4A2E', margin: 0, lineHeight: 1.6 }}>
-            {t.googleNote}
-          </p>
-        </div>
-      )}
 
       {errors.submit && (
         <div style={{ padding: '12px 16px', background: '#fef2f2', border: '1px solid #fecaca', borderRadius: 10, fontSize: 13, color: '#dc2626', marginBottom: 18 }}>
@@ -255,10 +266,6 @@ export default function JoinForm() {
       >
         {submitting ? t.submitting : t.submit}
       </button>
-
-      <p style={{ fontSize: 11, color: '#94a3b8', textAlign: 'center', marginTop: 14, lineHeight: 1.6 }}>
-        {t.review}
-      </p>
     </form>
   )
 }
