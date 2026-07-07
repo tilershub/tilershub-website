@@ -1,5 +1,5 @@
 import { useState, useEffect } from 'react'
-import { supabase, getUser, signOut, onAuthStateChange, buildWhatsAppLink } from '../lib/supabase.js'
+import { supabase, getUser, signOut, onAuthStateChange, buildWhatsAppLink, phoneVariants } from '../lib/supabase.js'
 import ProfileEditor from './ProfileEditor.jsx'
 import PortfolioEditor from './PortfolioEditor.jsx'
 import { useLang } from '../lib/useLang.js'
@@ -170,21 +170,37 @@ function ProviderDashboard({ user, claimedProfile, submission, showClaimedBanner
 
   async function loadQuotesData() {
     setDataLoading(true)
+
+    // Collect the provider's bids two ways and merge:
+    //  1) by user_id (reliable for bids submitted while logged in)
+    //  2) by any stored phone-number format (recovers legacy/anonymous bids)
+    const byId = new Map()
+    const collect = rows => { for (const b of rows || []) byId.set(b.id, b) }
+
+    const { data: byUser } = await supabase
+      .from('bids').select('*').eq('user_id', user.id).order('created_at', { ascending: false })
+    collect(byUser)
+
     const providerWA = claimedProfile?.whatsapp || claimedProfile?.phone
-    if (providerWA) {
-      const { data: subBidData } = await supabase
-        .from('bids').select('*').eq('bidder_whatsapp', providerWA).order('created_at', { ascending: false })
-      if (subBidData?.length > 0) {
-        const jobIds = [...new Set(subBidData.map(b => b.job_id))]
-        const { data: jobProjects } = await supabase
-          .from('projects').select('id,project_type,city,district,description').in('id', jobIds)
-        const projById = {}
-        for (const p of jobProjects || []) projById[p.id] = p
-        setSubmittedBids(subBidData.map(b => ({ ...b, project: projById[b.job_id] || null })))
-      } else {
-        setSubmittedBids([])
-      }
+    const variants = phoneVariants(providerWA)
+    if (variants.length > 0) {
+      const { data: byPhone } = await supabase
+        .from('bids').select('*').in('bidder_whatsapp', variants).order('created_at', { ascending: false })
+      collect(byPhone)
     }
+
+    const bids = [...byId.values()].sort((a, b) => new Date(b.created_at) - new Date(a.created_at))
+    if (bids.length > 0) {
+      const jobIds = [...new Set(bids.map(b => b.job_id))]
+      const { data: jobProjects } = await supabase
+        .from('projects').select('id,project_type,city,district,description').in('id', jobIds)
+      const projById = {}
+      for (const p of jobProjects || []) projById[p.id] = p
+      setSubmittedBids(bids.map(b => ({ ...b, project: projById[b.job_id] || null })))
+    } else {
+      setSubmittedBids([])
+    }
+
     setDataLoaded(p => ({ ...p, quotes: true }))
     setDataLoading(false)
   }

@@ -1,5 +1,5 @@
 import { useState, useEffect } from 'react'
-import { supabase, getUser } from '../lib/supabase.js'
+import { supabase, getUser, phoneVariants } from '../lib/supabase.js'
 import { jobPath } from '../lib/jobs.js'
 
 const CACHE_KEY = 'tilershub_role'
@@ -85,14 +85,20 @@ function ProviderHero({ name }) {
         : rawViews >= 1000 ? `${(rawViews / 1000).toFixed(1)}k`
         : String(rawViews)
 
-      // Count active bids submitted by this provider
-      const { count: bidCount } = await supabase
-        .from('bids')
-        .select('id', { count: 'exact', head: true })
-        .eq('bidder_whatsapp', u.phone ?? '')
-        .gte('created_at', new Date(Date.now() - 30 * 86400000).toISOString())
+      // Count bids submitted by this provider (by user_id + any phone format)
+      const since = new Date(Date.now() - 30 * 86400000).toISOString()
+      const ids = new Set()
+      const { data: mine } = await supabase
+        .from('bids').select('id').eq('user_id', u.id).gte('created_at', since)
+      for (const b of mine || []) ids.add(b.id)
+      const variants = phoneVariants(u.phone)
+      if (variants.length > 0) {
+        const { data: byPhone } = await supabase
+          .from('bids').select('id').in('bidder_whatsapp', variants).gte('created_at', since)
+        for (const b of byPhone || []) ids.add(b.id)
+      }
 
-      setStats({ views, bids: bidCount != null ? String(bidCount) : '—' })
+      setStats({ views, bids: String(ids.size) })
     })
   }, [])
 

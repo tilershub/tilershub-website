@@ -67,14 +67,14 @@ export default function Notifications() {
         if (myProjects?.length) {
           const { data: bids } = await supabase
             .from('bids')
-            .select('id,project_id,bidder_name,bidder_type,quote_amount,created_at')
-            .in('project_id', myProjects.map(p => p.id))
+            .select('id,job_id,bidder_name,bidder_type,quote_amount,created_at')
+            .in('job_id', myProjects.map(p => p.id))
             .order('created_at', { ascending: false })
             .limit(30)
 
           const projMap = Object.fromEntries(myProjects.map(p => [p.id, p]))
           setItems((bids || []).map(b => {
-            const proj = projMap[b.project_id] || {}
+            const proj = projMap[b.job_id] || {}
             const quote = b.quote_amount ? ` · Rs ${b.quote_amount}` : ''
             return {
               id: b.id,
