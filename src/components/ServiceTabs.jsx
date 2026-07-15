@@ -131,7 +131,7 @@ const CATEGORIES = [
   },
 ]
 
-const AVATAR_COLORS = ['#4A2E17','#0f766e','#7c3aed','#b45309','#0369a1','#A9713C','#15803d','#be185d']
+const AVATAR_COLORS = ['#0F766E','#0f766e','#7c3aed','#b45309','#0369a1','#D97706','#15803d','#be185d']
 function avatarColor(name) {
   let h = 0
   for (const c of (name || '')) h = (h * 31 + c.charCodeAt(0)) >>> 0
@@ -199,7 +199,7 @@ function ProviderCard({ p }) {
         {(p.description || p.bio) && <div style={{ fontSize: 11, color: '#64748b', marginBottom: 6, display: '-webkit-box', WebkitLineClamp: 2, WebkitBoxOrient: 'vertical', overflow: 'hidden', lineHeight: 1.5 }}>{p.description || p.bio}</div>}
         {chips.length > 0 && (
           <div style={{ display: 'flex', flexWrap: 'wrap', gap: 4, marginBottom: 8 }}>
-            {chips.map(s => <span key={s} style={{ fontSize: 9, fontWeight: 600, padding: '2px 7px', borderRadius: 20, background: '#eef3fb', color: '#4A2E17', border: '1px solid #d5e2f5' }}>{s}</span>)}
+            {chips.map(s => <span key={s} style={{ fontSize: 9, fontWeight: 600, padding: '2px 7px', borderRadius: 20, background: '#eef3fb', color: '#0F766E', border: '1px solid #d5e2f5' }}>{s}</span>)}
           </div>
         )}
         {p.avg_rating > 0 && <div style={{ fontSize: 11, color: '#f59e0b', marginBottom: 8 }}>⭐ {Number(p.avg_rating).toFixed(1)}</div>}
@@ -210,7 +210,7 @@ function ProviderCard({ p }) {
                 💬 WhatsApp
               </a>
             : href
-              ? <a href={href} onClick={e => e.stopPropagation()} style={{ display: 'inline-flex', alignItems: 'center', gap: 5, background: '#4A2E17', color: '#fff', borderRadius: 10, padding: '7px 14px', fontSize: 11, fontWeight: 700, textDecoration: 'none' }}>
+              ? <a href={href} onClick={e => e.stopPropagation()} style={{ display: 'inline-flex', alignItems: 'center', gap: 5, background: '#0F766E', color: '#fff', borderRadius: 10, padding: '7px 14px', fontSize: 11, fontWeight: 700, textDecoration: 'none' }}>
                   View Profile ›
                 </a>
               : null
@@ -229,7 +229,7 @@ function BlogCard({ post }) {
         {post.icon}
       </div>
       <div style={{ padding: '9px 11px 11px', flex: 1 }}>
-        <div style={{ fontSize: 9, fontWeight: 700, color: '#A9713C', textTransform: 'uppercase', letterSpacing: 0.5, marginBottom: 4 }}>{post.category}</div>
+        <div style={{ fontSize: 9, fontWeight: 700, color: '#D97706', textTransform: 'uppercase', letterSpacing: 0.5, marginBottom: 4 }}>{post.category}</div>
         <div style={{ fontSize: 11, fontWeight: 700, color: '#0f172a', lineHeight: 1.4, display: '-webkit-box', WebkitLineClamp: 2, WebkitBoxOrient: 'vertical', overflow: 'hidden', marginBottom: 6 }}>{post.title}</div>
         <div style={{ fontSize: 10, color: '#94a3b8' }}>{post.readTime} →</div>
       </div>
@@ -256,7 +256,7 @@ function ProjectCard({ proj }) {
       )}
       <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', marginTop: 'auto', paddingTop: 2 }}>
         <span style={{ fontSize: 9, color: '#94a3b8' }}>{timeAgo(proj.created_at)}</span>
-        <span style={{ fontSize: 9, fontWeight: 700, color: '#A9713C', background: '#fff5f0', borderRadius: 6, padding: '2px 6px' }}>Bid Now →</span>
+        <span style={{ fontSize: 9, fontWeight: 700, color: '#D97706', background: '#fff5f0', borderRadius: 6, padding: '2px 6px' }}>Bid Now →</span>
       </div>
     </a>
   )
@@ -280,7 +280,7 @@ function SubLabel({ label, href, color }) {
   return (
     <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', padding: '10px 16px 7px' }}>
       <span style={{ fontSize: 11, fontWeight: 700, color: color || '#374151', textTransform: 'uppercase', letterSpacing: 0.6 }}>{label}</span>
-      {href && <a href={href} style={{ fontSize: 11, color: '#A9713C', fontWeight: 600, textDecoration: 'none' }}>See all ›</a>}
+      {href && <a href={href} style={{ fontSize: 11, color: '#D97706', fontWeight: 600, textDecoration: 'none' }}>See all ›</a>}
     </div>
   )
 }
@@ -306,7 +306,7 @@ export default function ServiceTabs() {
 
       <div style={{ padding: '13px 16px 10px', background: '#fff', borderBottom: '1px solid #e2e8f0', display: 'flex', alignItems: 'center', justifyContent: 'space-between' }}>
         <span style={{ fontSize: 15, fontWeight: 700, color: '#111827' }}>Browse Services</span>
-        <a href="/providers" style={{ fontSize: 12, fontWeight: 600, color: '#A9713C', textDecoration: 'none' }}>All Providers ›</a>
+        <a href="/providers" style={{ fontSize: 12, fontWeight: 600, color: '#D97706', textDecoration: 'none' }}>All Providers ›</a>
       </div>
 
       {CATEGORIES.map(cat => {
@@ -341,7 +341,7 @@ export default function ServiceTabs() {
                 : providers.length > 0
                   ? providers.map(p => <ProviderCard key={p.id} p={p} />)
                   : <div style={{ fontSize: 12, color: '#94a3b8', padding: '8px 0' }}>
-                      No providers yet — <a href="/join-tilershub" style={{ color: '#A9713C', textDecoration: 'none', fontWeight: 600 }}>Join TilersHub</a>
+                      No providers yet — <a href="/join-tilershub" style={{ color: '#D97706', textDecoration: 'none', fontWeight: 600 }}>Join TilersHub</a>
                     </div>
               }
             </HRow>

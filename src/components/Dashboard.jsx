@@ -98,7 +98,7 @@ export default function Dashboard({ initialUser, initialProjects, initialProvide
         <div style={{ fontSize: 40, marginBottom: 12 }}>⚠️</div>
         <h3 style={{ fontSize: 16, fontWeight: 700, color: '#dc2626', marginBottom: 8 }}>Could not load your dashboard</h3>
         <p style={{ fontSize: 13, color: '#64748b', marginBottom: 20 }}>{loadError}</p>
-        <button onClick={() => window.location.reload()} style={{ padding: '10px 24px', background: '#4A2E17', color: '#fff', border: 'none', borderRadius: 10, fontSize: 14, fontWeight: 600, cursor: 'pointer' }}>
+        <button onClick={() => window.location.reload()} style={{ padding: '10px 24px', background: '#0F766E', color: '#fff', border: 'none', borderRadius: 10, fontSize: 14, fontWeight: 600, cursor: 'pointer' }}>
           Try Again
         </button>
       </div>
@@ -261,7 +261,7 @@ function ProviderDashboard({ user, claimedProfile, submission, showClaimedBanner
       <style>{MOBILE_STYLES}</style>
 
       {/* ── Provider header ── */}
-      <div style={{ background:'linear-gradient(135deg,#1C120A 0%,#3A2416 100%)', paddingBottom:0 }}>
+      <div style={{ background:'linear-gradient(135deg,#042F2E 0%,#115E59 100%)', paddingBottom:0 }}>
         <div className="db-header-pad" style={{ maxWidth:860, margin:'0 auto', padding:'20px 16px 0' }}>
 
           {showClaimedBanner && (
@@ -427,7 +427,7 @@ function ExploreTab({ projects, user, lang }) {
                   <button
                     onClick={e => toggleSave(e, p.id)}
                     disabled={saving === p.id}
-                    style={{ display:'inline-flex', alignItems:'center', gap:5, background: isSaved ? '#eef3fb' : '#f8fafc', color: isSaved ? '#4A2E17' : 'var(--text-3)', border:`1px solid ${isSaved ? '#d5e2f5' : 'var(--border)'}`, borderRadius:8, padding:'7px 12px', fontSize:12, fontWeight:600, cursor:'pointer' }}>
+                    style={{ display:'inline-flex', alignItems:'center', gap:5, background: isSaved ? '#eef3fb' : '#f8fafc', color: isSaved ? '#0F766E' : 'var(--text-3)', border:`1px solid ${isSaved ? '#d5e2f5' : 'var(--border)'}`, borderRadius:8, padding:'7px 12px', fontSize:12, fontWeight:600, cursor:'pointer' }}>
                     {isSaved ? T.saved : T.save}
                   </button>
                 </div>
@@ -668,7 +668,7 @@ function SavedProvidersTab({ userId }) {
         const rating = p.avg_rating
         return (
           <div key={item.id} style={{ background:'#fff', borderRadius:14, border:'1px solid var(--border)', padding:'14px 16px', display:'flex', alignItems:'center', gap:14 }}>
-            <div style={{ width:48, height:48, borderRadius:12, background:'#4A2E17', flexShrink:0, overflow:'hidden', display:'flex', alignItems:'center', justifyContent:'center', fontSize:18, fontWeight:700, color:'#fff' }}>
+            <div style={{ width:48, height:48, borderRadius:12, background:'#0F766E', flexShrink:0, overflow:'hidden', display:'flex', alignItems:'center', justifyContent:'center', fontSize:18, fontWeight:700, color:'#fff' }}>
               {p.profile_image
                 ? <img src={p.profile_image} alt={p.name} style={{ width:'100%', height:'100%', objectFit:'cover' }} />
                 : (p.name || '?')[0].toUpperCase()
@@ -731,7 +731,7 @@ function ConsumerDashboard({ user, projects, bids, submission, dataLoading, show
           {/* Identity row */}
           <div style={{ display:'flex', alignItems:'center', justifyContent:'space-between', marginBottom:16, flexWrap:'wrap', gap:10 }}>
             <div style={{ display:'flex', alignItems:'center', gap:12 }}>
-              <div className="db-avatar" style={{ width:52, height:52, borderRadius:14, background:'var(--terra-50)', border:'2px solid rgba(169,113,60,0.2)', color:'var(--terra)', display:'flex', alignItems:'center', justifyContent:'center', fontSize:18, fontWeight:700, flexShrink:0 }}>
+              <div className="db-avatar" style={{ width:52, height:52, borderRadius:14, background:'var(--terra-50)', border:'2px solid rgba(217,119,6,0.2)', color:'var(--terra)', display:'flex', alignItems:'center', justifyContent:'center', fontSize:18, fontWeight:700, flexShrink:0 }}>
                 {initials}
               </div>
               <div>
@@ -796,7 +796,7 @@ function Spinner({ full }) {
   return (
     <div style={{ ...(full ? { minHeight:'60vh' } : { padding:40 }), display:'flex', alignItems:'center', justifyContent:'center' }}>
       <div style={{ textAlign:'center' }}>
-        <div className="spinner" style={{ margin:'0 auto 10px', borderColor:'rgba(58,36,22,0.15)', borderTopColor:'var(--navy)' }} />
+        <div className="spinner" style={{ margin:'0 auto 10px', borderColor:'rgba(17,94,89,0.15)', borderTopColor:'var(--navy)' }} />
         <p style={{ fontSize:13, color:'var(--text-3)' }}>Loading…</p>
       </div>
     </div>
@@ -850,7 +850,7 @@ function BidsPanel({ projectBids }) {
 
   return (
     <div style={{ marginTop:12 }}>
-      <button onClick={() => setOpen(o => !o)} style={{ display:'flex', alignItems:'center', gap:8, background:'none', border:'none', cursor:'pointer', padding:0, fontSize:13, fontWeight:700, color:'#4A2E17' }}>
+      <button onClick={() => setOpen(o => !o)} style={{ display:'flex', alignItems:'center', gap:8, background:'none', border:'none', cursor:'pointer', padding:0, fontSize:13, fontWeight:700, color:'#0F766E' }}>
         <span style={{ display:'inline-flex', alignItems:'center', justifyContent:'center', background: newCount > 0 ? '#f59e0b' : '#e2e8f0', color: newCount > 0 ? '#fff' : '#64748b', borderRadius:20, padding:'2px 8px', fontSize:11, fontWeight:700 }}>
           {projectBids.length}
         </span>
@@ -882,11 +882,11 @@ function BidsPanel({ projectBids }) {
                     <div style={{ flexShrink:0 }}>
                       {prov?.profile_image
                         ? <img src={prov.profile_image} alt={bid.bidder_name} style={{ width:44, height:44, borderRadius:'50%', objectFit:'cover', border:'2px solid #e2e8f0' }} />
-                        : <div style={{ width:44, height:44, borderRadius:'50%', background: profileUrl ? '#4A2E17' : '#e2e8f0', display:'flex', alignItems:'center', justifyContent:'center', fontSize:16, color: profileUrl ? '#fff' : '#64748b', fontWeight:700 }}>{(bid.bidder_name||'?')[0].toUpperCase()}</div>
+                        : <div style={{ width:44, height:44, borderRadius:'50%', background: profileUrl ? '#0F766E' : '#e2e8f0', display:'flex', alignItems:'center', justifyContent:'center', fontSize:16, color: profileUrl ? '#fff' : '#64748b', fontWeight:700 }}>{(bid.bidder_name||'?')[0].toUpperCase()}</div>
                       }
                     </div>
                     <div style={{ minWidth:0 }}>
-                      <div style={{ fontSize:13, fontWeight:700, color: profileUrl ? '#4A2E17' : '#0f172a' }}>{bid.bidder_name}{profileUrl ? ' ↗' : ''}</div>
+                      <div style={{ fontSize:13, fontWeight:700, color: profileUrl ? '#0F766E' : '#0f172a' }}>{bid.bidder_name}{profileUrl ? ' ↗' : ''}</div>
                       <div style={{ fontSize:11, color:'#64748b', marginTop:2, display:'flex', flexWrap:'wrap', gap:'0 8px' }}>
                         {prov && (prov.avg_rating > 0
                           ? <span style={{ color:'#b45309' }}>⭐ {Number(prov.avg_rating).toFixed(1)} ({prov.review_count || 0})</span>

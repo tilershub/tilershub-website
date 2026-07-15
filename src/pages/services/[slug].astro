@@ -53,7 +53,7 @@ function budgetStr(min, max) {
   return `Up to Rs. ${Number(max).toLocaleString()}`
 }
 
-const AVATAR_COLORS = ['#4A2E17','#0f766e','#7c3aed','#b45309','#0369a1','#A9713C','#15803d','#be185d']
+const AVATAR_COLORS = ['#0F766E','#0f766e','#7c3aed','#b45309','#0369a1','#D97706','#15803d','#be185d']
 function avatarColor(name) {
   let h = 0
   for (const c of name) h = (h * 31 + c.charCodeAt(0)) >>> 0
@@ -108,7 +108,7 @@ const serviceFaqSchema = JSON.stringify({
   <script slot="head" type="application/ld+json" set:html={serviceFaqSchema} />
 
   <!-- Service header -->
-  <div style="background:linear-gradient(135deg,#1C120A 0%,#3A2416 100%);padding:28px 20px 24px;text-align:center;position:relative;overflow:hidden;">
+  <div style="background:linear-gradient(135deg,#042F2E 0%,#115E59 100%);padding:28px 20px 24px;text-align:center;position:relative;overflow:hidden;">
     <div style="position:absolute;inset:0;opacity:0.03;background-image:repeating-linear-gradient(0deg,transparent,transparent 39px,rgba(255,255,255,0.8) 39px,rgba(255,255,255,0.8) 40px),repeating-linear-gradient(90deg,transparent,transparent 39px,rgba(255,255,255,0.8) 39px,rgba(255,255,255,0.8) 40px);pointer-events:none;"></div>
     <div style="position:relative;">
       <div style="text-align:left;max-width:960px;margin:0 auto;"><Breadcrumbs items={[{ name: 'Services', href: '/categories' }, { name: service.label }]} light /></div>
@@ -118,7 +118,7 @@ const serviceFaqSchema = JSON.stringify({
         Find verified {service.label} professionals across Sri Lanka
       </p>
       <a href={postUrl}
-        style="display:inline-flex;align-items:center;gap:8px;background:#A9713C;color:#fff;border-radius:24px;padding:12px 26px;font-size:14px;font-weight:700;text-decoration:none;box-shadow:0 4px 20px rgba(169,113,60,0.4);">
+        style="display:inline-flex;align-items:center;gap:8px;background:#D97706;color:#fff;border-radius:24px;padding:12px 26px;font-size:14px;font-weight:700;text-decoration:none;box-shadow:0 4px 20px rgba(217,119,6,0.4);">
         📋 Post a {service.label} Project
       </a>
     </div>
@@ -136,10 +136,10 @@ const serviceFaqSchema = JSON.stringify({
           Be the first {service.label} specialist on TilersHub, or post a project to receive bids.
         </p>
         <div style="display:flex;gap:10px;justify-content:center;flex-wrap:wrap;">
-          <a href="/join-tilershub" style="display:inline-flex;align-items:center;gap:6px;background:#4A2E17;color:#fff;border-radius:12px;padding:10px 20px;font-size:13px;font-weight:700;text-decoration:none;">
+          <a href="/join-tilershub" style="display:inline-flex;align-items:center;gap:6px;background:#0F766E;color:#fff;border-radius:12px;padding:10px 20px;font-size:13px;font-weight:700;text-decoration:none;">
             ✅ Join as Provider
           </a>
-          <a href={postUrl} style="display:inline-flex;align-items:center;gap:6px;background:#A9713C;color:#fff;border-radius:12px;padding:10px 20px;font-size:13px;font-weight:700;text-decoration:none;">
+          <a href={postUrl} style="display:inline-flex;align-items:center;gap:6px;background:#D97706;color:#fff;border-radius:12px;padding:10px 20px;font-size:13px;font-weight:700;text-decoration:none;">
             📋 Post a Project
           </a>
         </div>
@@ -151,7 +151,7 @@ const serviceFaqSchema = JSON.stringify({
 
         <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:16px;">
           <span style="font-size:13px;font-weight:700;color:#374151;">{total} provider{total !== 1 ? 's' : ''} found</span>
-          <a href="/providers" style="font-size:12px;color:#A9713C;font-weight:600;text-decoration:none;">Browse all ›</a>
+          <a href="/providers" style="font-size:12px;color:#D97706;font-weight:600;text-decoration:none;">Browse all ›</a>
         </div>
 
         <div style="display:grid;grid-template-columns:repeat(auto-fill,minmax(280px,1fr));gap:16px;">
@@ -179,7 +179,7 @@ const serviceFaqSchema = JSON.stringify({
                 <div style="display:flex;align-items:flex-start;justify-content:space-between;gap:8px;margin-bottom:5px;">
                   <span style="font-size:16px;font-weight:700;color:#0f172a;line-height:1.25;">{p.name}</span>
                   {p.daily_rate_min && (
-                    <span style="font-size:12px;font-weight:700;color:#A9713C;white-space:nowrap;flex-shrink:0;">From Rs. {Number(p.daily_rate_min).toLocaleString()}/day</span>
+                    <span style="font-size:12px;font-weight:700;color:#D97706;white-space:nowrap;flex-shrink:0;">From Rs. {Number(p.daily_rate_min).toLocaleString()}/day</span>
                   )}
                 </div>
                 <div style="font-size:12px;margin-bottom:8px;">
@@ -207,7 +207,7 @@ const serviceFaqSchema = JSON.stringify({
                     )}
                     {cardHref && (
                       <a href={cardHref} onclick="event.stopPropagation()"
-                        style="display:inline-flex;align-items:center;gap:4px;background:#4A2E17;color:#fff;border-radius:10px;padding:7px 12px;font-size:11px;font-weight:700;text-decoration:none;">
+                        style="display:inline-flex;align-items:center;gap:4px;background:#0F766E;color:#fff;border-radius:10px;padding:7px 12px;font-size:11px;font-weight:700;text-decoration:none;">
                         View ›
                       </a>
                     )}
@@ -232,7 +232,7 @@ const serviceFaqSchema = JSON.stringify({
             <span class="en-text">Recent Projects</span>
             <span class="si-text">මෑත ව්‍යාපෘති</span>
           </h2>
-          <a href="/jobs" style="font-size:12px;color:#A9713C;font-weight:600;text-decoration:none;">
+          <a href="/jobs" style="font-size:12px;color:#D97706;font-weight:600;text-decoration:none;">
             <span class="en-text">View all ›</span>
             <span class="si-text">සියල්ල බලන්න ›</span>
           </a>
@@ -276,7 +276,7 @@ const serviceFaqSchema = JSON.stringify({
           <h2 style="font-size:14px;font-weight:800;color:#0f172a;margin:0 0 10px;">{service.label} by district</h2>
           <div style="display:flex;flex-wrap:wrap;gap:8px;">
             {topDistricts.map(d => (
-              <a href={serviceDistrictPath(service.slug, d)} style="font-size:12px;font-weight:700;color:#4A2E17;background:#fff;border:1px solid #EADDCB;border-radius:20px;padding:7px 14px;text-decoration:none;">{service.label} in {d.name}</a>
+              <a href={serviceDistrictPath(service.slug, d)} style="font-size:12px;font-weight:700;color:#0F766E;background:#fff;border:1px solid #99F6E4;border-radius:20px;padding:7px 14px;text-decoration:none;">{service.label} in {d.name}</a>
             ))}
           </div>
         </div>
@@ -285,7 +285,7 @@ const serviceFaqSchema = JSON.stringify({
   </div>
 
   <!-- Post Project CTA -->
-  <div style="background:linear-gradient(135deg,#3A2416 0%,#1C120A 100%);padding:40px 20px;text-align:center;">
+  <div style="background:linear-gradient(135deg,#115E59 0%,#042F2E 100%);padding:40px 20px;text-align:center;">
     <h2 style="font-family:'Playfair Display',serif;font-size:clamp(18px,4vw,24px);font-weight:700;color:#fff;margin:0 0 10px;">
       <span class="en-text">Need {service.label} done?</span>
       <span class="si-text">{service.label} සේවාවක් අවශ්‍යද?</span>
@@ -295,7 +295,7 @@ const serviceFaqSchema = JSON.stringify({
       <span class="si-text">ඔබේ ව්‍යාපෘතිය නොමිලේ පළ කර සත්‍යාපිත ශිල්පීන්ගේ ලංසු ලබා ගන්න</span>
     </p>
     <a href={postUrl}
-      style="display:inline-flex;align-items:center;gap:8px;background:#A9713C;color:#fff;border-radius:24px;padding:13px 28px;font-size:14px;font-weight:700;text-decoration:none;box-shadow:0 4px 20px rgba(169,113,60,0.45);">
+      style="display:inline-flex;align-items:center;gap:8px;background:#D97706;color:#fff;border-radius:24px;padding:13px 28px;font-size:14px;font-weight:700;text-decoration:none;box-shadow:0 4px 20px rgba(217,119,6,0.45);">
       📋
       <span class="en-text">Post Your Project →</span>
       <span class="si-text">ව්‍යාපෘතිය පලකරන්න →</span>

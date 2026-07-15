@@ -5,8 +5,8 @@ import { SERVICES, HOME_GROUPS } from '../lib/services.js'
 import { CATEGORIES } from '../lib/categories.js'
 
 // ─── Design tokens ────────────────────────────────────────────────────────────
-const NAVY  = '#4A2E17'
-const TERRA = '#A9713C'
+const NAVY  = '#0F766E'
+const TERRA = '#D97706'
 const S = {
   page:    { display: 'flex', minHeight: '100vh' },
   sidebar: { width: 220, background: NAVY, color: '#fff', flexShrink: 0, display: 'flex', flexDirection: 'column', position: 'sticky', top: 0, height: '100vh', overflowY: 'auto' },

@@ -65,7 +65,7 @@ function Field({ label, id, req, error, hint, children }) {
   return (
     <div style={{ marginBottom: 20 }}>
       <label htmlFor={id} style={{ display: 'block', fontSize: 11, fontWeight: 700, color: '#334155', textTransform: 'uppercase', letterSpacing: '0.6px', marginBottom: 7 }}>
-        {label}{req && <span style={{ color: '#A9713C', marginLeft: 3 }}>*</span>}
+        {label}{req && <span style={{ color: '#D97706', marginLeft: 3 }}>*</span>}
       </label>
       {children}
       {hint && !error && <p style={{ fontSize: 11, color: '#94a3b8', marginTop: 5, lineHeight: 1.5 }}>{hint}</p>}
@@ -160,7 +160,7 @@ export default function JoinForm({ initialUser = null }) {
         <div style={{ fontSize: 56, marginBottom: 16 }}>🎉</div>
         <h2 style={{ fontFamily: "'Playfair Display', serif", fontSize: 24, fontWeight: 700, color: '#0f172a', marginBottom: 12 }}>{t.pendingTitle}</h2>
         <p style={{ fontSize: 14, color: '#64748b', lineHeight: 1.8, maxWidth: 400, margin: '0 auto 24px' }}>{t.pendingBody}</p>
-        <a href="/provider" style={{ display: 'inline-flex', alignItems: 'center', gap: 8, background: '#4A2E17', color: '#fff', borderRadius: 12, padding: '12px 24px', fontSize: 14, fontWeight: 700, textDecoration: 'none' }}>
+        <a href="/provider" style={{ display: 'inline-flex', alignItems: 'center', gap: 8, background: '#0F766E', color: '#fff', borderRadius: 12, padding: '12px 24px', fontSize: 14, fontWeight: 700, textDecoration: 'none' }}>
           {t.goDashboard}
         </a>
       </div>
@@ -208,7 +208,7 @@ export default function JoinForm({ initialUser = null }) {
               type="button"
               onClick={() => setCategory(prof)}
               style={{ display: 'flex', flexDirection: 'column', alignItems: 'center', gap: 8, padding: '18px 12px', borderRadius: 14, border: '2px solid #e2e8f0', background: '#fff', cursor: 'pointer', textAlign: 'center', transition: 'all 0.15s', boxShadow: '0 1px 4px rgba(0,0,0,0.04)' }}
-              onMouseOver={e => { e.currentTarget.style.borderColor = '#4A2E17'; e.currentTarget.style.boxShadow = '0 4px 16px rgba(74,46,23,0.12)'; e.currentTarget.style.background = '#F8F1E8' }}
+              onMouseOver={e => { e.currentTarget.style.borderColor = '#0F766E'; e.currentTarget.style.boxShadow = '0 4px 16px rgba(15,118,110,0.12)'; e.currentTarget.style.background = '#F0FDFA' }}
               onMouseOut={e => { e.currentTarget.style.borderColor = '#e2e8f0'; e.currentTarget.style.boxShadow = '0 1px 4px rgba(0,0,0,0.04)'; e.currentTarget.style.background = '#fff' }}
             >
               <span style={{ fontSize: 30 }}>{prof.icon}</span>
@@ -228,7 +228,7 @@ export default function JoinForm({ initialUser = null }) {
         <button
           type="button"
           onClick={() => setCategory(null)}
-          style={{ display: 'inline-flex', alignItems: 'center', gap: 8, background: '#F8F1E8', border: '1.5px solid #EADDCB', borderRadius: 10, padding: '7px 14px', cursor: 'pointer', fontSize: 12, fontWeight: 700, color: '#4A2E17' }}
+          style={{ display: 'inline-flex', alignItems: 'center', gap: 8, background: '#F0FDFA', border: '1.5px solid #99F6E4', borderRadius: 10, padding: '7px 14px', cursor: 'pointer', fontSize: 12, fontWeight: 700, color: '#0F766E' }}
         >
           {category.icon} {category.label} <span style={{ fontSize: 10, color: '#94a3b8', fontWeight: 400 }}>{t.change}</span>
         </button>
@@ -262,7 +262,7 @@ export default function JoinForm({ initialUser = null }) {
       <button
         type="submit"
         disabled={submitting}
-        style={{ width: '100%', padding: 14, background: submitting ? '#94a3b8' : '#4A2E17', color: '#fff', border: 'none', borderRadius: 12, fontSize: 15, fontWeight: 700, cursor: submitting ? 'not-allowed' : 'pointer', display: 'flex', alignItems: 'center', justifyContent: 'center', gap: 8, transition: 'background 0.2s' }}
+        style={{ width: '100%', padding: 14, background: submitting ? '#94a3b8' : '#0F766E', color: '#fff', border: 'none', borderRadius: 12, fontSize: 15, fontWeight: 700, cursor: submitting ? 'not-allowed' : 'pointer', display: 'flex', alignItems: 'center', justifyContent: 'center', gap: 8, transition: 'background 0.2s' }}
       >
         {submitting ? t.submitting : t.submit}
       </button>

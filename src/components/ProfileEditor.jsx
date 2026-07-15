@@ -43,9 +43,9 @@ function Chip({ label, checked, onClick }) {
   return (
     <button type="button" onClick={onClick} style={{
       padding: '6px 13px', borderRadius: 20, fontSize: 12, fontWeight: 600, cursor: 'pointer',
-      border: `1.5px solid ${checked ? '#4A2E17' : '#e2e8f0'}`,
+      border: `1.5px solid ${checked ? '#0F766E' : '#e2e8f0'}`,
       background: checked ? '#eef3fb' : '#fff',
-      color: checked ? '#4A2E17' : '#64748b',
+      color: checked ? '#0F766E' : '#64748b',
       transition: 'all 0.15s',
     }}>
       {checked ? '✓ ' : ''}{label}
@@ -66,7 +66,7 @@ function ServiceTextInput({ value, onChange }) {
         onKeyDown={e => { if (e.key === 'Enter') { e.preventDefault(); add() } }}
         placeholder="සේවාවක් එකතු කරන්න…"
         style={{ flex: 1, padding: '8px 12px', border: '1.5px solid #e2e8f0', borderRadius: 10, fontSize: 12, outline: 'none', fontFamily: 'inherit' }} />
-      <button type="button" onClick={add} style={{ padding: '8px 14px', background: '#eef3fb', color: '#4A2E17', border: '1.5px solid #d5e2f5', borderRadius: 10, fontSize: 12, fontWeight: 700, cursor: 'pointer' }}>+ එකතු</button>
+      <button type="button" onClick={add} style={{ padding: '8px 14px', background: '#eef3fb', color: '#0F766E', border: '1.5px solid #d5e2f5', borderRadius: 10, fontSize: 12, fontWeight: 700, cursor: 'pointer' }}>+ එකතු</button>
     </div>
   )
 }
@@ -91,7 +91,7 @@ function ImageUploadBox({ label, hint, value, onChange, aspect }) {
         onDragOver={e => { e.preventDefault(); setDragging(true) }}
         onDragLeave={() => setDragging(false)}
         onDrop={e => { e.preventDefault(); setDragging(false); handle(e.dataTransfer.files[0]) }}
-        style={{ position: 'relative', height, borderRadius: 12, border: `2px dashed ${dragging ? '#4A2E17' : '#cbd5e1'}`, background: dragging ? '#eef3fb' : preview ? '#000' : '#f8fafc', cursor: 'pointer', overflow: 'hidden', display: 'flex', alignItems: 'center', justifyContent: 'center', transition: 'all 0.2s' }}>
+        style={{ position: 'relative', height, borderRadius: 12, border: `2px dashed ${dragging ? '#0F766E' : '#cbd5e1'}`, background: dragging ? '#eef3fb' : preview ? '#000' : '#f8fafc', cursor: 'pointer', overflow: 'hidden', display: 'flex', alignItems: 'center', justifyContent: 'center', transition: 'all 0.2s' }}>
         {preview ? (
           <>
             <img src={preview} alt="" style={{ position: 'absolute', inset: 0, width: '100%', height: '100%', objectFit: 'cover', opacity: 0.85 }} />
@@ -259,12 +259,12 @@ export default function ProfileEditor({ profile, profileType, userId }) {
           <div style={{ padding: '10px 14px', background: '#f0fdf4', border: '1px solid #bbf7d0', borderRadius: 10, marginBottom: 20, display: 'flex', alignItems: 'center', justifyContent: 'space-between', gap: 10 }}>
             <span style={{ fontSize: 13, color: '#15803d', fontWeight: 600 }}>✓ පැතිකඩ යාවත්කාලීන විය!</span>
             {profilePath && (
-              <a href={profilePath} target="_blank" rel="noopener" style={{ fontSize: 12, color: '#4A2E17', fontWeight: 700, textDecoration: 'none' }}>පැතිකඩ →</a>
+              <a href={profilePath} target="_blank" rel="noopener" style={{ fontSize: 12, color: '#0F766E', fontWeight: 700, textDecoration: 'none' }}>පැතිකඩ →</a>
             )}
           </div>
         )}
         <div style={{ display: 'flex', alignItems: 'center', gap: 16, marginBottom: 20 }}>
-          <div style={{ width: 64, height: 64, borderRadius: 14, background: '#4A2E17', border: '2px solid #e2e8f0', overflow: 'hidden', flexShrink: 0, display: 'flex', alignItems: 'center', justifyContent: 'center', fontSize: 22, fontWeight: 700, color: '#fff' }}>
+          <div style={{ width: 64, height: 64, borderRadius: 14, background: '#0F766E', border: '2px solid #e2e8f0', overflow: 'hidden', flexShrink: 0, display: 'flex', alignItems: 'center', justifyContent: 'center', fontSize: 22, fontWeight: 700, color: '#fff' }}>
             {displayImg
               ? <img src={displayImg} alt={displayName} style={{ width: '100%', height: '100%', objectFit: 'cover' }} />
               : displayName.split(' ').map(w => w[0]).join('').slice(0, 2).toUpperCase()
@@ -276,7 +276,7 @@ export default function ProfileEditor({ profile, profileType, userId }) {
               {isTiler ? 'ටයිලර්' : 'සේවා සපයන්නා'} · {profile.city || '—'}
             </div>
             {profilePath && (
-              <a href={profilePath} target="_blank" rel="noopener" style={{ fontSize: 11, color: '#4A2E17', fontWeight: 600, textDecoration: 'none' }}>
+              <a href={profilePath} target="_blank" rel="noopener" style={{ fontSize: 11, color: '#0F766E', fontWeight: 600, textDecoration: 'none' }}>
                 පොදු පැතිකඩ →
               </a>
             )}
@@ -285,7 +285,7 @@ export default function ProfileEditor({ profile, profileType, userId }) {
 
         <div style={{ display: 'flex', gap: 10, flexWrap: 'wrap' }}>
           <button onClick={() => { setEditing(true); setSaved(false) }}
-            style={{ padding: '10px 22px', background: '#4A2E17', color: '#fff', border: 'none', borderRadius: 10, fontSize: 13, fontWeight: 700, cursor: 'pointer' }}>
+            style={{ padding: '10px 22px', background: '#0F766E', color: '#fff', border: 'none', borderRadius: 10, fontSize: 13, fontWeight: 700, cursor: 'pointer' }}>
             ✏️ පැතිකඩ සංස්කරණය
           </button>
           {profilePath && (
@@ -412,7 +412,7 @@ export default function ProfileEditor({ profile, profileType, userId }) {
 
       <div style={{ display: 'flex', gap: 10 }}>
         <button onClick={save} disabled={saving}
-          style={{ flex: 1, padding: '13px', background: saving ? '#94a3b8' : '#4A2E17', color: '#fff', border: 'none', borderRadius: 12, fontSize: 14, fontWeight: 700, cursor: saving ? 'not-allowed' : 'pointer', transition: 'background 0.2s' }}>
+          style={{ flex: 1, padding: '13px', background: saving ? '#94a3b8' : '#0F766E', color: '#fff', border: 'none', borderRadius: 12, fontSize: 14, fontWeight: 700, cursor: saving ? 'not-allowed' : 'pointer', transition: 'background 0.2s' }}>
           {saving ? '⏳ සුරකිමින්…' : '💾 වෙනස්කම් සුරකින්න'}
         </button>
         <button onClick={() => setEditing(false)} disabled={saving}

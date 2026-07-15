@@ -29,7 +29,7 @@ const { data: similarRaw } = job.district
 const similar = similarRaw || []
 
 const icon = JOB_TYPE_ICONS[job.project_type] || '🏠'
-const color = JOB_TYPE_COLORS[job.project_type] || '#4A2E17'
+const color = JOB_TYPE_COLORS[job.project_type] || '#0F766E'
 const isActive = job.status === 'active' || !job.status
 const locationLabel = job.city || job.district || 'Sri Lanka'
 
@@ -134,7 +134,7 @@ const waShare = `https://wa.me/?text=${encodeURIComponent(`🏠 ${job.project_ty
           {job.budget_range && (
             <span style="font-size:11px;padding:5px 13px;border-radius:20px;background:#f0fdf4;color:#15803d;font-weight:700;border:1px solid #bbf7d0;">💰 {job.budget_range}</span>
           )}
-          <span style="font-size:11px;padding:5px 13px;border-radius:20px;background:#F8F1E8;color:#6B4A2E;font-weight:700;border:1px solid #EADDCB;">💬 {bidCount} bid{bidCount !== 1 ? 's' : ''} received</span>
+          <span style="font-size:11px;padding:5px 13px;border-radius:20px;background:#F0FDFA;color:#0D9488;font-weight:700;border:1px solid #99F6E4;">💬 {bidCount} bid{bidCount !== 1 ? 's' : ''} received</span>
         </div>
 
         <!-- Description -->
@@ -161,9 +161,9 @@ const waShare = `https://wa.me/?text=${encodeURIComponent(`🏠 ${job.project_ty
             <div style="font-size:9px;font-weight:700;color:#94a3b8;text-transform:uppercase;letter-spacing:1px;margin-bottom:4px;">Posted</div>
             <div style="font-size:13px;font-weight:600;color:#0f172a;">⏱ {timeAgo(job.created_at)}</div>
           </div>
-          <div style="background:#F8F1E8;border-radius:12px;border:1px solid #EADDCB;padding:12px 14px;">
+          <div style="background:#F0FDFA;border-radius:12px;border:1px solid #99F6E4;padding:12px 14px;">
             <div style="font-size:9px;font-weight:700;color:#94a3b8;text-transform:uppercase;letter-spacing:1px;margin-bottom:4px;">Competition</div>
-            <div style="font-size:13px;font-weight:700;color:#6B4A2E;">💬 {bidCount} bid{bidCount !== 1 ? 's' : ''}</div>
+            <div style="font-size:13px;font-weight:700;color:#0D9488;">💬 {bidCount} bid{bidCount !== 1 ? 's' : ''}</div>
           </div>
         </div>
 
@@ -184,7 +184,7 @@ const waShare = `https://wa.me/?text=${encodeURIComponent(`🏠 ${job.project_ty
 
       <!-- Bid form card -->
       <div style="background:#fff;border:1px solid #e2e8f0;border-radius:20px;overflow:hidden;box-shadow:0 2px 10px rgba(0,0,0,0.05);">
-        <div style="background:linear-gradient(135deg,#1C120A,#4A2E17);padding:20px 24px;">
+        <div style="background:linear-gradient(135deg,#042F2E,#0F766E);padding:20px 24px;">
           <h2 style="font-size:17px;font-weight:700;color:#fff;margin:0 0 4px;">Submit Your Bid</h2>
           <p style="font-size:12px;color:rgba(255,255,255,0.55);margin:0;">No login required · Free · Homeowner contacts you on WhatsApp if interested</p>
         </div>
@@ -198,12 +198,12 @@ const waShare = `https://wa.me/?text=${encodeURIComponent(`🏠 ${job.project_ty
         <div>
           <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:12px;">
             <div style="font-size:13px;font-weight:700;color:#111827;">More in {job.district || job.city}</div>
-            <a href="/jobs" style="font-size:12px;font-weight:600;color:#A9713C;text-decoration:none;">View all →</a>
+            <a href="/jobs" style="font-size:12px;font-weight:600;color:#D97706;text-decoration:none;">View all →</a>
           </div>
           <div style="display:flex;flex-direction:column;gap:8px;">
             {similar.map(s => {
               const sIcon = JOB_TYPE_ICONS[s.project_type] || '🏠'
-              const sColor = JOB_TYPE_COLORS[s.project_type] || '#4A2E17'
+              const sColor = JOB_TYPE_COLORS[s.project_type] || '#0F766E'
               return (
                 <a href={jobPath(s)}
                   style="display:flex;align-items:center;gap:0;background:#fff;border-radius:12px;overflow:hidden;border:1px solid #e2e8f0;text-decoration:none;color:inherit;box-shadow:0 1px 4px rgba(0,0,0,0.04);">
@@ -221,12 +221,12 @@ const waShare = `https://wa.me/?text=${encodeURIComponent(`🏠 ${job.project_ty
       )}
 
       <!-- CTA for homeowners -->
-      <div style="background:#A9713C;border-radius:16px;padding:20px 24px;display:flex;align-items:center;justify-content:space-between;gap:16px;flex-wrap:wrap;">
+      <div style="background:#D97706;border-radius:16px;padding:20px 24px;display:flex;align-items:center;justify-content:space-between;gap:16px;flex-wrap:wrap;">
         <div>
           <div style="font-size:9px;font-weight:700;color:rgba(255,255,255,0.6);letter-spacing:2px;text-transform:uppercase;margin-bottom:3px;">Have a project?</div>
           <div style="font-size:14px;font-weight:700;color:#fff;">Post your project free — get competitive bids</div>
         </div>
-        <a href="/post-project" style="display:inline-flex;align-items:center;gap:6px;background:#fff;color:#A9713C;border-radius:10px;padding:11px 20px;font-size:13px;font-weight:800;text-decoration:none;flex-shrink:0;">
+        <a href="/post-project" style="display:inline-flex;align-items:center;gap:6px;background:#fff;color:#D97706;border-radius:10px;padding:11px 20px;font-size:13px;font-weight:800;text-decoration:none;flex-shrink:0;">
           📋 Post Free
         </a>
       </div>

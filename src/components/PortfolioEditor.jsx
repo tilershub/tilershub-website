@@ -62,7 +62,7 @@ export default function PortfolioEditor({ profile, profileType, userId }) {
     <div>
       {/* Prompt when empty */}
       {total === 0 && (
-        <div style={{ background:'linear-gradient(135deg,#F8F1E8,#fff7ed)', border:'1px solid #fed7aa', borderRadius:14, padding:'18px 20px', marginBottom:20, display:'flex', alignItems:'center', gap:14 }}>
+        <div style={{ background:'linear-gradient(135deg,#F0FDFA,#fff7ed)', border:'1px solid #fed7aa', borderRadius:14, padding:'18px 20px', marginBottom:20, display:'flex', alignItems:'center', gap:14 }}>
           <div style={{ fontSize:36, flexShrink:0 }}>📸</div>
           <div>
             <div style={{ fontSize:14, fontWeight:700, color:'#c2410c', marginBottom:4 }}>ව්‍යාපෘති ඡායාරූප එකතු කරන්න</div>
@@ -78,7 +78,7 @@ export default function PortfolioEditor({ profile, profileType, userId }) {
             📸 ඡායාරූප {gallery.length}ක්
           </span>
           {profileHref && (
-            <a href={profileHref} target="_blank" rel="noopener" style={{ fontSize:12, fontWeight:600, color:'#4A2E17', textDecoration:'none' }}>
+            <a href={profileHref} target="_blank" rel="noopener" style={{ fontSize:12, fontWeight:600, color:'#0F766E', textDecoration:'none' }}>
               පොදු පැතිකඩ →
             </a>
           )}
@@ -109,7 +109,7 @@ export default function PortfolioEditor({ profile, profileType, userId }) {
         {total < MAX_GALLERY && (
           <div onClick={() => ref.current?.click()}
             style={{ aspectRatio:'1', borderRadius:12, border:'2px dashed #cbd5e1', display:'flex', flexDirection:'column', alignItems:'center', justifyContent:'center', cursor:'pointer', background:'#f8fafc', gap:6, transition:'border-color 0.15s,background 0.15s' }}
-            onMouseOver={e => { e.currentTarget.style.borderColor='#4A2E17'; e.currentTarget.style.background='#eef3fb' }}
+            onMouseOver={e => { e.currentTarget.style.borderColor='#0F766E'; e.currentTarget.style.background='#eef3fb' }}
             onMouseOut={e  => { e.currentTarget.style.borderColor='#cbd5e1'; e.currentTarget.style.background='#f8fafc' }}
           >
             <span style={{ fontSize:24, color:'#94a3b8' }}>+</span>
@@ -135,12 +135,12 @@ export default function PortfolioEditor({ profile, profileType, userId }) {
 
       {hasNew ? (
         <button onClick={save} disabled={saving}
-          style={{ width:'100%', padding:'13px', background: saving ? '#94a3b8' : '#4A2E17', color:'#fff', border:'none', borderRadius:12, fontSize:14, fontWeight:700, cursor: saving ? 'not-allowed' : 'pointer', transition:'background 0.2s' }}>
+          style={{ width:'100%', padding:'13px', background: saving ? '#94a3b8' : '#0F766E', color:'#fff', border:'none', borderRadius:12, fontSize:14, fontWeight:700, cursor: saving ? 'not-allowed' : 'pointer', transition:'background 0.2s' }}>
           {saving ? '⏳ සුරකිමින්…' : `💾 නව ඡායාරූප ${newFiles.length}ක් සුරකින්න`}
         </button>
       ) : gallery.length > 0 && profileHref ? (
         <a href={profileHref} target="_blank" rel="noopener"
-          style={{ display:'block', textAlign:'center', padding:'12px', background:'#f1f5f9', color:'#4A2E17', border:'1px solid #e2e8f0', borderRadius:12, fontSize:13, fontWeight:700, textDecoration:'none' }}>
+          style={{ display:'block', textAlign:'center', padding:'12px', background:'#f1f5f9', color:'#0F766E', border:'1px solid #e2e8f0', borderRadius:12, fontSize:13, fontWeight:700, textDecoration:'none' }}>
           🔗 පොදු පැතිකඩ බලන්න →
         </a>
       ) : null}

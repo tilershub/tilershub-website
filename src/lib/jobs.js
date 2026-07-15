@@ -14,9 +14,9 @@ export const JOB_TYPE_ICONS = {
 }
 
 export const JOB_TYPE_COLORS = {
-  'Floor Tiling': '#4A2E17', 'Bathroom Tiling': '#0f766e', 'Bathroom Renovation': '#0f766e',
+  'Floor Tiling': '#0F766E', 'Bathroom Tiling': '#0f766e', 'Bathroom Renovation': '#0f766e',
   'Granite Works': '#7c3aed', 'Tile Cutting': '#b45309', 'Waterproofing': '#0369a1',
-  'Tile Shop Inquiry': '#A9713C', 'Large Format Tiling': '#7c3aed', 'Mosaic Tiling': '#7c3aed',
+  'Tile Shop Inquiry': '#D97706', 'Large Format Tiling': '#7c3aed', 'Mosaic Tiling': '#7c3aed',
   'House Painting': '#b45309', 'Landscaping & Gardening': '#15803d', 'Carpentry Works': '#92400e',
   'Glass Railing': '#0891b2', 'Aluminium & Glass Works': '#374151', 'Electrical Repairs': '#7c3aed',
   'House Wiring': '#7c3aed', 'Gypsum Ceiling': '#166534', 'IPanel Ceiling': '#166534',

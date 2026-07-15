@@ -5,8 +5,8 @@ export const GUIDES = [
     title: 'How to Choose the Right Tile Size for Your Room',
     excerpt: 'Larger tiles make rooms look bigger, but installation requires more precision. Learn the pros and cons of each size before you buy.',
     icon: '📐',
-    bg: 'linear-gradient(135deg,#3A2416,#6B4A2E)',
-    accentColor: '#3A2416',
+    bg: 'linear-gradient(135deg,#115E59,#0D9488)',
+    accentColor: '#115E59',
     readTime: '5 min read',
     sections: [
       {
@@ -267,8 +267,8 @@ export const GUIDES = [
     title: 'Tile Prices in Sri Lanka (2026): Ceramic, Porcelain & Large Format',
     excerpt: 'Current tile price ranges by size and type — ceramic, porcelain, vitrified and large format — plus what drives the price up or down.',
     icon: '🏷️',
-    bg: 'linear-gradient(135deg,#4A2E17,#A9713C)',
-    accentColor: '#4A2E17',
+    bg: 'linear-gradient(135deg,#0F766E,#D97706)',
+    accentColor: '#0F766E',
     readTime: '6 min read',
     sections: [
       {

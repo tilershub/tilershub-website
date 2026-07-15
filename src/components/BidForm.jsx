@@ -27,10 +27,10 @@ function BidSuccess({ projectType, city }) {
         Your bid for the <strong>{projectType}</strong> in <strong>{city}</strong> has been received. If the homeowner selects you, they'll contact you directly on WhatsApp.
       </p>
       <div style={{ display: 'flex', gap: 10, justifyContent: 'center', flexWrap: 'wrap' }}>
-        <a href="/jobs" style={{ display: 'inline-flex', alignItems: 'center', gap: 6, fontSize: 13, fontWeight: 700, color: '#4A2E17', textDecoration: 'none', background: '#F8F1E8', border: '1.5px solid #4A2E1722', borderRadius: 10, padding: '11px 20px' }}>
+        <a href="/jobs" style={{ display: 'inline-flex', alignItems: 'center', gap: 6, fontSize: 13, fontWeight: 700, color: '#0F766E', textDecoration: 'none', background: '#F0FDFA', border: '1.5px solid #0F766E22', borderRadius: 10, padding: '11px 20px' }}>
           ← Browse More Projects
         </a>
-        <a href="/providers?type=tiler" style={{ display: 'inline-flex', alignItems: 'center', gap: 6, fontSize: 13, fontWeight: 700, color: '#fff', textDecoration: 'none', background: '#4A2E17', borderRadius: 10, padding: '11px 20px' }}>
+        <a href="/providers?type=tiler" style={{ display: 'inline-flex', alignItems: 'center', gap: 6, fontSize: 13, fontWeight: 700, color: '#fff', textDecoration: 'none', background: '#0F766E', borderRadius: 10, padding: '11px 20px' }}>
           ✅ Create Your Profile
         </a>
       </div>
@@ -109,8 +109,8 @@ export default function BidForm({ jobId, bidCount = 0, projectType = '', city = 
           {BIDDER_TYPES.map(t => (
             <button key={t.value} type="button" onClick={() => set('bidder_type', t.value)}
               style={{ display: 'flex', flexDirection: 'column', alignItems: 'center', gap: 4, padding: '10px 4px', borderRadius: 12, cursor: 'pointer', border: '1.5px solid', transition: 'all 0.15s',
-                background: form.bidder_type === t.value ? '#4A2E17' : '#f8fafc',
-                borderColor: form.bidder_type === t.value ? '#4A2E17' : '#e2e8f0',
+                background: form.bidder_type === t.value ? '#0F766E' : '#f8fafc',
+                borderColor: form.bidder_type === t.value ? '#0F766E' : '#e2e8f0',
               }}
             >
               <span style={{ fontSize: 18 }}>{t.icon}</span>
@@ -159,7 +159,7 @@ export default function BidForm({ jobId, bidCount = 0, projectType = '', city = 
       )}
 
       <button type="submit" disabled={loading}
-        style={{ padding: '15px', background: loading ? '#94a3b8' : 'linear-gradient(135deg,#4A2E17,#6B4A2E)', color: '#fff', border: 'none', borderRadius: 12, fontSize: 15, fontWeight: 700, cursor: loading ? 'not-allowed' : 'pointer', boxShadow: loading ? 'none' : '0 4px 14px rgba(74,46,23,0.3)', transition: 'all 0.2s' }}>
+        style={{ padding: '15px', background: loading ? '#94a3b8' : 'linear-gradient(135deg,#0F766E,#0D9488)', color: '#fff', border: 'none', borderRadius: 12, fontSize: 15, fontWeight: 700, cursor: loading ? 'not-allowed' : 'pointer', boxShadow: loading ? 'none' : '0 4px 14px rgba(15,118,110,0.3)', transition: 'all 0.2s' }}>
         {loading ? '⏳ Submitting your bid…' : '📨 Submit Bid Now'}
       </button>
 

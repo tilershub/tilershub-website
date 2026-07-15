@@ -43,7 +43,7 @@ const locServices = LOCATION_SERVICE_SLUGS.map(s => SERVICES.find(x => x.slug ==
 const cost = typicalCostPerSqft()
 const year = new Date().getFullYear()
 
-const AVATAR_COLORS = ['#4A2E17','#0f766e','#7c3aed','#b45309','#0369a1','#A9713C','#15803d','#be185d']
+const AVATAR_COLORS = ['#0F766E','#0f766e','#7c3aed','#b45309','#0369a1','#D97706','#15803d','#be185d']
 function avatarColor(name) {
   let h = 0
   for (const c of name) h = (h * 31 + c.charCodeAt(0)) >>> 0
@@ -97,7 +97,7 @@ Astro.response.headers.set('Cache-Control', 'public, max-age=0, s-maxage=600')
   <script slot="head" type="application/ld+json" set:html={serviceSchema} />
 
   <!-- Hero -->
-  <div style="background:linear-gradient(135deg,#1C120A 0%,#3A2416 100%);padding:32px 20px 30px;position:relative;overflow:hidden;">
+  <div style="background:linear-gradient(135deg,#042F2E 0%,#115E59 100%);padding:32px 20px 30px;position:relative;overflow:hidden;">
     <div style="position:absolute;inset:0;opacity:0.03;background-image:repeating-linear-gradient(0deg,transparent,transparent 39px,rgba(255,255,255,0.8) 39px,rgba(255,255,255,0.8) 40px),repeating-linear-gradient(90deg,transparent,transparent 39px,rgba(255,255,255,0.8) 39px,rgba(255,255,255,0.8) 40px);pointer-events:none;"></div>
     <div style="position:relative;max-width:960px;margin:0 auto;">
       <Breadcrumbs items={[{ name: 'Find Tilers', href: '/providers?type=tiler' }, { name: district.name }]} light />
@@ -110,7 +110,7 @@ Astro.response.headers.set('Cache-Control', 'public, max-age=0, s-maxage=600')
         <span class="si-text">{district.nameSi} දිස්ත්‍රික්කයේ සත්‍යාපිත ටයිලර්වරුන්ගෙන් නොමිලේ ලංසු ලබා ගන්න.</span>
       </p>
       <a href={`/post-project?district=${encodeURIComponent(district.name)}`}
-        style="display:inline-flex;align-items:center;gap:8px;background:#A9713C;color:#fff;border-radius:24px;padding:12px 26px;font-size:14px;font-weight:700;text-decoration:none;box-shadow:0 4px 20px rgba(169,113,60,0.4);">
+        style="display:inline-flex;align-items:center;gap:8px;background:#D97706;color:#fff;border-radius:24px;padding:12px 26px;font-size:14px;font-weight:700;text-decoration:none;box-shadow:0 4px 20px rgba(217,119,6,0.4);">
         📋 <span class="en-text">Post a Project in {district.name}</span><span class="si-text">ව්‍යාපෘතිය පලකරන්න</span>
       </a>
     </div>
@@ -121,7 +121,7 @@ Astro.response.headers.set('Cache-Control', 'public, max-age=0, s-maxage=600')
     <div style="max-width:960px;margin:0 auto;">
       <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:16px;">
         <h2 style="font-size:15px;font-weight:800;color:#0f172a;margin:0;">{total > 0 ? `${total} tiling professional${total !== 1 ? 's' : ''} serving ${district.name}` : `Tiling professionals serving ${district.name}`}</h2>
-        <a href="/providers" style="font-size:12px;color:#A9713C;font-weight:600;text-decoration:none;">Browse all ›</a>
+        <a href="/providers" style="font-size:12px;color:#D97706;font-weight:600;text-decoration:none;">Browse all ›</a>
       </div>
 
       {total === 0 ? (
@@ -129,8 +129,8 @@ Astro.response.headers.set('Cache-Control', 'public, max-age=0, s-maxage=600')
           <div style="font-size:36px;margin-bottom:10px;">👷</div>
           <p style="font-size:13px;color:#64748b;margin:0 0 16px;line-height:1.7;">No providers listed in {district.name} yet — post your project and nearby tilers will bid, or be the first to join.</p>
           <div style="display:flex;gap:10px;justify-content:center;flex-wrap:wrap;">
-            <a href="/post-project" style="display:inline-flex;background:#A9713C;color:#fff;border-radius:12px;padding:10px 20px;font-size:13px;font-weight:700;text-decoration:none;">📋 Post a Project</a>
-            <a href="/join-tilershub" style="display:inline-flex;background:#4A2E17;color:#fff;border-radius:12px;padding:10px 20px;font-size:13px;font-weight:700;text-decoration:none;">✅ Join as Provider</a>
+            <a href="/post-project" style="display:inline-flex;background:#D97706;color:#fff;border-radius:12px;padding:10px 20px;font-size:13px;font-weight:700;text-decoration:none;">📋 Post a Project</a>
+            <a href="/join-tilershub" style="display:inline-flex;background:#0F766E;color:#fff;border-radius:12px;padding:10px 20px;font-size:13px;font-weight:700;text-decoration:none;">✅ Join as Provider</a>
           </div>
         </div>
       ) : (
@@ -159,7 +159,7 @@ Astro.response.headers.set('Cache-Control', 'public, max-age=0, s-maxage=600')
                   <div style="display:flex;align-items:flex-start;justify-content:space-between;gap:8px;margin-bottom:5px;">
                     <span style="font-size:15px;font-weight:700;color:#0f172a;line-height:1.25;">{p.name}</span>
                     {p.daily_rate_min && (
-                      <span style="font-size:11px;font-weight:700;color:#A9713C;white-space:nowrap;flex-shrink:0;">From Rs. {Number(p.daily_rate_min).toLocaleString()}/day</span>
+                      <span style="font-size:11px;font-weight:700;color:#D97706;white-space:nowrap;flex-shrink:0;">From Rs. {Number(p.daily_rate_min).toLocaleString()}/day</span>
                     )}
                   </div>
                   <div style="font-size:12px;margin-bottom:8px;">
@@ -180,7 +180,7 @@ Astro.response.headers.set('Cache-Control', 'public, max-age=0, s-maxage=600')
                       )}
                       {cardHref && (
                         <a href={cardHref} onclick="event.stopPropagation()"
-                          style="display:inline-flex;align-items:center;background:#4A2E17;color:#fff;border-radius:10px;padding:7px 12px;font-size:11px;font-weight:700;text-decoration:none;">View ›</a>
+                          style="display:inline-flex;align-items:center;background:#0F766E;color:#fff;border-radius:10px;padding:7px 12px;font-size:11px;font-weight:700;text-decoration:none;">View ›</a>
                       )}
                     </div>
                   </div>
@@ -199,7 +199,7 @@ Astro.response.headers.set('Cache-Control', 'public, max-age=0, s-maxage=600')
       <div style="max-width:720px;margin:0 auto;">
         <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:14px;">
           <h2 style="font-size:15px;font-weight:800;color:#0f172a;margin:0;">Recent tiling projects in {district.name}</h2>
-          <a href="/jobs" style="font-size:12px;color:#A9713C;font-weight:600;text-decoration:none;">View all ›</a>
+          <a href="/jobs" style="font-size:12px;color:#D97706;font-weight:600;text-decoration:none;">View all ›</a>
         </div>
         <div style="display:flex;flex-direction:column;gap:10px;">
           {jobs.map(j => (
@@ -226,7 +226,7 @@ Astro.response.headers.set('Cache-Control', 'public, max-age=0, s-maxage=600')
         (C1 Rs. {ADHESIVE_TIERS[0].rate} – C2TE Rs. {ADHESIVE_TIERS[2].rate}/sq.ft), grout Rs. {EXTRAS.grout}/sq.ft and level clips
         Rs. {EXTRAS.levelClips}/sq.ft, budget roughly <strong>Rs. {cost.low}–{cost.high} per sq.ft</strong> before tile material.
       </p>
-      <a href="/estimator" style="display:inline-flex;align-items:center;gap:7px;background:#4A2E17;color:#fff;border-radius:12px;padding:10px 20px;font-size:13px;font-weight:700;text-decoration:none;">
+      <a href="/estimator" style="display:inline-flex;align-items:center;gap:7px;background:#0F766E;color:#fff;border-radius:12px;padding:10px 20px;font-size:13px;font-weight:700;text-decoration:none;">
         📐 Calculate your tiling cost →
       </a>
     </div>
@@ -240,7 +240,7 @@ Astro.response.headers.set('Cache-Control', 'public, max-age=0, s-maxage=600')
         <h2 style="font-size:14px;font-weight:800;color:#0f172a;margin:0 0 10px;">Popular services in {district.name}</h2>
         <div style="display:flex;flex-wrap:wrap;gap:8px;">
           {locServices.map(s => (
-            <a href={serviceDistrictPath(s.slug, district)} style="font-size:12px;font-weight:700;color:#4A2E17;background:#F8F1E8;border:1px solid #EADDCB;border-radius:20px;padding:7px 14px;text-decoration:none;">{s.icon} {s.label} in {district.name}</a>
+            <a href={serviceDistrictPath(s.slug, district)} style="font-size:12px;font-weight:700;color:#0F766E;background:#F0FDFA;border:1px solid #99F6E4;border-radius:20px;padding:7px 14px;text-decoration:none;">{s.icon} {s.label} in {district.name}</a>
           ))}
         </div>
       </div>
@@ -278,7 +278,7 @@ Astro.response.headers.set('Cache-Control', 'public, max-age=0, s-maxage=600')
   </div>
 
   <!-- CTA -->
-  <div style="background:linear-gradient(135deg,#3A2416 0%,#1C120A 100%);padding:36px 20px;text-align:center;">
+  <div style="background:linear-gradient(135deg,#115E59 0%,#042F2E 100%);padding:36px 20px;text-align:center;">
     <h2 style="font-family:'Playfair Display',serif;font-size:clamp(18px,4vw,24px);font-weight:700;color:#fff;margin:0 0 10px;">
       <span class="en-text">Need tiling done in {district.name}?</span>
       <span class="si-text">{district.nameSi} හි ටයිලිං සේවාවක් අවශ්‍යද?</span>
@@ -287,7 +287,7 @@ Astro.response.headers.set('Cache-Control', 'public, max-age=0, s-maxage=600')
       <span class="en-text">Post free — get quotes from verified tilers on WhatsApp</span>
       <span class="si-text">නොමිලේ පලකරන්න — WhatsApp හරහා ලංසු ලබා ගන්න</span>
     </p>
-    <a href="/post-project" style="display:inline-flex;align-items:center;gap:8px;background:#A9713C;color:#fff;border-radius:24px;padding:13px 28px;font-size:14px;font-weight:700;text-decoration:none;box-shadow:0 4px 20px rgba(169,113,60,0.45);">
+    <a href="/post-project" style="display:inline-flex;align-items:center;gap:8px;background:#D97706;color:#fff;border-radius:24px;padding:13px 28px;font-size:14px;font-weight:700;text-decoration:none;box-shadow:0 4px 20px rgba(217,119,6,0.45);">
       📋 <span class="en-text">Post Your Project →</span><span class="si-text">ව්‍යාපෘතිය පලකරන්න →</span>
     </a>
   </div>
