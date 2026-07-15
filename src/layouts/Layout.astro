@@ -176,6 +176,9 @@ const orgSchema = JSON.stringify({
     <a href="/" class={`drawer-link${path==='/'?' active':''}`}>🏠 Home</a>
     <a href="/providers?type=tiler" class={`drawer-link${path.startsWith('/providers')?' active':''}`}>👷 Find Tilers</a>
     <a href="/jobs" class={`drawer-link${path==='/jobs'?' active':''}`}>💼 View Projects</a>
+    <a href="/tile" class={`drawer-link${path==='/tile'?' active':''}`}>🏪 Tile Shops & Brands</a>
+    <a href="/bathrooms" class={`drawer-link${path==='/bathrooms'?' active':''}`} style="color:rgba(255,255,255,0.6);">🚿 Bathroom Products</a>
+    <a href="/tools" class={`drawer-link${path==='/tools'?' active':''}`} style="color:rgba(255,255,255,0.6);">🛠️ Tools & Equipment</a>
     <div class="drawer-divider"></div>
     <a href="/post-project" class="drawer-link highlight">📋 Post a Project — Get Quotes</a>
     <a href="/join-tilershub" class="drawer-link" style="color:rgba(255,255,255,0.6);">✅ Join as a Provider</a>
@@ -204,7 +207,7 @@ const orgSchema = JSON.stringify({
           <div class="site-logo-grid">{[0,1,2,3,4,5,6,7,8].map(()=><div class="site-logo-tile"></div>)}</div>
           <span style="font-family:'Playfair Display',serif;font-size:16px;font-weight:700;color:rgba(255,255,255,0.88);">TILERS<strong>HUB</strong></span>
         </div>
-        <p class="footer-brand-text">Sri Lanka's tile &amp; home renovation marketplace — post a project, get quotes, choose your expert. Free for homeowners.</p>
+        <p class="footer-brand-text">The home of Sri Lanka's tile trade — homeowners post projects free, tilers win work, and shops, brands &amp; suppliers reach customers islandwide.</p>
         <div style="display:flex;gap:10px;margin-top:16px;">
           <a href="https://chat.whatsapp.com/IR9ZWyFj7ZN15KeOHqwG3Z" target="_blank" rel="noopener" style="display:inline-flex;align-items:center;gap:5px;font-size:11px;font-weight:700;color:#25D366;text-decoration:none;">💬 WhatsApp</a>
           <a href="https://www.facebook.com/share/g/1Dsc63BvXS/" target="_blank" rel="noopener" style="display:inline-flex;align-items:center;gap:5px;font-size:11px;font-weight:700;color:#60a5fa;text-decoration:none;">👥 Facebook</a>
@@ -214,11 +217,12 @@ const orgSchema = JSON.stringify({
       <div>
         <div class="footer-col-head">Discover</div>
         <nav class="footer-links">
-          <a href="/providers?type=tiler">Find Professionals</a>
+          <a href="/providers?type=tiler">Find Tilers</a>
           <a href="/jobs">View Projects</a>
-          <a href="/estimator">Cost Estimator</a>
-          <a href="/providers">All Providers</a>
-          <a href="https://luxehome.lk/services/bathroom/" target="_blank" rel="noopener noreferrer">Bathroom Renovation</a>
+          <a href="/estimator">Cost Calculator</a>
+          <a href="/tile">Tile Shops &amp; Brands</a>
+          <a href="/bathrooms">Bathroom Products</a>
+          <a href="/tools">Tools &amp; Equipment</a>
           <a href="/services/floor-tiling">Floor Tiling</a>
         </nav>
       </div>
