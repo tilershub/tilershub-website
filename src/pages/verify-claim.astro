@@ -1,10 +1,6 @@
 ---
-import Layout from '../layouts/Layout.astro'
-import VerifyClaimForm from '../components/VerifyClaimForm.jsx'
+// The profile-claim flow has been retired — providers now register
+// directly via /join-tilershub (Google sign-in → admin approval).
+export const prerender = false
+return Astro.redirect('/join-tilershub', 301)
 ---
-<Layout title="Verify Profile Claim · TilersHub"
-  description="Enter your verification code to claim your TilersHub profile.">
-  <div style="max-width:480px;margin:60px auto;padding:0 16px 80px">
-    <VerifyClaimForm client:load />
-  </div>
-</Layout>
