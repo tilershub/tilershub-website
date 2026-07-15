@@ -157,7 +157,7 @@ const orgSchema = JSON.stringify({
     </a>
 
     <div class="header-actions">
-      <button class="header-icon-btn" id="lang-toggle" aria-label="Switch language" style="font-size:11px;font-weight:800;letter-spacing:0.5px;">සිං</button>
+      <button id="lang-toggle" aria-label="Switch language" style="min-width:40px;height:28px;padding:0 10px;border-radius:20px;border:1.5px solid var(--border);background:#fff;color:var(--text-2);font-size:11px;font-weight:800;letter-spacing:0.5px;cursor:pointer;font-family:inherit;">සිං</button>
       <a href="/providers" class="header-icon-btn header-search-hide" title="Search" aria-label="Search providers">🔍</a>
       <a href="/notifications" class="header-icon-btn" title="Notifications" aria-label="Notifications">🔔</a>
       <AuthButton initialUser={user} client:load />
@@ -174,14 +174,15 @@ const orgSchema = JSON.stringify({
       <button id="close-drawer" style="background:transparent;border:none;color:rgba(255,255,255,0.5);font-size:22px;cursor:pointer;padding:4px;">✕</button>
     </div>
     <a href="/" class={`drawer-link${path==='/'?' active':''}`}>🏠 Home</a>
-    <a href="/providers?type=tiler" class={`drawer-link${path.startsWith('/providers')?' active':''}`}>👷 Find Professionals</a>
+    <a href="/providers?type=tiler" class={`drawer-link${path.startsWith('/providers')?' active':''}`}>👷 Find Tilers</a>
     <a href="/jobs" class={`drawer-link${path==='/jobs'?' active':''}`}>💼 View Projects</a>
-    <a href="/estimator" class={`drawer-link${path==='/estimator'?' active':''}`}>📐 Cost Estimator</a>
     <div class="drawer-divider"></div>
     <a href="/post-project" class="drawer-link highlight">📋 Post a Project — Get Quotes</a>
     <a href="/join-tilershub" class="drawer-link" style="color:rgba(255,255,255,0.6);">✅ Join as a Provider</a>
     <div class="drawer-divider"></div>
-    <a href="/providers" class="drawer-link" style="color:rgba(255,255,255,0.5);font-size:13px;">🔍 All Providers</a>
+    <a href="/estimator" class={`drawer-link${path==='/estimator'?' active':''}`}>📐 Cost Calculator</a>
+    <a href="/guides" class={`drawer-link${path.startsWith('/guides')?' active':''}`} style="color:rgba(255,255,255,0.6);">📖 Guides</a>
+    <a href="/blog" class={`drawer-link${path.startsWith('/blog')?' active':''}`} style="color:rgba(255,255,255,0.6);">📰 Blog & Tips</a>
     <div class="drawer-divider"></div>
     <a href="/about" class={`drawer-link${path==='/about'?' active':''}`} style="color:rgba(255,255,255,0.5);font-size:13px;">ℹ️ About TilersHub</a>
     <a href="/contact" class={`drawer-link${path==='/contact'?' active':''}`} style="color:rgba(255,255,255,0.5);font-size:13px;">📬 Contact Us</a>
@@ -267,7 +268,7 @@ const orgSchema = JSON.stringify({
       </a>
       <a href="/providers" class={`bottom-nav-item${path.startsWith('/providers')?' active':''}`}>
         <span class="bottom-nav-icon">👥</span>
-        Providers
+        Tilers
       </a>
       <a href="/post-project" class="bottom-nav-post" aria-label="Post a project">
         +
