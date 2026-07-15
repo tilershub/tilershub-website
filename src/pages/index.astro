@@ -54,18 +54,18 @@ const WHY_ITEMS = [
 ---
 
 <Layout
-  title="TilersHub · Sri Lanka's Home Improvement Marketplace"
-  description="Post your home project free and get quotes from verified tilers, contractors and specialists across Sri Lanka."
+  title="TilersHub · Sri Lanka's Tile Marketplace — Tilers, Shops, Brands & Projects"
+  description="The home of Sri Lanka's tile trade: homeowners post projects free, tilers win jobs, and tile shops, brands and suppliers reach customers. All 25 districts."
 >
-  <meta slot="head" name="keywords" content="tilers Sri Lanka, tiling services, bathroom renovation, floor tiling, tile contractor Colombo, tile shop Sri Lanka, waterproofing Sri Lanka, TilersHub" />
+  <meta slot="head" name="keywords" content="tilers Sri Lanka, tiling services, tile marketplace Sri Lanka, bathroom renovation, floor tiling, tile contractor Colombo, tile shop Sri Lanka, tile brands Sri Lanka, tile suppliers, waterproofing Sri Lanka, TilersHub" />
   <script slot="head" type="application/ld+json" set:html={JSON.stringify({
     '@context': 'https://schema.org',
     '@type': 'WebPage',
-    name: "TilersHub · Sri Lanka's Home Improvement Marketplace",
-    description: 'Post your home project free and get quotes from verified specialists across Sri Lanka.',
+    name: "TilersHub · Sri Lanka's Tile Marketplace",
+    description: "The home of Sri Lanka's tile trade — projects, professionals, shops, brands and suppliers.",
     url: 'https://www.tilershub.lk',
     isPartOf: { '@id': 'https://www.tilershub.lk/#website' },
-    about: { '@type': 'Thing', name: 'Tiling and home improvement services in Sri Lanka' },
+    about: { '@type': 'Thing', name: 'Tile trade marketplace in Sri Lanka' },
   })} />
   <link slot="head" rel="preload" as="image" href={HERO_IMG} fetchpriority="high" />
 
@@ -302,6 +302,76 @@ const WHY_ITEMS = [
         ))}
       </div>
     </div>
+  </section>
+
+  <!-- ══ ECOSYSTEM: EVERY PARTY IN THE TILE TRADE ══ -->
+  <section style="background:#fff;padding:24px 16px 28px;border-top:1px solid #f1f5f9;">
+    <h2 style="font-size:16px;font-weight:800;color:#111827;margin:0 0 4px;">
+      <span class="en-text">🧱 One Place for the Whole Tile Trade</span>
+      <span class="si-text">🧱 ටයිල් ක්ෂේත්‍රයේ සියල්ලන්ටම එකම තැන</span>
+    </h2>
+    <p style="font-size:12px;color:#64748b;margin:0 0 14px;line-height:1.6;">
+      <span class="en-text">Homeowners, tilers, shops, brands and suppliers — everyone in Sri Lanka's tile niche works through TilersHub.</span>
+      <span class="si-text">ගෙදර හිමිකරුවන්, ටයිලර්වරු, ටයිල් සාප්පු, brands සහ suppliers — සියල්ලන්ටම TilersHub.</span>
+    </p>
+    <div style="display:grid;grid-template-columns:1fr 1fr;gap:12px;">
+
+      <a href="/post-project" style="display:block;background:linear-gradient(135deg,#0F766E,#0D9488);border-radius:16px;padding:16px 14px;text-decoration:none;">
+        <div style="font-size:26px;margin-bottom:8px;">🏠</div>
+        <div style="font-size:13px;font-weight:800;color:#fff;margin-bottom:3px;">
+          <span class="en-text">Homeowners</span>
+          <span class="si-text">ගෙදර හිමිකරුවන්</span>
+        </div>
+        <div style="font-size:11px;color:rgba(255,255,255,0.75);line-height:1.5;">
+          <span class="en-text">Post a project free, compare quotes, hire with confidence</span>
+          <span class="si-text">නොමිලේ පලකරන්න, ලංසු සසඳන්න, විශ්වාසයෙන් කුලියට ගන්න</span>
+        </div>
+        <div style="font-size:11px;font-weight:800;color:#FDE68A;margin-top:8px;"><span class="en-text">Post free →</span><span class="si-text">පලකරන්න →</span></div>
+      </a>
+
+      <a href="/jobs" style="display:block;background:#fff;border:1.5px solid #99F6E4;border-radius:16px;padding:16px 14px;text-decoration:none;">
+        <div style="font-size:26px;margin-bottom:8px;">👷</div>
+        <div style="font-size:13px;font-weight:800;color:#0f172a;margin-bottom:3px;">
+          <span class="en-text">Tilers & Contractors</span>
+          <span class="si-text">ටයිලර්වරු</span>
+        </div>
+        <div style="font-size:11px;color:#64748b;line-height:1.5;">
+          <span class="en-text">Browse open projects, bid free, get listed islandwide</span>
+          <span class="si-text">විවෘත ව්‍යාපෘති බලන්න, නොමිලේ ලංසු දමන්න</span>
+        </div>
+        <div style="font-size:11px;font-weight:800;color:#0F766E;margin-top:8px;"><span class="en-text">Find jobs →</span><span class="si-text">රැකියා →</span></div>
+      </a>
+
+      <a href="/tile" style="display:block;background:#fff;border:1.5px solid #99F6E4;border-radius:16px;padding:16px 14px;text-decoration:none;">
+        <div style="font-size:26px;margin-bottom:8px;">🏪</div>
+        <div style="font-size:13px;font-weight:800;color:#0f172a;margin-bottom:3px;">
+          <span class="en-text">Tile Shops & Brands</span>
+          <span class="si-text">ටයිල් සාප්පු සහ Brands</span>
+        </div>
+        <div style="font-size:11px;color:#64748b;line-height:1.5;">
+          <span class="en-text">Reach renovating customers; showcase collections & dealers</span>
+          <span class="si-text">ගනුදෙනුකරුවන් වෙත ළඟා වන්න</span>
+        </div>
+        <div style="font-size:11px;font-weight:800;color:#0F766E;margin-top:8px;"><span class="en-text">Shops & brands →</span><span class="si-text">සාප්පු →</span></div>
+      </a>
+
+      <a href="/tools" style="display:block;background:#fff;border:1.5px solid #99F6E4;border-radius:16px;padding:16px 14px;text-decoration:none;">
+        <div style="font-size:26px;margin-bottom:8px;">🛠️</div>
+        <div style="font-size:13px;font-weight:800;color:#0f172a;margin-bottom:3px;">
+          <span class="en-text">Suppliers & Workshops</span>
+          <span class="si-text">Suppliers සහ Workshops</span>
+        </div>
+        <div style="font-size:11px;color:#64748b;line-height:1.5;">
+          <span class="en-text">Tools, adhesives, cutting services — list your business free</span>
+          <span class="si-text">මෙවලම්, ඇලවුම්, කැපුම් සේවා</span>
+        </div>
+        <div style="font-size:11px;font-weight:800;color:#0F766E;margin-top:8px;"><span class="en-text">Tools & supplies →</span><span class="si-text">මෙවලම් →</span></div>
+      </a>
+
+    </div>
+    <a href="/join-tilershub" style="display:flex;align-items:center;justify-content:center;gap:8px;margin-top:12px;background:#FFF7ED;border:1.5px solid #FDE68A;border-radius:14px;padding:13px;font-size:13px;font-weight:800;color:#B45309;text-decoration:none;">
+      ✅ <span class="en-text">In the tile trade? Get listed free →</span><span class="si-text">ටයිල් ක්ෂේත්‍රයේද? නොමිලේ ලියාපදිංචි වන්න →</span>
+    </a>
   </section>
 
   <!-- ══ BLOG / TIPS ══ -->
