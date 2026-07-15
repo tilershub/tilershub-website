@@ -139,8 +139,6 @@ function ProviderDashboard({ user, claimedProfile, submission, showClaimedBanner
   const [reviews, setReviews]                 = useState([])
   const [dataLoaded, setDataLoaded]           = useState({ explore:false, quotes:false, saved:false, reviews:false })
   const [dataLoading, setDataLoading]         = useState(false)
-  const [pendingClaim, setPendingClaim]       = useState(null)
-  const [claimLoading, setClaimLoading]       = useState(false)
 
   useEffect(() => {
     const params = new URLSearchParams(window.location.search)
@@ -155,7 +153,6 @@ function ProviderDashboard({ user, claimedProfile, submission, showClaimedBanner
     if (tab === 'quotes'   && !dataLoaded.quotes)   loadQuotesData()
     if (tab === 'saved'    && !dataLoaded.saved)    loadSavedData()
     if (tab === 'reviews'  && !dataLoaded.reviews)  loadReviewsData()
-    if (tab === 'profile'  && !claimedProfile && pendingClaim === null) loadPendingClaim()
   }, [tab])
 
   async function loadExploreData() {
@@ -226,20 +223,6 @@ function ProviderDashboard({ user, claimedProfile, submission, showClaimedBanner
     if (!error) setReviews(data || [])
     setDataLoaded(p => ({ ...p, reviews: true }))
     setDataLoading(false)
-  }
-
-  async function loadPendingClaim() {
-    setClaimLoading(true)
-    const { data } = await supabase
-      .from('claim_requests')
-      .select('id, profile_name, created_at')
-      .eq('user_id', user.id)
-      .eq('status', 'pending_code')
-      .order('created_at', { ascending: false })
-      .limit(1)
-      .maybeSingle()
-    setPendingClaim(data || false)
-    setClaimLoading(false)
   }
 
   const T = { explore:'🔍 Explore', quotes:'💬 My Quotes', saved:'🔖 Saved', profile:'👤 Profile', reviews:'⭐ Reviews', provider:'Provider', signOut:'Sign Out', viewListing:'🔗 View Listing' }
@@ -330,7 +313,7 @@ function ProviderDashboard({ user, claimedProfile, submission, showClaimedBanner
         {tab === 'explore' && (dataLoading ? <Spinner /> : <ExploreTab projects={exploreProjects} user={user} lang={lang} />)}
         {tab === 'quotes'  && (dataLoading ? <Spinner /> : <MyQuotesTab submittedBids={submittedBids} lang={lang} />)}
         {tab === 'saved'   && (dataLoading ? <Spinner /> : <SavedTab savedProjects={savedProjects} user={user} setSavedProjects={setSavedProjects} lang={lang} />)}
-        {tab === 'profile' && <ProfileTab user={user} claimedProfile={claimedProfile} submission={submission} profileHref={profileHref} lang={lang} pendingClaim={pendingClaim} claimLoading={claimLoading} />}
+        {tab === 'profile' && <ProfileTab user={user} claimedProfile={claimedProfile} submission={submission} profileHref={profileHref} lang={lang} />}
         {tab === 'reviews' && (dataLoading ? <Spinner /> : <ReviewsTab reviews={reviews} profileHref={profileHref} lang={lang} />)}
       </div>
     </div>
@@ -531,7 +514,7 @@ function SavedTab({ savedProjects, user, setSavedProjects, lang }) {
 }
 
 // ── Profile Tab ───────────────────────────────────────────────────────────────
-function ProfileTab({ user, claimedProfile, submission, profileHref, lang, pendingClaim, claimLoading }) {
+function ProfileTab({ user, claimedProfile, submission, profileHref, lang }) {
   const [showEditor, setShowEditor]     = useState(false)
   const [showPortfolio, setShowPortfolio] = useState(false)
 
@@ -558,25 +541,6 @@ function ProfileTab({ user, claimedProfile, submission, profileHref, lang, pendi
         </div>
       ) : (
         <>
-          {claimLoading && (
-            <div style={{ padding:'14px 16px', background:'#f8fafc', borderRadius:12, border:'1px solid var(--border)', fontSize:13, color:'var(--text-3)' }}>
-              ⏳ Checking for pending claims…
-            </div>
-          )}
-          {!claimLoading && pendingClaim && (
-            <div style={{ background:'#fffbeb', border:'1.5px solid #fcd34d', borderLeft:'4px solid #f59e0b', borderRadius:14, padding:'16px' }}>
-              <div style={{ fontSize:12, fontWeight:700, color:'#92400e', marginBottom:6 }}>⏳ Claim In Progress</div>
-              <p style={{ fontSize:13, color:'#78350f', marginBottom:14, lineHeight:1.6 }}>
-                You started claiming <strong>{pendingClaim.profile_name}</strong>. Enter the 5-digit code sent to the WhatsApp number on that profile to complete verification.
-              </p>
-              <a
-                href={`/verify-claim?id=${pendingClaim.id}`}
-                style={{ display:'inline-flex', alignItems:'center', gap:6, padding:'10px 18px', background:'#f59e0b', color:'#fff', borderRadius:10, fontSize:13, fontWeight:700, textDecoration:'none' }}
-              >
-                Enter PIN &amp; Complete Claim →
-              </a>
-            </div>
-          )}
           <div style={{ textAlign:'center', padding:'36px 20px', background:'#fff', borderRadius:16, border:'1px solid var(--border)' }}>
             <div style={{ fontSize:36, marginBottom:12 }}>👷</div>
             <div style={{ fontSize:15, fontWeight:700, color:'var(--text)', marginBottom:8 }}>{T.noProfile}</div>

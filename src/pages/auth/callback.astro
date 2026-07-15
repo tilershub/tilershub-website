@@ -15,20 +15,9 @@ if (!user) {
   return Astro.redirect('/login')
 }
 
-// Return to profile page if user was in the middle of a claim flow
-const claimReturn = Astro.url.searchParams.get('claim_return')
-if (claimReturn && claimReturn.startsWith('/providers/')) {
-  return Astro.redirect(claimReturn)
-}
-
 const joinReturn = Astro.url.searchParams.get('join_return')
 if (joinReturn === '/join-tilershub') {
   return Astro.redirect('/join-tilershub')
-}
-
-const verifyReturn = Astro.url.searchParams.get('verify_return')
-if (verifyReturn?.startsWith('/verify-claim')) {
-  return Astro.redirect(verifyReturn)
 }
 
 const ADMIN_EMAILS = ['tilershub@gmail.com']

@@ -34,7 +34,7 @@ export async function GET({ locals }) {
 
   const [{ data: tilerRows }, { data: providerRows }, { data: projectRows }] = await Promise.all([
     locals.supabase.from('tilers').select('slug,updated_at').eq('is_verified', true).not('slug', 'is', null),
-    locals.supabase.from('providers').select('slug,updated_at').not('slug', 'is', null),
+    locals.supabase.from('providers').select('slug,updated_at').eq('status', 'active').not('slug', 'is', null),
     locals.supabase.from('projects').select('id,project_type,city,district,created_at').eq('status', 'active').order('created_at', { ascending: false }).limit(500),
   ])
 

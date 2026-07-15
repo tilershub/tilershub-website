@@ -2,7 +2,6 @@
 export const prerender = false
 import Layout from '../../layouts/Layout.astro'
 import ReviewsSection from '../../components/ReviewsSection.jsx'
-import ClaimProfile from '../../components/ClaimProfile.jsx'
 import EditProfileButton from '../../components/EditProfileButton.jsx'
 
 const { slug } = Astro.params
@@ -783,13 +782,6 @@ const breadcrumbSchema = JSON.stringify({
       ownerId={item.user_id}
       profileType="provider"
       profileSlug={item.slug}
-    />
-    <ClaimProfile
-      client:load
-      profileId={item.id}
-      profileType="provider"
-      profileName={name}
-      isClaimed={!!item.user_id}
     />
   </div>
 

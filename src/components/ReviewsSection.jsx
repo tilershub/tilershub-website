@@ -90,18 +90,25 @@ function ReviewForm({ tilerId, providerId, onSubmitted }) {
     if (!form.reviewer_name.trim())             { setError('ඔබේ නම ඇතුළු කරන්න'); return }
     if (!form.job_type)                         { setError('කාර්ය වර්ගය තෝරන්න'); return }
     if (form.comment.trim().length < 20)        { setError('සමාලෝචනය අවම වශයෙන් අකුරු 20ක් විය යුතුය'); return }
+    // One review per provider per browser
+    const guardKey = `th_reviewed_${providerId || tilerId}`
+    if (localStorage.getItem(guardKey)) { setError('ඔබ දැනටමත් මෙම ශිල්පියා සමාලෝචනය කර ඇත'); return }
     setLoading(true); setError('')
+    // Attach user_id when signed in so reviews are accountable
+    const { data: { user } } = await supabase.auth.getUser()
     const payload = {
       reviewer_name: form.reviewer_name.trim(),
       rating:        form.rating,
       job_type:      form.job_type,
       comment:       form.comment.trim(),
+      user_id:       user?.id ?? null,
     }
     if (tilerId)    payload.tiler_id    = tilerId
     if (providerId) payload.provider_id = providerId
     const { error: err } = await supabase.from('reviews').insert(payload)
     setLoading(false)
     if (err) { setError(err.message || 'ඉදිරිපත් කිරීම අසාර්ථකයි — නැවත උත්සාහ කරන්න.'); return }
+    try { localStorage.setItem(guardKey, '1') } catch {}
     onSubmitted()
   }
 
