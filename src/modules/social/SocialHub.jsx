@@ -3,7 +3,7 @@ import ContentStudio   from './components/ContentStudio.jsx'
 import ContentCalendar from './components/ContentCalendar.jsx'
 import PostQueue       from './components/PostQueue.jsx'
 
-const NAVY   = '#4A2E17'
+const NAVY   = '#0F766E'
 const GOLD   = '#E8B341'
 const ORANGE = '#E8580A'
 

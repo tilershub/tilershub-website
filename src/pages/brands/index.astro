@@ -30,7 +30,7 @@ const BRAND_META = {
 }
 
 function meta(brand) {
-  return BRAND_META[brand.slug] || { color: '#fff', bg: '#4A2E17' }
+  return BRAND_META[brand.slug] || { color: '#fff', bg: '#0F766E' }
 }
 
 function logoText(name) {
@@ -61,7 +61,7 @@ function logoText(name) {
       {tileBrands.length > 0 && (
         <div style="margin-bottom:56px;">
           <div style="display:flex;align-items:center;gap:12px;margin-bottom:24px;">
-            <div style="width:36px;height:36px;background:linear-gradient(135deg,var(--navy),#6B4A2E);border-radius:10px;display:flex;align-items:center;justify-content:center;font-size:18px;">🪨</div>
+            <div style="width:36px;height:36px;background:linear-gradient(135deg,var(--navy),#0D9488);border-radius:10px;display:flex;align-items:center;justify-content:center;font-size:18px;">🪨</div>
             <div>
               <div style="font-size:18px;font-weight:700;color:var(--text);">Tile Brands</div>
               <div style="font-size:12px;color:var(--text-4);">Floor tiles, wall tiles, porcelain &amp; ceramic collections</div>
@@ -74,7 +74,7 @@ function logoText(name) {
               const isFeaturedPage = !!brand.dedicated_page_url
               return (
                 <a href={href} style={`background:#fff;border-radius:16px;border:${isFeaturedPage ? '2px solid var(--gold)' : '1px solid #e2e8f0'};padding:22px;display:block;text-decoration:none;color:inherit;position:relative;overflow:hidden;transition:box-shadow 0.2s,transform 0.2s;`}
-                  onmouseover="this.style.boxShadow='0 8px 28px rgba(74,46,23,0.12)';this.style.transform='translateY(-3px)'"
+                  onmouseover="this.style.boxShadow='0 8px 28px rgba(15,118,110,0.12)';this.style.transform='translateY(-3px)'"
                   onmouseout="this.style.boxShadow='';this.style.transform=''">
                   {isFeaturedPage && <div style="position:absolute;top:0;right:0;background:var(--gold);color:#0d0b08;font-size:9px;font-weight:800;letter-spacing:1.5px;text-transform:uppercase;padding:4px 12px;border-bottom-left-radius:10px;">Sponsored</div>}
                   <div style="display:flex;align-items:center;gap:14px;margin-bottom:14px;">
@@ -90,7 +90,7 @@ function logoText(name) {
                   <p style="font-size:12px;color:var(--text-3);line-height:1.65;margin-bottom:14px;">{brand.description}</p>
                   <div style="display:flex;flex-wrap:wrap;gap:5px;margin-bottom:14px;">
                     {(brand.categories || []).slice(0,3).map(c => (
-                      <span style={`font-size:10px;padding:2px 9px;border-radius:20px;background:${m.bg}18;color:${m.bg === '#FFFFFF' ? '#4A2E17' : m.bg};border:1px solid ${m.bg}30;font-weight:600;`}>{c}</span>
+                      <span style={`font-size:10px;padding:2px 9px;border-radius:20px;background:${m.bg}18;color:${m.bg === '#FFFFFF' ? '#0F766E' : m.bg};border:1px solid ${m.bg}30;font-weight:600;`}>{c}</span>
                     ))}
                   </div>
                   <div style="font-size:12px;font-weight:700;color:var(--navy);">{isFeaturedPage ? 'View Sponsor Page →' : 'View Brand →'}</div>
@@ -145,7 +145,7 @@ function logoText(name) {
       {bathroomBrands.length > 0 && (
         <div style="margin-bottom:56px;">
           <div style="display:flex;align-items:center;gap:12px;margin-bottom:24px;">
-            <div style="width:36px;height:36px;background:linear-gradient(135deg,#1C120A,#4A2E17);border-radius:10px;display:flex;align-items:center;justify-content:center;font-size:18px;">🚿</div>
+            <div style="width:36px;height:36px;background:linear-gradient(135deg,#042F2E,#0F766E);border-radius:10px;display:flex;align-items:center;justify-content:center;font-size:18px;">🚿</div>
             <div>
               <div style="font-size:18px;font-weight:700;color:var(--text);">Bathroom Products &amp; Fittings</div>
               <div style="font-size:12px;color:var(--text-4);">Sanitary ware, faucets, showers, bathtubs &amp; bathroom accessories</div>
@@ -158,20 +158,20 @@ function logoText(name) {
               const isFeaturedPage = !!brand.dedicated_page_url
               return (
                 <a href={href} style={`background:#fff;border-radius:16px;border:${isFeaturedPage ? '2px solid var(--gold)' : '1px solid #e2e8f0'};padding:22px;display:block;text-decoration:none;color:inherit;position:relative;overflow:hidden;transition:box-shadow 0.2s,transform 0.2s;`}
-                  onmouseover="this.style.boxShadow='0 8px 28px rgba(74,46,23,0.12)';this.style.transform='translateY(-3px)'"
+                  onmouseover="this.style.boxShadow='0 8px 28px rgba(15,118,110,0.12)';this.style.transform='translateY(-3px)'"
                   onmouseout="this.style.boxShadow='';this.style.transform=''">
                   {isFeaturedPage && <div style="position:absolute;top:0;right:0;background:var(--gold);color:#0d0b08;font-size:9px;font-weight:800;letter-spacing:1.5px;text-transform:uppercase;padding:4px 12px;border-bottom-left-radius:10px;">Sponsored</div>}
                   <div style="display:flex;align-items:center;gap:14px;margin-bottom:14px;">
                     <div style={`width:56px;height:56px;border-radius:14px;background:${m.bg};display:flex;align-items:center;justify-content:center;font-size:18px;font-weight:800;color:${m.color};letter-spacing:-0.5px;flex-shrink:0;font-family:'Playfair Display',serif;`}>{logoText(brand.name)}</div>
                     <div>
                       <div style="font-size:16px;font-weight:700;color:var(--text);">{brand.name}</div>
-                      <span style="font-size:10px;color:#1C120A;font-weight:700;">🚿 Bathroom Products</span>
+                      <span style="font-size:10px;color:#042F2E;font-weight:700;">🚿 Bathroom Products</span>
                     </div>
                   </div>
                   <p style="font-size:12px;color:var(--text-3);line-height:1.65;margin-bottom:14px;">{brand.description}</p>
                   <div style="display:flex;flex-wrap:wrap;gap:5px;margin-bottom:14px;">
                     {(brand.categories || []).slice(0,3).map(c => (
-                      <span style="font-size:10px;padding:2px 9px;border-radius:20px;background:#EFF6FF;color:#4A2E17;border:1px solid #BFDBFE;font-weight:600;">{c}</span>
+                      <span style="font-size:10px;padding:2px 9px;border-radius:20px;background:#EFF6FF;color:#0F766E;border:1px solid #BFDBFE;font-weight:600;">{c}</span>
                     ))}
                   </div>
                   <div style="font-size:12px;font-weight:700;color:var(--navy);">{isFeaturedPage ? 'View Sponsor Page →' : 'View Brand →'}</div>
@@ -197,7 +197,7 @@ function logoText(name) {
               const m = meta(brand)
               return (
                 <a href={`/brands/${brand.slug}`} style="background:#fff;border-radius:16px;border:1px solid #e2e8f0;padding:22px;display:block;text-decoration:none;color:inherit;transition:box-shadow 0.2s,transform 0.2s;"
-                  onmouseover="this.style.boxShadow='0 8px 28px rgba(74,46,23,0.10)';this.style.transform='translateY(-3px)'"
+                  onmouseover="this.style.boxShadow='0 8px 28px rgba(15,118,110,0.10)';this.style.transform='translateY(-3px)'"
                   onmouseout="this.style.boxShadow='';this.style.transform=''">
                   <div style="display:flex;align-items:center;gap:14px;margin-bottom:14px;">
                     <div style={`width:56px;height:56px;border-radius:14px;background:${m.bg};display:flex;align-items:center;justify-content:center;font-size:18px;font-weight:800;color:${m.color};letter-spacing:-0.5px;flex-shrink:0;font-family:'Playfair Display',serif;`}>{logoText(brand.name)}</div>

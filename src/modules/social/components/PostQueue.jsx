@@ -1,7 +1,7 @@
 import { useState, useEffect } from 'react'
 import { getQueue, updateStatus, removeFromQueue, copyRowToClipboard, copyAllToClipboard } from '../lib/contentQueue.js'
 
-const NAVY   = '#4A2E17'
+const NAVY   = '#0F766E'
 const GOLD   = '#E8B341'
 const ORANGE = '#E8580A'
 const SHEET_URL = 'https://docs.google.com/spreadsheets/d/1umnpXIFhPT8-D31_dbiS_Iz5Ebw9ZfexwrBPD7YPENw/edit'

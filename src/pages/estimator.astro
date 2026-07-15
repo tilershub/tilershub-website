@@ -86,7 +86,7 @@ const topDistricts = DISTRICT_INFO.filter(d => ['colombo','gampaha','kandy','gal
   <div style="background:#f8fafc;padding:12px 20px;border-bottom:1px solid #e2e8f0;">
     <div style="max-width:580px;margin:0 auto;display:flex;align-items:center;justify-content:space-between;gap:12px;flex-wrap:wrap;">
       <span style="font-size:13px;color:#64748b;">අයවැය දැනටමත් දන්නවාද? ගණනය ඉක්මවා යන්න.</span>
-      <a href="/post-project" style="display:inline-flex;align-items:center;gap:6px;background:#A9713C;color:#fff;border-radius:10px;padding:8px 16px;font-size:12px;font-weight:700;text-decoration:none;white-space:nowrap;">
+      <a href="/post-project" style="display:inline-flex;align-items:center;gap:6px;background:#D97706;color:#fff;border-radius:10px;padding:8px 16px;font-size:12px;font-weight:700;text-decoration:none;white-space:nowrap;">
         📋 නොමිලේ ව්‍යාපෘතිය පලකරන්න →
       </a>
     </div>
@@ -277,7 +277,7 @@ const topDistricts = DISTRICT_INFO.filter(d => ['colombo','gampaha','kandy','gal
         </div>
 
         <!-- Grand Total -->
-        <div style="background:rgba(169,113,60,0.15);border:1px solid rgba(169,113,60,0.3);border-radius:12px;padding:18px;text-align:center;">
+        <div style="background:rgba(217,119,6,0.15);border:1px solid rgba(217,119,6,0.3);border-radius:12px;padding:18px;text-align:center;">
           <div style="font-size:11px;color:rgba(255,255,255,0.45);margin-bottom:4px;letter-spacing:1px;text-transform:uppercase;">ඇස්තමේන්තු සම්පූර්ණය</div>
           <div id="res-total" style="font-size:30px;font-weight:700;color:var(--terra);">—</div>
           <div id="res-total-note" style="font-size:10px;color:rgba(255,255,255,0.3);margin-top:4px;">තෝරාගත් සියලු අයිතම ඇතුළත්</div>
@@ -320,8 +320,8 @@ const topDistricts = DISTRICT_INFO.filter(d => ['colombo','gampaha','kandy','gal
         </p>
         <p style="font-size:14px;color:#374151;line-height:1.9;margin:0;">
           The calculator above applies these exact market rates. For a deeper breakdown read our
-          <a href="/guides/tiling-cost-guide-sri-lanka" style="color:#A9713C;font-weight:700;">tiling cost guide</a>,
-          or <a href="/post-project" style="color:#A9713C;font-weight:700;">post your project free</a> to get real quotes from verified tilers.
+          <a href="/guides/tiling-cost-guide-sri-lanka" style="color:#D97706;font-weight:700;">tiling cost guide</a>,
+          or <a href="/post-project" style="color:#D97706;font-weight:700;">post your project free</a> to get real quotes from verified tilers.
         </p>
       </div>
 
@@ -331,9 +331,9 @@ const topDistricts = DISTRICT_INFO.filter(d => ['colombo','gampaha','kandy','gal
         <table style="width:100%;border-collapse:collapse;font-size:13px;min-width:420px;">
           <thead>
             <tr>
-              <th style="background:#4A2E17;color:#fff;padding:9px 12px;text-align:left;font-size:12px;">Item</th>
-              <th style="background:#4A2E17;color:#fff;padding:9px 12px;text-align:left;font-size:12px;">Rate (Rs. / sq.ft)</th>
-              <th style="background:#4A2E17;color:#fff;padding:9px 12px;text-align:left;font-size:12px;">Notes</th>
+              <th style="background:#0F766E;color:#fff;padding:9px 12px;text-align:left;font-size:12px;">Item</th>
+              <th style="background:#0F766E;color:#fff;padding:9px 12px;text-align:left;font-size:12px;">Rate (Rs. / sq.ft)</th>
+              <th style="background:#0F766E;color:#fff;padding:9px 12px;text-align:left;font-size:12px;">Notes</th>
             </tr>
           </thead>
           <tbody>
@@ -354,9 +354,9 @@ const topDistricts = DISTRICT_INFO.filter(d => ['colombo','gampaha','kandy','gal
         <table style="width:100%;border-collapse:collapse;font-size:13px;min-width:320px;">
           <thead>
             <tr>
-              <th style="background:#4A2E17;color:#fff;padding:9px 12px;text-align:left;font-size:12px;">Tile size</th>
-              <th style="background:#4A2E17;color:#fff;padding:9px 12px;text-align:left;font-size:12px;">Coverage / tile</th>
-              <th style="background:#4A2E17;color:#fff;padding:9px 12px;text-align:left;font-size:12px;">Tiles per 100 sq.ft</th>
+              <th style="background:#0F766E;color:#fff;padding:9px 12px;text-align:left;font-size:12px;">Tile size</th>
+              <th style="background:#0F766E;color:#fff;padding:9px 12px;text-align:left;font-size:12px;">Coverage / tile</th>
+              <th style="background:#0F766E;color:#fff;padding:9px 12px;text-align:left;font-size:12px;">Tiles per 100 sq.ft</th>
             </tr>
           </thead>
           <tbody>
@@ -364,15 +364,15 @@ const topDistricts = DISTRICT_INFO.filter(d => ['colombo','gampaha','kandy','gal
               <tr>
                 <td style="padding:9px 12px;border-bottom:1px solid #e2e8f0;font-weight:600;">{t.label}</td>
                 <td style="padding:9px 12px;border-bottom:1px solid #e2e8f0;">{t.sqft.toFixed(2)} sq.ft</td>
-                <td style="padding:9px 12px;border-bottom:1px solid #e2e8f0;font-weight:700;color:#A9713C;">{tilesNeeded(100, t.sqft)} tiles</td>
+                <td style="padding:9px 12px;border-bottom:1px solid #e2e8f0;font-weight:700;color:#D97706;">{tilesNeeded(100, t.sqft)} tiles</td>
               </tr>
             ))}
           </tbody>
         </table>
         <p style="font-size:12px;color:#64748b;margin:10px 0 0;line-height:1.7;">
           Typical tile prices: {TILE_PRICE_RANGES.map((r, i) => `${r.size} ${r.range}${i < TILE_PRICE_RANGES.length - 1 ? ' · ' : ''}`)} —
-          see the full <a href="/guides/tile-prices-sri-lanka" style="color:#A9713C;font-weight:700;">tile price list</a> and
-          <a href="/guides/tiling-labour-charges-sri-lanka" style="color:#A9713C;font-weight:700;">labour charges guide</a>.
+          see the full <a href="/guides/tile-prices-sri-lanka" style="color:#D97706;font-weight:700;">tile price list</a> and
+          <a href="/guides/tiling-labour-charges-sri-lanka" style="color:#D97706;font-weight:700;">labour charges guide</a>.
         </p>
       </div>
 
@@ -382,18 +382,18 @@ const topDistricts = DISTRICT_INFO.filter(d => ['colombo','gampaha','kandy','gal
         <table style="width:100%;border-collapse:collapse;font-size:13px;min-width:380px;">
           <thead>
             <tr>
-              <th style="background:#4A2E17;color:#fff;padding:9px 12px;text-align:left;font-size:12px;">Material</th>
-              <th style="background:#4A2E17;color:#fff;padding:9px 12px;text-align:left;font-size:12px;">Quantity / 100 sq.ft</th>
-              <th style="background:#4A2E17;color:#fff;padding:9px 12px;text-align:left;font-size:12px;">Basis</th>
+              <th style="background:#0F766E;color:#fff;padding:9px 12px;text-align:left;font-size:12px;">Material</th>
+              <th style="background:#0F766E;color:#fff;padding:9px 12px;text-align:left;font-size:12px;">Quantity / 100 sq.ft</th>
+              <th style="background:#0F766E;color:#fff;padding:9px 12px;text-align:left;font-size:12px;">Basis</th>
             </tr>
           </thead>
           <tbody>
-            <tr><td style="padding:9px 12px;border-bottom:1px solid #e2e8f0;font-weight:600;">Adhesive C1 / C2 (25kg bags)</td><td style="padding:9px 12px;border-bottom:1px solid #e2e8f0;font-weight:700;color:#A9713C;">3 bags</td><td style="padding:9px 12px;border-bottom:1px solid #e2e8f0;">1 bag ≈ 30–35 sq.ft</td></tr>
-            <tr><td style="padding:9px 12px;border-bottom:1px solid #e2e8f0;font-weight:600;">Adhesive C2TE (25kg bags)</td><td style="padding:9px 12px;border-bottom:1px solid #e2e8f0;font-weight:700;color:#A9713C;">3 – 4 bags</td><td style="padding:9px 12px;border-bottom:1px solid #e2e8f0;">Large format needs a thicker bed</td></tr>
-            <tr><td style="padding:9px 12px;border-bottom:1px solid #e2e8f0;font-weight:600;">Grout</td><td style="padding:9px 12px;border-bottom:1px solid #e2e8f0;font-weight:700;color:#A9713C;">2 – 4 kg</td><td style="padding:9px 12px;border-bottom:1px solid #e2e8f0;">Depends on tile size and joint width</td></tr>
-            <tr><td style="padding:9px 12px;border-bottom:1px solid #e2e8f0;font-weight:600;">Level clips</td><td style="padding:9px 12px;border-bottom:1px solid #e2e8f0;font-weight:700;color:#A9713C;">Depends on tile size</td><td style="padding:9px 12px;border-bottom:1px solid #e2e8f0;">~3–8 per tile; wedges are reusable</td></tr>
-            <tr><td style="padding:9px 12px;border-bottom:1px solid #e2e8f0;font-weight:600;">Screed cement (50kg bags)</td><td style="padding:9px 12px;border-bottom:1px solid #e2e8f0;font-weight:700;color:#A9713C;">2 – 3 bags</td><td style="padding:9px 12px;border-bottom:1px solid #e2e8f0;">2 bags standard screed · 3 bags premium screed</td></tr>
-            <tr><td style="padding:9px 12px;font-weight:600;">Screed sand</td><td style="padding:9px 12px;font-weight:700;color:#A9713C;">20 cu.ft</td><td style="padding:9px 12px;">River or manufactured sand</td></tr>
+            <tr><td style="padding:9px 12px;border-bottom:1px solid #e2e8f0;font-weight:600;">Adhesive C1 / C2 (25kg bags)</td><td style="padding:9px 12px;border-bottom:1px solid #e2e8f0;font-weight:700;color:#D97706;">3 bags</td><td style="padding:9px 12px;border-bottom:1px solid #e2e8f0;">1 bag ≈ 30–35 sq.ft</td></tr>
+            <tr><td style="padding:9px 12px;border-bottom:1px solid #e2e8f0;font-weight:600;">Adhesive C2TE (25kg bags)</td><td style="padding:9px 12px;border-bottom:1px solid #e2e8f0;font-weight:700;color:#D97706;">3 – 4 bags</td><td style="padding:9px 12px;border-bottom:1px solid #e2e8f0;">Large format needs a thicker bed</td></tr>
+            <tr><td style="padding:9px 12px;border-bottom:1px solid #e2e8f0;font-weight:600;">Grout</td><td style="padding:9px 12px;border-bottom:1px solid #e2e8f0;font-weight:700;color:#D97706;">2 – 4 kg</td><td style="padding:9px 12px;border-bottom:1px solid #e2e8f0;">Depends on tile size and joint width</td></tr>
+            <tr><td style="padding:9px 12px;border-bottom:1px solid #e2e8f0;font-weight:600;">Level clips</td><td style="padding:9px 12px;border-bottom:1px solid #e2e8f0;font-weight:700;color:#D97706;">Depends on tile size</td><td style="padding:9px 12px;border-bottom:1px solid #e2e8f0;">~3–8 per tile; wedges are reusable</td></tr>
+            <tr><td style="padding:9px 12px;border-bottom:1px solid #e2e8f0;font-weight:600;">Screed cement (50kg bags)</td><td style="padding:9px 12px;border-bottom:1px solid #e2e8f0;font-weight:700;color:#D97706;">2 – 3 bags</td><td style="padding:9px 12px;border-bottom:1px solid #e2e8f0;">2 bags standard screed · 3 bags premium screed</td></tr>
+            <tr><td style="padding:9px 12px;font-weight:600;">Screed sand</td><td style="padding:9px 12px;font-weight:700;color:#D97706;">20 cu.ft</td><td style="padding:9px 12px;">River or manufactured sand</td></tr>
           </tbody>
         </table>
         <p style="font-size:12px;color:#64748b;margin:10px 0 0;line-height:1.7;">
@@ -402,14 +402,14 @@ const topDistricts = DISTRICT_INFO.filter(d => ['colombo','gampaha','kandy','gal
       </div>
 
       <!-- Worked example -->
-      <div style="background:#F8F1E8;border:1px solid #EADDCB;border-radius:16px;padding:20px;">
-        <h2 style="font-size:16px;font-weight:800;color:#4A2E17;margin:0 0 12px;">Worked example: 100 sq.ft floor with 60×60 cm tiles</h2>
-        <div style="font-size:13px;color:#6B4A2E;line-height:2;">
+      <div style="background:#F0FDFA;border:1px solid #99F6E4;border-radius:16px;padding:20px;">
+        <h2 style="font-size:16px;font-weight:800;color:#0F766E;margin:0 0 12px;">Worked example: 100 sq.ft floor with 60×60 cm tiles</h2>
+        <div style="font-size:13px;color:#0D9488;line-height:2;">
           <div>• Tiles needed: 100 ÷ 3.875 × 1.12 = <strong>{tilesNeeded(100, 3.875)} tiles</strong> (at Rs. 900/tile → Rs. {(tilesNeeded(100, 3.875) * 900).toLocaleString('en-LK')})</div>
           <div>• Labour: 100 sq.ft × Rs. {LABOUR.default} = <strong>Rs. {(100 * LABOUR.default).toLocaleString('en-LK')}</strong></div>
           <div>• Adhesive C1: 100 × Rs. {ADHESIVE_TIERS[0].rate} = <strong>Rs. {(100 * ADHESIVE_TIERS[0].rate).toLocaleString('en-LK')}</strong></div>
           <div>• Level clips: 100 × Rs. {EXTRAS.levelClips} = <strong>Rs. {(100 * EXTRAS.levelClips).toLocaleString('en-LK')}</strong> · Grout: 100 × Rs. {EXTRAS.grout} = <strong>Rs. {(100 * EXTRAS.grout).toLocaleString('en-LK')}</strong></div>
-          <div style="border-top:1px solid #EADDCB;margin-top:6px;padding-top:6px;">≈ <strong>Rs. {(tilesNeeded(100, 3.875) * 900 + 100 * (LABOUR.default + ADHESIVE_TIERS[0].rate + EXTRAS.levelClips + EXTRAS.grout)).toLocaleString('en-LK')} total</strong> (no screed needed)</div>
+          <div style="border-top:1px solid #99F6E4;margin-top:6px;padding-top:6px;">≈ <strong>Rs. {(tilesNeeded(100, 3.875) * 900 + 100 * (LABOUR.default + ADHESIVE_TIERS[0].rate + EXTRAS.levelClips + EXTRAS.grout)).toLocaleString('en-LK')} total</strong> (no screed needed)</div>
         </div>
       </div>
 
@@ -431,9 +431,9 @@ const topDistricts = DISTRICT_INFO.filter(d => ['colombo','gampaha','kandy','gal
         <h2 style="font-size:16px;font-weight:800;color:#0f172a;margin:0 0 10px;">Ready to hire? Find tilers near you</h2>
         <div style="display:flex;flex-wrap:wrap;gap:8px;">
           {topDistricts.map(d => (
-            <a href={districtPath(d)} style="font-size:12px;font-weight:700;color:#4A2E17;background:#fff;border:1px solid #EADDCB;border-radius:20px;padding:7px 14px;text-decoration:none;">Tilers in {d.name}</a>
+            <a href={districtPath(d)} style="font-size:12px;font-weight:700;color:#0F766E;background:#fff;border:1px solid #99F6E4;border-radius:20px;padding:7px 14px;text-decoration:none;">Tilers in {d.name}</a>
           ))}
-          <a href="/providers?type=tiler" style="font-size:12px;font-weight:700;color:#fff;background:#A9713C;border-radius:20px;padding:7px 14px;text-decoration:none;">All districts →</a>
+          <a href="/providers?type=tiler" style="font-size:12px;font-weight:700;color:#fff;background:#D97706;border-radius:20px;padding:7px 14px;text-decoration:none;">All districts →</a>
         </div>
       </div>
 

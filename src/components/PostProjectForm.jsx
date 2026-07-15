@@ -110,7 +110,7 @@ function Field({ label, id, req, error, hint, children }) {
   return (
     <div style={{ marginBottom: 18 }}>
       <label htmlFor={id} style={{ display: 'block', fontSize: 12, fontWeight: 700, color: '#334155', textTransform: 'uppercase', letterSpacing: '0.5px', marginBottom: 6 }}>
-        {label} {req && <span style={{ color: '#A9713C' }}>*</span>}
+        {label} {req && <span style={{ color: '#D97706' }}>*</span>}
       </label>
       {children}
       {hint && !error && <p style={{ fontSize: 11, color: '#94a3b8', marginTop: 4 }}>{hint}</p>}
@@ -170,7 +170,7 @@ function MagicLinkForm({ label, hint, t }) {
           autoFocus
           style={{ flex: 1, padding: '10px 14px', border: `1.5px solid ${err ? '#fca5a5' : '#e2e8f0'}`, borderRadius: 10, fontSize: 13, outline: 'none', fontFamily: 'inherit', background: err ? '#fef2f2' : '#fff', boxSizing: 'border-box' }}
         />
-        <button type="submit" disabled={loading} style={{ padding: '10px 18px', background: loading ? '#94a3b8' : '#4A2E17', color: '#fff', border: 'none', borderRadius: 10, fontSize: 13, fontWeight: 700, cursor: loading ? 'not-allowed' : 'pointer', whiteSpace: 'nowrap' }}>
+        <button type="submit" disabled={loading} style={{ padding: '10px 18px', background: loading ? '#94a3b8' : '#0F766E', color: '#fff', border: 'none', borderRadius: 10, fontSize: 13, fontWeight: 700, cursor: loading ? 'not-allowed' : 'pointer', whiteSpace: 'nowrap' }}>
           {loading ? '⏳' : t.sendLink}
         </button>
       </div>
@@ -266,10 +266,10 @@ export default function PostProjectForm() {
             <span style={{ fontSize: 13, color: '#15803d' }}>✓ {t.whatsappNote} <strong>{form.whatsapp}</strong></span>
           </div>
           {/* What happens next */}
-          <div style={{ textAlign: 'left', background: '#F8F1E8', border: '1px solid #EADDCB', borderRadius: 12, padding: '14px 16px', margin: '0 auto', maxWidth: 360 }}>
-            <div style={{ fontSize: 12, fontWeight: 800, color: '#4A2E17', marginBottom: 8 }}>{t.nextTitle}</div>
+          <div style={{ textAlign: 'left', background: '#F0FDFA', border: '1px solid #99F6E4', borderRadius: 12, padding: '14px 16px', margin: '0 auto', maxWidth: 360 }}>
+            <div style={{ fontSize: 12, fontWeight: 800, color: '#0F766E', marginBottom: 8 }}>{t.nextTitle}</div>
             {t.nextSteps.map(s => (
-              <div key={s} style={{ fontSize: 12, color: '#6B4A2E', lineHeight: 1.9 }}>{s}</div>
+              <div key={s} style={{ fontSize: 12, color: '#0D9488', lineHeight: 1.9 }}>{s}</div>
             ))}
           </div>
           <a href={`https://wa.me/?text=${encodeURIComponent(t.shareText)}`} target="_blank" rel="noopener noreferrer"
@@ -282,7 +282,7 @@ export default function PostProjectForm() {
           /* Signed-in user: simple success with manage link */
           <div style={{ background: '#fff', border: '1px solid #e2e8f0', borderTop: '1px solid #f1f5f9', borderRadius: '0 0 20px 20px', padding: '20px 24px' }}>
             <div style={{ display: 'flex', gap: 10, justifyContent: 'center', flexWrap: 'wrap' }}>
-              <a href="/dashboard" style={{ padding: '11px 22px', background: '#4A2E17', color: '#fff', borderRadius: 12, fontSize: 14, fontWeight: 600, textDecoration: 'none' }}>{t.viewDashboard}</a>
+              <a href="/dashboard" style={{ padding: '11px 22px', background: '#0F766E', color: '#fff', borderRadius: 12, fontSize: 14, fontWeight: 600, textDecoration: 'none' }}>{t.viewDashboard}</a>
               <button onClick={resetForm}
                 style={{ padding: '11px 22px', background: '#f1f5f9', color: '#334155', borderRadius: 12, fontSize: 14, fontWeight: 600, border: 'none', cursor: 'pointer' }}>
                 {t.postAnother}
@@ -292,7 +292,7 @@ export default function PostProjectForm() {
         ) : (
           /* Anonymous user: auth prompt to finalize */
           <div style={{ background: '#fff', border: '1px solid #e2e8f0', borderTop: 'none', borderRadius: '0 0 20px 20px', overflow: 'hidden' }}>
-            <div style={{ background: 'linear-gradient(135deg, #4A2E17, #1C120A)', padding: '20px 24px' }}>
+            <div style={{ background: 'linear-gradient(135deg, #0F766E, #042F2E)', padding: '20px 24px' }}>
               <div style={{ fontSize: 11, fontWeight: 700, color: 'rgba(245,158,11,0.8)', letterSpacing: 2, textTransform: 'uppercase', marginBottom: 8 }}>
                 {t.oneMoreStep}
               </div>
@@ -382,7 +382,7 @@ export default function PostProjectForm() {
       </div>
 
       <button type="submit" disabled={submitting}
-        style={{ width: '100%', padding: '13px', background: submitting ? '#94a3b8' : '#A9713C', color: '#fff', border: 'none', borderRadius: 12, fontSize: 15, fontWeight: 700, cursor: submitting ? 'not-allowed' : 'pointer', display: 'flex', alignItems: 'center', justifyContent: 'center', gap: 8, transition: 'background 0.2s' }}>
+        style={{ width: '100%', padding: '13px', background: submitting ? '#94a3b8' : '#D97706', color: '#fff', border: 'none', borderRadius: 12, fontSize: 15, fontWeight: 700, cursor: submitting ? 'not-allowed' : 'pointer', display: 'flex', alignItems: 'center', justifyContent: 'center', gap: 8, transition: 'background 0.2s' }}>
         {submitting ? t.submitting : t.submit}
       </button>
 

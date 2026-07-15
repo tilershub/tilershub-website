@@ -63,7 +63,7 @@ function ShopCard({ shop, index }) {
         {chips.length > 0 && (
           <div style={{ display: 'flex', flexWrap: 'wrap', gap: 4, marginBottom: 10 }}>
             {chips.map(s => (
-              <span key={s} style={{ fontSize: 9, fontWeight: 600, padding: '2px 7px', borderRadius: 20, background: '#eef3fb', color: '#4A2E17', border: '1px solid #d5e2f5' }}>{s}</span>
+              <span key={s} style={{ fontSize: 9, fontWeight: 600, padding: '2px 7px', borderRadius: 20, background: '#eef3fb', color: '#0F766E', border: '1px solid #d5e2f5' }}>{s}</span>
             ))}
           </div>
         )}

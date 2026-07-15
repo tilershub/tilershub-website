@@ -3,7 +3,7 @@ import { planWeek, ANGLES } from '../lib/claudeApi.js'
 import { getQueue, saveToLocalQueue } from '../lib/contentQueue.js'
 import { useSupabaseStats } from '../hooks/useSupabaseStats.js'
 
-const NAVY   = '#4A2E17'
+const NAVY   = '#0F766E'
 const GOLD   = '#E8B341'
 const ORANGE = '#E8580A'
 

@@ -70,7 +70,7 @@ export default function VerifyClaimForm() {
               }
             })
           }}
-          style={{ width: '100%', padding: '11px', background: '#4A2E17', color: '#fff', border: 'none', borderRadius: 12, fontSize: 14, fontWeight: 700, cursor: 'pointer', marginBottom: 10 }}
+          style={{ width: '100%', padding: '11px', background: '#0F766E', color: '#fff', border: 'none', borderRadius: 12, fontSize: 14, fontWeight: 700, cursor: 'pointer', marginBottom: 10 }}
         >
           Sign in with Google →
         </button>
@@ -85,7 +85,7 @@ export default function VerifyClaimForm() {
         <div style={{ fontSize: 40, marginBottom: 12 }}>✅</div>
         <h2 style={{ fontSize: 18, fontWeight: 700, color: '#0f172a', marginBottom: 8 }}>Profile already claimed</h2>
         <p style={{ fontSize: 13, color: '#64748b', marginBottom: 20, lineHeight: 1.7 }}>This profile has already been verified and linked to an account.</p>
-        <a href="/provider" style={{ padding: '10px 22px', background: '#4A2E17', color: '#fff', borderRadius: 10, fontSize: 13, fontWeight: 700, textDecoration: 'none', display: 'inline-block' }}>Go to Dashboard →</a>
+        <a href="/provider" style={{ padding: '10px 22px', background: '#0F766E', color: '#fff', borderRadius: 10, fontSize: 13, fontWeight: 700, textDecoration: 'none', display: 'inline-block' }}>Go to Dashboard →</a>
       </div>
     )
   }
@@ -98,7 +98,7 @@ export default function VerifyClaimForm() {
         <p style={{ fontSize: 13, color: '#64748b', marginBottom: 20, lineHeight: 1.7 }}>
           We couldn't load your claim details. Please refresh and try again.
         </p>
-        <button onClick={() => window.location.reload()} style={{ padding: '10px 22px', background: '#4A2E17', color: '#fff', border: 'none', borderRadius: 10, fontSize: 13, fontWeight: 700, cursor: 'pointer' }}>Try Again →</button>
+        <button onClick={() => window.location.reload()} style={{ padding: '10px 22px', background: '#0F766E', color: '#fff', border: 'none', borderRadius: 10, fontSize: 13, fontWeight: 700, cursor: 'pointer' }}>Try Again →</button>
       </div>
     )
   }
@@ -111,7 +111,7 @@ export default function VerifyClaimForm() {
         <p style={{ fontSize: 13, color: '#64748b', marginBottom: 20, lineHeight: 1.7 }}>
           This verification link has expired or is invalid. Go back to the profile page to start a new claim.
         </p>
-        <a href="/providers" style={{ padding: '10px 22px', background: '#4A2E17', color: '#fff', borderRadius: 10, fontSize: 13, fontWeight: 700, textDecoration: 'none', display: 'inline-block' }}>Browse Profiles →</a>
+        <a href="/providers" style={{ padding: '10px 22px', background: '#0F766E', color: '#fff', borderRadius: 10, fontSize: 13, fontWeight: 700, textDecoration: 'none', display: 'inline-block' }}>Browse Profiles →</a>
       </div>
     )
   }
@@ -152,7 +152,7 @@ export default function VerifyClaimForm() {
         <button
           type="submit"
           disabled={submitting || code.length !== 5}
-          style={{ width: '100%', padding: '13px', background: (submitting || code.length !== 5) ? '#94a3b8' : '#A9713C', color: '#fff', border: 'none', borderRadius: 12, fontSize: 15, fontWeight: 700, cursor: (submitting || code.length !== 5) ? 'not-allowed' : 'pointer', transition: 'background 0.2s' }}
+          style={{ width: '100%', padding: '13px', background: (submitting || code.length !== 5) ? '#94a3b8' : '#D97706', color: '#fff', border: 'none', borderRadius: 12, fontSize: 15, fontWeight: 700, cursor: (submitting || code.length !== 5) ? 'not-allowed' : 'pointer', transition: 'background 0.2s' }}
         >
           {submitting ? '⏳ Verifying…' : 'Verify & Claim Profile →'}
         </button>
