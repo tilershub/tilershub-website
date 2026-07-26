@@ -91,7 +91,7 @@ function AuthModal({ onClose }) {
           onClick={() => signInWithGoogle()}
           style={{
             width: '100%', padding: '13px', marginBottom: 14,
-            background: '#fff', color: '#374151',
+            background: '#fff', color: '#44403C',
             border: '1.5px solid #d1d5db', borderRadius: 10,
             fontSize: 14, fontWeight: 600, cursor: 'pointer',
             display: 'flex', alignItems: 'center', justifyContent: 'center', gap: 10,

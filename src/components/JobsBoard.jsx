@@ -1,6 +1,6 @@
 import { useState, useEffect } from 'react'
 import { supabase, PROJECT_TYPES, DISTRICTS_EN } from '../lib/supabase.js'
-import { jobPath } from '../lib/jobs.js'
+import { jobPath, shortDate } from '../lib/jobs.js'
 
 const TYPE_ICONS = {
   'Floor Tiling': '🪨', 'Bathroom Tiling': '🚿', 'Bathroom Renovation': '🛁',
@@ -9,9 +9,9 @@ const TYPE_ICONS = {
 }
 
 const TYPE_COLORS = {
-  'Floor Tiling': '#0F766E', 'Bathroom Tiling': '#0f766e', 'Bathroom Renovation': '#0f766e',
+  'Floor Tiling': '#B45309', 'Bathroom Tiling': '#B45309', 'Bathroom Renovation': '#B45309',
   'Granite Works': '#7c3aed', 'Tile Cutting': '#b45309', 'Routering': '#b45309',
-  'Waterproofing': '#0369a1', 'Tile Shop Inquiry': '#D97706',
+  'Waterproofing': '#0369a1', 'Tile Shop Inquiry': '#B45309',
 }
 
 function timeAgo(ts) {
@@ -20,12 +20,12 @@ function timeAgo(ts) {
   if (diff < 3600) return `${Math.floor(diff / 60)} මිනි`
   if (diff < 86400) return `${Math.floor(diff / 3600)} පැය`
   if (diff < 604800) return `${Math.floor(diff / 86400)} දින`
-  return new Date(ts).toLocaleDateString('si-LK', { day: 'numeric', month: 'short' })
+  return shortDate(ts)
 }
 
 function selectStyle() {
   return {
-    padding: '9px 14px', border: '1.5px solid #e2e8f0', borderRadius: 10,
+    padding: '9px 14px', border: '1.5px solid #EDE4D3', borderRadius: 10,
     fontSize: 13, fontFamily: 'inherit', background: '#fff', outline: 'none',
     cursor: 'pointer', WebkitAppearance: 'none', appearance: 'none',
   }
@@ -33,22 +33,22 @@ function selectStyle() {
 
 function JobCard({ project, bidCount, blurred }) {
   const icon  = TYPE_ICONS[project.project_type] || '🏠'
-  const color = TYPE_COLORS[project.project_type] || '#0F766E'
+  const color = TYPE_COLORS[project.project_type] || '#B45309'
   const excerpt = project.description?.length > 120 ? project.description.slice(0, 120) + '…' : project.description
 
   return (
-    <div style={{ background: '#fff', borderRadius: 16, border: '1px solid #e2e8f0', padding: '22px 24px', display: 'flex', flexDirection: 'column', gap: 12, boxShadow: '0 1px 4px rgba(0,0,0,0.04)', filter: blurred ? 'blur(5px)' : 'none', userSelect: blurred ? 'none' : 'auto', pointerEvents: blurred ? 'none' : 'auto' }}>
+    <div style={{ background: '#fff', borderRadius: 16, border: '1px solid #EDE4D3', padding: '22px 24px', display: 'flex', flexDirection: 'column', gap: 12, boxShadow: '0 1px 4px rgba(0,0,0,0.04)', filter: blurred ? 'blur(5px)' : 'none', userSelect: blurred ? 'none' : 'auto', pointerEvents: blurred ? 'none' : 'auto' }}>
       <div style={{ display: 'flex', alignItems: 'flex-start', justifyContent: 'space-between', gap: 10 }}>
         <div style={{ display: 'flex', alignItems: 'center', gap: 10 }}>
           <div style={{ width: 44, height: 44, borderRadius: 12, background: `${color}12`, border: `1.5px solid ${color}22`, display: 'flex', alignItems: 'center', justifyContent: 'center', fontSize: 22, flexShrink: 0 }}>{icon}</div>
           <div>
-            <div style={{ fontSize: 15, fontWeight: 700, color: '#0f172a', lineHeight: 1.2 }}>{project.project_type}</div>
-            <div style={{ fontSize: 12, color: '#64748b', marginTop: 2 }}>📍 {project.city}{project.district ? `, ${project.district}` : ''}</div>
+            <div style={{ fontSize: 15, fontWeight: 700, color: '#1C1917', lineHeight: 1.2 }}>{project.project_type}</div>
+            <div style={{ fontSize: 12, color: '#57534E', marginTop: 2 }}>📍 {project.city}{project.district ? `, ${project.district}` : ''}</div>
           </div>
         </div>
-        <span style={{ fontSize: 11, color: '#94a3b8', whiteSpace: 'nowrap', paddingTop: 2 }}>{timeAgo(project.created_at)}</span>
+        <span style={{ fontSize: 11, color: '#A8A29E', whiteSpace: 'nowrap', paddingTop: 2 }}>{timeAgo(project.created_at)}</span>
       </div>
-      <p style={{ fontSize: 13, color: '#475569', lineHeight: 1.7, margin: 0 }}>{excerpt}</p>
+      <p style={{ fontSize: 13, color: '#44403C', lineHeight: 1.7, margin: 0 }}>{excerpt}</p>
       <div style={{ display: 'flex', flexWrap: 'wrap', gap: 6 }}>
         <span style={{ fontSize: 11, padding: '3px 10px', borderRadius: 20, background: `${color}10`, color, fontWeight: 600, border: `1px solid ${color}20` }}>{project.project_type}</span>
         {project.budget_range && (
@@ -58,8 +58,8 @@ function JobCard({ project, bidCount, blurred }) {
           <span style={{ fontSize: 11, padding: '3px 10px', borderRadius: 20, background: '#eff6ff', color: '#1d4ed8', fontWeight: 600, border: '1px solid #bfdbfe' }}>💬 {bidCount} ලංසු</span>
         )}
       </div>
-      <div style={{ borderTop: '1px solid #f1f5f9', paddingTop: 12, marginTop: 2 }}>
-        <a href={jobPath(project)} style={{ display: 'inline-flex', alignItems: 'center', gap: 7, background: '#D97706', color: '#fff', borderRadius: 10, padding: '9px 18px', fontSize: 13, fontWeight: 700, textDecoration: 'none' }}>
+      <div style={{ borderTop: '1px solid #F7EFE2', paddingTop: 12, marginTop: 2 }}>
+        <a href={jobPath(project)} style={{ display: 'inline-flex', alignItems: 'center', gap: 7, background: '#B45309', color: '#fff', borderRadius: 10, padding: '9px 18px', fontSize: 13, fontWeight: 700, textDecoration: 'none' }}>
           බලන්න සහ ලංසු →
         </a>
       </div>
@@ -93,12 +93,12 @@ function ProviderGate({ previewProjects, bidCounts }) {
             <JobCard key={p.id} project={p} bidCount={bidCounts[p.id] || 0} blurred />
           ))}
         </div>
-        <div style={{ position: 'absolute', bottom: 0, left: 0, right: 0, height: 140, background: 'linear-gradient(transparent, #f8fafc)', pointerEvents: 'none' }} />
+        <div style={{ position: 'absolute', bottom: 0, left: 0, right: 0, height: 140, background: 'linear-gradient(transparent, #FFFBF5)', pointerEvents: 'none' }} />
       </div>
 
       {/* Gate card */}
-      <div style={{ maxWidth: 480, margin: '0 auto', background: '#fff', borderRadius: 20, border: '1.5px solid #e2e8f0', boxShadow: '0 8px 32px rgba(0,0,0,0.08)', overflow: 'hidden' }}>
-        <div style={{ background: 'linear-gradient(135deg, #0F766E, #042F2E)', padding: '24px 28px' }}>
+      <div style={{ maxWidth: 480, margin: '0 auto', background: '#fff', borderRadius: 20, border: '1.5px solid #EDE4D3', boxShadow: '0 8px 32px rgba(0,0,0,0.08)', overflow: 'hidden' }}>
+        <div style={{ background: 'linear-gradient(135deg, #B45309, #451A03)', padding: '24px 28px' }}>
           <div style={{ fontSize: 28, marginBottom: 10 }}>🔒</div>
           <div style={{ fontFamily: "'Playfair Display', serif", fontSize: 18, fontWeight: 700, color: '#fff', marginBottom: 6 }}>
             ව්‍යාපෘති බැලීමට සහ ලංසු දැමීමට ලොගිනය
@@ -112,14 +112,14 @@ function ProviderGate({ previewProjects, bidCounts }) {
             <div>
               <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: 8, marginBottom: 20 }}>
                 {['📊 සියලු විවෘත ව්‍යාපෘති බලන්න', '💬 මිල ගණන් සහිත ලංසු ඉදිරිපත් කරන්න', '✅ කෙළින්ම රැකියා ජය ගන්න', '🔔 නව ව්‍යාපෘති දැනුම් ලබන්න'].map(b => (
-                  <div key={b} style={{ fontSize: 12, color: '#475569' }}>{b}</div>
+                  <div key={b} style={{ fontSize: 12, color: '#44403C' }}>{b}</div>
                 ))}
               </div>
               <div style={{ display: 'flex', gap: 10, flexWrap: 'wrap' }}>
-                <button onClick={() => setShowAuth(true)} style={{ flex: 1, padding: '12px', background: '#D97706', color: '#fff', border: 'none', borderRadius: 12, fontSize: 14, fontWeight: 700, cursor: 'pointer', minWidth: 140 }}>
+                <button onClick={() => setShowAuth(true)} style={{ flex: 1, padding: '12px', background: '#B45309', color: '#fff', border: 'none', borderRadius: 12, fontSize: 14, fontWeight: 700, cursor: 'pointer', minWidth: 140 }}>
                   ලොගිනය →
                 </button>
-                <a href="/join-tilershub" style={{ flex: 1, display: 'flex', alignItems: 'center', justifyContent: 'center', padding: '12px', background: '#f1f5f9', color: '#0F766E', border: '1.5px solid #d5e2f5', borderRadius: 12, fontSize: 13, fontWeight: 700, textDecoration: 'none', minWidth: 140 }}>
+                <a href="/join-tilershub" style={{ flex: 1, display: 'flex', alignItems: 'center', justifyContent: 'center', padding: '12px', background: '#F7EFE2', color: '#B45309', border: '1.5px solid #d5e2f5', borderRadius: 12, fontSize: 13, fontWeight: 700, textDecoration: 'none', minWidth: 140 }}>
                   සේවා සපයන්නෙකු ලෙස එකතු වන්න
                 </a>
               </div>
@@ -127,8 +127,8 @@ function ProviderGate({ previewProjects, bidCounts }) {
           ) : sent ? (
             <div style={{ textAlign: 'center', padding: '8px 0' }}>
               <div style={{ fontSize: 36, marginBottom: 10 }}>📬</div>
-              <div style={{ fontSize: 15, fontWeight: 700, color: '#0f172a', marginBottom: 6 }}>ඔබේ ඊමේල් බලන්න</div>
-              <p style={{ fontSize: 13, color: '#64748b', lineHeight: 1.7 }}>
+              <div style={{ fontSize: 15, fontWeight: 700, color: '#1C1917', marginBottom: 6 }}>ඔබේ ඊමේල් බලන්න</div>
+              <p style={{ fontSize: 13, color: '#57534E', lineHeight: 1.7 }}>
                 <strong>{email}</strong> වෙත ලොගිනය සබැඳියක් යවා ඇත. සියලු ව්‍යාපෘති ප්‍රවේශ වීමට ක්ලික් කරන්න.
               </p>
             </div>
@@ -136,19 +136,19 @@ function ProviderGate({ previewProjects, bidCounts }) {
             <form onSubmit={send}>
               <div style={{ fontSize: 13, fontWeight: 600, color: '#334155', marginBottom: 10 }}>ලොගිනය සඳහා ඊමේල් ඇතුළු කරන්න</div>
               <input type="email" value={email} onChange={e => { setEmail(e.target.value); setErr('') }} placeholder="your@email.com" autoFocus
-                style={{ width: '100%', padding: '11px 14px', border: `1.5px solid ${err ? '#fca5a5' : '#e2e8f0'}`, borderRadius: 10, fontSize: 13, outline: 'none', fontFamily: 'inherit', background: err ? '#fef2f2' : '#fff', boxSizing: 'border-box', marginBottom: 10 }} />
+                style={{ width: '100%', padding: '11px 14px', border: `1.5px solid ${err ? '#fca5a5' : '#EDE4D3'}`, borderRadius: 10, fontSize: 13, outline: 'none', fontFamily: 'inherit', background: err ? '#fef2f2' : '#fff', boxSizing: 'border-box', marginBottom: 10 }} />
               {err && <p style={{ fontSize: 11, color: '#dc2626', marginBottom: 8 }}>⚠ {err}</p>}
               <div style={{ display: 'flex', gap: 8 }}>
                 <button type="submit" disabled={loading}
-                  style={{ flex: 1, padding: '11px', background: loading ? '#94a3b8' : '#0F766E', color: '#fff', border: 'none', borderRadius: 10, fontSize: 13, fontWeight: 700, cursor: loading ? 'not-allowed' : 'pointer' }}>
+                  style={{ flex: 1, padding: '11px', background: loading ? '#A8A29E' : '#B45309', color: '#fff', border: 'none', borderRadius: 10, fontSize: 13, fontWeight: 700, cursor: loading ? 'not-allowed' : 'pointer' }}>
                   {loading ? '⏳ යවමින්…' : '✉️ Magic Link යවන්න'}
                 </button>
                 <button type="button" onClick={() => setShowAuth(false)}
-                  style={{ padding: '11px 14px', background: '#f1f5f9', color: '#64748b', border: 'none', borderRadius: 10, fontSize: 12, cursor: 'pointer' }}>
+                  style={{ padding: '11px 14px', background: '#F7EFE2', color: '#57534E', border: 'none', borderRadius: 10, fontSize: 12, cursor: 'pointer' }}>
                   ආපසු
                 </button>
               </div>
-              <p style={{ fontSize: 11, color: '#94a3b8', textAlign: 'center', marginTop: 8 }}>මුරපදයක් අවශ්‍ය නැත — ආරක්ෂිත එකවර ලොගිනය.</p>
+              <p style={{ fontSize: 11, color: '#A8A29E', textAlign: 'center', marginTop: 8 }}>මුරපදයක් අවශ්‍ය නැත — ආරක්ෂිත එකවර ලොගිනය.</p>
             </form>
           )}
         </div>
@@ -201,7 +201,7 @@ export default function JobsBoard({ initialProjects = null, initialBidCounts = n
   return (
     <div style={{ background: 'var(--surface)', minHeight: '60vh' }}>
       {/* Filter bar */}
-      <div style={{ background: '#fff', borderBottom: '1px solid #e2e8f0', padding: '14px 20px', position: 'sticky', top: 0, zIndex: 10 }}>
+      <div style={{ background: '#fff', borderBottom: '1px solid #EDE4D3', padding: '14px 20px', position: 'sticky', top: 0, zIndex: 10 }}>
         <div style={{ maxWidth: 1100, margin: '0 auto', display: 'flex', alignItems: 'center', gap: 10, flexWrap: 'wrap' }}>
           <select value={filters.type} onChange={e => setFilters(f => ({ ...f, type: e.target.value }))} style={selectStyle()}>
             <option value="">සියලු ව්‍යාපෘති වර්ග</option>
@@ -212,11 +212,11 @@ export default function JobsBoard({ initialProjects = null, initialBidCounts = n
             {DISTRICTS_EN.map(d => <option key={d} value={d}>{d}</option>)}
           </select>
           {(filters.type || filters.district) && (
-            <button onClick={() => setFilters({ type: '', district: '' })} style={{ fontSize: 12, color: '#64748b', background: '#f1f5f9', border: 'none', borderRadius: 8, padding: '8px 12px', cursor: 'pointer', fontWeight: 600 }}>
+            <button onClick={() => setFilters({ type: '', district: '' })} style={{ fontSize: 12, color: '#57534E', background: '#F7EFE2', border: 'none', borderRadius: 8, padding: '8px 12px', cursor: 'pointer', fontWeight: 600 }}>
               ✕ ඉවත් කරන්න
             </button>
           )}
-          <span style={{ fontSize: 12, color: '#94a3b8', marginLeft: 'auto' }}>
+          <span style={{ fontSize: 12, color: '#A8A29E', marginLeft: 'auto' }}>
             {loading ? 'පූරණය…' : `විවෘත ව්‍යාපෘති ${filtered.length}ක්`}
           </span>
         </div>
@@ -225,13 +225,13 @@ export default function JobsBoard({ initialProjects = null, initialBidCounts = n
       {/* Content */}
       <div style={{ maxWidth: 1100, margin: '0 auto', padding: '32px 20px 64px' }}>
         {loading ? (
-          <div style={{ textAlign: 'center', padding: '64px 20px', color: '#94a3b8', fontSize: 14 }}>ව්‍යාපෘති පූරණය…</div>
+          <div style={{ textAlign: 'center', padding: '64px 20px', color: '#A8A29E', fontSize: 14 }}>ව්‍යාපෘති පූරණය…</div>
         ) : filtered.length === 0 ? (
-          <div style={{ textAlign: 'center', padding: '64px 20px', background: '#fff', borderRadius: 16, border: '1px solid #e2e8f0' }}>
+          <div style={{ textAlign: 'center', padding: '64px 20px', background: '#fff', borderRadius: 16, border: '1px solid #EDE4D3' }}>
             <div style={{ fontSize: 48, marginBottom: 16 }}>🏗️</div>
-            <h3 style={{ fontSize: 18, fontWeight: 700, color: '#0f172a', marginBottom: 8 }}>දැනට විවෘත ව්‍යාපෘති නොමැත</h3>
-            <p style={{ fontSize: 14, color: '#64748b', marginBottom: 24 }}>ප්‍රථමයෙන් ව්‍යාපෘතිය පලකරන්න — සත්‍යාපිත ටයිලර්ලා ලංසු ඉදිරිපත් කරනු ඇත.</p>
-            <a href="/post-project" style={{ display: 'inline-flex', alignItems: 'center', gap: 8, background: '#D97706', color: '#fff', borderRadius: 12, padding: '11px 24px', fontSize: 14, fontWeight: 700, textDecoration: 'none' }}>
+            <h3 style={{ fontSize: 18, fontWeight: 700, color: '#1C1917', marginBottom: 8 }}>දැනට විවෘත ව්‍යාපෘති නොමැත</h3>
+            <p style={{ fontSize: 14, color: '#57534E', marginBottom: 24 }}>ප්‍රථමයෙන් ව්‍යාපෘතිය පලකරන්න — සත්‍යාපිත ටයිලර්ලා ලංසු ඉදිරිපත් කරනු ඇත.</p>
+            <a href="/post-project" style={{ display: 'inline-flex', alignItems: 'center', gap: 8, background: '#B45309', color: '#fff', borderRadius: 12, padding: '11px 24px', fontSize: 14, fontWeight: 700, textDecoration: 'none' }}>
               📋 ව්‍යාපෘතිය පලකරන්න
             </a>
           </div>
@@ -244,12 +244,12 @@ export default function JobsBoard({ initialProjects = null, initialBidCounts = n
         )}
 
         {!loading && user && filtered.length > 0 && (
-          <div style={{ marginTop: 48, padding: '28px 32px', background: 'linear-gradient(135deg, #0F766E, #042F2E)', borderRadius: 16, display: 'flex', alignItems: 'center', justifyContent: 'space-between', flexWrap: 'wrap', gap: 16 }}>
+          <div style={{ marginTop: 48, padding: '28px 32px', background: 'linear-gradient(135deg, #B45309, #451A03)', borderRadius: 16, display: 'flex', alignItems: 'center', justifyContent: 'space-between', flexWrap: 'wrap', gap: 16 }}>
             <div>
               <div style={{ fontSize: 16, fontWeight: 700, color: '#fff', marginBottom: 4 }}>ටයිලිං ව්‍යාපෘතියක් තිබේද?</div>
               <div style={{ fontSize: 13, color: 'rgba(255,255,255,0.6)' }}>නොමිලේ පලකරන්න — සේවා සපයන්නන් ලංසු ඉදිරිපත් කරති, ඔබ තෝරා ගන්න.</div>
             </div>
-            <a href="/post-project" style={{ display: 'inline-flex', alignItems: 'center', gap: 8, background: '#D97706', color: '#fff', borderRadius: 12, padding: '11px 22px', fontSize: 13, fontWeight: 700, textDecoration: 'none', whiteSpace: 'nowrap' }}>
+            <a href="/post-project" style={{ display: 'inline-flex', alignItems: 'center', gap: 8, background: '#B45309', color: '#fff', borderRadius: 12, padding: '11px 22px', fontSize: 13, fontWeight: 700, textDecoration: 'none', whiteSpace: 'nowrap' }}>
               📋 මගේ ව්‍යාපෘතිය පලකරන්න
             </a>
           </div>

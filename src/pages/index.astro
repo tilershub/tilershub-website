@@ -10,8 +10,8 @@ const HERO_IMG = 'https://images.unsplash.com/photo-1552321554-5fefe8c9ef14?auto
 const serviceBySlug = Object.fromEntries(SERVICES.map(s => [s.slug, s]))
 
 const BLOG_POSTS = [
-  { slug: 'how-to-choose-a-tiler',             icon: '👷', color: '#0F766E', category: 'Hiring Tips',          titleEn: 'How to Choose the Right Tiler for Your Project',                      titleSi: 'ඔබේ ව්‍යාපෘතිය සඳහා නිවැරදි ටයිලර් කෙනෙකු තෝරා ගන්නේ කෙසේද' },
-  { slug: 'bathroom-renovation-cost-sri-lanka', icon: '💰', color: '#0f766e', category: 'Cost Guide',           titleEn: 'Bathroom Renovation Cost in Sri Lanka (2025 Guide)',                    titleSi: 'ශ්‍රී ලංකාවේ නාන කාමර ප්‍රතිසංස්කරණ පිරිවැය (2025 මාර්ගෝපදේශ)' },
+  { slug: 'how-to-choose-a-tiler',             icon: '👷', color: '#B45309', category: 'Hiring Tips',          titleEn: 'How to Choose the Right Tiler for Your Project',                      titleSi: 'ඔබේ ව්‍යාපෘතිය සඳහා නිවැරදි ටයිලර් කෙනෙකු තෝරා ගන්නේ කෙසේද' },
+  { slug: 'bathroom-renovation-cost-sri-lanka', icon: '💰', color: '#B45309', category: 'Cost Guide',           titleEn: 'Bathroom Renovation Cost in Sri Lanka (2025 Guide)',                    titleSi: 'ශ්‍රී ලංකාවේ නාන කාමර ප්‍රතිසංස්කරණ පිරිවැය (2025 මාර්ගෝපදේශ)' },
   { slug: 'waterproofing-bathroom-guide',       icon: '💧', color: '#0369a1', category: 'How-to Guide',         titleEn: 'Why Waterproofing Is the Most Important Step',                         titleSi: 'ජලනිරෝධය වඩාත්ම වැදගත් පියවර වන්නේ ඇයි' },
   { slug: 'large-format-tiles-guide',           icon: '📏', color: '#b45309', category: 'Tile Guide',           titleEn: 'Large Format Tiles: Pros, Cons & Installation Tips',                   titleSi: 'විශාල ෆෝමැට් ටයිල්: වාසි, අවාසි සහ ස්ථාපන ඉඟි' },
 ]
@@ -22,9 +22,9 @@ const PROJECT_TYPE_ICONS: Record<string,string> = {
   'Waterproofing':'💧','Tile Shop Inquiry':'🏪',
 }
 const PROJECT_TYPE_COLORS: Record<string,string> = {
-  'Floor Tiling':'#0F766E','Bathroom Tiling':'#0f766e','Bathroom Renovation':'#0f766e',
+  'Floor Tiling':'#B45309','Bathroom Tiling':'#B45309','Bathroom Renovation':'#B45309',
   'Granite Works':'#7c3aed','Tile Cutting':'#b45309','Routering':'#b45309',
-  'Waterproofing':'#0369a1','Tile Shop Inquiry':'#D97706',
+  'Waterproofing':'#0369a1','Tile Shop Inquiry':'#B45309',
 }
 
 const { data: recentProjectsRaw } = await Astro.locals.supabase
@@ -70,11 +70,11 @@ const WHY_ITEMS = [
   <link slot="head" rel="preload" as="image" href={HERO_IMG} fetchpriority="high" />
 
   <!-- ══ HERO ══ -->
-  <div id="guest-hero-static" style="position:relative;min-height:320px;display:flex;align-items:center;justify-content:center;overflow:hidden;padding:44px 20px 40px;background:#0a121f;">
+  <div id="guest-hero-static" style="position:relative;min-height:320px;display:flex;align-items:center;justify-content:center;overflow:hidden;padding:44px 20px 40px;background:#2A1505;">
     <img src={HERO_IMG} alt="" width="1400" height="800"
-      style="position:absolute;inset:0;width:100%;height:100%;object-fit:cover;object-position:center 30%;opacity:0.32;"
+      style="position:absolute;inset:0;width:100%;height:100%;object-fit:cover;object-position:center 30%;opacity:0.5;"
       loading="eager" fetchpriority="high" decoding="sync" />
-    <div style="position:absolute;inset:0;background:linear-gradient(175deg,rgba(2,44,42,0.72) 0%,rgba(20,35,65,0.68) 100%);pointer-events:none;"></div>
+    <div style="position:absolute;inset:0;background:linear-gradient(175deg,rgba(69,26,3,0.5) 0%,rgba(120,53,15,0.55) 100%),radial-gradient(ellipse 90% 55% at 50% -5%,rgba(252,211,77,0.30) 0%,transparent 72%);pointer-events:none;"></div>
     <div style="position:relative;text-align:center;max-width:560px;width:100%;">
       <h1 style="font-family:'Playfair Display',serif;font-size:clamp(24px,5vw,40px);font-weight:700;color:#fff;line-height:1.15;margin-bottom:10px;">
         <span class="en-text">Find the Right Professional for Your Home</span>
@@ -87,16 +87,16 @@ const WHY_ITEMS = [
       <!-- Search bar -->
       <form id="hero-search" style="display:flex;gap:8px;margin-bottom:16px;max-width:480px;margin-left:auto;margin-right:auto;">
         <input id="hero-q" type="search"
-          style="flex:1;padding:13px 16px;border-radius:24px;border:none;font-size:14px;outline:none;color:#0f172a;"
+          style="flex:1;padding:13px 16px;border-radius:24px;border:none;font-size:14px;outline:none;color:#1C1917;"
           aria-label="Search services" />
         <button type="submit"
-          style="flex-shrink:0;background:#D97706;color:#fff;border:none;border-radius:24px;padding:13px 22px;font-size:14px;font-weight:700;cursor:pointer;white-space:nowrap;">
+          style="flex-shrink:0;background:linear-gradient(135deg,#FCD34D 0%,#F59E0B 100%);color:#1C1917;border:none;border-radius:24px;padding:13px 22px;font-size:14px;font-weight:700;cursor:pointer;white-space:nowrap;">
           <span class="en-text">Search</span>
           <span class="si-text">සොයන්න</span>
         </button>
       </form>
       <div>
-        <a href="/post-project" style="display:inline-flex;align-items:center;gap:8px;background:#D97706;color:#fff;border-radius:24px;padding:13px 26px;font-size:14px;font-weight:800;text-decoration:none;box-shadow:0 4px 20px rgba(217,119,6,0.45);margin-bottom:14px;">
+        <a href="/post-project" style="display:inline-flex;align-items:center;gap:8px;background:linear-gradient(135deg,#FCD34D 0%,#F59E0B 100%);color:#1C1917;border-radius:24px;padding:13px 26px;font-size:14px;font-weight:800;text-decoration:none;box-shadow:0 6px 24px rgba(245,158,11,0.45);margin-bottom:14px;">
           📋
           <span class="en-text">Post Your Project Free</span>
           <span class="si-text">ව්‍යාපෘතිය නොමිලේ පලකරන්න</span>
@@ -122,9 +122,9 @@ const WHY_ITEMS = [
   <HomeHero client:load heroImg={HERO_IMG} />
 
   <!-- ══ SERVICE GROUPS ══ -->
-  <section style="background:#fff;padding:20px 0 8px;border-bottom:1px solid #f1f5f9;">
+  <section style="background:#fff;padding:20px 0 8px;border-bottom:1px solid #F7EFE2;">
     <div style="padding:0 16px 10px;">
-      <h2 style="font-size:16px;font-weight:800;color:#111827;margin:0 0 2px;">
+      <h2 style="font-size:16px;font-weight:800;color:#1C1917;margin:0 0 2px;">
         <span class="en-text">Browse by Service</span>
         <span class="si-text">සේවාවෙන් සොයන්න</span>
       </h2>
@@ -138,12 +138,12 @@ const WHY_ITEMS = [
           <div style="display:flex;align-items:center;justify-content:space-between;padding:0 16px 8px;">
             <div style="display:flex;align-items:center;gap:7px;">
               <span style="font-size:16px;">{group.icon}</span>
-              <span style="font-size:14px;font-weight:700;color:#111827;">
+              <span style="font-size:14px;font-weight:700;color:#1C1917;">
                 <span class="en-text">{group.label}</span>
                 <span class="si-text">{group.labelSi}</span>
               </span>
             </div>
-            <a href={group.viewAllHref} style="font-size:12px;font-weight:600;color:#D97706;text-decoration:none;">
+            <a href={group.viewAllHref} style="font-size:12px;font-weight:600;color:#B45309;text-decoration:none;">
               <span class="en-text">View all ›</span>
               <span class="si-text">සියල්ල ›</span>
             </a>
@@ -154,9 +154,9 @@ const WHY_ITEMS = [
               <a href={svc.externalUrl || `/services/${svc.slug}`}
                 target={svc.externalUrl ? '_blank' : undefined}
                 rel={svc.externalUrl ? 'noopener noreferrer' : undefined}
-                style="flex-shrink:0;display:flex;flex-direction:column;align-items:center;gap:6px;width:86px;padding:12px 6px 10px;background:#f8fafc;border-radius:14px;border:1px solid #e2e8f0;text-decoration:none;color:#0f172a;transition:border-color 0.15s;">
+                style="flex-shrink:0;display:flex;flex-direction:column;align-items:center;gap:6px;width:86px;padding:12px 6px 10px;background:#FFFBF5;border-radius:14px;border:1px solid #EDE4D3;text-decoration:none;color:#1C1917;transition:border-color 0.15s;">
                 <span style="font-size:26px;line-height:1;">{svc.icon}</span>
-                <span style="font-size:10px;font-weight:600;text-align:center;line-height:1.3;color:#374151;">{svc.label}</span>
+                <span style="font-size:10px;font-weight:600;text-align:center;line-height:1.3;color:#44403C;">{svc.label}</span>
               </a>
             ))}
           </div>
@@ -166,7 +166,7 @@ const WHY_ITEMS = [
   </section>
 
   <!-- ══ HOW IT WORKS ══ -->
-  <section style="background:linear-gradient(135deg,#042F2E,#115E59);padding:28px 16px 24px;">
+  <section style="background:linear-gradient(135deg,#451A03,#78350F),radial-gradient(ellipse 80% 60% at 50% -10%,rgba(252,211,77,0.22) 0%,transparent 70%);background-blend-mode:screen;padding:28px 16px 24px;">
     <div style="max-width:480px;margin:0 auto;">
       <p style="font-size:9px;font-weight:700;color:rgba(255,255,255,0.4);letter-spacing:3px;text-transform:uppercase;text-align:center;margin:0 0 18px;">
         <span class="en-text">HOW IT WORKS</span>
@@ -176,7 +176,7 @@ const WHY_ITEMS = [
         { n:'1', icon:'📋',
           titleEn:'Post Your Project', titleSi:'ව්‍යාපෘතිය පලකරන්න',
           descEn:'Free — no login needed. Takes 2 minutes.', descSi:'නොමිලේ — ලොගිනය අවශ්‍ය නැත. මිනිත්තු 2 ක් ගනී.',
-          c:'#D97706' },
+          c:'#B45309' },
         { n:'2', icon:'💬',
           titleEn:'Receive Quotes',    titleSi:'ලංසු ලැබේ',
           descEn:'Verified specialists send quotes via WhatsApp.', descSi:'සත්‍යාපිත ශිල්පීවරු WhatsApp ට ලංසු යවති.',
@@ -204,13 +204,13 @@ const WHY_ITEMS = [
   </section>
 
   <!-- ══ RECENT PROJECTS ══ -->
-  <section style="background:#fff;padding:22px 0 24px;border-bottom:1px solid #f1f5f9;">
+  <section style="background:#fff;padding:22px 0 24px;border-bottom:1px solid #F7EFE2;">
     <div style="padding:0 16px 14px;display:flex;align-items:center;justify-content:space-between;">
-      <h2 style="font-size:16px;font-weight:800;color:#111827;margin:0;">
+      <h2 style="font-size:16px;font-weight:800;color:#1C1917;margin:0;">
         <span class="en-text">Recent Projects</span>
         <span class="si-text">මෑත ව්‍යාපෘති</span>
       </h2>
-      <a href="/jobs" style="font-size:12px;font-weight:600;color:#D97706;text-decoration:none;">
+      <a href="/jobs" style="font-size:12px;font-weight:600;color:#B45309;text-decoration:none;">
         <span class="en-text">View all ›</span>
         <span class="si-text">සියල්ල ›</span>
       </a>
@@ -218,10 +218,10 @@ const WHY_ITEMS = [
     <div style="display:flex;flex-direction:column;gap:10px;padding:0 16px;">
       {recentProjects.length === 0
         ? (
-          <div style="padding:20px 0;font-size:13px;color:#94a3b8;text-align:center;">
+          <div style="padding:20px 0;font-size:13px;color:#A8A29E;text-align:center;">
             <span class="en-text">No projects yet — </span>
             <span class="si-text">දැනට ව්‍යාපෘති නොමැත — </span>
-            <a href="/post-project" style="color:#D97706;font-weight:600;text-decoration:none;">
+            <a href="/post-project" style="color:#B45309;font-weight:600;text-decoration:none;">
               <span class="en-text">post yours free →</span>
               <span class="si-text">නොමිලේ පලකරන්න →</span>
             </a>
@@ -229,19 +229,19 @@ const WHY_ITEMS = [
         )
         : recentProjects.map((p: any) => {
           const icon  = PROJECT_TYPE_ICONS[p.project_type]  || '🏠'
-          const color = PROJECT_TYPE_COLORS[p.project_type] || '#0F766E'
+          const color = PROJECT_TYPE_COLORS[p.project_type] || '#B45309'
           const excerpt = p.description?.length > 90 ? p.description.slice(0, 90) + '…' : p.description
           return (
             <a href={jobPath(p)}
-              style="display:flex;align-items:center;gap:12px;background:#f8fafc;border-radius:16px;border:1px solid #e2e8f0;padding:14px 16px;text-decoration:none;color:inherit;">
+              style="display:flex;align-items:center;gap:12px;background:#FFFBF5;border-radius:16px;border:1px solid #EDE4D3;padding:14px 16px;text-decoration:none;color:inherit;">
               <div style={`width:48px;height:48px;border-radius:14px;background:${color}12;border:1.5px solid ${color}22;display:flex;align-items:center;justify-content:center;font-size:24px;flex-shrink:0;`}>{icon}</div>
               <div style="flex:1;min-width:0;">
                 <div style="display:flex;align-items:center;gap:6px;margin-bottom:3px;">
-                  <span style="font-size:13px;font-weight:700;color:#0f172a;">{p.project_type}</span>
-                  <span style="font-size:11px;color:#94a3b8;margin-left:auto;white-space:nowrap;">{projectTimeAgo(p.created_at)}</span>
+                  <span style="font-size:13px;font-weight:700;color:#1C1917;">{p.project_type}</span>
+                  <span style="font-size:11px;color:#A8A29E;margin-left:auto;white-space:nowrap;">{projectTimeAgo(p.created_at)}</span>
                 </div>
-                {(p.city || p.district) && <div style="font-size:11px;color:#64748b;margin-bottom:4px;">📍 {p.city}{p.district && p.district !== p.city ? `, ${p.district}` : ''}</div>}
-                {excerpt && <p style="font-size:12px;color:#64748b;margin:0 0 6px;line-height:1.5;overflow:hidden;white-space:nowrap;text-overflow:ellipsis;">{excerpt}</p>}
+                {(p.city || p.district) && <div style="font-size:11px;color:#57534E;margin-bottom:4px;">📍 {p.city}{p.district && p.district !== p.city ? `, ${p.district}` : ''}</div>}
+                {excerpt && <p style="font-size:12px;color:#57534E;margin:0 0 6px;line-height:1.5;overflow:hidden;white-space:nowrap;text-overflow:ellipsis;">{excerpt}</p>}
                 {p.budget_range && <span style="font-size:10px;padding:2px 8px;border-radius:20px;background:#f0fdf4;color:#15803d;font-weight:600;border:1px solid #bbf7d0;">💰 {p.budget_range}</span>}
               </div>
               <div style={`flex-shrink:0;background:${color};color:#fff;border-radius:10px;padding:9px 16px;font-size:12px;font-weight:700;white-space:nowrap;`}>
@@ -256,9 +256,9 @@ const WHY_ITEMS = [
   </section>
 
   <!-- ══ ESTIMATOR TEASER ══ -->
-  <div style="padding:14px 16px;background:#fff;border-top:1px solid #f1f5f9;">
+  <div style="padding:14px 16px;background:#fff;border-top:1px solid #F7EFE2;">
     <a href="/estimator"
-      style="display:flex;align-items:center;justify-content:space-between;gap:12px;background:linear-gradient(120deg,#0F766E,#0D9488);border-radius:18px;padding:16px 20px;text-decoration:none;">
+      style="display:flex;align-items:center;justify-content:space-between;gap:12px;background:linear-gradient(120deg,#B45309,#92400E);border-radius:18px;padding:16px 20px;text-decoration:none;">
       <div style="display:flex;align-items:center;gap:14px;">
         <div style="font-size:28px;flex-shrink:0;">📐</div>
         <div>
@@ -272,7 +272,7 @@ const WHY_ITEMS = [
           </div>
         </div>
       </div>
-      <div style="background:#fff;color:#0F766E;border-radius:12px;padding:9px 16px;font-size:12px;font-weight:800;white-space:nowrap;flex-shrink:0;">
+      <div style="background:#fff;color:#B45309;border-radius:12px;padding:9px 16px;font-size:12px;font-weight:800;white-space:nowrap;flex-shrink:0;">
         <span class="en-text">Free ›</span>
         <span class="si-text">නොමිලේ ›</span>
       </div>
@@ -280,21 +280,21 @@ const WHY_ITEMS = [
   </div>
 
   <!-- ══ WHY TILERSHUB ══ -->
-  <section style="background:#f8fafc;padding:28px 16px 24px;border-top:1px solid #f1f5f9;">
+  <section style="background:#FFFBF5;padding:28px 16px 24px;border-top:1px solid #F7EFE2;">
     <div style="max-width:560px;margin:0 auto;">
-      <h2 style="font-size:16px;font-weight:800;color:#0f172a;text-align:center;margin:0 0 20px;">
+      <h2 style="font-size:16px;font-weight:800;color:#1C1917;text-align:center;margin:0 0 20px;">
         <span class="en-text">Why TilersHub?</span>
         <span class="si-text">ඇයි TilersHub?</span>
       </h2>
       <div style="display:grid;grid-template-columns:1fr 1fr;gap:12px;">
         {WHY_ITEMS.map(item => (
-          <div style="background:#fff;border-radius:14px;border:1px solid #e2e8f0;padding:16px 14px;">
+          <div style="background:#fff;border-radius:14px;border:1px solid #EDE4D3;padding:16px 14px;">
             <div style="font-size:24px;margin-bottom:8px;">{item.icon}</div>
-            <div style="font-size:13px;font-weight:700;color:#0f172a;margin-bottom:4px;line-height:1.3;">
+            <div style="font-size:13px;font-weight:700;color:#1C1917;margin-bottom:4px;line-height:1.3;">
               <span class="en-text">{item.en}</span>
               <span class="si-text">{item.si}</span>
             </div>
-            <div style="font-size:11px;color:#64748b;line-height:1.5;">
+            <div style="font-size:11px;color:#57534E;line-height:1.5;">
               <span class="en-text">{item.descEn}</span>
               <span class="si-text">{item.descSi}</span>
             </div>
@@ -305,18 +305,18 @@ const WHY_ITEMS = [
   </section>
 
   <!-- ══ ECOSYSTEM: EVERY PARTY IN THE TILE TRADE ══ -->
-  <section style="background:#fff;padding:24px 16px 28px;border-top:1px solid #f1f5f9;">
-    <h2 style="font-size:16px;font-weight:800;color:#111827;margin:0 0 4px;">
+  <section style="background:#fff;padding:24px 16px 28px;border-top:1px solid #F7EFE2;">
+    <h2 style="font-size:16px;font-weight:800;color:#1C1917;margin:0 0 4px;">
       <span class="en-text">🧱 One Place for the Whole Tile Trade</span>
       <span class="si-text">🧱 ටයිල් ක්ෂේත්‍රයේ සියල්ලන්ටම එකම තැන</span>
     </h2>
-    <p style="font-size:12px;color:#64748b;margin:0 0 14px;line-height:1.6;">
+    <p style="font-size:12px;color:#57534E;margin:0 0 14px;line-height:1.6;">
       <span class="en-text">Homeowners, tilers, shops, brands and suppliers — everyone in Sri Lanka's tile niche works through TilersHub.</span>
       <span class="si-text">ගෙදර හිමිකරුවන්, ටයිලර්වරු, ටයිල් සාප්පු, brands සහ suppliers — සියල්ලන්ටම TilersHub.</span>
     </p>
     <div style="display:grid;grid-template-columns:1fr 1fr;gap:12px;">
 
-      <a href="/post-project" style="display:block;background:linear-gradient(135deg,#0F766E,#0D9488);border-radius:16px;padding:16px 14px;text-decoration:none;">
+      <a href="/post-project" style="display:block;background:linear-gradient(135deg,#B45309,#92400E);border-radius:16px;padding:16px 14px;text-decoration:none;">
         <div style="font-size:26px;margin-bottom:8px;">🏠</div>
         <div style="font-size:13px;font-weight:800;color:#fff;margin-bottom:3px;">
           <span class="en-text">Homeowners</span>
@@ -329,43 +329,43 @@ const WHY_ITEMS = [
         <div style="font-size:11px;font-weight:800;color:#FDE68A;margin-top:8px;"><span class="en-text">Post free →</span><span class="si-text">පලකරන්න →</span></div>
       </a>
 
-      <a href="/jobs" style="display:block;background:#fff;border:1.5px solid #99F6E4;border-radius:16px;padding:16px 14px;text-decoration:none;">
+      <a href="/jobs" style="display:block;background:#fff;border:1.5px solid #FDE68A;border-radius:16px;padding:16px 14px;text-decoration:none;">
         <div style="font-size:26px;margin-bottom:8px;">👷</div>
-        <div style="font-size:13px;font-weight:800;color:#0f172a;margin-bottom:3px;">
+        <div style="font-size:13px;font-weight:800;color:#1C1917;margin-bottom:3px;">
           <span class="en-text">Tilers & Contractors</span>
           <span class="si-text">ටයිලර්වරු</span>
         </div>
-        <div style="font-size:11px;color:#64748b;line-height:1.5;">
+        <div style="font-size:11px;color:#57534E;line-height:1.5;">
           <span class="en-text">Browse open projects, bid free, get listed islandwide</span>
           <span class="si-text">විවෘත ව්‍යාපෘති බලන්න, නොමිලේ ලංසු දමන්න</span>
         </div>
-        <div style="font-size:11px;font-weight:800;color:#0F766E;margin-top:8px;"><span class="en-text">Find jobs →</span><span class="si-text">රැකියා →</span></div>
+        <div style="font-size:11px;font-weight:800;color:#B45309;margin-top:8px;"><span class="en-text">Find jobs →</span><span class="si-text">රැකියා →</span></div>
       </a>
 
-      <a href="/tile" style="display:block;background:#fff;border:1.5px solid #99F6E4;border-radius:16px;padding:16px 14px;text-decoration:none;">
+      <a href="/tile" style="display:block;background:#fff;border:1.5px solid #FDE68A;border-radius:16px;padding:16px 14px;text-decoration:none;">
         <div style="font-size:26px;margin-bottom:8px;">🏪</div>
-        <div style="font-size:13px;font-weight:800;color:#0f172a;margin-bottom:3px;">
+        <div style="font-size:13px;font-weight:800;color:#1C1917;margin-bottom:3px;">
           <span class="en-text">Tile Shops & Brands</span>
           <span class="si-text">ටයිල් සාප්පු සහ Brands</span>
         </div>
-        <div style="font-size:11px;color:#64748b;line-height:1.5;">
+        <div style="font-size:11px;color:#57534E;line-height:1.5;">
           <span class="en-text">Reach renovating customers; showcase collections & dealers</span>
           <span class="si-text">ගනුදෙනුකරුවන් වෙත ළඟා වන්න</span>
         </div>
-        <div style="font-size:11px;font-weight:800;color:#0F766E;margin-top:8px;"><span class="en-text">Shops & brands →</span><span class="si-text">සාප්පු →</span></div>
+        <div style="font-size:11px;font-weight:800;color:#B45309;margin-top:8px;"><span class="en-text">Shops & brands →</span><span class="si-text">සාප්පු →</span></div>
       </a>
 
-      <a href="/tools" style="display:block;background:#fff;border:1.5px solid #99F6E4;border-radius:16px;padding:16px 14px;text-decoration:none;">
+      <a href="/tools" style="display:block;background:#fff;border:1.5px solid #FDE68A;border-radius:16px;padding:16px 14px;text-decoration:none;">
         <div style="font-size:26px;margin-bottom:8px;">🛠️</div>
-        <div style="font-size:13px;font-weight:800;color:#0f172a;margin-bottom:3px;">
+        <div style="font-size:13px;font-weight:800;color:#1C1917;margin-bottom:3px;">
           <span class="en-text">Suppliers & Workshops</span>
           <span class="si-text">Suppliers සහ Workshops</span>
         </div>
-        <div style="font-size:11px;color:#64748b;line-height:1.5;">
+        <div style="font-size:11px;color:#57534E;line-height:1.5;">
           <span class="en-text">Tools, adhesives, cutting services — list your business free</span>
           <span class="si-text">මෙවලම්, ඇලවුම්, කැපුම් සේවා</span>
         </div>
-        <div style="font-size:11px;font-weight:800;color:#0F766E;margin-top:8px;"><span class="en-text">Tools & supplies →</span><span class="si-text">මෙවලම් →</span></div>
+        <div style="font-size:11px;font-weight:800;color:#B45309;margin-top:8px;"><span class="en-text">Tools & supplies →</span><span class="si-text">මෙවලම් →</span></div>
       </a>
 
     </div>
@@ -375,13 +375,13 @@ const WHY_ITEMS = [
   </section>
 
   <!-- ══ BLOG / TIPS ══ -->
-  <section style="background:#fff;padding:20px 0 24px;border-top:1px solid #f1f5f9;">
+  <section style="background:#fff;padding:20px 0 24px;border-top:1px solid #F7EFE2;">
     <div style="padding:0 16px 12px;display:flex;align-items:center;justify-content:space-between;">
-      <h2 style="font-size:16px;font-weight:800;color:#111827;margin:0;">
+      <h2 style="font-size:16px;font-weight:800;color:#1C1917;margin:0;">
         <span class="en-text">📰 Tips & Guides</span>
         <span class="si-text">📰 ඉඟි සහ මාර්ගෝපදේශ</span>
       </h2>
-      <a href="/blog" style="font-size:12px;font-weight:600;color:#D97706;text-decoration:none;">
+      <a href="/blog" style="font-size:12px;font-weight:600;color:#B45309;text-decoration:none;">
         <span class="en-text">View all ›</span>
         <span class="si-text">සියල්ල ›</span>
       </a>
@@ -389,34 +389,34 @@ const WHY_ITEMS = [
     <div style="display:flex;flex-direction:column;gap:8px;padding:0 16px;">
       {BLOG_POSTS.slice(0,2).map(post => (
         <a href={`/blog/${post.slug}`}
-          style="display:flex;align-items:center;gap:0;background:#fff;border-radius:14px;overflow:hidden;border:1px solid #e2e8f0;text-decoration:none;color:inherit;">
+          style="display:flex;align-items:center;gap:0;background:#fff;border-radius:14px;overflow:hidden;border:1px solid #EDE4D3;text-decoration:none;color:inherit;">
           <div style={`width:64px;height:64px;background:${post.color};flex-shrink:0;display:flex;align-items:center;justify-content:center;font-size:24px;`}>{post.icon}</div>
           <div style="flex:1;padding:11px 13px;min-width:0;">
-            <span style="font-size:9px;font-weight:700;color:#D97706;background:#FFF7ED;border:1px solid #FDE68A;border-radius:20px;padding:1px 7px;">{post.category}</span>
-            <div style="font-size:12px;font-weight:700;color:#111827;line-height:1.4;margin-top:5px;overflow:hidden;display:-webkit-box;-webkit-line-clamp:2;-webkit-box-orient:vertical;">
+            <span style="font-size:9px;font-weight:700;color:#B45309;background:#FFF7ED;border:1px solid #FDE68A;border-radius:20px;padding:1px 7px;">{post.category}</span>
+            <div style="font-size:12px;font-weight:700;color:#1C1917;line-height:1.4;margin-top:5px;overflow:hidden;display:-webkit-box;-webkit-line-clamp:2;-webkit-box-orient:vertical;">
               <span class="en-text">{post.titleEn}</span>
               <span class="si-text">{post.titleSi}</span>
             </div>
           </div>
-          <div style="padding:0 14px;font-size:18px;color:#cbd5e1;flex-shrink:0;">›</div>
+          <div style="padding:0 14px;font-size:18px;color:#D6CFC4;flex-shrink:0;">›</div>
         </a>
       ))}
     </div>
   </section>
 
   <!-- ══ FIND TILERS BY DISTRICT ══ -->
-  <section style="background:#f8fafc;padding:24px 16px 28px;border-top:1px solid #f1f5f9;">
-    <h2 style="font-size:16px;font-weight:800;color:#111827;margin:0 0 4px;">
+  <section style="background:#FFFBF5;padding:24px 16px 28px;border-top:1px solid #F7EFE2;">
+    <h2 style="font-size:16px;font-weight:800;color:#1C1917;margin:0 0 4px;">
       <span class="en-text">📍 Find Tilers by District</span>
       <span class="si-text">📍 දිස්ත්‍රික්කය අනුව ටයිලර්වරු</span>
     </h2>
-    <p style="font-size:12px;color:#64748b;margin:0 0 14px;">
+    <p style="font-size:12px;color:#57534E;margin:0 0 14px;">
       <span class="en-text">Verified tiling professionals across all 25 districts of Sri Lanka</span>
       <span class="si-text">ශ්‍රී ලංකාවේ දිස්ත්‍රික්ක 25 පුරා සත්‍යාපිත ටයිලර්වරු</span>
     </p>
     <div style="display:flex;flex-wrap:wrap;gap:8px;">
       {DISTRICT_INFO.map(d => (
-        <a href={districtPath(d)} style="font-size:12px;font-weight:600;color:#0F766E;background:#fff;border:1px solid #99F6E4;border-radius:20px;padding:6px 13px;text-decoration:none;">
+        <a href={districtPath(d)} style="font-size:12px;font-weight:600;color:#B45309;background:#fff;border:1px solid #FDE68A;border-radius:20px;padding:6px 13px;text-decoration:none;">
           {d.name}
         </a>
       ))}
@@ -424,7 +424,7 @@ const WHY_ITEMS = [
   </section>
 
   <!-- ══ BOTTOM CTA ══ -->
-  <section style="background:linear-gradient(135deg,#042F2E,#115E59);padding:36px 20px;">
+  <section style="background:linear-gradient(135deg,#451A03,#78350F),radial-gradient(ellipse 80% 60% at 50% -10%,rgba(252,211,77,0.22) 0%,transparent 70%);background-blend-mode:screen;padding:36px 20px;">
     <div style="max-width:480px;margin:0 auto;text-align:center;">
       <div style="font-size:32px;margin-bottom:12px;">🏠</div>
       <h2 style="font-family:'Playfair Display',serif;font-size:20px;font-weight:700;color:#fff;margin:0 0 10px;line-height:1.3;">
@@ -436,7 +436,7 @@ const WHY_ITEMS = [
         <span class="si-text">නොමිලේ පලකරන්න — ශ්‍රී ලංකාව පුරා සත්‍යාපිත ශිල්පීන්ගේ ලංසු ලබා ගන්න.</span>
       </p>
       <div style="display:flex;gap:12px;justify-content:center;flex-wrap:wrap;">
-        <a href="/post-project" style="display:inline-flex;align-items:center;gap:8px;background:#D97706;color:#fff;border-radius:14px;padding:14px 28px;font-size:14px;font-weight:800;text-decoration:none;box-shadow:0 4px 20px rgba(217,119,6,0.35);">
+        <a href="/post-project" style="display:inline-flex;align-items:center;gap:8px;background:linear-gradient(135deg,#FCD34D 0%,#F59E0B 100%);color:#1C1917;border-radius:14px;padding:14px 28px;font-size:14px;font-weight:800;text-decoration:none;box-shadow:0 6px 24px rgba(245,158,11,0.4);">
           📋
           <span class="en-text">Post Your Project Free</span>
           <span class="si-text">ව්‍යාපෘතිය නොමිලේ පලකරන්න</span>

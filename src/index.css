@@ -1,36 +1,36 @@
 /* ═══ DESIGN TOKENS ═══ */
 :root {
-  /* Primary — Deep Teal */
-  --navy: #115E59;
-  --navy-light: #0D9488;
-  --navy-dark: #042F2E;
-  --navy-50: #F0FDFA;
-  --navy-100: #CCFBF1;
+  /* Primary — Sunlit amber. Deep enough for white text (5.9:1 and up). */
+  --navy: #78350F;        /* amber-900 — headings, dark UI */
+  --navy-light: #92400E;  /* amber-800 — hover, gradient partner */
+  --navy-dark: #451A03;   /* amber-950 — hero / footer gradients */
+  --navy-50: #FFFBEB;
+  --navy-100: #FDE68A;
 
-  /* Accent — Warm Gold */
+  /* Sun — bright gold. Always pair with ink text, never white. */
   --gold: #F59E0B;
   --gold-light: #FCD34D;
-  --gold-dark: #D97706;
+  --gold-dark: #B45309;
   --gold-50: #FFFBEB;
   --gold-100: #FEF3C7;
 
-  /* Amber accent */
-  --terra: #D97706;
-  --terra-light: #F59E0B;
+  /* Action — used for CTA fills that carry white text */
+  --terra: #B45309;
+  --terra-light: #B45309;
   --terra-50: #FFF7ED;
 
-  /* Neutrals */
+  /* Neutrals — warm cream */
   --surface: #ffffff;
-  --surface-2: #F9FAFB;
-  --surface-3: #F3F4F6;
-  --border: #E5E7EB;
-  --border-dark: #D1D5DB;
+  --surface-2: #FFFBF5;
+  --surface-3: #FDF6EC;
+  --border: #EDE4D3;
+  --border-dark: #DCCFB8;
 
-  /* Text */
-  --text: #111827;
-  --text-2: #374151;
-  --text-3: #6B7280;
-  --text-4: #9CA3AF;
+  /* Text — warm ink */
+  --text: #1C1917;
+  --text-2: #44403C;
+  --text-3: #57534E;
+  --text-4: #A8A29E;
 
   /* Semantic */
   --green: #16A34A;
@@ -68,7 +68,7 @@
 html { scroll-behavior: smooth; }
 body {
   font-family: 'Noto Sans Sinhala', 'Inter', sans-serif;
-  background: var(--surface);
+  background: var(--surface-2);
   color: var(--text);
   line-height: 1.5;
   -webkit-font-smoothing: antialiased;
@@ -243,7 +243,7 @@ img { max-width: 100%; display: block; }
 .search-box input:focus {
   border-color: var(--navy);
   background: #fff;
-  box-shadow: 0 0 0 4px rgba(17,94,89,0.08);
+  box-shadow: 0 0 0 4px rgba(120,53,15,0.08);
 }
 .search-box input::placeholder { color: var(--text-4); }
 .search-icon {
@@ -594,11 +594,11 @@ img { max-width: 100%; display: block; }
   line-height: 1;
 }
 .btn:active { transform: scale(0.97); }
-.btn-navy { background: var(--navy); color: #fff; box-shadow: 0 2px 10px rgba(17,94,89,0.2); }
+.btn-navy { background: var(--navy); color: #fff; box-shadow: 0 2px 10px rgba(120,53,15,0.2); }
 .btn-navy:hover { background: var(--navy-light); transform: translateY(-1px); }
 .btn-gold { background: var(--gold); color: #111; box-shadow: 0 2px 10px rgba(245,158,11,0.3); }
 .btn-gold:hover { background: var(--gold-light); transform: translateY(-1px); }
-.btn-terra { background: var(--terra); color: #fff; box-shadow: 0 2px 10px rgba(217,119,6,0.25); }
+.btn-terra { background: var(--terra); color: #fff; box-shadow: 0 2px 10px rgba(180,83,9,0.25); }
 .btn-terra:hover { background: var(--terra-light); transform: translateY(-1px); }
 .btn-outline { background: transparent; color: var(--navy); border: 1.5px solid var(--navy); }
 .btn-outline:hover { background: var(--navy-50); }
@@ -615,7 +615,7 @@ img { max-width: 100%; display: block; }
 .chip { display: inline-flex; align-items: center; gap: 4px; font-size: 11px; font-weight: 500; padding: 4px 10px; border-radius: 20px; }
 .chip-navy { background: var(--navy-50); color: var(--navy); border: 1px solid var(--navy-100); }
 .chip-gold { background: var(--gold-50); color: var(--gold-dark); border: 1px solid var(--gold-100); }
-.chip-terra { background: var(--terra-50); color: var(--terra); border: 1px solid rgba(217,119,6,0.2); }
+.chip-terra { background: var(--terra-50); color: var(--terra); border: 1px solid rgba(180,83,9,0.2); }
 .chip-green { background: var(--green-bg); color: var(--green); border: 1px solid var(--green-border); }
 .chip-gray { background: var(--surface-3); color: var(--text-3); border: 1px solid var(--border); }
 
@@ -632,7 +632,7 @@ img { max-width: 100%; display: block; }
 input[type="text"], input[type="email"], input[type="tel"], input[type="number"], input[type="search"], select, textarea {
   font-size: 16px;
 }
-.form-input:focus, .form-select:focus, .form-textarea:focus { border-color: var(--navy); box-shadow: 0 0 0 3px rgba(17,94,89,0.08); }
+.form-input:focus, .form-select:focus, .form-textarea:focus { border-color: var(--navy); box-shadow: 0 0 0 3px rgba(120,53,15,0.08); }
 .form-textarea { resize: vertical; min-height: 100px; }
 .form-row { display: grid; grid-template-columns: 1fr 1fr; gap: 14px; }
 .form-error { font-size: 11px; color: var(--error); margin-top: 4px; }
@@ -716,7 +716,7 @@ input[type="text"], input[type="email"], input[type="tel"], input[type="number"]
   justify-content: center;
   gap: 3px;
   text-decoration: none;
-  color: #94a3b8;
+  color: #A8A29E;
   font-size: 10px;
   font-weight: 600;
   padding: 8px 2px;
@@ -755,7 +755,7 @@ input[type="text"], input[type="email"], input[type="tel"], input[type="number"]
   display: flex;
   align-items: center;
   justify-content: center;
-  box-shadow: 0 4px 16px rgba(217,119,6,0.45);
+  box-shadow: 0 4px 16px rgba(180,83,9,0.45);
   margin-top: -20px;
   color: #fff;
   font-size: 28px;

@@ -43,14 +43,14 @@ const S = {
   card: {
     background: '#fff',
     borderRadius: 14,
-    border: '1px solid #e2e8f0',
+    border: '1px solid #EDE4D3',
     padding: '20px 22px',
   },
   label: {
     display: 'block',
     fontSize: 11,
     fontWeight: 700,
-    color: '#374151',
+    color: '#44403C',
     textTransform: 'uppercase',
     letterSpacing: '0.6px',
     marginBottom: 7,
@@ -58,13 +58,13 @@ const S = {
   input: {
     width: '100%',
     padding: '11px 14px',
-    border: '1.5px solid #e2e8f0',
+    border: '1.5px solid #EDE4D3',
     borderRadius: 10,
     fontSize: 13,
     outline: 'none',
     fontFamily: 'inherit',
     background: '#fff',
-    color: '#0f172a',
+    color: '#1C1917',
     boxSizing: 'border-box',
     transition: 'border-color 0.15s',
   },
@@ -87,13 +87,13 @@ function Field({ label, hint, error, charLimit, value = '', children }) {
       <label style={S.label}>
         {label}
         {charLimit != null && (
-          <span style={{ fontSize: 10, fontWeight: 400, marginLeft: 8, color: value.length > charLimit ? '#dc2626' : '#94a3b8' }}>
+          <span style={{ fontSize: 10, fontWeight: 400, marginLeft: 8, color: value.length > charLimit ? '#dc2626' : '#A8A29E' }}>
             {value.length}/{charLimit}
           </span>
         )}
       </label>
       {children}
-      {hint && !error && <p style={{ fontSize: 11, color: '#94a3b8', margin: '5px 0 0' }}>{hint}</p>}
+      {hint && !error && <p style={{ fontSize: 11, color: '#A8A29E', margin: '5px 0 0' }}>{hint}</p>}
       {error && <p style={{ fontSize: 11, color: '#dc2626', margin: '5px 0 0' }}>⚠ {error}</p>}
     </div>
   )
@@ -304,9 +304,9 @@ export default function BlogEditor({ mode = 'create', blogId = null }) {
       <Centred>
         <div style={{ textAlign: 'center' }}>
           <div style={{ fontSize: 48, marginBottom: 12 }}>🔒</div>
-          <div style={{ fontSize: 16, fontWeight: 700, marginBottom: 8, color: '#0f172a' }}>Access denied</div>
-          <div style={{ fontSize: 13, color: '#64748b', marginBottom: 20 }}>Admin privileges required.</div>
-          <a href="/admin" style={{ color: '#0F766E', fontWeight: 600, fontSize: 13 }}>← Go to Admin</a>
+          <div style={{ fontSize: 16, fontWeight: 700, marginBottom: 8, color: '#1C1917' }}>Access denied</div>
+          <div style={{ fontSize: 13, color: '#57534E', marginBottom: 20 }}>Admin privileges required.</div>
+          <a href="/admin" style={{ color: '#B45309', fontWeight: 600, fontSize: 13 }}>← Go to Admin</a>
         </div>
       </Centred>
     )
@@ -318,17 +318,17 @@ export default function BlogEditor({ mode = 'create', blogId = null }) {
   const isCreate = mode === 'create'
 
   return (
-    <div style={{ minHeight: '100vh', background: '#f1f5f9', padding: '24px 16px 80px' }}>
+    <div style={{ minHeight: '100vh', background: '#F7EFE2', padding: '24px 16px 80px' }}>
       <div style={{ maxWidth: 860, margin: '0 auto' }}>
 
         {/* ── Header ─────────────────────────────────────────────── */}
         <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', marginBottom: 28 }}>
           <div>
-            <h1 style={{ margin: 0, fontSize: 22, fontWeight: 800, color: '#0f172a' }}>
+            <h1 style={{ margin: 0, fontSize: 22, fontWeight: 800, color: '#1C1917' }}>
               {isCreate ? '✍️ New Blog Post' : '✏️ Edit Blog Post'}
             </h1>
             {!isCreate && (
-              <p style={{ margin: '4px 0 0', fontSize: 12, color: '#94a3b8', fontFamily: 'monospace' }}>
+              <p style={{ margin: '4px 0 0', fontSize: 12, color: '#A8A29E', fontFamily: 'monospace' }}>
                 ID: {blogId}
               </p>
             )}
@@ -339,18 +339,18 @@ export default function BlogEditor({ mode = 'create', blogId = null }) {
                 href={`/blog/${slug}`}
                 target="_blank"
                 rel="noopener"
-                style={{ fontSize: 12, color: '#0F766E', textDecoration: 'none', display: 'flex', alignItems: 'center', gap: 4 }}
+                style={{ fontSize: 12, color: '#B45309', textDecoration: 'none', display: 'flex', alignItems: 'center', gap: 4 }}
               >
                 👁 Preview ↗
               </a>
             )}
-            <a href="/admin" style={{ fontSize: 13, color: '#64748b', textDecoration: 'none' }}>← Admin</a>
+            <a href="/admin" style={{ fontSize: 13, color: '#57534E', textDecoration: 'none' }}>← Admin</a>
           </div>
         </div>
 
         {/* ── AI Optimizer banner ─────────────────────────────────── */}
         <div style={{
-          background: 'linear-gradient(135deg, #0F766E 0%, #0f172a 100%)',
+          background: 'linear-gradient(135deg, #B45309 0%, #1C1917 100%)',
           borderRadius: 14,
           padding: '18px 22px',
           marginBottom: 24,
@@ -374,7 +374,7 @@ export default function BlogEditor({ mode = 'create', blogId = null }) {
             disabled={aiLoading}
             style={{
               padding: '10px 22px',
-              background: aiLoading ? '#475569' : '#D97706',
+              background: aiLoading ? '#44403C' : '#B45309',
               color: '#fff',
               border: 'none',
               borderRadius: 10,
@@ -415,8 +415,8 @@ export default function BlogEditor({ mode = 'create', blogId = null }) {
             label="URL Slug *"
             hint="Auto-generated from title. Edit only if needed."
           >
-            <div style={{ display: 'flex', alignItems: 'center', gap: 0, border: '1.5px solid #e2e8f0', borderRadius: 10, overflow: 'hidden', background: '#fff' }}>
-              <span style={{ padding: '11px 10px 11px 14px', fontSize: 11, color: '#94a3b8', whiteSpace: 'nowrap', flexShrink: 0 }}>
+            <div style={{ display: 'flex', alignItems: 'center', gap: 0, border: '1.5px solid #EDE4D3', borderRadius: 10, overflow: 'hidden', background: '#fff' }}>
+              <span style={{ padding: '11px 10px 11px 14px', fontSize: 11, color: '#A8A29E', whiteSpace: 'nowrap', flexShrink: 0 }}>
                 /blog/
               </span>
               <input
@@ -452,9 +452,9 @@ export default function BlogEditor({ mode = 'create', blogId = null }) {
 
           {/* ── SEO Card ─────────────────────────────────────────── */}
           <div style={{ ...S.card, marginBottom: 20 }}>
-            <div style={{ fontSize: 13, fontWeight: 700, color: '#374151', marginBottom: 18, display: 'flex', alignItems: 'center', gap: 6 }}>
+            <div style={{ fontSize: 13, fontWeight: 700, color: '#44403C', marginBottom: 18, display: 'flex', alignItems: 'center', gap: 6 }}>
               🎯 SEO Metadata
-              <span style={{ fontSize: 11, color: '#94a3b8', fontWeight: 400 }}>— auto-populated by AI Optimizer</span>
+              <span style={{ fontSize: 11, color: '#A8A29E', fontWeight: 400 }}>— auto-populated by AI Optimizer</span>
             </div>
 
             <Field label="Meta Title" charLimit={60} value={metaTitle}>
@@ -493,9 +493,9 @@ export default function BlogEditor({ mode = 'create', blogId = null }) {
 
           {/* ── Featured Image Card ───────────────────────────────── */}
           <div style={{ ...S.card, marginBottom: 20 }}>
-            <div style={{ fontSize: 13, fontWeight: 700, color: '#374151', marginBottom: 16 }}>
+            <div style={{ fontSize: 13, fontWeight: 700, color: '#44403C', marginBottom: 16 }}>
               🖼️ Featured Image
-              <span style={{ fontSize: 11, color: '#94a3b8', fontWeight: 400, marginLeft: 8 }}>
+              <span style={{ fontSize: 11, color: '#A8A29E', fontWeight: 400, marginLeft: 8 }}>
                 — auto-compressed &amp; converted to WebP
               </span>
             </div>
@@ -506,7 +506,7 @@ export default function BlogEditor({ mode = 'create', blogId = null }) {
               onDragOver={e => e.preventDefault()}
               onDrop={e => { e.preventDefault(); handleImageFile(e.dataTransfer.files[0]) }}
               style={{
-                border: '2px dashed #cbd5e1',
+                border: '2px dashed #D6CFC4',
                 borderRadius: 12,
                 minHeight: 130,
                 display: 'flex',
@@ -514,7 +514,7 @@ export default function BlogEditor({ mode = 'create', blogId = null }) {
                 alignItems: 'center',
                 justifyContent: 'center',
                 cursor: imgUploading ? 'wait' : 'pointer',
-                background: '#f8fafc',
+                background: '#FFFBF5',
                 marginBottom: 14,
                 overflow: 'hidden',
                 position: 'relative',
@@ -540,9 +540,9 @@ export default function BlogEditor({ mode = 'create', blogId = null }) {
                   </div>
                 </>
               ) : (
-                <div style={{ textAlign: 'center', color: '#94a3b8', padding: 24 }}>
+                <div style={{ textAlign: 'center', color: '#A8A29E', padding: 24 }}>
                   <div style={{ fontSize: 36, marginBottom: 8 }}>📸</div>
-                  <div style={{ fontSize: 13, fontWeight: 600, color: '#374151' }}>
+                  <div style={{ fontSize: 13, fontWeight: 600, color: '#44403C' }}>
                     {imgUploading ? '⏳ Compressing & uploading…' : 'Click or drag image here'}
                   </div>
                   <div style={{ fontSize: 11, marginTop: 4 }}>
@@ -561,7 +561,7 @@ export default function BlogEditor({ mode = 'create', blogId = null }) {
             />
 
             {imageUrl && (
-              <div style={{ fontSize: 11, color: '#94a3b8', marginBottom: 10, wordBreak: 'break-all' }}>
+              <div style={{ fontSize: 11, color: '#A8A29E', marginBottom: 10, wordBreak: 'break-all' }}>
                 URL: {imageUrl}
               </div>
             )}
@@ -591,8 +591,8 @@ export default function BlogEditor({ mode = 'create', blogId = null }) {
             flexWrap: 'wrap',
           }}>
             <div>
-              <div style={{ fontSize: 13, fontWeight: 700, color: '#374151' }}>Publication Status</div>
-              <div style={{ fontSize: 11, color: '#94a3b8', marginTop: 3 }}>
+              <div style={{ fontSize: 13, fontWeight: 700, color: '#44403C' }}>Publication Status</div>
+              <div style={{ fontSize: 11, color: '#A8A29E', marginTop: 3 }}>
                 Drafts are not visible to public visitors.
               </div>
             </div>
@@ -621,8 +621,8 @@ export default function BlogEditor({ mode = 'create', blogId = null }) {
               href="/admin"
               style={{
                 padding: '11px 22px',
-                background: '#f1f5f9',
-                color: '#374151',
+                background: '#F7EFE2',
+                color: '#44403C',
                 borderRadius: 10,
                 fontSize: 14,
                 fontWeight: 600,
@@ -642,7 +642,7 @@ export default function BlogEditor({ mode = 'create', blogId = null }) {
                 onClick={() => setStatus('draft')}
                 style={{
                   padding: '11px 22px',
-                  background: saving ? '#94a3b8' : '#475569',
+                  background: saving ? '#A8A29E' : '#44403C',
                   color: '#fff',
                   border: 'none',
                   borderRadius: 10,
@@ -660,7 +660,7 @@ export default function BlogEditor({ mode = 'create', blogId = null }) {
               disabled={saving}
               style={{
                 padding: '11px 28px',
-                background: saving ? '#94a3b8' : '#0F766E',
+                background: saving ? '#A8A29E' : '#B45309',
                 color: '#fff',
                 border: 'none',
                 borderRadius: 10,
@@ -690,7 +690,7 @@ function Centred({ children }) {
   return (
     <div style={{
       display: 'flex', alignItems: 'center', justifyContent: 'center',
-      height: '100vh', color: '#64748b', fontSize: 14, flexDirection: 'column', gap: 12,
+      height: '100vh', color: '#57534E', fontSize: 14, flexDirection: 'column', gap: 12,
     }}>
       {children}
     </div>
