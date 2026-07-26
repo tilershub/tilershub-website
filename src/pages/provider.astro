@@ -8,11 +8,16 @@ if (!Astro.locals.user) return Astro.redirect('/login')
 const supabase = Astro.locals.supabase
 const user = Astro.locals.user
 
-const [{ data: projects }, { data: provider }, { data: bids }] = await Promise.all([
-  supabase.from('projects').select('*').order('created_at', { ascending: false }).limit(50),
+const [{ data: projects }, { data: provider }] = await Promise.all([
+  supabase.from('projects').select('*').eq('user_id', user.id).order('created_at', { ascending: false }),
   supabase.from('providers').select('*').eq('user_id', user.id).maybeSingle(),
-  supabase.from('bids').select('*').eq('user_id', user.id).order('created_at', { ascending: false }),
 ])
+
+// Bids have no account column — they link to a project via job_id.
+const projectIds = (projects ?? []).map(p => p.id)
+const { data: bids } = projectIds.length > 0
+  ? await supabase.from('bids').select('*').in('job_id', projectIds).order('created_at', { ascending: false })
+  : { data: [] }
 ---
 
 <Layout
