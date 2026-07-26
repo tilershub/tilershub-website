@@ -32,8 +32,10 @@ function url(loc, lastmod, changefreq, priority) {
 export async function GET({ locals }) {
   const today = new Date().toISOString().split('T')[0]
 
-  const [{ data: tilerRows }, { data: providerRows }, { data: projectRows }] = await Promise.all([
-    locals.supabase.from('tilers').select('slug,updated_at').eq('is_verified', true).not('slug', 'is', null),
+  // No `tilers` block: that legacy table's slugs are people, but /tilers/<slug>
+  // only serves districts and 301s anything else to /providers/<slug> — a
+  // sitemap should list canonical 200s, and district URLs are added below.
+  const [{ data: providerRows }, { data: projectRows }] = await Promise.all([
     locals.supabase.from('providers').select('slug,updated_at').eq('status', 'active').not('slug', 'is', null),
     locals.supabase.from('projects').select('id,project_type,city,district,created_at').eq('status', 'active').order('created_at', { ascending: false }).limit(500),
   ])
@@ -42,9 +44,6 @@ export async function GET({ locals }) {
     ...STATIC.map(u => url(u.loc, today, u.changefreq, u.priority)),
     ...SERVICES.map(s => url(`/services/${s.slug}`, today, 'weekly', '0.8')),
     ...BLOG_POSTS.map(p => url(`/blog/${p.slug}`, today, 'monthly', '0.7')),
-    ...(tilerRows || []).filter(r => r.slug).map(t =>
-      url(`/tilers/${t.slug}`, t.updated_at ? t.updated_at.split('T')[0] : today, 'weekly', '0.8')
-    ),
     ...(providerRows || []).filter(r => r.slug).map(p =>
       url(`/providers/${p.slug}`, p.updated_at ? p.updated_at.split('T')[0] : today, 'weekly', '0.7')
     ),

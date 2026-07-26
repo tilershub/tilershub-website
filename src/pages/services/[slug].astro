@@ -21,7 +21,7 @@ const [{ data: providersRaw }, { data: recentProjectsRaw }] = await Promise.all(
     .limit(200),
   supabase
     .from('projects')
-    .select('id,project_type,district,created_at,budget_min,budget_max,description')
+    .select('id,project_type,district,created_at,budget_range,description')
     .eq('status', 'active')
     .ilike('project_type', `%${service.terms[0]}%`)
     .order('created_at', { ascending: false })
@@ -239,7 +239,7 @@ const serviceFaqSchema = JSON.stringify({
         </div>
         <div style="display:flex;flex-direction:column;gap:10px;">
           {recentProjects.map(proj => {
-            const budget = budgetStr(proj.budget_min, proj.budget_max)
+            const budget = proj.budget_range || null
             return (
               <div style="background:#f8fafc;border:1px solid #e8edf5;border-radius:14px;padding:14px 16px;">
                 <div style="display:flex;align-items:flex-start;justify-content:space-between;gap:8px;margin-bottom:6px;">

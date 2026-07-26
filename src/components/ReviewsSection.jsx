@@ -94,14 +94,11 @@ function ReviewForm({ tilerId, providerId, onSubmitted }) {
     const guardKey = `th_reviewed_${providerId || tilerId}`
     if (localStorage.getItem(guardKey)) { setError('ඔබ දැනටමත් මෙම ශිල්පියා සමාලෝචනය කර ඇත'); return }
     setLoading(true); setError('')
-    // Attach user_id when signed in so reviews are accountable
-    const { data: { user } } = await supabase.auth.getUser()
     const payload = {
       reviewer_name: form.reviewer_name.trim(),
       rating:        form.rating,
       job_type:      form.job_type,
       comment:       form.comment.trim(),
-      user_id:       user?.id ?? null,
     }
     if (tilerId)    payload.tiler_id    = tilerId
     if (providerId) payload.provider_id = providerId
