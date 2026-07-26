@@ -54,18 +54,16 @@ export default function BidForm({ jobId, bidCount = 0, projectType = '', city = 
     if (form.message.trim().length < 20) { setError('Please write at least 20 characters describing your offer'); return }
     setLoading(true)
     setError('')
-    // Stamp the submitter's user_id when logged in so their quotes reliably
-    // show up under "My Quotes" regardless of phone-number formatting.
-    const { data: { user } } = await supabase.auth.getUser()
     const { error: err } = await supabase.from('bids').insert({
       job_id: jobId,
       bidder_name: form.name.trim(),
+      // Stored without spaces so "My Quotes" can match it against the
+      // number on the provider's profile regardless of how it was typed.
       bidder_whatsapp: form.whatsapp.replace(/\s/g, ''),
       bidder_type: form.bidder_type.toLowerCase(),
       message: form.message.trim(),
       quote_amount: form.quote_amount ? parseInt(form.quote_amount, 10) : null,
       timeline: form.timeline.trim() || null,
-      user_id: user?.id ?? null,
     })
     setLoading(false)
     if (err) { setError(err.message || 'Failed to submit. Please try again.'); return }

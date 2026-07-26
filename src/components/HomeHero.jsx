@@ -77,28 +77,29 @@ function ProviderHero({ name }) {
     getUser().then(async u => {
       if (!u) return
       const [{ data: t }, { data: p }] = await Promise.all([
-        supabase.from('tilers').select('profile_views').eq('user_id', u.id).maybeSingle(),
-        supabase.from('providers').select('profile_views').eq('user_id', u.id).maybeSingle(),
+        supabase.from('tilers').select('profile_views,phone').eq('user_id', u.id).maybeSingle(),
+        supabase.from('providers').select('profile_views,whatsapp,phone').eq('user_id', u.id).maybeSingle(),
       ])
       const rawViews = t?.profile_views ?? p?.profile_views ?? null
       const views = rawViews === null ? '—'
         : rawViews >= 1000 ? `${(rawViews / 1000).toFixed(1)}k`
         : String(rawViews)
 
-      // Count bids submitted by this provider (by user_id + any phone format)
+      // Bids carry no account reference — count them by the provider's
+      // WhatsApp number in any format it may have been stored in.
       const since = new Date(Date.now() - 30 * 86400000).toISOString()
-      const ids = new Set()
-      const { data: mine } = await supabase
-        .from('bids').select('id').eq('user_id', u.id).gte('created_at', since)
-      for (const b of mine || []) ids.add(b.id)
-      const variants = phoneVariants(u.phone)
+      const variants = [...new Set(
+        [p?.whatsapp, p?.phone, t?.phone, u.phone].filter(Boolean).flatMap(n => phoneVariants(n))
+      )]
+      let bidCount = 0
       if (variants.length > 0) {
-        const { data: byPhone } = await supabase
-          .from('bids').select('id').in('bidder_whatsapp', variants).gte('created_at', since)
-        for (const b of byPhone || []) ids.add(b.id)
+        const { count } = await supabase
+          .from('bids').select('id', { count: 'exact', head: true })
+          .in('bidder_whatsapp', variants).gte('created_at', since)
+        bidCount = count ?? 0
       }
 
-      setStats({ views, bids: String(ids.size) })
+      setStats({ views, bids: String(bidCount) })
     })
   }, [])
 

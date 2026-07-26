@@ -168,25 +168,24 @@ function ProviderDashboard({ user, claimedProfile, submission, showClaimedBanner
   async function loadQuotesData() {
     setDataLoading(true)
 
-    // Collect the provider's bids two ways and merge:
-    //  1) by user_id (reliable for bids submitted while logged in)
-    //  2) by any stored phone-number format (recovers legacy/anonymous bids)
-    const byId = new Map()
-    const collect = rows => { for (const b of rows || []) byId.set(b.id, b) }
+    // Bids are submitted without a login, so they carry no account reference —
+    // the WhatsApp number is the only link back to the provider. Match against
+    // every number we know for this user (approved profile, pending
+    // registration, account phone) in all the formats it may have been typed.
+    const numbers = [
+      claimedProfile?.whatsapp, claimedProfile?.phone,
+      submission?.whatsapp,
+      user.phone,
+    ].filter(Boolean)
+    const variants = [...new Set(numbers.flatMap(n => phoneVariants(n)))]
 
-    const { data: byUser } = await supabase
-      .from('bids').select('*').eq('user_id', user.id).order('created_at', { ascending: false })
-    collect(byUser)
-
-    const providerWA = claimedProfile?.whatsapp || claimedProfile?.phone
-    const variants = phoneVariants(providerWA)
+    let bids = []
     if (variants.length > 0) {
-      const { data: byPhone } = await supabase
+      const { data } = await supabase
         .from('bids').select('*').in('bidder_whatsapp', variants).order('created_at', { ascending: false })
-      collect(byPhone)
+      bids = data || []
     }
 
-    const bids = [...byId.values()].sort((a, b) => new Date(b.created_at) - new Date(a.created_at))
     if (bids.length > 0) {
       const jobIds = [...new Set(bids.map(b => b.job_id))]
       const { data: jobProjects } = await supabase
