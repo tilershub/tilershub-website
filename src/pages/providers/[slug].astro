@@ -7,9 +7,14 @@ import EditProfileButton from '../../components/EditProfileButton.jsx'
 const { slug } = Astro.params
 const supabase = Astro.locals.supabase
 
-const { data: item } = await supabase.from('providers').select('*').eq('slug', slug).single()
+// Only active profiles are public — hidden/unclaimed ones must not be
+// reachable or indexable.
+const { data: item } = await supabase
+  .from('providers').select('*').eq('slug', slug).eq('status', 'active').maybeSingle()
 
-if (!item) return Astro.redirect('/providers')
+// Genuine 404 rather than a redirect to the directory, which Google treats
+// as a soft 404.
+if (!item) return Astro.rewrite('/404')
 
 const name = item.name || ''
 const phone = item.whatsapp || item.phone

@@ -6,7 +6,8 @@
     "dev": "astro dev",
     "build": "astro build",
     "preview": "astro preview",
-    "deploy": "wrangler deploy"
+    "deploy": "wrangler deploy",
+    "check:schema": "node scripts/check-schema.mjs"
   },
   "dependencies": {
     "@anthropic-ai/sdk": "^0.105.0",

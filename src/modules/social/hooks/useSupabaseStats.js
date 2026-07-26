@@ -14,7 +14,8 @@ export function useSupabaseStats() {
         { count: bids },
       ] = await Promise.all([
         supabase.from('projects').select('*', { count: 'exact', head: true }),
-        supabase.from('tilers').select('*', { count: 'exact', head: true }).eq('status', 'active'),
+        // Listed professionals live in `providers`; `tilers` is legacy and has no status column
+        supabase.from('providers').select('*', { count: 'exact', head: true }).eq('status', 'active'),
         supabase.from('bids').select('*', { count: 'exact', head: true }),
       ])
       setStats({

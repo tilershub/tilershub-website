@@ -274,7 +274,6 @@ export default function BlogEditor({ mode = 'create', blogId = null }) {
       featured_image_url: imageUrl || null,
       alt_text:           altText.trim() || null,
       status,
-      updated_at:         new Date().toISOString(),
     }
 
     try {

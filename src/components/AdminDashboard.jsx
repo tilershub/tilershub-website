@@ -498,16 +498,14 @@ function OverviewTab() {
   useEffect(() => {
     Promise.all([
       supabase.from('provider_submissions').select('id', { count: 'exact', head: true }).eq('status', 'pending_review'),
-      supabase.from('claim_requests').select('id', { count: 'exact', head: true }).eq('status', 'pending_code'),
       supabase.from('projects').select('id', { count: 'exact', head: true }).eq('status', 'active'),
       supabase.from('bids').select('id', { count: 'exact', head: true }).eq('status', 'new'),
       supabase.from('projects').select('id', { count: 'exact', head: true }),
       supabase.from('provider_submissions').select('id', { count: 'exact', head: true }),
       supabase.from('providers').select('id', { count: 'exact', head: true }),
-    ]).then(([pend, claims, activeProj, newBids, totalProj, totalSub, totalProviders]) => {
+    ]).then(([pend, activeProj, newBids, totalProj, totalSub, totalProviders]) => {
       setStats({
         pendingSubmissions: pend.count ?? 0,
-        pendingClaims:      claims.count ?? 0,
         activeProjects:     activeProj.count ?? 0,
         newBids:            newBids.count ?? 0,
         totalProjects:      totalProj.count ?? 0,
@@ -519,7 +517,6 @@ function OverviewTab() {
 
   const cards = stats ? [
     { label: 'Pending Submissions', value: stats.pendingSubmissions, color: stats.pendingSubmissions > 0 ? TERRA : '#64748b', emoji: '📝' },
-    { label: 'Pending Claims',      value: stats.pendingClaims,      color: stats.pendingClaims > 0 ? '#f59e0b' : '#64748b', emoji: '📲' },
     { label: 'Active Projects',     value: stats.activeProjects,     color: '#16a34a', emoji: '📋' },
     { label: 'New Bids',            value: stats.newBids,            color: stats.newBids > 0 ? TERRA : '#64748b', emoji: '💬' },
     { label: 'Total Providers',      value: stats.totalProviders,     color: NAVY, emoji: '👷' },
@@ -656,71 +653,6 @@ function SubmissionsTab() {
   )
 }
 
-// ─── Claims tab ───────────────────────────────────────────────────────────────
-function ClaimsTab() {
-  const [rows, setRows]       = useState([])
-  const [showAll, setShowAll] = useState(false)
-  const [loading, setLoading] = useState(true)
-
-  const load = useCallback(async () => {
-    setLoading(true)
-    let q = supabase.from('claim_requests').select('*').order('created_at', { ascending: false })
-    if (!showAll) q = q.eq('status', 'pending_code')
-    const { data } = await q.limit(100)
-    setRows(data || [])
-    setLoading(false)
-  }, [showAll])
-
-  useEffect(() => { load() }, [load])
-
-  function waLink(whatsapp, code, profileName) {
-    const num = (whatsapp || '').replace(/\D/g, '')
-    const normalized = num.startsWith('94') ? num : '94' + num.replace(/^0/, '')
-    const msg = encodeURIComponent(`Hi ${profileName}, someone is claiming your TilersHub profile. Your verification code is: *${code}*\n\nOnly share this if you started the claim at tilershub.lk`)
-    return `https://wa.me/${normalized}?text=${msg}`
-  }
-
-  return (
-    <div>
-      <div style={{ display: 'flex', alignItems: 'center', gap: 14, marginBottom: 18, flexWrap: 'wrap' }}>
-        <h2 style={{ ...S.h2, marginBottom: 0 }}>Claim Requests</h2>
-        <label style={{ display: 'flex', alignItems: 'center', gap: 6, fontSize: 13, color: '#64748b', cursor: 'pointer', marginLeft: 'auto' }}>
-          <input type="checkbox" checked={showAll} onChange={e => setShowAll(e.target.checked)} />
-          Show all (including verified)
-        </label>
-      </div>
-      {loading ? <p style={{ color: '#94a3b8' }}>Loading…</p> : (
-        <div style={S.card}>
-          <Table
-            heads={['Profile','Type','WhatsApp (send code to)','Code','Status','Requested','Action']}
-            empty={rows.length === 0 ? (showAll ? 'No claim requests yet' : 'No pending claims 🎉') : null}
-          >
-            {rows.map(r => (
-              <tr key={r.id}>
-                <td style={S.td}><strong>{r.profile_name}</strong></td>
-                <td style={S.td}><span style={{ fontSize: 11, padding: '2px 8px', background: '#f1f5f9', borderRadius: 8 }}>{r.profile_type}</span></td>
-                <td style={S.td}><span style={{ fontFamily: 'monospace', fontSize: 13 }}>{r.whatsapp}</span></td>
-                <td style={S.td}>
-                  <span style={{ fontFamily: 'monospace', fontSize: 18, fontWeight: 800, color: NAVY, letterSpacing: '0.1em' }}>{r.code}</span>
-                </td>
-                <td style={S.td}><StatusBadge status={r.status} /></td>
-                <td style={S.td}>{timeAgo(r.created_at)}</td>
-                <td style={S.td}>
-                  {r.status === 'pending_code' && (
-                    <a href={waLink(r.whatsapp, r.code, r.profile_name)} target="_blank" rel="noopener"
-                      style={{ ...S.btn('#25D366'), display: 'inline-flex', alignItems: 'center', gap: 5, textDecoration: 'none' }}>
-                      💬 Send Code
-                    </a>
-                  )}
-                </td>
-              </tr>
-            ))}
-          </Table>
-        </div>
-      )}
-    </div>
-  )
-}
 
 // ─── Projects tab ─────────────────────────────────────────────────────────────
 function ProjectsTab() {
@@ -1114,7 +1046,7 @@ function BlogsTab() {
   const load = useCallback(async () => {
     setLoading(true)
     let q = supabase.from('blogs')
-      .select('id,title,slug,status,created_at,updated_at', { count: 'exact' })
+      .select('id,title,slug,status,created_at', { count: 'exact' })
       .order('created_at', { ascending: false })
       .range(page * PER, page * PER + PER - 1)
     if (filter !== 'all') q = q.eq('status', filter)
@@ -1155,7 +1087,7 @@ function BlogsTab() {
         <>
           <div style={S.card}>
             <Table
-              heads={['Title', 'Slug', 'Status', 'Created', 'Updated', 'Actions']}
+              heads={['Title', 'Slug', 'Status', 'Created', 'Actions']}
               empty={rows.length === 0 ? 'No blog posts found' : null}
             >
               {rows.map(r => (
@@ -1164,7 +1096,6 @@ function BlogsTab() {
                   <td style={{ ...S.td, fontSize: 11, color: '#64748b' }}>/blog/{r.slug}</td>
                   <td style={S.td}><StatusBadge status={r.status} /></td>
                   <td style={S.td}>{timeAgo(r.created_at)}</td>
-                  <td style={S.td}>{timeAgo(r.updated_at)}</td>
                   <td style={S.td}>
                     <div style={{ display: 'flex', gap: 5 }}>
                       <a href={`/admin/edit-blog/${r.id}`} target="_blank" rel="noopener"
@@ -1368,7 +1299,6 @@ const TABS = [
   { key: 'overview',     label: '📊 Overview' },
   { key: 'profiles',     label: '👥 Profiles' },
   { key: 'submissions',  label: '📝 Submissions' },
-  { key: 'claims',       label: '📲 Claims' },
   { key: 'projects',     label: '📋 Projects' },
   { key: 'bids',         label: '💬 Bids' },
   { key: 'reviews',      label: '⭐ Reviews' },
@@ -1491,7 +1421,6 @@ export default function AdminDashboard({ initialUser }) {
         {tab === 'overview'    && <OverviewTab />}
         {tab === 'profiles'    && <ProfilesTab adminUserId={user.id} />}
         {tab === 'submissions' && <SubmissionsTab />}
-        {tab === 'claims'      && <ClaimsTab />}
         {tab === 'projects'    && <ProjectsTab />}
         {tab === 'bids'        && <BidsTab />}
         {tab === 'reviews'     && <ReviewsTab />}

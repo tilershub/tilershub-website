@@ -71,19 +71,15 @@ export default function HomeHero({ heroImg }) {
 // ─── PROVIDER HERO ────────────────────────────────────────────────
 
 function ProviderHero({ name }) {
-  const [stats, setStats] = useState({ views: '—', bids: '—' })
+  const [stats, setStats] = useState({ bids: '—' })
 
   useEffect(() => {
     getUser().then(async u => {
       if (!u) return
       const [{ data: t }, { data: p }] = await Promise.all([
-        supabase.from('tilers').select('profile_views,phone').eq('user_id', u.id).maybeSingle(),
-        supabase.from('providers').select('profile_views,whatsapp,phone').eq('user_id', u.id).maybeSingle(),
+        supabase.from('tilers').select('phone').eq('user_id', u.id).maybeSingle(),
+        supabase.from('providers').select('whatsapp,phone').eq('user_id', u.id).maybeSingle(),
       ])
-      const rawViews = t?.profile_views ?? p?.profile_views ?? null
-      const views = rawViews === null ? '—'
-        : rawViews >= 1000 ? `${(rawViews / 1000).toFixed(1)}k`
-        : String(rawViews)
 
       // Bids carry no account reference — count them by the provider's
       // WhatsApp number in any format it may have been stored in.
@@ -99,7 +95,7 @@ function ProviderHero({ name }) {
         bidCount = count ?? 0
       }
 
-      setStats({ views, bids: String(bidCount) })
+      setStats({ bids: String(bidCount) })
     })
   }, [])
 
@@ -117,10 +113,6 @@ function ProviderHero({ name }) {
 
           {/* KPI chips */}
           <div style={{ display:'flex', gap:8, flexWrap:'wrap' }}>
-            <div style={{ background:'rgba(255,255,255,0.08)', border:'1px solid rgba(255,255,255,0.12)', borderRadius:10, padding:'6px 14px', minWidth:80 }}>
-              <div style={{ fontSize:18, fontWeight:800, color:'#D4AF37', lineHeight:1.2 }}>{stats.views}</div>
-              <div style={{ fontSize:9, color:'rgba(255,255,255,0.45)', textTransform:'uppercase', letterSpacing:1, marginTop:1 }}>පැතිකඩ නරඹූ</div>
-            </div>
             <div style={{ background:'rgba(255,255,255,0.08)', border:'1px solid rgba(255,255,255,0.12)', borderRadius:10, padding:'6px 14px', minWidth:80 }}>
               <div style={{ fontSize:18, fontWeight:800, color:'#D4AF37', lineHeight:1.2 }}>{stats.bids}</div>
               <div style={{ fontSize:9, color:'rgba(255,255,255,0.45)', textTransform:'uppercase', letterSpacing:1, marginTop:1 }}>ක්‍රි. ලංසු</div>
@@ -173,10 +165,10 @@ function ProviderProjectsFeed() {
         setTotal(count || 0)
         const { data: bids } = await supabase
           .from('bids')
-          .select('project_id')
-          .in('project_id', data.map(p => p.id))
+          .select('job_id')
+          .in('job_id', data.map(p => p.id))
         const counts = {}
-        bids?.forEach(b => { counts[b.project_id] = (counts[b.project_id] || 0) + 1 })
+        bids?.forEach(b => { counts[b.job_id] = (counts[b.job_id] || 0) + 1 })
         setBidCounts(counts)
       }
       setLoading(false)
