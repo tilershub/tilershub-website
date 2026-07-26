@@ -79,8 +79,8 @@ export const PROFESSION_LABELS = Object.fromEntries(PROFESSIONS.map(p => [p.valu
 export const PROVIDER_TYPES = PROFESSIONS
 
 export const VERIFICATION_BADGES = {
-  listed: { label: 'Listed', color: '#64748b', bg: '#f1f5f9' },
-  th_verified: { label: 'TH Verified', color: '#0f766e', bg: '#f0fdfa' },
+  listed: { label: 'Listed', color: '#57534E', bg: '#F7EFE2' },
+  th_verified: { label: 'TH Verified', color: '#B45309', bg: '#FFFBEB' },
   th_certified_pro: { label: 'Certified Pro', color: '#1d4ed8', bg: '#eff6ff' },
   th_master: { label: 'TH Master', color: '#7c3aed', bg: '#f5f3ff' },
 }

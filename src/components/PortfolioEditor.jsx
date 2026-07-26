@@ -62,7 +62,7 @@ export default function PortfolioEditor({ profile, profileType, userId }) {
     <div>
       {/* Prompt when empty */}
       {total === 0 && (
-        <div style={{ background:'linear-gradient(135deg,#F0FDFA,#fff7ed)', border:'1px solid #fed7aa', borderRadius:14, padding:'18px 20px', marginBottom:20, display:'flex', alignItems:'center', gap:14 }}>
+        <div style={{ background:'linear-gradient(135deg,#FFFBEB,#fff7ed)', border:'1px solid #fed7aa', borderRadius:14, padding:'18px 20px', marginBottom:20, display:'flex', alignItems:'center', gap:14 }}>
           <div style={{ fontSize:36, flexShrink:0 }}>📸</div>
           <div>
             <div style={{ fontSize:14, fontWeight:700, color:'#c2410c', marginBottom:4 }}>ව්‍යාපෘති ඡායාරූප එකතු කරන්න</div>
@@ -74,11 +74,11 @@ export default function PortfolioEditor({ profile, profileType, userId }) {
       {/* Stats bar */}
       {gallery.length > 0 && (
         <div style={{ display:'flex', alignItems:'center', justifyContent:'space-between', marginBottom:16 }}>
-          <span style={{ fontSize:13, fontWeight:700, color:'#374151' }}>
+          <span style={{ fontSize:13, fontWeight:700, color:'#44403C' }}>
             📸 ඡායාරූප {gallery.length}ක්
           </span>
           {profileHref && (
-            <a href={profileHref} target="_blank" rel="noopener" style={{ fontSize:12, fontWeight:600, color:'#0F766E', textDecoration:'none' }}>
+            <a href={profileHref} target="_blank" rel="noopener" style={{ fontSize:12, fontWeight:600, color:'#B45309', textDecoration:'none' }}>
               පොදු පැතිකඩ →
             </a>
           )}
@@ -88,7 +88,7 @@ export default function PortfolioEditor({ profile, profileType, userId }) {
       {/* Photo grid */}
       <div style={{ display:'grid', gridTemplateColumns:'repeat(auto-fill,minmax(100px,1fr))', gap:10, marginBottom:12 }}>
         {gallery.map((url, i) => (
-          <div key={url} style={{ position:'relative', aspectRatio:'1', borderRadius:12, overflow:'hidden', border:'1px solid #e2e8f0' }}>
+          <div key={url} style={{ position:'relative', aspectRatio:'1', borderRadius:12, overflow:'hidden', border:'1px solid #EDE4D3' }}>
             <img src={url} alt="" style={{ width:'100%', height:'100%', objectFit:'cover' }} loading="lazy" />
             <button type="button" onClick={() => removePhoto(i)}
               style={{ position:'absolute', top:4, right:4, background:'rgba(0,0,0,0.7)', color:'#fff', border:'none', borderRadius:'50%', width:22, height:22, cursor:'pointer', fontSize:11, display:'flex', alignItems:'center', justifyContent:'center' }}>
@@ -108,18 +108,18 @@ export default function PortfolioEditor({ profile, profileType, userId }) {
         ))}
         {total < MAX_GALLERY && (
           <div onClick={() => ref.current?.click()}
-            style={{ aspectRatio:'1', borderRadius:12, border:'2px dashed #cbd5e1', display:'flex', flexDirection:'column', alignItems:'center', justifyContent:'center', cursor:'pointer', background:'#f8fafc', gap:6, transition:'border-color 0.15s,background 0.15s' }}
-            onMouseOver={e => { e.currentTarget.style.borderColor='#0F766E'; e.currentTarget.style.background='#eef3fb' }}
-            onMouseOut={e  => { e.currentTarget.style.borderColor='#cbd5e1'; e.currentTarget.style.background='#f8fafc' }}
+            style={{ aspectRatio:'1', borderRadius:12, border:'2px dashed #D6CFC4', display:'flex', flexDirection:'column', alignItems:'center', justifyContent:'center', cursor:'pointer', background:'#FFFBF5', gap:6, transition:'border-color 0.15s,background 0.15s' }}
+            onMouseOver={e => { e.currentTarget.style.borderColor='#B45309'; e.currentTarget.style.background='#eef3fb' }}
+            onMouseOut={e  => { e.currentTarget.style.borderColor='#D6CFC4'; e.currentTarget.style.background='#FFFBF5' }}
           >
-            <span style={{ fontSize:24, color:'#94a3b8' }}>+</span>
-            <span style={{ fontSize:10, color:'#94a3b8', fontWeight:600 }}>ඡායාරූප</span>
+            <span style={{ fontSize:24, color:'#A8A29E' }}>+</span>
+            <span style={{ fontSize:10, color:'#A8A29E', fontWeight:600 }}>ඡායාරූප</span>
           </div>
         )}
       </div>
 
       <input ref={ref} type="file" accept="image/*" multiple onChange={e => addFiles(e.target.files)} style={{ display:'none' }} />
-      <p style={{ fontSize:11, color:'#94a3b8', margin:'0 0 16px' }}>JPG / PNG / WebP · ඡායාරූප {MAX_GALLERY}ක් දක්වා · ඔබේ හොඳම නිමි කාර්ය</p>
+      <p style={{ fontSize:11, color:'#A8A29E', margin:'0 0 16px' }}>JPG / PNG / WebP · ඡායාරූප {MAX_GALLERY}ක් දක්වා · ඔබේ හොඳම නිමි කාර්ය</p>
 
       {error && (
         <div style={{ padding:'10px 14px', background:'#fef2f2', border:'1px solid #fecaca', borderRadius:10, fontSize:13, color:'#dc2626', marginBottom:14 }}>
@@ -135,12 +135,12 @@ export default function PortfolioEditor({ profile, profileType, userId }) {
 
       {hasNew ? (
         <button onClick={save} disabled={saving}
-          style={{ width:'100%', padding:'13px', background: saving ? '#94a3b8' : '#0F766E', color:'#fff', border:'none', borderRadius:12, fontSize:14, fontWeight:700, cursor: saving ? 'not-allowed' : 'pointer', transition:'background 0.2s' }}>
+          style={{ width:'100%', padding:'13px', background: saving ? '#A8A29E' : '#B45309', color:'#fff', border:'none', borderRadius:12, fontSize:14, fontWeight:700, cursor: saving ? 'not-allowed' : 'pointer', transition:'background 0.2s' }}>
           {saving ? '⏳ සුරකිමින්…' : `💾 නව ඡායාරූප ${newFiles.length}ක් සුරකින්න`}
         </button>
       ) : gallery.length > 0 && profileHref ? (
         <a href={profileHref} target="_blank" rel="noopener"
-          style={{ display:'block', textAlign:'center', padding:'12px', background:'#f1f5f9', color:'#0F766E', border:'1px solid #e2e8f0', borderRadius:12, fontSize:13, fontWeight:700, textDecoration:'none' }}>
+          style={{ display:'block', textAlign:'center', padding:'12px', background:'#F7EFE2', color:'#B45309', border:'1px solid #EDE4D3', borderRadius:12, fontSize:13, fontWeight:700, textDecoration:'none' }}>
           🔗 පොදු පැතිකඩ බලන්න →
         </a>
       ) : null}

@@ -1,6 +1,6 @@
 import { useState, useEffect } from 'react'
 import { supabase, getUser, phoneVariants } from '../lib/supabase.js'
-import { jobPath } from '../lib/jobs.js'
+import { jobPath, shortDate } from '../lib/jobs.js'
 
 const CACHE_KEY = 'tilershub_role'
 const NAME_KEY  = 'tilershub_pname'
@@ -11,9 +11,9 @@ const TYPE_ICONS = {
   'Waterproofing':'💧','Tile Shop Inquiry':'🏪',
 }
 const TYPE_COLORS = {
-  'Floor Tiling':'#0F766E','Bathroom Tiling':'#0f766e','Bathroom Renovation':'#0f766e',
+  'Floor Tiling':'#B45309','Bathroom Tiling':'#B45309','Bathroom Renovation':'#B45309',
   'Granite Works':'#7c3aed','Tile Cutting':'#b45309','Routering':'#b45309',
-  'Waterproofing':'#0369a1','Tile Shop Inquiry':'#D97706',
+  'Waterproofing':'#0369a1','Tile Shop Inquiry':'#B45309',
 }
 
 function timeAgo(ts) {
@@ -22,7 +22,7 @@ function timeAgo(ts) {
   if (diff < 3600)   return `${Math.floor(diff / 60)}මිනි`
   if (diff < 86400)  return `${Math.floor(diff / 3600)}පැය`
   if (diff < 604800) return `${Math.floor(diff / 86400)}දින`
-  return new Date(ts).toLocaleDateString('si-LK', { day:'numeric', month:'short' })
+  return shortDate(ts)
 }
 
 export default function HomeHero({ heroImg }) {
@@ -100,7 +100,7 @@ function ProviderHero({ name }) {
   }, [])
 
   return (
-    <div style={{ position:'relative', overflow:'hidden', padding:'24px 20px 20px', background:'linear-gradient(135deg,#042F2E 0%,#115E59 100%)' }}>
+    <div style={{ position:'relative', overflow:'hidden', padding:'24px 20px 20px', background:'linear-gradient(135deg,#451A03 0%,#78350F 100%)' }}>
       <div style={{ position:'absolute', inset:0, opacity:0.035, backgroundImage:'repeating-linear-gradient(0deg,transparent,transparent 39px,rgba(255,255,255,0.8) 39px,rgba(255,255,255,0.8) 40px),repeating-linear-gradient(90deg,transparent,transparent 39px,rgba(255,255,255,0.8) 39px,rgba(255,255,255,0.8) 40px)', pointerEvents:'none' }} />
       <div style={{ position:'absolute', top:'-60px', left:'50%', transform:'translateX(-50%)', width:500, height:260, background:'radial-gradient(ellipse,rgba(212,175,55,0.09) 0%,transparent 70%)', pointerEvents:'none' }} />
 
@@ -135,9 +135,9 @@ function ProviderHero({ name }) {
 
 function ProviderActions() {
   const ACTIONS = [
-    { icon:'✏️', label:'මගේ පැතිකඩ',  sub:'ලිස්ටිං සංස්කරණය',      href:'/dashboard',  bg:'#F0FDFA', ibg:'rgba(17,94,89,0.12)'   },
+    { icon:'✏️', label:'මගේ පැතිකඩ',  sub:'ලිස්ටිං සංස්කරණය',      href:'/dashboard',  bg:'#FFFBEB', ibg:'rgba(120,53,15,0.12)'   },
     { icon:'📋', label:'මගේ ලිස්ටිං',  sub:'තත්ත්වය සහ ලංසු',     href:'/dashboard',  bg:'#fffbeb', ibg:'rgba(245,158,11,0.14)' },
-    { icon:'📐', label:'ගණනය',   sub:'පිරිවැය ගණනය',   href:'/estimator',  bg:'#F0FDFA', ibg:'rgba(217,119,6,0.12)'  },
+    { icon:'📐', label:'ගණනය',   sub:'පිරිවැය ගණනය',   href:'/estimator',  bg:'#FFFBEB', ibg:'rgba(180,83,9,0.12)'  },
     { icon:'💼', label:'සියලු ව්‍යාපෘති',    sub:'සම්පූර්ණ ව්‍යාපෘති', href:'/jobs',       bg:'#f0fdf4', ibg:'rgba(22,163,74,0.14)'  },
   ]
   return <QuickActionsGrid actions={ACTIONS} />
@@ -177,36 +177,36 @@ function ProviderProjectsFeed() {
   }, [])
 
   return (
-    <div style={{ background:'#f8fafc', borderBottom:'1px solid #e2e8f0' }}>
+    <div style={{ background:'#FFFBF5', borderBottom:'1px solid #EDE4D3' }}>
 
       <div style={{ maxWidth:860, margin:'0 auto', padding:'16px 16px 0', display:'flex', alignItems:'center', justifyContent:'space-between' }}>
         <div style={{ display:'flex', alignItems:'center', gap:8 }}>
-          <span style={{ fontSize:14, fontWeight:700, color:'#0f172a' }}>විවෘත ව්‍යාපෘති</span>
+          <span style={{ fontSize:14, fontWeight:700, color:'#1C1917' }}>විවෘත ව්‍යාපෘති</span>
           {total > 0 && (
             <span style={{ fontSize:11, fontWeight:700, color:'#D4AF37', background:'rgba(212,175,55,0.12)', border:'1px solid rgba(212,175,55,0.25)', borderRadius:20, padding:'2px 8px' }}>
               {total} ක්‍රියාකාරී
             </span>
           )}
         </div>
-        <a href="/jobs" style={{ fontSize:12, fontWeight:600, color:'#0F766E', textDecoration:'none' }}>සියල්ල බලන්න →</a>
+        <a href="/jobs" style={{ fontSize:12, fontWeight:600, color:'#B45309', textDecoration:'none' }}>සියල්ල බලන්න →</a>
       </div>
 
       <div style={{ maxWidth:860, margin:'0 auto', padding:'10px 16px 16px', display:'flex', flexDirection:'column', gap:8 }}>
 
         {loading
           ? Array.from({ length: 4 }).map((_, i) => (
-              <div key={i} style={{ background:'#fff', borderRadius:12, border:'1px solid #e2e8f0', padding:'14px 16px', display:'flex', gap:12, alignItems:'center' }}>
-                <div style={{ width:44, height:44, borderRadius:12, background:'#f1f5f9', flexShrink:0 }} />
+              <div key={i} style={{ background:'#fff', borderRadius:12, border:'1px solid #EDE4D3', padding:'14px 16px', display:'flex', gap:12, alignItems:'center' }}>
+                <div style={{ width:44, height:44, borderRadius:12, background:'#F7EFE2', flexShrink:0 }} />
                 <div style={{ flex:1, display:'flex', flexDirection:'column', gap:7 }}>
-                  <div style={{ height:12, background:'#f1f5f9', borderRadius:6, width:'35%' }} />
-                  <div style={{ height:10, background:'#f1f5f9', borderRadius:6, width:'65%' }} />
+                  <div style={{ height:12, background:'#F7EFE2', borderRadius:6, width:'35%' }} />
+                  <div style={{ height:10, background:'#F7EFE2', borderRadius:6, width:'65%' }} />
                 </div>
-                <div style={{ width:52, height:34, borderRadius:10, background:'#f1f5f9', flexShrink:0 }} />
+                <div style={{ width:52, height:34, borderRadius:10, background:'#F7EFE2', flexShrink:0 }} />
               </div>
             ))
           : projects.map(p => {
               const icon  = TYPE_ICONS[p.project_type]  || '🏠'
-              const color = TYPE_COLORS[p.project_type] || '#0F766E'
+              const color = TYPE_COLORS[p.project_type] || '#B45309'
               const bids  = bidCounts[p.id] || 0
               const excerpt = p.description?.length > 100
                 ? p.description.slice(0, 100) + '…'
@@ -214,21 +214,21 @@ function ProviderProjectsFeed() {
 
               return (
                 <a key={p.id} href={jobPath(p)}
-                  style={{ display:'flex', alignItems:'center', gap:12, background:'#fff', borderRadius:12, border:'1px solid #e2e8f0', padding:'14px 16px', textDecoration:'none', color:'inherit', transition:'box-shadow 0.15s,border-color 0.15s' }}
-                  onMouseOver={e => { e.currentTarget.style.boxShadow='0 4px 14px rgba(0,0,0,0.07)'; e.currentTarget.style.borderColor='#cbd5e1' }}
-                  onMouseOut={e  => { e.currentTarget.style.boxShadow=''; e.currentTarget.style.borderColor='#e2e8f0' }}
+                  style={{ display:'flex', alignItems:'center', gap:12, background:'#fff', borderRadius:12, border:'1px solid #EDE4D3', padding:'14px 16px', textDecoration:'none', color:'inherit', transition:'box-shadow 0.15s,border-color 0.15s' }}
+                  onMouseOver={e => { e.currentTarget.style.boxShadow='0 4px 14px rgba(0,0,0,0.07)'; e.currentTarget.style.borderColor='#D6CFC4' }}
+                  onMouseOut={e  => { e.currentTarget.style.boxShadow=''; e.currentTarget.style.borderColor='#EDE4D3' }}
                 >
                   <div style={{ width:44, height:44, borderRadius:12, background:`${color}12`, border:`1.5px solid ${color}22`, display:'flex', alignItems:'center', justifyContent:'center', fontSize:22, flexShrink:0 }}>{icon}</div>
 
                   <div style={{ flex:1, minWidth:0 }}>
                     <div style={{ display:'flex', alignItems:'center', gap:6, marginBottom:2 }}>
-                      <span style={{ fontSize:13, fontWeight:700, color:'#0f172a' }}>{p.project_type}</span>
-                      <span style={{ fontSize:11, color:'#94a3b8' }}>·</span>
-                      <span style={{ fontSize:11, color:'#64748b' }}>📍 {p.city}{p.district && p.district !== p.city ? `, ${p.district}` : ''}</span>
-                      <span style={{ fontSize:11, color:'#94a3b8', marginLeft:'auto', whiteSpace:'nowrap' }}>{timeAgo(p.created_at)}</span>
+                      <span style={{ fontSize:13, fontWeight:700, color:'#1C1917' }}>{p.project_type}</span>
+                      <span style={{ fontSize:11, color:'#A8A29E' }}>·</span>
+                      <span style={{ fontSize:11, color:'#57534E' }}>📍 {p.city}{p.district && p.district !== p.city ? `, ${p.district}` : ''}</span>
+                      <span style={{ fontSize:11, color:'#A8A29E', marginLeft:'auto', whiteSpace:'nowrap' }}>{timeAgo(p.created_at)}</span>
                     </div>
                     {excerpt && (
-                      <p style={{ fontSize:12, color:'#64748b', margin:'0 0 6px', lineHeight:1.5, overflow:'hidden', whiteSpace:'nowrap', textOverflow:'ellipsis' }}>{excerpt}</p>
+                      <p style={{ fontSize:12, color:'#57534E', margin:'0 0 6px', lineHeight:1.5, overflow:'hidden', whiteSpace:'nowrap', textOverflow:'ellipsis' }}>{excerpt}</p>
                     )}
                     <div style={{ display:'flex', gap:5, flexWrap:'wrap' }}>
                       {p.budget_range && (
@@ -240,7 +240,7 @@ function ProviderProjectsFeed() {
                     </div>
                   </div>
 
-                  <div style={{ flexShrink:0, background:'#D97706', color:'#fff', borderRadius:10, padding:'8px 14px', fontSize:12, fontWeight:700 }}>
+                  <div style={{ flexShrink:0, background:'#B45309', color:'#fff', borderRadius:10, padding:'8px 14px', fontSize:12, fontWeight:700 }}>
                     ලංසු →
                   </div>
                 </a>
@@ -249,15 +249,15 @@ function ProviderProjectsFeed() {
         }
 
         {!loading && projects.length === 0 && (
-          <div style={{ textAlign:'center', padding:'28px 16px', color:'#94a3b8', fontSize:13 }}>
+          <div style={{ textAlign:'center', padding:'28px 16px', color:'#A8A29E', fontSize:13 }}>
             දැනට ක්‍රියාකාරී ව්‍යාපෘති නොමැත — ශීඝ්‍රයෙන් නැවත පරීක්ෂා කරන්න.
           </div>
         )}
 
         {!loading && projects.length > 0 && (
-          <a href="/jobs" style={{ display:'flex', alignItems:'center', justifyContent:'center', gap:6, padding:'12px', borderRadius:12, border:'1.5px dashed #cbd5e1', color:'#64748b', fontSize:13, fontWeight:600, textDecoration:'none', background:'transparent', transition:'border-color 0.15s,color 0.15s' }}
-            onMouseOver={e => { e.currentTarget.style.borderColor='#0F766E'; e.currentTarget.style.color='#0F766E' }}
-            onMouseOut={e  => { e.currentTarget.style.borderColor='#cbd5e1'; e.currentTarget.style.color='#64748b' }}
+          <a href="/jobs" style={{ display:'flex', alignItems:'center', justifyContent:'center', gap:6, padding:'12px', borderRadius:12, border:'1.5px dashed #D6CFC4', color:'#57534E', fontSize:13, fontWeight:600, textDecoration:'none', background:'transparent', transition:'border-color 0.15s,color 0.15s' }}
+            onMouseOver={e => { e.currentTarget.style.borderColor='#B45309'; e.currentTarget.style.color='#B45309' }}
+            onMouseOut={e  => { e.currentTarget.style.borderColor='#D6CFC4'; e.currentTarget.style.color='#57534E' }}
           >
             💼 සියලු {total} ව්‍යාපෘති බලන්න →
           </a>
@@ -276,7 +276,7 @@ function GuestHero({ heroImg }) {
         style={{ position:'absolute', inset:0, width:'100%', height:'100%', objectFit:'cover', objectPosition:'center 30%', opacity:0.32 }}
         loading="eager" fetchpriority="high" decoding="sync"
       />
-      <div style={{ position:'absolute', inset:0, background:'linear-gradient(175deg,rgba(2,44,42,0.72) 0%,rgba(20,35,65,0.68) 100%)', pointerEvents:'none' }} />
+      <div style={{ position:'absolute', inset:0, background:'linear-gradient(175deg,rgba(69,26,3,0.72) 0%,rgba(20,35,65,0.68) 100%)', pointerEvents:'none' }} />
 
       <div style={{ position:'relative', textAlign:'center', maxWidth:520, width:'100%' }}>
         <h1 style={{ fontFamily:"'Playfair Display',serif", fontSize:'clamp(26px,5.5vw,42px)', fontWeight:700, color:'#fff', lineHeight:1.15, marginBottom:10 }}>
@@ -288,7 +288,7 @@ function GuestHero({ heroImg }) {
         </p>
 
         {/* Single primary CTA */}
-        <a href="/post-project" style={{ display:'flex', alignItems:'center', justifyContent:'center', gap:8, background:'#D97706', color:'#fff', borderRadius:24, padding:'14px 28px', fontSize:15, fontWeight:800, textDecoration:'none', boxShadow:'0 4px 20px rgba(217,119,6,0.45)', marginBottom:14 }}>
+        <a href="/post-project" style={{ display:'flex', alignItems:'center', justifyContent:'center', gap:8, background:'#B45309', color:'#fff', borderRadius:24, padding:'14px 28px', fontSize:15, fontWeight:800, textDecoration:'none', boxShadow:'0 4px 20px rgba(180,83,9,0.45)', marginBottom:14 }}>
           📋 නොමිලේ ව්‍යාපෘතිය පලකරන්න
         </a>
 
@@ -321,20 +321,20 @@ function GuestActions() {
     { icon:'🪞', label:'වැනිටි\nකබඩ්',       href:'/providers?q=Vanity+Cupboard'       },
   ]
   return (
-    <div style={{ background:'#fff', borderBottom:'1px solid #f1f5f9', padding:'16px 16px 12px' }}>
+    <div style={{ background:'#fff', borderBottom:'1px solid #F7EFE2', padding:'16px 16px 12px' }}>
       <div style={{ display:'flex', alignItems:'center', justifyContent:'space-between', marginBottom:14 }}>
-        <span style={{ fontSize:15, fontWeight:700, color:'#111827' }}>ජනප්‍රිය සේවාවන්</span>
-        <a href="/providers" style={{ fontSize:12, fontWeight:600, color:'#D97706', textDecoration:'none' }}>සියල්ල &rsaquo;</a>
+        <span style={{ fontSize:15, fontWeight:700, color:'#1C1917' }}>ජනප්‍රිය සේවාවන්</span>
+        <a href="/providers" style={{ fontSize:12, fontWeight:600, color:'#B45309', textDecoration:'none' }}>සියල්ල &rsaquo;</a>
       </div>
       <div style={{ display:'grid', gridTemplateColumns:'repeat(4,1fr)', gap:10 }}>
         {SERVICES.map(s => (
           <a key={s.href} href={s.href}
-            style={{ display:'flex', flexDirection:'column', alignItems:'center', gap:7, padding:'12px 4px 10px', borderRadius:14, background:'#f8fafc', textDecoration:'none', border:'1px solid #f1f5f9', transition:'background 0.15s' }}
-            onMouseOver={e => e.currentTarget.style.background='#F0FDFA'}
-            onMouseOut={e  => e.currentTarget.style.background='#f8fafc'}
+            style={{ display:'flex', flexDirection:'column', alignItems:'center', gap:7, padding:'12px 4px 10px', borderRadius:14, background:'#FFFBF5', textDecoration:'none', border:'1px solid #F7EFE2', transition:'background 0.15s' }}
+            onMouseOver={e => e.currentTarget.style.background='#FFFBEB'}
+            onMouseOut={e  => e.currentTarget.style.background='#FFFBF5'}
           >
-            <div style={{ width:46, height:46, borderRadius:13, background:'#fff', border:'1px solid #e2e8f0', boxShadow:'0 1px 4px rgba(0,0,0,0.06)', display:'flex', alignItems:'center', justifyContent:'center', fontSize:22 }}>{s.icon}</div>
-            <span style={{ fontSize:10, fontWeight:600, color:'#374151', textAlign:'center', lineHeight:1.35, whiteSpace:'pre-line' }}>{s.label}</span>
+            <div style={{ width:46, height:46, borderRadius:13, background:'#fff', border:'1px solid #EDE4D3', boxShadow:'0 1px 4px rgba(0,0,0,0.06)', display:'flex', alignItems:'center', justifyContent:'center', fontSize:22 }}>{s.icon}</div>
+            <span style={{ fontSize:10, fontWeight:600, color:'#44403C', textAlign:'center', lineHeight:1.35, whiteSpace:'pre-line' }}>{s.label}</span>
           </a>
         ))}
       </div>
@@ -355,7 +355,7 @@ function QuickActionsGrid({ actions }) {
             onMouseOut={e  => { e.currentTarget.style.transform=''; e.currentTarget.style.boxShadow='' }}
           >
             <div style={{ width:44, height:44, borderRadius:12, background:a.ibg, display:'flex', alignItems:'center', justifyContent:'center', fontSize:20, marginBottom:2 }}>{a.icon}</div>
-            <div style={{ fontSize:11, fontWeight:700, color:'#111827', lineHeight:1.2, textAlign:'center' }}>{a.label}</div>
+            <div style={{ fontSize:11, fontWeight:700, color:'#1C1917', lineHeight:1.2, textAlign:'center' }}>{a.label}</div>
             <div style={{ fontSize:9, color:'#9CA3AF', lineHeight:1.2, textAlign:'center' }}>{a.sub}</div>
           </a>
         ))}

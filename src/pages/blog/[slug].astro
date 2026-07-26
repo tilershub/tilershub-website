@@ -60,34 +60,34 @@ const faqSchema = post.sections?.length > 0 ? JSON.stringify({
   </div>
 
   <style is:global>
-    .blog-rich-content { color: #374151; font-size: 14px; line-height: 1.85; word-break: break-word; overflow-x: hidden; max-width: 100%; }
+    .blog-rich-content { color: #44403C; font-size: 14px; line-height: 1.85; word-break: break-word; overflow-x: hidden; max-width: 100%; }
     .blog-rich-content p { margin: 0 0 14px; }
     .blog-rich-content h2 {
       font-family: 'Playfair Display', serif;
       font-size: clamp(15px, 4.5vw, 19px);
-      font-weight: 700; color: #111827;
+      font-weight: 700; color: #1C1917;
       margin: 26px 0 10px; padding-bottom: 8px;
-      border-bottom: 2px solid #e2e8f0; line-height: 1.35;
+      border-bottom: 2px solid #EDE4D3; line-height: 1.35;
     }
     .blog-rich-content h2:first-child { margin-top: 0; }
-    .blog-rich-content h3 { font-size: clamp(13px, 3.5vw, 15px); font-weight: 700; color: #0F766E; margin: 20px 0 8px; line-height: 1.4; }
+    .blog-rich-content h3 { font-size: clamp(13px, 3.5vw, 15px); font-weight: 700; color: #B45309; margin: 20px 0 8px; line-height: 1.4; }
     .blog-rich-content ul { margin: 0 0 14px; padding-left: 18px; }
     .blog-rich-content li { margin-bottom: 10px; line-height: 1.7; }
-    .blog-rich-content strong { color: #111827; }
+    .blog-rich-content strong { color: #1C1917; }
 
     /* Table: wrap in scroll container via JS; also scroll via display:block as CSS fallback */
-    .blog-table-wrap { overflow-x: auto; -webkit-overflow-scrolling: touch; margin: 14px 0 18px; border-radius: 10px; border: 1px solid #e2e8f0; max-width: 100%; }
+    .blog-table-wrap { overflow-x: auto; -webkit-overflow-scrolling: touch; margin: 14px 0 18px; border-radius: 10px; border: 1px solid #EDE4D3; max-width: 100%; }
     .blog-rich-content table { display: block; overflow-x: auto; -webkit-overflow-scrolling: touch; border-collapse: collapse; font-size: 13px; min-width: 320px; width: max-content; max-width: 100%; }
     .blog-table-wrap table { display: table; overflow-x: unset; width: 100%; max-width: unset; }
-    .blog-rich-content th { background: #0F766E; color: #fff; padding: 9px 11px; text-align: left; font-weight: 700; font-size: 12px; line-height: 1.4; white-space: nowrap; }
-    .blog-rich-content td { padding: 9px 11px; border-bottom: 1px solid #e2e8f0; vertical-align: top; }
+    .blog-rich-content th { background: #B45309; color: #fff; padding: 9px 11px; text-align: left; font-weight: 700; font-size: 12px; line-height: 1.4; white-space: nowrap; }
+    .blog-rich-content td { padding: 9px 11px; border-bottom: 1px solid #EDE4D3; vertical-align: top; }
     .blog-rich-content tr:last-child td { border-bottom: none; }
-    .blog-rich-content tr:nth-child(even) td { background: #f8fafc; }
+    .blog-rich-content tr:nth-child(even) td { background: #FFFBF5; }
 
     .blog-rich-content .img-placeholder {
-      background: #f1f5f9; border: 2px dashed #cbd5e1; border-radius: 10px;
+      background: #F7EFE2; border: 2px dashed #D6CFC4; border-radius: 10px;
       padding: 14px 16px; margin: 18px 0;
-      font-size: 12px; color: #64748b; font-style: italic; line-height: 1.6;
+      font-size: 12px; color: #57534E; font-style: italic; line-height: 1.6;
     }
     .blog-rich-content .warning-box {
       background: #fffbeb; border: 1.5px solid #fcd34d;
@@ -96,8 +96,8 @@ const faqSchema = post.sections?.length > 0 ? JSON.stringify({
       font-size: 13px; color: #78350f; line-height: 1.7;
     }
     .blog-rich-content .disclaimer {
-      font-size: 11px; color: #94a3b8; font-style: italic;
-      border-top: 1px solid #e2e8f0; padding-top: 14px; margin-top: 6px; line-height: 1.7;
+      font-size: 11px; color: #A8A29E; font-style: italic;
+      border-top: 1px solid #EDE4D3; padding-top: 14px; margin-top: 6px; line-height: 1.7;
     }
 
     @media (max-width: 480px) {
@@ -120,30 +120,30 @@ const faqSchema = post.sections?.length > 0 ? JSON.stringify({
   </style>
 
   <!-- Content -->
-  <div style="background:#f8fafc;padding:18px 12px 80px;overflow-x:hidden;">
+  <div style="background:#FFFBF5;padding:18px 12px 80px;overflow-x:hidden;">
     <div style="max-width:760px;margin:0 auto;display:grid;grid-template-columns:1fr;gap:14px;">
 
       <!-- Excerpt -->
-      <p style="font-size:14px;color:#374151;line-height:1.85;font-weight:500;border-left:3px solid #D97706;padding-left:14px;margin:0;">{post.excerpt}</p>
+      <p style="font-size:14px;color:#44403C;line-height:1.85;font-weight:500;border-left:3px solid #B45309;padding-left:14px;margin:0;">{post.excerpt}</p>
 
       <!-- Rich HTML content or plain sections -->
       {post.content
-        ? <div class="blog-rich-content blog-page-card" style="background:#fff;border:1px solid #e2e8f0;border-radius:14px;padding:18px;" set:html={post.content} />
+        ? <div class="blog-rich-content blog-page-card" style="background:#fff;border:1px solid #EDE4D3;border-radius:14px;padding:18px;" set:html={post.content} />
         : post.sections?.map(s => (
-            <div class="blog-page-card" style="background:#fff;border:1px solid #e2e8f0;border-radius:14px;padding:18px;">
-              <h2 style="font-family:'Playfair Display',serif;font-size:clamp(14px,4vw,17px);font-weight:700;color:#111827;margin:0 0 10px;line-height:1.3;">{s.heading}</h2>
-              <p style="font-size:14px;color:#374151;line-height:1.85;margin:0;">{s.body}</p>
+            <div class="blog-page-card" style="background:#fff;border:1px solid #EDE4D3;border-radius:14px;padding:18px;">
+              <h2 style="font-family:'Playfair Display',serif;font-size:clamp(14px,4vw,17px);font-weight:700;color:#1C1917;margin:0 0 10px;line-height:1.3;">{s.heading}</h2>
+              <p style="font-size:14px;color:#44403C;line-height:1.85;margin:0;">{s.body}</p>
             </div>
           ))
       }
 
       <!-- Quick tips -->
-      <div class="blog-page-card" style="background:linear-gradient(135deg,#042F2E,#115E59);border-radius:14px;padding:18px;">
+      <div class="blog-page-card" style="background:linear-gradient(135deg,#451A03,#78350F);border-radius:14px;padding:18px;">
         <h2 style="font-size:11px;font-weight:700;color:rgba(255,255,255,0.5);text-transform:uppercase;letter-spacing:2px;margin:0 0 14px;">Quick Tips</h2>
         <div style="display:flex;flex-direction:column;gap:10px;">
           {post.tips.map((tip, i) => (
             <div style="display:flex;align-items:flex-start;gap:11px;">
-              <div style="width:22px;height:22px;min-width:22px;border-radius:50%;background:#D97706;display:flex;align-items:center;justify-content:center;font-size:11px;font-weight:800;color:#fff;">{i + 1}</div>
+              <div style="width:22px;height:22px;min-width:22px;border-radius:50%;background:#B45309;display:flex;align-items:center;justify-content:center;font-size:11px;font-weight:800;color:#fff;">{i + 1}</div>
               <p style="font-size:13px;color:rgba(255,255,255,0.82);line-height:1.65;margin:0;overflow-wrap:break-word;">{tip}</p>
             </div>
           ))}
@@ -151,13 +151,13 @@ const faqSchema = post.sections?.length > 0 ? JSON.stringify({
       </div>
 
       <!-- CTA -->
-      <div class="blog-page-card blog-cta" style="background:#D97706;border-radius:14px;padding:18px;display:flex;align-items:center;justify-content:space-between;gap:14px;flex-wrap:wrap;">
+      <div class="blog-page-card blog-cta" style="background:#B45309;border-radius:14px;padding:18px;display:flex;align-items:center;justify-content:space-between;gap:14px;flex-wrap:wrap;">
         <div style="flex:1;min-width:0;">
           <div style="font-size:9px;font-weight:700;color:rgba(255,255,255,0.65);letter-spacing:2px;text-transform:uppercase;margin-bottom:4px;">Take Action</div>
           <div style="font-size:15px;font-weight:700;color:#fff;line-height:1.3;margin-bottom:3px;">Ready to start your project?</div>
           <div style="font-size:12px;color:rgba(255,255,255,0.75);line-height:1.5;">Connect with verified professionals across Sri Lanka.</div>
         </div>
-        <a href={post.cta.href} class="blog-cta-btn" style="display:inline-flex;align-items:center;gap:7px;background:#fff;color:#D97706;border-radius:12px;padding:11px 20px;font-size:13px;font-weight:800;text-decoration:none;white-space:nowrap;">
+        <a href={post.cta.href} class="blog-cta-btn" style="display:inline-flex;align-items:center;gap:7px;background:#fff;color:#B45309;border-radius:12px;padding:11px 20px;font-size:13px;font-weight:800;text-decoration:none;white-space:nowrap;">
           {post.cta.text} →
         </a>
       </div>
@@ -165,23 +165,23 @@ const faqSchema = post.sections?.length > 0 ? JSON.stringify({
       <!-- Related posts -->
       {related.length > 0 && (
         <div>
-          <div style="font-size:11px;font-weight:700;color:#94a3b8;text-transform:uppercase;letter-spacing:2px;margin-bottom:10px;">Related Reading</div>
+          <div style="font-size:11px;font-weight:700;color:#A8A29E;text-transform:uppercase;letter-spacing:2px;margin-bottom:10px;">Related Reading</div>
           <div style="display:flex;flex-direction:column;gap:10px;">
             {related.map(r => (
               <a href={`/blog/${r.slug}`}
-                style="display:flex;align-items:center;background:#fff;border-radius:12px;overflow:hidden;border:1px solid #e2e8f0;text-decoration:none;color:inherit;box-shadow:0 1px 4px rgba(0,0,0,0.04);"
-                onmouseover="this.style.boxShadow='0 4px 16px rgba(0,0,0,0.09)';this.style.borderColor='#cbd5e1'"
-                onmouseout="this.style.boxShadow='0 1px 4px rgba(0,0,0,0.04)';this.style.borderColor='#e2e8f0'"
+                style="display:flex;align-items:center;background:#fff;border-radius:12px;overflow:hidden;border:1px solid #EDE4D3;text-decoration:none;color:inherit;box-shadow:0 1px 4px rgba(0,0,0,0.04);"
+                onmouseover="this.style.boxShadow='0 4px 16px rgba(0,0,0,0.09)';this.style.borderColor='#D6CFC4'"
+                onmouseout="this.style.boxShadow='0 1px 4px rgba(0,0,0,0.04)';this.style.borderColor='#EDE4D3'"
               >
                 <div class="related-icon" style={`width:66px;min-width:66px;height:66px;background:${r.color};display:flex;align-items:center;justify-content:center;font-size:24px;`}>{r.icon}</div>
                 <div style="flex:1;padding:10px 12px;min-width:0;">
                   <div style="display:flex;align-items:center;gap:6px;margin-bottom:3px;flex-wrap:wrap;">
-                    <span style="font-size:9px;font-weight:700;color:#D97706;background:#FFF7ED;border:1px solid #FDE68A;border-radius:20px;padding:1px 7px;">{r.category}</span>
-                    <span style="font-size:10px;color:#94a3b8;">{r.readTime}</span>
+                    <span style="font-size:9px;font-weight:700;color:#B45309;background:#FFF7ED;border:1px solid #FDE68A;border-radius:20px;padding:1px 7px;">{r.category}</span>
+                    <span style="font-size:10px;color:#A8A29E;">{r.readTime}</span>
                   </div>
-                  <div style="font-size:13px;font-weight:700;color:#111827;line-height:1.35;overflow:hidden;display:-webkit-box;-webkit-line-clamp:2;-webkit-box-orient:vertical;">{r.title}</div>
+                  <div style="font-size:13px;font-weight:700;color:#1C1917;line-height:1.35;overflow:hidden;display:-webkit-box;-webkit-line-clamp:2;-webkit-box-orient:vertical;">{r.title}</div>
                 </div>
-                <div style="padding:0 12px;font-size:20px;color:#cbd5e1;flex-shrink:0;">›</div>
+                <div style="padding:0 12px;font-size:20px;color:#D6CFC4;flex-shrink:0;">›</div>
               </a>
             ))}
           </div>

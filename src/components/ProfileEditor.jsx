@@ -22,7 +22,7 @@ function lbl(text) {
 function inp(hasError) {
   return {
     width: '100%', padding: '10px 13px',
-    border: `1.5px solid ${hasError ? '#fca5a5' : '#e2e8f0'}`,
+    border: `1.5px solid ${hasError ? '#fca5a5' : '#EDE4D3'}`,
     borderRadius: 10, fontSize: 13, outline: 'none', fontFamily: 'inherit',
     background: hasError ? '#fef2f2' : '#fff', boxSizing: 'border-box',
   }
@@ -33,7 +33,7 @@ function Field({ label, error, hint, children }) {
     <div style={{ marginBottom: 18 }}>
       <label style={lbl(label)}>{label}</label>
       {children}
-      {hint && !error && <p style={{ fontSize: 11, color: '#94a3b8', marginTop: 4, lineHeight: 1.5 }}>{hint}</p>}
+      {hint && !error && <p style={{ fontSize: 11, color: '#A8A29E', marginTop: 4, lineHeight: 1.5 }}>{hint}</p>}
       {error && <p style={{ fontSize: 11, color: '#dc2626', marginTop: 4 }}>⚠ {error}</p>}
     </div>
   )
@@ -43,9 +43,9 @@ function Chip({ label, checked, onClick }) {
   return (
     <button type="button" onClick={onClick} style={{
       padding: '6px 13px', borderRadius: 20, fontSize: 12, fontWeight: 600, cursor: 'pointer',
-      border: `1.5px solid ${checked ? '#0F766E' : '#e2e8f0'}`,
+      border: `1.5px solid ${checked ? '#B45309' : '#EDE4D3'}`,
       background: checked ? '#eef3fb' : '#fff',
-      color: checked ? '#0F766E' : '#64748b',
+      color: checked ? '#B45309' : '#57534E',
       transition: 'all 0.15s',
     }}>
       {checked ? '✓ ' : ''}{label}
@@ -65,8 +65,8 @@ function ServiceTextInput({ value, onChange }) {
       <input value={text} onChange={e => setText(e.target.value)}
         onKeyDown={e => { if (e.key === 'Enter') { e.preventDefault(); add() } }}
         placeholder="සේවාවක් එකතු කරන්න…"
-        style={{ flex: 1, padding: '8px 12px', border: '1.5px solid #e2e8f0', borderRadius: 10, fontSize: 12, outline: 'none', fontFamily: 'inherit' }} />
-      <button type="button" onClick={add} style={{ padding: '8px 14px', background: '#eef3fb', color: '#0F766E', border: '1.5px solid #d5e2f5', borderRadius: 10, fontSize: 12, fontWeight: 700, cursor: 'pointer' }}>+ එකතු</button>
+        style={{ flex: 1, padding: '8px 12px', border: '1.5px solid #EDE4D3', borderRadius: 10, fontSize: 12, outline: 'none', fontFamily: 'inherit' }} />
+      <button type="button" onClick={add} style={{ padding: '8px 14px', background: '#eef3fb', color: '#B45309', border: '1.5px solid #d5e2f5', borderRadius: 10, fontSize: 12, fontWeight: 700, cursor: 'pointer' }}>+ එකතු</button>
     </div>
   )
 }
@@ -91,21 +91,21 @@ function ImageUploadBox({ label, hint, value, onChange, aspect }) {
         onDragOver={e => { e.preventDefault(); setDragging(true) }}
         onDragLeave={() => setDragging(false)}
         onDrop={e => { e.preventDefault(); setDragging(false); handle(e.dataTransfer.files[0]) }}
-        style={{ position: 'relative', height, borderRadius: 12, border: `2px dashed ${dragging ? '#0F766E' : '#cbd5e1'}`, background: dragging ? '#eef3fb' : preview ? '#000' : '#f8fafc', cursor: 'pointer', overflow: 'hidden', display: 'flex', alignItems: 'center', justifyContent: 'center', transition: 'all 0.2s' }}>
+        style={{ position: 'relative', height, borderRadius: 12, border: `2px dashed ${dragging ? '#B45309' : '#D6CFC4'}`, background: dragging ? '#eef3fb' : preview ? '#000' : '#FFFBF5', cursor: 'pointer', overflow: 'hidden', display: 'flex', alignItems: 'center', justifyContent: 'center', transition: 'all 0.2s' }}>
         {preview ? (
           <>
             <img src={preview} alt="" style={{ position: 'absolute', inset: 0, width: '100%', height: '100%', objectFit: 'cover', opacity: 0.85 }} />
             <div style={{ position: 'relative', zIndex: 1, background: 'rgba(0,0,0,0.55)', color: '#fff', borderRadius: 8, padding: '4px 12px', fontSize: 11, fontWeight: 600 }}>වෙනස් කිරීමට ක්ලික් කරන්න</div>
           </>
         ) : (
-          <div style={{ textAlign: 'center', color: '#94a3b8', pointerEvents: 'none' }}>
+          <div style={{ textAlign: 'center', color: '#A8A29E', pointerEvents: 'none' }}>
             <div style={{ fontSize: 22, marginBottom: 4 }}>{aspect === 'cover' ? '🖼️' : '👤'}</div>
             <div style={{ fontSize: 12, fontWeight: 600 }}>ක්ලික් කරන්න හෝ ඇද දමන්න</div>
             <div style={{ fontSize: 10, marginTop: 2 }}>JPG, PNG, WebP · උපරිම 5 MB</div>
           </div>
         )}
       </div>
-      {hint && <p style={{ fontSize: 11, color: '#94a3b8', marginTop: 4, lineHeight: 1.5 }}>{hint}</p>}
+      {hint && <p style={{ fontSize: 11, color: '#A8A29E', marginTop: 4, lineHeight: 1.5 }}>{hint}</p>}
       <input ref={ref} type="file" accept="image/*" onChange={e => handle(e.target.files[0])} style={{ display: 'none' }} />
     </div>
   )
@@ -123,10 +123,10 @@ function GalleryEditor({ existing, newFiles, onNewFiles, onRemoveExisting }) {
 
   return (
     <div style={{ marginBottom: 18 }}>
-      <div style={lbl('ව්‍යාපෘති ගැලරිය')}> ව්‍යාපෘති ගැලරිය <span style={{ fontSize: 10, color: '#94a3b8', textTransform: 'none', fontWeight: 400 }}>(ඡායාරූප {MAX_GALLERY}ක් දක්වා)</span></div>
+      <div style={lbl('ව්‍යාපෘති ගැලරිය')}> ව්‍යාපෘති ගැලරිය <span style={{ fontSize: 10, color: '#A8A29E', textTransform: 'none', fontWeight: 400 }}>(ඡායාරූප {MAX_GALLERY}ක් දක්වා)</span></div>
       <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fill,minmax(90px,1fr))', gap: 8, marginBottom: 8 }}>
         {existing.map((url, i) => (
-          <div key={url} style={{ position: 'relative', aspectRatio: '1', borderRadius: 10, overflow: 'hidden', border: '1px solid #e2e8f0' }}>
+          <div key={url} style={{ position: 'relative', aspectRatio: '1', borderRadius: 10, overflow: 'hidden', border: '1px solid #EDE4D3' }}>
             <img src={url} alt="" style={{ width: '100%', height: '100%', objectFit: 'cover' }} />
             <button type="button" onClick={() => onRemoveExisting(i)} style={{ position: 'absolute', top: 3, right: 3, background: 'rgba(0,0,0,0.65)', color: '#fff', border: 'none', borderRadius: '50%', width: 20, height: 20, cursor: 'pointer', fontSize: 11, display: 'flex', alignItems: 'center', justifyContent: 'center' }}>✕</button>
           </div>
@@ -138,14 +138,14 @@ function GalleryEditor({ existing, newFiles, onNewFiles, onRemoveExisting }) {
           </div>
         ))}
         {(existing.length + newFiles.length) < MAX_GALLERY && (
-          <div onClick={() => ref.current?.click()} style={{ aspectRatio: '1', borderRadius: 10, border: '2px dashed #cbd5e1', display: 'flex', flexDirection: 'column', alignItems: 'center', justifyContent: 'center', cursor: 'pointer', background: '#f8fafc', gap: 4 }}>
-            <span style={{ fontSize: 20, color: '#94a3b8' }}>+</span>
-            <span style={{ fontSize: 10, color: '#94a3b8' }}>එකතු</span>
+          <div onClick={() => ref.current?.click()} style={{ aspectRatio: '1', borderRadius: 10, border: '2px dashed #D6CFC4', display: 'flex', flexDirection: 'column', alignItems: 'center', justifyContent: 'center', cursor: 'pointer', background: '#FFFBF5', gap: 4 }}>
+            <span style={{ fontSize: 20, color: '#A8A29E' }}>+</span>
+            <span style={{ fontSize: 10, color: '#A8A29E' }}>එකතු</span>
           </div>
         )}
       </div>
       <input ref={ref} type="file" accept="image/*" multiple onChange={e => addFiles(e.target.files)} style={{ display: 'none' }} />
-      <p style={{ fontSize: 11, color: '#94a3b8', margin: 0 }}>JPG/PNG/WebP. ඔබේ හොඳම කාර්ය ඉදිරිපත් කරන්න.</p>
+      <p style={{ fontSize: 11, color: '#A8A29E', margin: 0 }}>JPG/PNG/WebP. ඔබේ හොඳම කාර්ය ඉදිරිපත් කරන්න.</p>
     </div>
   )
 }
@@ -254,29 +254,29 @@ export default function ProfileEditor({ profile, profileType, userId }) {
   // ── Summary (non-editing) ──────────────────────────────────────────────────
   if (!editing) {
     return (
-      <div style={{ background: '#fff', border: '1px solid #e2e8f0', borderRadius: 16, padding: 24 }}>
+      <div style={{ background: '#fff', border: '1px solid #EDE4D3', borderRadius: 16, padding: 24 }}>
         {saved && (
           <div style={{ padding: '10px 14px', background: '#f0fdf4', border: '1px solid #bbf7d0', borderRadius: 10, marginBottom: 20, display: 'flex', alignItems: 'center', justifyContent: 'space-between', gap: 10 }}>
             <span style={{ fontSize: 13, color: '#15803d', fontWeight: 600 }}>✓ පැතිකඩ යාවත්කාලීන විය!</span>
             {profilePath && (
-              <a href={profilePath} target="_blank" rel="noopener" style={{ fontSize: 12, color: '#0F766E', fontWeight: 700, textDecoration: 'none' }}>පැතිකඩ →</a>
+              <a href={profilePath} target="_blank" rel="noopener" style={{ fontSize: 12, color: '#B45309', fontWeight: 700, textDecoration: 'none' }}>පැතිකඩ →</a>
             )}
           </div>
         )}
         <div style={{ display: 'flex', alignItems: 'center', gap: 16, marginBottom: 20 }}>
-          <div style={{ width: 64, height: 64, borderRadius: 14, background: '#0F766E', border: '2px solid #e2e8f0', overflow: 'hidden', flexShrink: 0, display: 'flex', alignItems: 'center', justifyContent: 'center', fontSize: 22, fontWeight: 700, color: '#fff' }}>
+          <div style={{ width: 64, height: 64, borderRadius: 14, background: '#B45309', border: '2px solid #EDE4D3', overflow: 'hidden', flexShrink: 0, display: 'flex', alignItems: 'center', justifyContent: 'center', fontSize: 22, fontWeight: 700, color: '#fff' }}>
             {displayImg
               ? <img src={displayImg} alt={displayName} style={{ width: '100%', height: '100%', objectFit: 'cover' }} />
               : displayName.split(' ').map(w => w[0]).join('').slice(0, 2).toUpperCase()
             }
           </div>
           <div>
-            <div style={{ fontSize: 16, fontWeight: 700, color: '#0f172a' }}>{displayName}</div>
-            <div style={{ fontSize: 12, color: '#64748b', marginTop: 2 }}>
+            <div style={{ fontSize: 16, fontWeight: 700, color: '#1C1917' }}>{displayName}</div>
+            <div style={{ fontSize: 12, color: '#57534E', marginTop: 2 }}>
               {isTiler ? 'ටයිලර්' : 'සේවා සපයන්නා'} · {profile.city || '—'}
             </div>
             {profilePath && (
-              <a href={profilePath} target="_blank" rel="noopener" style={{ fontSize: 11, color: '#0F766E', fontWeight: 600, textDecoration: 'none' }}>
+              <a href={profilePath} target="_blank" rel="noopener" style={{ fontSize: 11, color: '#B45309', fontWeight: 600, textDecoration: 'none' }}>
                 පොදු පැතිකඩ →
               </a>
             )}
@@ -285,12 +285,12 @@ export default function ProfileEditor({ profile, profileType, userId }) {
 
         <div style={{ display: 'flex', gap: 10, flexWrap: 'wrap' }}>
           <button onClick={() => { setEditing(true); setSaved(false) }}
-            style={{ padding: '10px 22px', background: '#0F766E', color: '#fff', border: 'none', borderRadius: 10, fontSize: 13, fontWeight: 700, cursor: 'pointer' }}>
+            style={{ padding: '10px 22px', background: '#B45309', color: '#fff', border: 'none', borderRadius: 10, fontSize: 13, fontWeight: 700, cursor: 'pointer' }}>
             ✏️ පැතිකඩ සංස්කරණය
           </button>
           {profilePath && (
             <a href={profilePath} target="_blank" rel="noopener"
-              style={{ padding: '10px 18px', background: '#f1f5f9', color: '#334155', border: '1px solid #e2e8f0', borderRadius: 10, fontSize: 13, fontWeight: 600, textDecoration: 'none', display: 'inline-flex', alignItems: 'center' }}>
+              style={{ padding: '10px 18px', background: '#F7EFE2', color: '#334155', border: '1px solid #EDE4D3', borderRadius: 10, fontSize: 13, fontWeight: 600, textDecoration: 'none', display: 'inline-flex', alignItems: 'center' }}>
               🔗 පැතිකඩ
             </a>
           )}
@@ -301,10 +301,10 @@ export default function ProfileEditor({ profile, profileType, userId }) {
 
   // ── Editing form ───────────────────────────────────────────────────────────
   return (
-    <div style={{ background: '#fff', border: '1px solid #e2e8f0', borderRadius: 16, padding: 24 }}>
+    <div style={{ background: '#fff', border: '1px solid #EDE4D3', borderRadius: 16, padding: 24 }}>
       <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', marginBottom: 24 }}>
-        <h3 style={{ fontFamily: "'Playfair Display',serif", fontSize: 18, fontWeight: 700, color: '#0f172a', margin: 0 }}>පැතිකඩ සංස්කරණය</h3>
-        <button onClick={() => setEditing(false)} style={{ background: 'none', border: 'none', color: '#94a3b8', fontSize: 20, cursor: 'pointer', padding: 4 }}>✕</button>
+        <h3 style={{ fontFamily: "'Playfair Display',serif", fontSize: 18, fontWeight: 700, color: '#1C1917', margin: 0 }}>පැතිකඩ සංස්කරණය</h3>
+        <button onClick={() => setEditing(false)} style={{ background: 'none', border: 'none', color: '#A8A29E', fontSize: 20, cursor: 'pointer', padding: 4 }}>✕</button>
       </div>
 
       {/* Images */}
@@ -412,11 +412,11 @@ export default function ProfileEditor({ profile, profileType, userId }) {
 
       <div style={{ display: 'flex', gap: 10 }}>
         <button onClick={save} disabled={saving}
-          style={{ flex: 1, padding: '13px', background: saving ? '#94a3b8' : '#0F766E', color: '#fff', border: 'none', borderRadius: 12, fontSize: 14, fontWeight: 700, cursor: saving ? 'not-allowed' : 'pointer', transition: 'background 0.2s' }}>
+          style={{ flex: 1, padding: '13px', background: saving ? '#A8A29E' : '#B45309', color: '#fff', border: 'none', borderRadius: 12, fontSize: 14, fontWeight: 700, cursor: saving ? 'not-allowed' : 'pointer', transition: 'background 0.2s' }}>
           {saving ? '⏳ සුරකිමින්…' : '💾 වෙනස්කම් සුරකින්න'}
         </button>
         <button onClick={() => setEditing(false)} disabled={saving}
-          style={{ padding: '13px 20px', background: '#f1f5f9', color: '#334155', border: '1px solid #e2e8f0', borderRadius: 12, fontSize: 14, fontWeight: 600, cursor: 'pointer' }}>
+          style={{ padding: '13px 20px', background: '#F7EFE2', color: '#334155', border: '1px solid #EDE4D3', borderRadius: 12, fontSize: 14, fontWeight: 600, cursor: 'pointer' }}>
           අවලංගු කරන්න
         </button>
       </div>
