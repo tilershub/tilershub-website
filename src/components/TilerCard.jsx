@@ -118,7 +118,7 @@ export function TilerModal({ tiler, onClose }) {
           <div style={{ display: 'flex', gap: 18, alignItems: 'flex-end' }}>
             <AvatarDisplay avatarUrl={tiler.avatar_url} name={tiler.full_name} size={76} />
             <div>
-              <div style={{ fontFamily: "'Playfair Display', serif", fontSize: 24, color: 'var(--white)', fontWeight: 700, marginBottom: 4 }}>{tiler.full_name}</div>
+              <div style={{ fontFamily: "'Inter', sans-serif", fontSize: 24, color: 'var(--white)', fontWeight: 700, marginBottom: 4 }}>{tiler.full_name}</div>
               <div style={{ fontSize: 13, color: 'rgba(245,240,232,0.45)', marginBottom: 10 }}>📍 {tiler.city || tiler.district} · {tiler.district} දිස්ත්‍රික්කය</div>
               <div style={{ display: 'flex', gap: 8, flexWrap: 'wrap' }}>
                 <span style={{ fontSize: 11, background: 'rgba(122,154,126,0.15)', border: '1px solid rgba(122,154,126,0.3)', color: 'var(--sage-light)', padding: '3px 12px', borderRadius: 20 }}>

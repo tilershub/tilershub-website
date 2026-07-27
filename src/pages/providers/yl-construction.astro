@@ -9,7 +9,7 @@ const CUBICLES = [
     icon: '🚿',
     desc: 'Corner-fitting L-shaped glass enclosure with a swing-open door. Ideal for bathrooms with ample clearance space. Clean lines, full seal.',
     features: ['Corner installation', 'Outward swing door', 'Full waterproof seal', 'Custom sizing'],
-    color: '#B45309',
+    color: '#2563EB',
   },
   {
     id: 'l-shape-sliding',
@@ -18,7 +18,7 @@ const CUBICLES = [
     icon: '🚿',
     desc: 'Corner-fitting L-shaped glass enclosure with a space-saving sliding door. Perfect for smaller bathrooms where swing clearance is limited.',
     features: ['Corner installation', 'Space-saving slider', 'Smooth glide system', 'Custom sizing'],
-    color: '#B45309',
+    color: '#2563EB',
   },
   {
     id: 'panel-swing',
@@ -36,7 +36,7 @@ const CUBICLES = [
     icon: '🪟',
     desc: 'Straight glass panel enclosure with a sliding door — smooth, quiet and space-efficient for everyday use.',
     features: ['Alcove / inline fit', 'Sliding bypass door', 'Anti-splash seal', 'Custom sizing'],
-    color: '#b45309',
+    color: '#2563EB',
   },
   {
     id: 'panel-only',
@@ -59,7 +59,7 @@ const waMsg = (product) => encodeURIComponent(`Hi YL Construction, I'm intereste
 >
 
   <!-- ═══ HERO ═══ -->
-  <div style="background:linear-gradient(135deg,#0a1628 0%,#451A03 50%,#0a1628 100%);padding:60px 20px 52px;text-align:center;position:relative;overflow:hidden;">
+  <div style="background:linear-gradient(135deg,#0a1628 0%,#0F172A 50%,#0a1628 100%);padding:60px 20px 52px;text-align:center;position:relative;overflow:hidden;">
     <!-- Glass shimmer background -->
     <div style="position:absolute;inset:0;pointer-events:none;overflow:hidden;">
       <div style="position:absolute;top:-60px;left:10%;width:280px;height:280px;border-radius:50%;background:radial-gradient(circle,rgba(148,210,255,0.06) 0%,transparent 70%);"></div>
@@ -71,7 +71,7 @@ const waMsg = (product) => encodeURIComponent(`Hi YL Construction, I'm intereste
       <div style="display:inline-flex;align-items:center;gap:8px;background:rgba(148,210,255,0.08);border:1px solid rgba(148,210,255,0.15);border-radius:30px;padding:5px 16px;margin-bottom:20px;">
         <span style="font-size:10px;font-weight:700;color:rgba(148,210,255,0.7);letter-spacing:2px;text-transform:uppercase;">🔷 Glass Works Specialist</span>
       </div>
-      <h1 style="font-family:'Playfair Display',serif;font-size:clamp(28px,5vw,46px);font-weight:700;color:#fff;margin:0 0 14px;line-height:1.15;">
+      <h1 style="font-family: 'Inter', sans-serif;font-size:clamp(28px,5vw,46px);font-weight:700;color:#fff;margin:0 0 14px;line-height:1.15;">
         YL <span style="color:#94d2ff;">Construction</span>
       </h1>
       <p style="font-size:15px;color:rgba(255,255,255,0.55);max-width:480px;margin:0 auto 32px;line-height:1.8;">
@@ -97,17 +97,17 @@ const waMsg = (product) => encodeURIComponent(`Hi YL Construction, I'm intereste
   </div>
 
   <!-- ═══ CUBICLE PRODUCTS ═══ -->
-  <section style="background:#FFFBF5;padding:56px 20px;">
+  <section style="background:#F8FAFC;padding:56px 20px;">
     <div style="max-width:1060px;margin:0 auto;">
       <div style="text-align:center;margin-bottom:40px;">
-        <div style="font-size:10px;font-weight:700;color:#B45309;letter-spacing:3px;text-transform:uppercase;margin-bottom:10px;">Our Products</div>
-        <h2 style="font-family:'Playfair Display',serif;font-size:clamp(22px,3vw,34px);font-weight:700;color:#1C1917;margin:0 0 10px;">Shower Cubicle <span style="color:#B45309;">Options</span></h2>
-        <p style="font-size:14px;color:#57534E;max-width:480px;margin:0 auto;">All cubicles use toughened tempered glass. Custom dimensions available — we measure and install at your site.</p>
+        <div style="font-size:10px;font-weight:700;color:#2563EB;letter-spacing:3px;text-transform:uppercase;margin-bottom:10px;">Our Products</div>
+        <h2 style="font-family: 'Inter', sans-serif;font-size:clamp(22px,3vw,34px);font-weight:700;color:#0F172A;margin:0 0 10px;">Shower Cubicle <span style="color:#2563EB;">Options</span></h2>
+        <p style="font-size:14px;color:#64748B;max-width:480px;margin:0 auto;">All cubicles use toughened tempered glass. Custom dimensions available — we measure and install at your site.</p>
       </div>
 
       <div style="display:grid;grid-template-columns:repeat(auto-fill,minmax(300px,1fr));gap:22px;">
         {CUBICLES.map(c => (
-          <div style={`background:#fff;border-radius:18px;border:1px solid #EDE4D3;overflow:hidden;display:flex;flex-direction:column;box-shadow:0 2px 8px rgba(0,0,0,0.04);`}>
+          <div style={`background:#fff;border-radius:18px;border:1px solid #E2E8F0;overflow:hidden;display:flex;flex-direction:column;box-shadow:0 2px 8px rgba(0,0,0,0.04);`}>
             <!-- Card top accent -->
             <div style={`height:6px;background:${c.color};`}></div>
 
@@ -116,13 +116,13 @@ const waMsg = (product) => encodeURIComponent(`Hi YL Construction, I'm intereste
               <div style="display:flex;align-items:flex-start;gap:14px;">
                 <div style={`width:52px;height:52px;border-radius:14px;background:${c.color}12;border:1.5px solid ${c.color}22;display:flex;align-items:center;justify-content:center;font-size:24px;flex-shrink:0;`}>{c.icon}</div>
                 <div>
-                  <div style="font-size:16px;font-weight:800;color:#1C1917;line-height:1.2;">{c.name}</div>
+                  <div style="font-size:16px;font-weight:800;color:#0F172A;line-height:1.2;">{c.name}</div>
                   <div style={`font-size:11px;font-weight:700;color:${c.color};text-transform:uppercase;letter-spacing:0.5px;margin-top:3px;`}>{c.variant}</div>
                 </div>
               </div>
 
               <!-- Description -->
-              <p style="font-size:13px;color:#44403C;line-height:1.7;margin:0;">{c.desc}</p>
+              <p style="font-size:13px;color:#334155;line-height:1.7;margin:0;">{c.desc}</p>
 
               <!-- Feature list -->
               <ul style="margin:0;padding:0;list-style:none;display:flex;flex-direction:column;gap:6px;">
@@ -135,7 +135,7 @@ const waMsg = (product) => encodeURIComponent(`Hi YL Construction, I'm intereste
             </div>
 
             <!-- CTA -->
-            <div style="padding:16px 24px;border-top:1px solid #F7EFE2;">
+            <div style="padding:16px 24px;border-top:1px solid #F1F5F9;">
               <a
                 href={`https://wa.me/${WA_NUMBER}?text=${waMsg(`${c.name} — ${c.variant}`)}`}
                 target="_blank" rel="noopener noreferrer"
@@ -151,30 +151,30 @@ const waMsg = (product) => encodeURIComponent(`Hi YL Construction, I'm intereste
   </section>
 
   <!-- ═══ HAND RAILINGS SECTION ═══ -->
-  <section style="background:#fff;padding:52px 20px;border-top:1px solid #EDE4D3;">
+  <section style="background:#fff;padding:52px 20px;border-top:1px solid #E2E8F0;">
     <div style="max-width:900px;margin:0 auto;display:flex;align-items:center;gap:40px;flex-wrap:wrap;">
       <div style="flex:1;min-width:260px;">
-        <div style="font-size:10px;font-weight:700;color:#B45309;letter-spacing:3px;text-transform:uppercase;margin-bottom:10px;">Also Available</div>
-        <h2 style="font-family:'Playfair Display',serif;font-size:clamp(22px,3vw,32px);font-weight:700;color:#1C1917;margin:0 0 14px;line-height:1.2;">Glass Hand <span style="color:#B45309;">Railings</span></h2>
-        <p style="font-size:14px;color:#57534E;line-height:1.8;margin:0 0 20px;">Tempered glass panel railings for staircases, balconies, mezzanines and terraces. Frameless and semi-framed designs for a clean, modern look.</p>
+        <div style="font-size:10px;font-weight:700;color:#2563EB;letter-spacing:3px;text-transform:uppercase;margin-bottom:10px;">Also Available</div>
+        <h2 style="font-family: 'Inter', sans-serif;font-size:clamp(22px,3vw,32px);font-weight:700;color:#0F172A;margin:0 0 14px;line-height:1.2;">Glass Hand <span style="color:#2563EB;">Railings</span></h2>
+        <p style="font-size:14px;color:#64748B;line-height:1.8;margin:0 0 20px;">Tempered glass panel railings for staircases, balconies, mezzanines and terraces. Frameless and semi-framed designs for a clean, modern look.</p>
         <ul style="margin:0 0 28px;padding:0;list-style:none;display:flex;flex-direction:column;gap:8px;">
           {['Staircase balustrades','Balcony & terrace railings','Indoor mezzanine guards','Frameless & semi-framed','Custom height & length'].map(f => (
             <li style="font-size:13px;color:#334155;display:flex;align-items:center;gap:10px;">
-              <span style="color:#B45309;font-size:15px;font-weight:700;">✓</span> {f}
+              <span style="color:#2563EB;font-size:15px;font-weight:700;">✓</span> {f}
             </li>
           ))}
         </ul>
         <a
           href={`https://wa.me/${WA_NUMBER}?text=${encodeURIComponent('Hi YL Construction, I\'m interested in glass hand railings from TilersHub. Can you advise?')}`}
           target="_blank" rel="noopener noreferrer"
-          style="display:inline-flex;align-items:center;gap:8px;background:#B45309;color:#fff;border-radius:12px;padding:12px 24px;font-size:14px;font-weight:700;text-decoration:none;"
+          style="display:inline-flex;align-items:center;gap:8px;background:#2563EB;color:#fff;border-radius:12px;padding:12px 24px;font-size:14px;font-weight:700;text-decoration:none;"
         >
           💬 Get a Railing Quote
         </a>
       </div>
 
       <!-- Visual block -->
-      <div style="flex-shrink:0;width:240px;height:240px;border-radius:20px;background:linear-gradient(135deg,#451A03,#B45309);display:flex;align-items:center;justify-content:center;position:relative;overflow:hidden;">
+      <div style="flex-shrink:0;width:240px;height:240px;border-radius:20px;background:linear-gradient(135deg,#0F172A,#2563EB);display:flex;align-items:center;justify-content:center;position:relative;overflow:hidden;">
         <div style="position:absolute;inset:0;background:repeating-linear-gradient(0deg,transparent,transparent 29px,rgba(148,210,255,0.06) 29px,rgba(148,210,255,0.06) 30px),repeating-linear-gradient(90deg,transparent,transparent 29px,rgba(148,210,255,0.06) 29px,rgba(148,210,255,0.06) 30px);"></div>
         <div style="position:relative;text-align:center;">
           <div style="font-size:72px;line-height:1;">🔩</div>
@@ -185,10 +185,10 @@ const waMsg = (product) => encodeURIComponent(`Hi YL Construction, I'm intereste
   </section>
 
   <!-- ═══ WHY YL CONSTRUCTION ═══ -->
-  <section style="background:#FFFBF5;padding:52px 20px;border-top:1px solid #EDE4D3;">
+  <section style="background:#F8FAFC;padding:52px 20px;border-top:1px solid #E2E8F0;">
     <div style="max-width:900px;margin:0 auto;">
       <div style="text-align:center;margin-bottom:36px;">
-        <h2 style="font-family:'Playfair Display',serif;font-size:clamp(20px,3vw,30px);font-weight:700;color:#1C1917;margin:0;">Why Choose <span style="color:#B45309;">YL Construction</span></h2>
+        <h2 style="font-family: 'Inter', sans-serif;font-size:clamp(20px,3vw,30px);font-weight:700;color:#0F172A;margin:0;">Why Choose <span style="color:#2563EB;">YL Construction</span></h2>
       </div>
       <div style="display:grid;grid-template-columns:repeat(auto-fill,minmax(200px,1fr));gap:18px;">
         {[
@@ -197,10 +197,10 @@ const waMsg = (product) => encodeURIComponent(`Hi YL Construction, I'm intereste
           { icon: '🏠', title: 'Site Visit', desc: 'We visit your site to measure, advise and confirm the right solution.' },
           { icon: '🔧', title: 'Full Installation', desc: 'Supply and install service — no need to find a separate fitter.' },
         ].map(f => (
-          <div style="background:#fff;border-radius:14px;border:1px solid #EDE4D3;padding:22px 20px;text-align:center;">
+          <div style="background:#fff;border-radius:14px;border:1px solid #E2E8F0;padding:22px 20px;text-align:center;">
             <div style="font-size:32px;margin-bottom:10px;">{f.icon}</div>
-            <div style="font-size:13px;font-weight:700;color:#1C1917;margin-bottom:6px;">{f.title}</div>
-            <div style="font-size:12px;color:#57534E;line-height:1.6;">{f.desc}</div>
+            <div style="font-size:13px;font-weight:700;color:#0F172A;margin-bottom:6px;">{f.title}</div>
+            <div style="font-size:12px;color:#64748B;line-height:1.6;">{f.desc}</div>
           </div>
         ))}
       </div>
@@ -208,10 +208,10 @@ const waMsg = (product) => encodeURIComponent(`Hi YL Construction, I'm intereste
   </section>
 
   <!-- ═══ BOTTOM CTA ═══ -->
-  <section style="background:linear-gradient(135deg,#0a1628,#451A03);padding:48px 20px;text-align:center;">
+  <section style="background:linear-gradient(135deg,#0a1628,#0F172A);padding:48px 20px;text-align:center;">
     <div style="max-width:520px;margin:0 auto;">
       <div style="font-size:36px;margin-bottom:16px;">💬</div>
-      <h2 style="font-family:'Playfair Display',serif;font-size:clamp(20px,3vw,28px);font-weight:700;color:#fff;margin:0 0 12px;">Ready to Get Started?</h2>
+      <h2 style="font-family: 'Inter', sans-serif;font-size:clamp(20px,3vw,28px);font-weight:700;color:#fff;margin:0 0 12px;">Ready to Get Started?</h2>
       <p style="font-size:14px;color:rgba(255,255,255,0.5);margin:0 0 28px;line-height:1.7;">Contact YL Construction directly on WhatsApp to discuss your project, get a quote, or book a free site visit.</p>
       <a
         href={`https://wa.me/${WA_NUMBER}?text=${encodeURIComponent('Hi YL Construction, I found you on TilersHub and would like a quote.')}`}

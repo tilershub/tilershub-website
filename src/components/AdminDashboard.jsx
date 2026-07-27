@@ -5,35 +5,35 @@ import { SERVICES, HOME_GROUPS } from '../lib/services.js'
 import { CATEGORIES } from '../lib/categories.js'
 
 // ─── Design tokens ────────────────────────────────────────────────────────────
-const NAVY  = '#B45309'
-const TERRA = '#B45309'
+const NAVY  = '#2563EB'
+const TERRA = '#2563EB'
 const S = {
   page:    { display: 'flex', minHeight: '100vh' },
   sidebar: { width: 220, background: NAVY, color: '#fff', flexShrink: 0, display: 'flex', flexDirection: 'column', position: 'sticky', top: 0, height: '100vh', overflowY: 'auto' },
   main:    { flex: 1, padding: '28px 32px', overflowX: 'auto' },
-  card:    { background: '#fff', border: '1px solid #EDE4D3', borderRadius: 14, padding: 20 },
-  h2:      { fontSize: 20, fontWeight: 700, color: '#1C1917', marginBottom: 18, marginTop: 0 },
+  card:    { background: '#fff', border: '1px solid #E2E8F0', borderRadius: 14, padding: 20 },
+  h2:      { fontSize: 20, fontWeight: 700, color: '#0F172A', marginBottom: 18, marginTop: 0 },
   badge:   (bg, color) => ({ display: 'inline-block', padding: '2px 10px', borderRadius: 20, fontSize: 11, fontWeight: 700, background: bg, color }),
   btn:     (bg, color='#fff') => ({ padding: '6px 14px', background: bg, color, border: 'none', borderRadius: 8, fontSize: 12, fontWeight: 700, cursor: 'pointer', whiteSpace: 'nowrap' }),
-  th:      { fontSize: 11, fontWeight: 700, color: '#57534E', textTransform: 'uppercase', letterSpacing: '0.5px', padding: '8px 12px', textAlign: 'left', borderBottom: '2px solid #F7EFE2', whiteSpace: 'nowrap' },
-  td:      { padding: '10px 12px', fontSize: 13, color: '#334155', borderBottom: '1px solid #FFFBF5', verticalAlign: 'top' },
+  th:      { fontSize: 11, fontWeight: 700, color: '#64748B', textTransform: 'uppercase', letterSpacing: '0.5px', padding: '8px 12px', textAlign: 'left', borderBottom: '2px solid #F1F5F9', whiteSpace: 'nowrap' },
+  td:      { padding: '10px 12px', fontSize: 13, color: '#334155', borderBottom: '1px solid #F8FAFC', verticalAlign: 'top' },
 }
 
 const STATUS_BADGE = {
-  pending_review: ['#FEF3C7','#92400E'],
+  pending_review: ['#DBEAFE','#1E293B'],
   approved:       ['#D1FAE5','#065F46'],
   listed:         ['#DBEAFE','#1E40AF'],
   rejected:       ['#FEE2E2','#991B1B'],
   active:         ['#D1FAE5','#065F46'],
   matched:        ['#EDE9FE','#5B21B6'],
-  completed:      ['#F3F4F6','#44403C'],
-  pending_code:   ['#FEF3C7','#92400E'],
+  completed:      ['#F3F4F6','#334155'],
+  pending_code:   ['#DBEAFE','#1E293B'],
   verified:       ['#D1FAE5','#065F46'],
   featured:       ['#EDE9FE','#5B21B6'],
-  none:           ['#F3F4F6','#57534E'],
-  new:            ['#FEF3C7','#92400E'],
-  seen:           ['#F3F4F6','#44403C'],
-  draft:          ['#F3F4F6','#44403C'],
+  none:           ['#F3F4F6','#64748B'],
+  new:            ['#DBEAFE','#1E293B'],
+  seen:           ['#F3F4F6','#334155'],
+  draft:          ['#F3F4F6','#334155'],
   published:      ['#D1FAE5','#065F46'],
   archived:       ['#FEE2E2','#991B1B'],
 }
@@ -51,7 +51,7 @@ const ALL_SERVICES = [
 ]
 
 function StatusBadge({ status }) {
-  const [bg, color] = STATUS_BADGE[status] || ['#F7EFE2','#57534E']
+  const [bg, color] = STATUS_BADGE[status] || ['#F1F5F9','#64748B']
   return <span style={S.badge(bg, color)}>{status?.replace(/_/g,' ')}</span>
 }
 
@@ -68,7 +68,7 @@ function Table({ heads, children, empty }) {
         <thead><tr>{heads.map(h => <th key={h} style={S.th}>{h}</th>)}</tr></thead>
         <tbody>{children}</tbody>
       </table>
-      {empty && <div style={{ textAlign: 'center', padding: '36px 0', color: '#A8A29E', fontSize: 13 }}>{empty}</div>}
+      {empty && <div style={{ textAlign: 'center', padding: '36px 0', color: '#94A3B8', fontSize: 13 }}>{empty}</div>}
     </div>
   )
 }
@@ -78,9 +78,9 @@ function Pagination({ page, setPage, count, perPage }) {
   if (total <= 1) return null
   return (
     <div style={{ display: 'flex', gap: 8, justifyContent: 'flex-end', marginTop: 14, alignItems: 'center' }}>
-      <span style={{ fontSize: 12, color: '#57534E' }}>Page {page + 1} of {total}</span>
-      <button onClick={() => setPage(p => Math.max(0, p - 1))} disabled={page === 0} style={S.btn('#F7EFE2','#334155')}>← Prev</button>
-      <button onClick={() => setPage(p => Math.min(total - 1, p + 1))} disabled={page >= total - 1} style={S.btn('#F7EFE2','#334155')}>Next →</button>
+      <span style={{ fontSize: 12, color: '#64748B' }}>Page {page + 1} of {total}</span>
+      <button onClick={() => setPage(p => Math.max(0, p - 1))} disabled={page === 0} style={S.btn('#F1F5F9','#334155')}>← Prev</button>
+      <button onClick={() => setPage(p => Math.min(total - 1, p + 1))} disabled={page >= total - 1} style={S.btn('#F1F5F9','#334155')}>Next →</button>
     </div>
   )
 }
@@ -90,11 +90,11 @@ function lbl() {
   return { display: 'block', fontSize: 11, fontWeight: 700, color: '#334155', textTransform: 'uppercase', letterSpacing: '0.6px', marginBottom: 7 }
 }
 function inp(hasError) {
-  return { width: '100%', padding: '10px 13px', border: `1.5px solid ${hasError ? '#fca5a5' : '#EDE4D3'}`, borderRadius: 10, fontSize: 13, outline: 'none', fontFamily: 'inherit', background: hasError ? '#fef2f2' : '#fff', boxSizing: 'border-box' }
+  return { width: '100%', padding: '10px 13px', border: `1.5px solid ${hasError ? '#fca5a5' : '#E2E8F0'}`, borderRadius: 10, fontSize: 13, outline: 'none', fontFamily: 'inherit', background: hasError ? '#fef2f2' : '#fff', boxSizing: 'border-box' }
 }
 function Chip({ label, checked, onClick }) {
   return (
-    <button type="button" onClick={onClick} style={{ padding: '5px 12px', borderRadius: 20, fontSize: 12, fontWeight: 600, cursor: 'pointer', border: `1.5px solid ${checked ? NAVY : '#EDE4D3'}`, background: checked ? '#eef3fb' : '#fff', color: checked ? NAVY : '#57534E' }}>
+    <button type="button" onClick={onClick} style={{ padding: '5px 12px', borderRadius: 20, fontSize: 12, fontWeight: 600, cursor: 'pointer', border: `1.5px solid ${checked ? NAVY : '#E2E8F0'}`, background: checked ? '#eef3fb' : '#fff', color: checked ? NAVY : '#64748B' }}>
       {checked ? '✓ ' : ''}{label}
     </button>
   )
@@ -131,20 +131,20 @@ function ImageUploadBox({ label, hint, value, onChange, aspect }) {
         onDragOver={e => { e.preventDefault(); setDragging(true) }}
         onDragLeave={() => setDragging(false)}
         onDrop={e => { e.preventDefault(); setDragging(false); handle(e.dataTransfer.files[0]) }}
-        style={{ position: 'relative', height, borderRadius: 10, border: `2px dashed ${dragging ? NAVY : '#D6CFC4'}`, background: dragging ? '#eef3fb' : preview ? '#000' : '#FFFBF5', cursor: 'pointer', overflow: 'hidden', display: 'flex', alignItems: 'center', justifyContent: 'center' }}>
+        style={{ position: 'relative', height, borderRadius: 10, border: `2px dashed ${dragging ? NAVY : '#CBD5E1'}`, background: dragging ? '#eef3fb' : preview ? '#000' : '#F8FAFC', cursor: 'pointer', overflow: 'hidden', display: 'flex', alignItems: 'center', justifyContent: 'center' }}>
         {preview ? (
           <>
             <img src={preview} alt="" style={{ position: 'absolute', inset: 0, width: '100%', height: '100%', objectFit: 'cover', opacity: 0.85 }} />
             <div style={{ position: 'relative', zIndex: 1, background: 'rgba(0,0,0,0.55)', color: '#fff', borderRadius: 8, padding: '3px 10px', fontSize: 11, fontWeight: 600 }}>Click to change</div>
           </>
         ) : (
-          <div style={{ textAlign: 'center', color: '#A8A29E', fontSize: 11, pointerEvents: 'none' }}>
+          <div style={{ textAlign: 'center', color: '#94A3B8', fontSize: 11, pointerEvents: 'none' }}>
             <div style={{ fontSize: 18, marginBottom: 3 }}>{aspect === 'cover' ? '🖼️' : '👤'}</div>
             Click or drag to upload
           </div>
         )}
       </div>
-      {hint && <p style={{ fontSize: 11, color: '#A8A29E', marginTop: 3 }}>{hint}</p>}
+      {hint && <p style={{ fontSize: 11, color: '#94A3B8', marginTop: 3 }}>{hint}</p>}
       <input ref={ref} type="file" accept="image/*" onChange={e => handle(e.target.files[0])} style={{ display: 'none' }} />
     </div>
   )
@@ -159,10 +159,10 @@ function GalleryEditor({ existing, newFiles, onNewFiles, onRemoveExisting }) {
   }
   return (
     <div style={{ marginBottom: 16 }}>
-      <div style={lbl()}>Gallery / Portfolio <span style={{ fontSize: 10, color: '#A8A29E', textTransform: 'none', fontWeight: 400 }}>(up to {MAX})</span></div>
+      <div style={lbl()}>Gallery / Portfolio <span style={{ fontSize: 10, color: '#94A3B8', textTransform: 'none', fontWeight: 400 }}>(up to {MAX})</span></div>
       <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fill,minmax(80px,1fr))', gap: 6, marginBottom: 6 }}>
         {existing.map((url, i) => (
-          <div key={url} style={{ position: 'relative', aspectRatio: '1', borderRadius: 8, overflow: 'hidden', border: '1px solid #EDE4D3' }}>
+          <div key={url} style={{ position: 'relative', aspectRatio: '1', borderRadius: 8, overflow: 'hidden', border: '1px solid #E2E8F0' }}>
             <img src={url} alt="" style={{ width: '100%', height: '100%', objectFit: 'cover' }} />
             <button type="button" onClick={() => onRemoveExisting(i)} style={{ position: 'absolute', top: 2, right: 2, background: 'rgba(0,0,0,0.65)', color: '#fff', border: 'none', borderRadius: '50%', width: 18, height: 18, cursor: 'pointer', fontSize: 10, display: 'flex', alignItems: 'center', justifyContent: 'center' }}>✕</button>
           </div>
@@ -174,8 +174,8 @@ function GalleryEditor({ existing, newFiles, onNewFiles, onRemoveExisting }) {
           </div>
         ))}
         {(existing.length + newFiles.length) < MAX && (
-          <div onClick={() => ref.current?.click()} style={{ aspectRatio: '1', borderRadius: 8, border: '2px dashed #D6CFC4', display: 'flex', flexDirection: 'column', alignItems: 'center', justifyContent: 'center', cursor: 'pointer', background: '#FFFBF5' }}>
-            <span style={{ fontSize: 18, color: '#A8A29E' }}>+</span>
+          <div onClick={() => ref.current?.click()} style={{ aspectRatio: '1', borderRadius: 8, border: '2px dashed #CBD5E1', display: 'flex', flexDirection: 'column', alignItems: 'center', justifyContent: 'center', cursor: 'pointer', background: '#F8FAFC' }}>
+            <span style={{ fontSize: 18, color: '#94A3B8' }}>+</span>
           </div>
         )}
       </div>
@@ -270,16 +270,16 @@ function ProfileModal({ profile, profileType, adminUserId, onClose, onSaved }) {
       <div style={{ flex: 1, background: 'rgba(15,23,42,0.5)' }} onClick={onClose} />
       <div style={{ width: isNarrow ? '100vw' : 520, maxWidth: '100vw', background: '#fff', overflowY: 'auto', boxShadow: '-4px 0 30px rgba(0,0,0,0.15)', display: 'flex', flexDirection: 'column', borderRadius: isNarrow ? 0 : undefined }}>
         {/* Drawer header */}
-        <div style={{ padding: '20px 24px', borderBottom: '1px solid #F7EFE2', display: 'flex', alignItems: 'center', justifyContent: 'space-between', flexShrink: 0, background: '#fff', position: 'sticky', top: 0, zIndex: 1 }}>
+        <div style={{ padding: '20px 24px', borderBottom: '1px solid #F1F5F9', display: 'flex', alignItems: 'center', justifyContent: 'space-between', flexShrink: 0, background: '#fff', position: 'sticky', top: 0, zIndex: 1 }}>
           <div>
-            <div style={{ fontSize: 16, fontWeight: 700, color: '#1C1917' }}>
+            <div style={{ fontSize: 16, fontWeight: 700, color: '#0F172A' }}>
               {isCreate ? 'Create Provider' : 'Edit Provider'}
             </div>
             {!isCreate && profile?.slug && (
-              <div style={{ fontSize: 11, color: '#A8A29E', marginTop: 2 }}>/{profile.slug}</div>
+              <div style={{ fontSize: 11, color: '#94A3B8', marginTop: 2 }}>/{profile.slug}</div>
             )}
           </div>
-          <button onClick={onClose} style={{ background: 'none', border: 'none', fontSize: 20, cursor: 'pointer', color: '#A8A29E', padding: 4 }}>✕</button>
+          <button onClick={onClose} style={{ background: 'none', border: 'none', fontSize: 20, cursor: 'pointer', color: '#94A3B8', padding: 4 }}>✕</button>
         </div>
 
         {/* Drawer body */}
@@ -394,7 +394,7 @@ function ProfileModal({ profile, profileType, adminUserId, onClose, onSaved }) {
               <input value={customSvc} onChange={e => setCustomSvc(e.target.value)}
                 onKeyDown={e => { if (e.key==='Enter'){e.preventDefault();addCustomSvc()} }}
                 placeholder="Add custom service…"
-                style={{ flex:1, padding:'7px 12px', border:'1.5px solid #EDE4D3', borderRadius:10, fontSize:12, outline:'none', fontFamily:'inherit' }} />
+                style={{ flex:1, padding:'7px 12px', border:'1.5px solid #E2E8F0', borderRadius:10, fontSize:12, outline:'none', fontFamily:'inherit' }} />
               <button type="button" onClick={addCustomSvc} style={{ padding:'7px 12px', background:'#eef3fb', color:NAVY, border:`1.5px solid #d5e2f5`, borderRadius:10, fontSize:12, fontWeight:700, cursor:'pointer' }}>+ Add</button>
             </div>
             {services.filter(s => !ALL_SERVICES.includes(s)).length > 0 && (
@@ -435,13 +435,13 @@ function ProfileModal({ profile, profileType, adminUserId, onClose, onSaved }) {
         </div>
 
         {/* Sticky footer */}
-        <div style={{ padding:'16px 24px', borderTop:'1px solid #F7EFE2', display:'flex', gap:10, background:'#fff', flexShrink:0, position:'sticky', bottom:0 }}>
+        <div style={{ padding:'16px 24px', borderTop:'1px solid #F1F5F9', display:'flex', gap:10, background:'#fff', flexShrink:0, position:'sticky', bottom:0 }}>
           <button onClick={save} disabled={saving}
-            style={{ flex:1, padding:'12px', background: saving ? '#A8A29E' : NAVY, color:'#fff', border:'none', borderRadius:10, fontSize:14, fontWeight:700, cursor: saving ? 'not-allowed' : 'pointer' }}>
+            style={{ flex:1, padding:'12px', background: saving ? '#94A3B8' : NAVY, color:'#fff', border:'none', borderRadius:10, fontSize:14, fontWeight:700, cursor: saving ? 'not-allowed' : 'pointer' }}>
             {saving ? '⏳ Saving…' : isCreate ? '✓ Create Profile' : '💾 Save Changes'}
           </button>
           <button onClick={onClose} disabled={saving}
-            style={{ padding:'12px 18px', background:'#F7EFE2', color:'#334155', border:'1px solid #EDE4D3', borderRadius:10, fontSize:14, fontWeight:600, cursor:'pointer' }}>
+            style={{ padding:'12px 18px', background:'#F1F5F9', color:'#334155', border:'1px solid #E2E8F0', borderRadius:10, fontSize:14, fontWeight:600, cursor:'pointer' }}>
             Cancel
           </button>
         </div>
@@ -468,20 +468,20 @@ function SignIn() {
   }
 
   return (
-    <div style={{ minHeight: '100vh', display: 'flex', alignItems: 'center', justifyContent: 'center', background: '#F7EFE2' }}>
+    <div style={{ minHeight: '100vh', display: 'flex', alignItems: 'center', justifyContent: 'center', background: '#F1F5F9' }}>
       <div style={{ ...S.card, maxWidth: 380, width: '100%', textAlign: 'center', padding: 36 }}>
         <div style={{ fontSize: 36, marginBottom: 12 }}>🔐</div>
-        <h1 style={{ fontSize: 20, fontWeight: 700, color: '#1C1917', marginBottom: 6 }}>TilersHub Admin</h1>
+        <h1 style={{ fontSize: 20, fontWeight: 700, color: '#0F172A', marginBottom: 6 }}>TilersHub Admin</h1>
         {sent ? (
-          <p style={{ fontSize: 14, color: '#57534E', lineHeight: 1.7 }}>Magic link sent to <strong>{email}</strong>. Click it to sign in.</p>
+          <p style={{ fontSize: 14, color: '#64748B', lineHeight: 1.7 }}>Magic link sent to <strong>{email}</strong>. Click it to sign in.</p>
         ) : (
           <form onSubmit={send}>
             <input type="email" value={email} onChange={e => { setEmail(e.target.value); setErr('') }}
               placeholder="admin@email.com" autoFocus
-              style={{ width: '100%', padding: '10px 13px', border: `1.5px solid ${err ? '#fca5a5' : '#EDE4D3'}`, borderRadius: 10, fontSize: 13, outline: 'none', fontFamily: 'inherit', marginBottom: 10 }} />
+              style={{ width: '100%', padding: '10px 13px', border: `1.5px solid ${err ? '#fca5a5' : '#E2E8F0'}`, borderRadius: 10, fontSize: 13, outline: 'none', fontFamily: 'inherit', marginBottom: 10 }} />
             {err && <p style={{ fontSize: 12, color: '#dc2626', marginBottom: 8 }}>⚠ {err}</p>}
             <button type="submit" disabled={loading}
-              style={{ ...S.btn(loading ? '#A8A29E' : NAVY), width: '100%', padding: '11px' }}>
+              style={{ ...S.btn(loading ? '#94A3B8' : NAVY), width: '100%', padding: '11px' }}>
               {loading ? 'Sending…' : 'Send Magic Link →'}
             </button>
           </form>
@@ -516,24 +516,24 @@ function OverviewTab() {
   }, [])
 
   const cards = stats ? [
-    { label: 'Pending Submissions', value: stats.pendingSubmissions, color: stats.pendingSubmissions > 0 ? TERRA : '#57534E', emoji: '📝' },
+    { label: 'Pending Submissions', value: stats.pendingSubmissions, color: stats.pendingSubmissions > 0 ? TERRA : '#64748B', emoji: '📝' },
     { label: 'Active Projects',     value: stats.activeProjects,     color: '#16a34a', emoji: '📋' },
-    { label: 'New Bids',            value: stats.newBids,            color: stats.newBids > 0 ? TERRA : '#57534E', emoji: '💬' },
+    { label: 'New Bids',            value: stats.newBids,            color: stats.newBids > 0 ? TERRA : '#64748B', emoji: '💬' },
     { label: 'Total Providers',      value: stats.totalProviders,     color: NAVY, emoji: '👷' },
-    { label: 'Total Projects',      value: stats.totalProjects,      color: '#57534E', emoji: '📊' },
-    { label: 'Total Submissions',   value: stats.totalSubmissions,   color: '#57534E', emoji: '👥' },
+    { label: 'Total Projects',      value: stats.totalProjects,      color: '#64748B', emoji: '📊' },
+    { label: 'Total Submissions',   value: stats.totalSubmissions,   color: '#64748B', emoji: '👥' },
   ] : []
 
   return (
     <div>
       <h2 style={S.h2}>Overview</h2>
-      {!stats ? <p style={{ color: '#A8A29E' }}>Loading…</p> : (
+      {!stats ? <p style={{ color: '#94A3B8' }}>Loading…</p> : (
         <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fill,minmax(160px,1fr))', gap: 14 }}>
           {cards.map(c => (
             <div key={c.label} style={{ ...S.card, textAlign: 'center' }}>
               <div style={{ fontSize: 26, marginBottom: 8 }}>{c.emoji}</div>
               <div style={{ fontSize: 32, fontWeight: 800, color: c.color }}>{c.value}</div>
-              <div style={{ fontSize: 12, color: '#57534E', marginTop: 4 }}>{c.label}</div>
+              <div style={{ fontSize: 12, color: '#64748B', marginTop: 4 }}>{c.label}</div>
             </div>
           ))}
         </div>
@@ -603,7 +603,7 @@ function SubmissionsTab() {
         <div style={{ display: 'flex', gap: 6, marginLeft: 'auto', flexWrap: 'wrap' }}>
           {FILTERS.map(f => (
             <button key={f} onClick={() => setFilter(f)}
-              style={{ ...S.btn(filter === f ? NAVY : '#F7EFE2', filter === f ? '#fff' : '#334155') }}>
+              style={{ ...S.btn(filter === f ? NAVY : '#F1F5F9', filter === f ? '#fff' : '#334155') }}>
               {f === 'all' ? 'All' : f.replace(/_/g,' ')}
             </button>
           ))}
@@ -614,7 +614,7 @@ function SubmissionsTab() {
           ⚠ {approveError}
         </p>
       )}
-      {loading ? <p style={{ color: '#A8A29E' }}>Loading…</p> : (
+      {loading ? <p style={{ color: '#94A3B8' }}>Loading…</p> : (
         <>
           <div style={S.card}>
             <Table
@@ -627,7 +627,7 @@ function SubmissionsTab() {
                   <td style={S.td}>{r.city}{r.district ? `, ${r.district}` : ''}</td>
                   <td style={S.td}><div style={{ display: 'flex', flexWrap: 'wrap', gap: 4 }}>
                     {(r.services || []).slice(0,3).map(s => <span key={s} style={{ fontSize: 10, padding: '2px 7px', background: '#eef3fb', color: NAVY, borderRadius: 10, fontWeight: 600 }}>{s}</span>)}
-                    {(r.services || []).length > 3 && <span style={{ fontSize: 10, color: '#A8A29E' }}>+{r.services.length - 3}</span>}
+                    {(r.services || []).length > 3 && <span style={{ fontSize: 10, color: '#94A3B8' }}>+{r.services.length - 3}</span>}
                   </div></td>
                   <td style={S.td}><a href={`https://wa.me/${r.whatsapp?.replace(/\D/g,'')}`} target="_blank" rel="noopener" style={{ color: '#16a34a', fontWeight: 600, textDecoration: 'none', fontSize: 12 }}>{r.whatsapp}</a></td>
                   <td style={S.td}><StatusBadge status={r.status} /></td>
@@ -636,10 +636,10 @@ function SubmissionsTab() {
                     <div style={{ display: 'flex', gap: 5, flexWrap: 'wrap' }}>
                       {r.status !== 'approved'  && <button onClick={() => listProvider(r)}                      style={S.btn('#16a34a')}>✓ Approve</button>}
                       {r.status !== 'rejected'  && <button onClick={() => update(r.id, { status: 'rejected' })}  style={S.btn('#dc2626')}>Reject</button>}
-                      {r.status !== 'pending_review' && <button onClick={() => update(r.id, { status: 'pending_review' })} style={S.btn('#A8A29E')}>Reset</button>}
+                      {r.status !== 'pending_review' && <button onClick={() => update(r.id, { status: 'pending_review' })} style={S.btn('#94A3B8')}>Reset</button>}
                     </div>
                     {r.description && (
-                      <p style={{ fontSize: 11, color: '#57534E', marginTop: 6, maxWidth: 260, lineHeight: 1.5 }}>{r.description.slice(0, 120)}{r.description.length > 120 ? '…' : ''}</p>
+                      <p style={{ fontSize: 11, color: '#64748B', marginTop: 6, maxWidth: 260, lineHeight: 1.5 }}>{r.description.slice(0, 120)}{r.description.length > 120 ? '…' : ''}</p>
                     )}
                   </td>
                 </tr>
@@ -706,13 +706,13 @@ function ProjectsTab() {
         <div style={{ display: 'flex', gap: 6, marginLeft: 'auto', flexWrap: 'wrap' }}>
           {STATUSES.map(f => (
             <button key={f} onClick={() => setFilter(f)}
-              style={S.btn(filter === f ? NAVY : '#F7EFE2', filter === f ? '#fff' : '#334155')}>
+              style={S.btn(filter === f ? NAVY : '#F1F5F9', filter === f ? '#fff' : '#334155')}>
               {f === 'all' ? 'All' : f.replace(/_/g,' ')}
             </button>
           ))}
         </div>
       </div>
-      {loading ? <p style={{ color: '#A8A29E' }}>Loading…</p> : (
+      {loading ? <p style={{ color: '#94A3B8' }}>Loading…</p> : (
         <>
           <div style={S.card}>
             <Table
@@ -732,7 +732,7 @@ function ProjectsTab() {
                   <td style={S.td}>
                     <div style={{ display: 'flex', gap: 5, flexWrap: 'wrap' }}>
                       <select onChange={e => e.target.value && setStatus(r.id, e.target.value)} defaultValue=""
-                        style={{ padding: '5px 8px', borderRadius: 7, border: '1px solid #EDE4D3', fontSize: 12, cursor: 'pointer' }}>
+                        style={{ padding: '5px 8px', borderRadius: 7, border: '1px solid #E2E8F0', fontSize: 12, cursor: 'pointer' }}>
                         <option value="" disabled>Set status…</option>
                         {['pending_review','active','matched','completed'].map(s =>
                           <option key={s} value={s}>{s.replace(/_/g,' ')}</option>
@@ -786,30 +786,46 @@ function BidsTab() {
     load()
   }
 
+  async function setStatus(id, status) {
+    await supabase.from('bids').update({ status }).eq('id', id)
+    load()
+  }
+
   return (
     <div>
       <h2 style={S.h2}>Bids</h2>
-      {loading ? <p style={{ color: '#A8A29E' }}>Loading…</p> : (
+      {loading ? <p style={{ color: '#94A3B8' }}>Loading…</p> : (
         <>
           <div style={S.card}>
             <Table
-              heads={['Project','Bidder','Type','WhatsApp','Quote','Timeline','Message','Status','Date','Del']}
+              heads={['Project','Bidder','Type','WhatsApp','Quote','Timeline','Message','Status','Date','Actions']}
               empty={rows.length === 0 ? 'No bids yet' : null}
             >
               {rows.map(r => {
                 const proj = projects[r.job_id]
                 return (
                   <tr key={r.id}>
-                    <td style={S.td}>{proj ? <span>{proj.project_type}<br /><span style={{ fontSize: 11, color: '#A8A29E' }}>{proj.city}</span></span> : '—'}</td>
+                    <td style={S.td}>{proj ? <span>{proj.project_type}<br /><span style={{ fontSize: 11, color: '#94A3B8' }}>{proj.city}</span></span> : '—'}</td>
                     <td style={S.td}><strong>{r.bidder_name}</strong></td>
-                    <td style={S.td}><span style={{ fontSize: 11, padding: '2px 7px', background: '#F7EFE2', borderRadius: 8 }}>{r.bidder_type}</span></td>
+                    <td style={S.td}><span style={{ fontSize: 11, padding: '2px 7px', background: '#F1F5F9', borderRadius: 8 }}>{r.bidder_type}</span></td>
                     <td style={S.td}><a href={`https://wa.me/${(r.bidder_whatsapp||'').replace(/\D/g,'')}`} target="_blank" rel="noopener" style={{ color: '#16a34a', fontWeight: 600, textDecoration: 'none', fontSize: 12 }}>{r.bidder_whatsapp}</a></td>
                     <td style={S.td}>{r.quote_amount ? `Rs. ${r.quote_amount.toLocaleString()}` : '—'}</td>
                     <td style={S.td}>{r.timeline || '—'}</td>
                     <td style={{ ...S.td, maxWidth: 200 }}>{r.message?.slice(0, 80)}{r.message?.length > 80 ? '…' : ''}</td>
                     <td style={S.td}><StatusBadge status={r.status} /></td>
                     <td style={S.td}>{timeAgo(r.created_at)}</td>
-                    <td style={S.td}><button onClick={() => del(r.id)} style={S.btn('#fef2f2','#dc2626')}>🗑</button></td>
+                    <td style={S.td}>
+                      <div style={{ display: 'flex', gap: 5, alignItems: 'center' }}>
+                        <select onChange={e => e.target.value && setStatus(r.id, e.target.value)} defaultValue=""
+                          style={{ fontSize: 11, padding: '4px 6px', borderRadius: 8, border: '1px solid #E2E8F0', cursor: 'pointer', fontFamily: 'inherit' }}>
+                          <option value="" disabled>Set…</option>
+                          <option value="new">New</option>
+                          <option value="accepted">Accepted</option>
+                          <option value="rejected">Rejected</option>
+                        </select>
+                        <button onClick={() => del(r.id)} style={S.btn('#fef2f2','#dc2626')}>🗑</button>
+                      </div>
+                    </td>
                   </tr>
                 )
               })}
@@ -866,6 +882,20 @@ function ReviewsTab() {
     await load()
   }
 
+  // Take a disputed review down without destroying it — reversible, and the
+  // provider's rating recomputes automatically via trg_sync_provider_rating.
+  async function setStatus(id, status) {
+    setDeleteError(null)
+    const { data, error } = await supabase
+      .from('reviews').update({ status }).eq('id', id).select('id')
+    if (error) { setDeleteError('Update failed: ' + error.message); return }
+    if (!data || data.length === 0) {
+      setDeleteError('Review was not updated — your session may have expired. Please refresh and sign in again.')
+      return
+    }
+    await load()
+  }
+
   function Stars({ n }) {
     return <span style={{ color: '#f59e0b' }}>{'★'.repeat(n)}{'☆'.repeat(5 - n)}</span>
   }
@@ -873,13 +903,13 @@ function ReviewsTab() {
   return (
     <div>
       <h2 style={S.h2}>Reviews</h2>
-      {loading ? <p style={{ color: '#A8A29E' }}>Loading…</p> : (
+      {loading ? <p style={{ color: '#94A3B8' }}>Loading…</p> : (
         <>
           {loadError && <p style={{ color: '#dc2626', fontSize: 13, marginBottom: 12 }}>Error loading reviews: {loadError}</p>}
           {deleteError && <p style={{ color: '#dc2626', fontSize: 13, marginBottom: 12, padding: '8px 12px', background: '#fef2f2', borderRadius: 8, border: '1px solid #fecaca' }}>{deleteError}</p>}
           <div style={S.card}>
             <Table
-              heads={['Reviewer','Rating','Job Type','Comment','Profile','Date','Del']}
+              heads={['Reviewer','Rating','Job Type','Comment','Profile','Date','Status','Actions']}
               empty={rows.length === 0 ? 'No reviews yet' : null}
             >
               {rows.map(r => (
@@ -889,11 +919,23 @@ function ReviewsTab() {
                   <td style={S.td}>{r.job_type || '—'}</td>
                   <td style={{ ...S.td, maxWidth: 260 }}>{r.comment?.slice(0, 120)}{r.comment?.length > 120 ? '…' : ''}</td>
                   <td style={S.td}>
-                    {r.tiler_id && <span style={{ fontSize: 11, color: '#57534E' }}>Professional</span>}
-                    {r.provider_id && <span style={{ fontSize: 11, color: '#57534E' }}>Provider</span>}
+                    {r.tiler_id && <span style={{ fontSize: 11, color: '#64748B' }}>Professional</span>}
+                    {r.provider_id && <span style={{ fontSize: 11, color: '#64748B' }}>Provider</span>}
                   </td>
                   <td style={S.td}>{timeAgo(r.created_at)}</td>
-                  <td style={S.td}><button onClick={() => del(r.id)} style={S.btn('#fef2f2','#dc2626')}>🗑</button></td>
+                  <td style={S.td}>
+                    <span style={{ fontSize: 11, fontWeight: 700, padding: '2px 8px', borderRadius: 20, background: r.status === 'hidden' ? '#F1F5F9' : '#f0fdf4', color: r.status === 'hidden' ? '#64748B' : '#166534' }}>
+                      {r.status === 'hidden' ? 'Hidden' : 'Published'}
+                    </span>
+                  </td>
+                  <td style={S.td}>
+                    <div style={{ display: 'flex', gap: 5 }}>
+                      {r.status === 'hidden'
+                        ? <button onClick={() => setStatus(r.id, 'published')} style={S.btn('#f0fdf4','#166534')}>Publish</button>
+                        : <button onClick={() => setStatus(r.id, 'hidden')} style={S.btn('#EFF6FF','#2563EB')}>Hide</button>}
+                      <button onClick={() => del(r.id)} style={S.btn('#fef2f2','#dc2626')}>🗑</button>
+                    </div>
+                  </td>
                 </tr>
               ))}
             </Table>
@@ -950,14 +992,14 @@ function ProfilesTab({ adminUserId }) {
         <h2 style={{ ...S.h2, marginBottom: 0 }}>Profiles</h2>
         <input value={search} onChange={e => setSearch(e.target.value)}
           placeholder="Search by name…"
-          style={{ padding: '7px 12px', border: '1.5px solid #EDE4D3', borderRadius: 10, fontSize: 13, outline: 'none', fontFamily: 'inherit', minWidth: 180 }} />
+          style={{ padding: '7px 12px', border: '1.5px solid #E2E8F0', borderRadius: 10, fontSize: 13, outline: 'none', fontFamily: 'inherit', minWidth: 180 }} />
         <button onClick={() => setCreating(true)} style={{ ...S.btn('#16a34a'), marginLeft: 'auto' }}>
           + New Provider
         </button>
       </div>
 
       {loadError && <p style={{ color: '#dc2626', fontSize: 13, marginBottom: 12 }}>Error loading profiles: {loadError}</p>}
-      {loading ? <p style={{ color: '#A8A29E' }}>Loading…</p> : (
+      {loading ? <p style={{ color: '#94A3B8' }}>Loading…</p> : (
         <>
           <div style={S.card}>
             <Table
@@ -968,7 +1010,7 @@ function ProfilesTab({ adminUserId }) {
                 <tr key={r.id}>
                   <td style={S.td}>
                     <strong>{r.name}</strong>
-                    {r.slug && <div style={{ fontSize: 10, color: '#A8A29E' }}>/{r.slug}</div>}
+                    {r.slug && <div style={{ fontSize: 10, color: '#94A3B8' }}>/{r.slug}</div>}
                   </td>
                   <td style={S.td}>
                     <span style={{ fontSize: 10, padding: '2px 8px', background: '#eef3fb', color: NAVY, borderRadius: 20, fontWeight: 700 }}>
@@ -987,7 +1029,7 @@ function ProfilesTab({ adminUserId }) {
                       {(r.services||[]).slice(0,2).map(s => (
                         <span key={s} style={{ fontSize: 10, padding: '2px 6px', background: '#eef3fb', color: NAVY, borderRadius: 8, fontWeight: 600 }}>{s}</span>
                       ))}
-                      {(r.services||[]).length > 2 && <span style={{ fontSize: 10, color: '#A8A29E' }}>+{r.services.length-2}</span>}
+                      {(r.services||[]).length > 2 && <span style={{ fontSize: 10, color: '#94A3B8' }}>+{r.services.length-2}</span>}
                     </div>
                   </td>
                   <td style={S.td}><StatusBadge status={r.verification_status || 'listed'} /></td>
@@ -998,7 +1040,7 @@ function ProfilesTab({ adminUserId }) {
                         style={S.btn(NAVY)}>✏️ Edit</button>
                       {r.slug && (
                         <a href={`/providers/${r.slug}`} target="_blank" rel="noopener"
-                          style={{ ...S.btn('#F7EFE2','#334155'), textDecoration: 'none', display: 'inline-flex', alignItems: 'center' }}>🔗</a>
+                          style={{ ...S.btn('#F1F5F9','#334155'), textDecoration: 'none', display: 'inline-flex', alignItems: 'center' }}>🔗</a>
                       )}
                       <button onClick={() => del(r.id)} style={S.btn('#fef2f2','#dc2626')}>🗑</button>
                     </div>
@@ -1072,7 +1114,7 @@ function BlogsTab() {
         <div style={{ display: 'flex', gap: 6 }}>
           {['all', 'draft', 'published', 'archived'].map(f => (
             <button key={f} onClick={() => setFilter(f)}
-              style={S.btn(filter === f ? NAVY : '#F7EFE2', filter === f ? '#fff' : '#334155')}>
+              style={S.btn(filter === f ? NAVY : '#F1F5F9', filter === f ? '#fff' : '#334155')}>
               {f.charAt(0).toUpperCase() + f.slice(1)}
             </button>
           ))}
@@ -1083,7 +1125,7 @@ function BlogsTab() {
         </a>
       </div>
 
-      {loading ? <p style={{ color: '#A8A29E' }}>Loading…</p> : (
+      {loading ? <p style={{ color: '#94A3B8' }}>Loading…</p> : (
         <>
           <div style={S.card}>
             <Table
@@ -1093,7 +1135,7 @@ function BlogsTab() {
               {rows.map(r => (
                 <tr key={r.id}>
                   <td style={{ ...S.td, maxWidth: 260 }}><strong>{r.title}</strong></td>
-                  <td style={{ ...S.td, fontSize: 11, color: '#57534E' }}>/blog/{r.slug}</td>
+                  <td style={{ ...S.td, fontSize: 11, color: '#64748B' }}>/blog/{r.slug}</td>
                   <td style={S.td}><StatusBadge status={r.status} /></td>
                   <td style={S.td}>{timeAgo(r.created_at)}</td>
                   <td style={S.td}>
@@ -1104,7 +1146,7 @@ function BlogsTab() {
                       </a>
                       {r.status === 'published' && (
                         <a href={`/blog/${r.slug}`} target="_blank" rel="noopener"
-                          style={{ ...S.btn('#F7EFE2', '#334155'), textDecoration: 'none', display: 'inline-flex', alignItems: 'center' }}>
+                          style={{ ...S.btn('#F1F5F9', '#334155'), textDecoration: 'none', display: 'inline-flex', alignItems: 'center' }}>
                           🔗
                         </a>
                       )}
@@ -1132,7 +1174,7 @@ function ServicesTab() {
           <tr key={s.slug}>
             <td style={S.td}>{s.icon}</td>
             <td style={S.td}>{s.label}</td>
-            <td style={{ ...S.td, fontFamily: 'monospace', fontSize: 11, color: '#57534E' }}>{s.slug}</td>
+            <td style={{ ...S.td, fontFamily: 'monospace', fontSize: 11, color: '#64748B' }}>{s.slug}</td>
             <td style={S.td}>
               <a href={`/services/${s.slug}`} target="_blank" rel="noopener" style={{ color: TERRA, fontSize: 12, fontWeight: 600 }}>/services/{s.slug} ›</a>
             </td>
@@ -1153,8 +1195,8 @@ function CategoriesTab() {
           <tr key={c.slug}>
             <td style={S.td}>{c.icon}</td>
             <td style={S.td}>{c.label}</td>
-            <td style={{ ...S.td, fontFamily: 'monospace', fontSize: 11, color: '#57534E' }}>{c.slug}</td>
-            <td style={{ ...S.td, maxWidth: 200, overflow: 'hidden', textOverflow: 'ellipsis', whiteSpace: 'nowrap', color: '#57534E' }}>{c.description || '—'}</td>
+            <td style={{ ...S.td, fontFamily: 'monospace', fontSize: 11, color: '#64748B' }}>{c.slug}</td>
+            <td style={{ ...S.td, maxWidth: 200, overflow: 'hidden', textOverflow: 'ellipsis', whiteSpace: 'nowrap', color: '#64748B' }}>{c.description || '—'}</td>
             <td style={S.td}>
               <a href={`/categories/${c.slug}`} target="_blank" rel="noopener" style={{ color: TERRA, fontSize: 12, fontWeight: 600 }}>/categories/{c.slug} ›</a>
             </td>
@@ -1198,7 +1240,7 @@ function UsersTab() {
     <div>
       <h2 style={S.h2}>Provider-linked Users ({count})</h2>
       {loadError && <p style={{ color: '#dc2626', fontSize: 13, marginBottom: 12 }}>Error: {loadError}</p>}
-      {loading ? <p style={{ color: '#A8A29E' }}>Loading…</p> : (
+      {loading ? <p style={{ color: '#94A3B8' }}>Loading…</p> : (
         <>
           <Table
             heads={['Name', 'Type', 'Status', 'WhatsApp', 'Joined']}
@@ -1210,7 +1252,7 @@ function UsersTab() {
                 <td style={S.td}><StatusBadge status={r.provider_type} /></td>
                 <td style={S.td}><StatusBadge status={r.status} /></td>
                 <td style={{ ...S.td, fontFamily: 'monospace', fontSize: 11 }}>{r.whatsapp || '—'}</td>
-                <td style={{ ...S.td, color: '#A8A29E' }}>{timeAgo(r.created_at)}</td>
+                <td style={{ ...S.td, color: '#94A3B8' }}>{timeAgo(r.created_at)}</td>
               </tr>
             ))}
           </Table>
@@ -1253,7 +1295,7 @@ function AnalyticsTab() {
     { label: 'Active Providers', value: stats.activeProviders, emoji: '👷', color: NAVY },
     { label: 'Total Projects',   value: stats.totalProjects,   emoji: '📋', color: '#16a34a' },
     { label: 'Total Bids',       value: stats.totalBids,       emoji: '💬', color: '#7c3aed' },
-    { label: 'Pending Review',   value: stats.pendingReview,   emoji: '📝', color: stats?.pendingReview > 0 ? TERRA : '#57534E' },
+    { label: 'Pending Review',   value: stats.pendingReview,   emoji: '📝', color: stats?.pendingReview > 0 ? TERRA : '#64748B' },
   ] : []
 
   const maxCount = typeBreakdown[0]?.[1] || 1
@@ -1261,14 +1303,14 @@ function AnalyticsTab() {
   return (
     <div>
       <h2 style={S.h2}>Analytics</h2>
-      {!stats ? <p style={{ color: '#A8A29E' }}>Loading…</p> : (
+      {!stats ? <p style={{ color: '#94A3B8' }}>Loading…</p> : (
         <>
           <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fill,minmax(160px,1fr))', gap: 14, marginBottom: 28 }}>
             {cards.map(c => (
               <div key={c.label} style={{ ...S.card, textAlign: 'center' }}>
                 <div style={{ fontSize: 26, marginBottom: 8 }}>{c.emoji}</div>
                 <div style={{ fontSize: 32, fontWeight: 800, color: c.color }}>{c.value}</div>
-                <div style={{ fontSize: 12, color: '#57534E', marginTop: 4 }}>{c.label}</div>
+                <div style={{ fontSize: 12, color: '#64748B', marginTop: 4 }}>{c.label}</div>
               </div>
             ))}
           </div>
@@ -1278,8 +1320,8 @@ function AnalyticsTab() {
               <div style={{ display: 'flex', flexDirection: 'column', gap: 8 }}>
                 {typeBreakdown.map(([type, cnt]) => (
                   <div key={type} style={{ display: 'flex', alignItems: 'center', gap: 10 }}>
-                    <div style={{ width: 140, fontSize: 12, color: '#44403C', flexShrink: 0 }}>{type.replace(/_/g, ' ')}</div>
-                    <div style={{ flex: 1, background: '#F7EFE2', borderRadius: 4, height: 14, overflow: 'hidden' }}>
+                    <div style={{ width: 140, fontSize: 12, color: '#334155', flexShrink: 0 }}>{type.replace(/_/g, ' ')}</div>
+                    <div style={{ flex: 1, background: '#F1F5F9', borderRadius: 4, height: 14, overflow: 'hidden' }}>
                       <div style={{ height: '100%', background: NAVY, borderRadius: 4, width: `${(cnt / maxCount) * 100}%` }} />
                     </div>
                     <div style={{ width: 30, fontSize: 12, fontWeight: 700, color: '#334155', textAlign: 'right', flexShrink: 0 }}>{cnt}</div>
@@ -1345,7 +1387,7 @@ export default function AdminDashboard({ initialUser }) {
   if (loading) {
     return (
       <div style={{ minHeight: '100vh', display: 'flex', alignItems: 'center', justifyContent: 'center' }}>
-        <div style={{ textAlign: 'center', color: '#57534E' }}>
+        <div style={{ textAlign: 'center', color: '#64748B' }}>
           <div style={{ fontSize: 32, marginBottom: 10 }}>⏳</div>
           <p>Checking access…</p>
         </div>
@@ -1360,12 +1402,12 @@ export default function AdminDashboard({ initialUser }) {
       <div style={{ minHeight: '100vh', display: 'flex', alignItems: 'center', justifyContent: 'center' }}>
         <div style={{ textAlign: 'center', maxWidth: 340 }}>
           <div style={{ fontSize: 48, marginBottom: 12 }}>🚫</div>
-          <h2 style={{ fontSize: 20, fontWeight: 700, color: '#1C1917', marginBottom: 8 }}>Access Denied</h2>
-          <p style={{ color: '#57534E', fontSize: 14, lineHeight: 1.7, marginBottom: 20 }}>
+          <h2 style={{ fontSize: 20, fontWeight: 700, color: '#0F172A', marginBottom: 8 }}>Access Denied</h2>
+          <p style={{ color: '#64748B', fontSize: 14, lineHeight: 1.7, marginBottom: 20 }}>
             <strong>{user.email}</strong> is not an admin account.
           </p>
           <button onClick={() => supabase.auth.signOut().then(() => window.location.reload())}
-            style={S.btn('#F7EFE2','#334155')}>Sign Out</button>
+            style={S.btn('#F1F5F9','#334155')}>Sign Out</button>
         </div>
       </div>
     )
@@ -1395,7 +1437,7 @@ export default function AdminDashboard({ initialUser }) {
                 }}>
                 <span>{t.label}</span>
                 {t.badge && (
-                  <span style={{ fontSize: 9, fontWeight: 800, background: GOLD, color: '#1C1917', padding: '2px 7px', borderRadius: 20, flexShrink: 0 }}>
+                  <span style={{ fontSize: 9, fontWeight: 800, background: GOLD, color: '#0F172A', padding: '2px 7px', borderRadius: 20, flexShrink: 0 }}>
                     {t.badge}
                   </span>
                 )}

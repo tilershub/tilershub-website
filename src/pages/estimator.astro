@@ -71,7 +71,7 @@ const topDistricts = DISTRICT_INFO.filter(d => ['colombo','gampaha','kandy','gal
     <div style="position:relative;max-width:560px;margin:0 auto;">
       <div style="text-align:left;"><Breadcrumbs items={[{ name: 'Tile Calculator' }]} light /></div>
       <span class="section-label" style="border-color:rgba(255,255,255,0.15);color:rgba(255,255,255,0.5);background:rgba(255,255,255,0.06);">📐 <span class="si-text">ගාස්තු ගණනය</span><span class="en-text">Cost Calculator</span></span>
-      <h1 style="font-family:'Playfair Display',serif;font-size:clamp(26px,4vw,40px);font-weight:700;color:#fff;margin:12px 0 10px;">
+      <h1 style="font-family: 'Inter', sans-serif;font-size:clamp(26px,4vw,40px);font-weight:700;color:#fff;margin:12px 0 10px;">
         <span class="si-text">ටයිලිං ගාස්තු <span style="color:var(--terra);">ගණනය කිරීම</span></span>
         <span class="en-text">Tile Calculator <span style="color:var(--terra);">Sri Lanka</span></span>
       </h1>
@@ -83,10 +83,10 @@ const topDistricts = DISTRICT_INFO.filter(d => ['colombo','gampaha','kandy','gal
   </div>
 
   <!-- Top CTA strip -->
-  <div style="background:#FFFBF5;padding:12px 20px;border-bottom:1px solid #EDE4D3;">
+  <div style="background:#F8FAFC;padding:12px 20px;border-bottom:1px solid #E2E8F0;">
     <div style="max-width:580px;margin:0 auto;display:flex;align-items:center;justify-content:space-between;gap:12px;flex-wrap:wrap;">
-      <span style="font-size:13px;color:#57534E;">අයවැය දැනටමත් දන්නවාද? ගණනය ඉක්මවා යන්න.</span>
-      <a href="/post-project" style="display:inline-flex;align-items:center;gap:6px;background:#B45309;color:#fff;border-radius:10px;padding:8px 16px;font-size:12px;font-weight:700;text-decoration:none;white-space:nowrap;">
+      <span style="font-size:13px;color:#64748B;">අයවැය දැනටමත් දන්නවාද? ගණනය ඉක්මවා යන්න.</span>
+      <a href="/post-project" style="display:inline-flex;align-items:center;gap:6px;background:#2563EB;color:#fff;border-radius:10px;padding:8px 16px;font-size:12px;font-weight:700;text-decoration:none;white-space:nowrap;">
         📋 නොමිලේ ව්‍යාපෘතිය පලකරන්න →
       </a>
     </div>
@@ -277,7 +277,7 @@ const topDistricts = DISTRICT_INFO.filter(d => ['colombo','gampaha','kandy','gal
         </div>
 
         <!-- Grand Total -->
-        <div style="background:rgba(180,83,9,0.15);border:1px solid rgba(180,83,9,0.3);border-radius:12px;padding:18px;text-align:center;">
+        <div style="background:rgba(37,99,235,0.15);border:1px solid rgba(37,99,235,0.3);border-radius:12px;padding:18px;text-align:center;">
           <div style="font-size:11px;color:rgba(255,255,255,0.45);margin-bottom:4px;letter-spacing:1px;text-transform:uppercase;">ඇස්තමේන්තු සම්පූර්ණය</div>
           <div id="res-total" style="font-size:30px;font-weight:700;color:var(--terra);">—</div>
           <div id="res-total-note" style="font-size:10px;color:rgba(255,255,255,0.3);margin-top:4px;">තෝරාගත් සියලු අයිතම ඇතුළත්</div>
@@ -308,119 +308,119 @@ const topDistricts = DISTRICT_INFO.filter(d => ['colombo','gampaha','kandy','gal
   </section>
 
   <!-- ═══ SEO CONTENT: methodology, rate tables, worked example, FAQ ═══ -->
-  <section style="background:#FFFBF5;border-top:1px solid #EDE4D3;padding:44px 20px 64px;">
+  <section style="background:#F8FAFC;border-top:1px solid #E2E8F0;padding:44px 20px 64px;">
     <div style="max-width:720px;margin:0 auto;display:flex;flex-direction:column;gap:28px;">
 
       <!-- Methodology -->
       <div>
-        <h2 style="font-family:'Playfair Display',serif;font-size:clamp(18px,4vw,24px);font-weight:700;color:#1C1917;margin:0 0 12px;">How tiling cost is calculated in Sri Lanka ({year})</h2>
-        <p style="font-size:14px;color:#44403C;line-height:1.9;margin:0 0 10px;">
+        <h2 style="font-family: 'Inter', sans-serif;font-size:clamp(18px,4vw,24px);font-weight:700;color:#0F172A;margin:0 0 12px;">How tiling cost is calculated in Sri Lanka ({year})</h2>
+        <p style="font-size:14px;color:#334155;line-height:1.9;margin:0 0 10px;">
           A tiling project has five cost components: <strong>tile material</strong>, <strong>labour</strong>, <strong>adhesive</strong>, <strong>grout and levelling clips</strong>, and — where the floor is uneven — a <strong>cement-sand screed</strong>.
           Labour in Sri Lanka currently runs <strong>Rs. {LABOUR.min}–{LABOUR.max} per sq.ft</strong> (Rs. {LABOUR.default} is typical for standard floor tiling), and tile quantity should always include a <strong>12% wastage allowance</strong> for cuts and breakage.
         </p>
-        <p style="font-size:14px;color:#44403C;line-height:1.9;margin:0;">
+        <p style="font-size:14px;color:#334155;line-height:1.9;margin:0;">
           The calculator above applies these exact market rates. For a deeper breakdown read our
-          <a href="/guides/tiling-cost-guide-sri-lanka" style="color:#B45309;font-weight:700;">tiling cost guide</a>,
-          or <a href="/post-project" style="color:#B45309;font-weight:700;">post your project free</a> to get real quotes from verified tilers.
+          <a href="/guides/tiling-cost-guide-sri-lanka" style="color:#2563EB;font-weight:700;">tiling cost guide</a>,
+          or <a href="/post-project" style="color:#2563EB;font-weight:700;">post your project free</a> to get real quotes from verified tilers.
         </p>
       </div>
 
       <!-- Labour + adhesive tables -->
-      <div style="background:#fff;border:1px solid #EDE4D3;border-radius:16px;padding:20px;overflow-x:auto;">
-        <h2 style="font-size:16px;font-weight:800;color:#1C1917;margin:0 0 12px;">Tiling labour &amp; material rates in Sri Lanka</h2>
+      <div style="background:#fff;border:1px solid #E2E8F0;border-radius:16px;padding:20px;overflow-x:auto;">
+        <h2 style="font-size:16px;font-weight:800;color:#0F172A;margin:0 0 12px;">Tiling labour &amp; material rates in Sri Lanka</h2>
         <table style="width:100%;border-collapse:collapse;font-size:13px;min-width:420px;">
           <thead>
             <tr>
-              <th style="background:#B45309;color:#fff;padding:9px 12px;text-align:left;font-size:12px;">Item</th>
-              <th style="background:#B45309;color:#fff;padding:9px 12px;text-align:left;font-size:12px;">Rate (Rs. / sq.ft)</th>
-              <th style="background:#B45309;color:#fff;padding:9px 12px;text-align:left;font-size:12px;">Notes</th>
+              <th style="background:#2563EB;color:#fff;padding:9px 12px;text-align:left;font-size:12px;">Item</th>
+              <th style="background:#2563EB;color:#fff;padding:9px 12px;text-align:left;font-size:12px;">Rate (Rs. / sq.ft)</th>
+              <th style="background:#2563EB;color:#fff;padding:9px 12px;text-align:left;font-size:12px;">Notes</th>
             </tr>
           </thead>
           <tbody>
-            <tr><td style="padding:9px 12px;border-bottom:1px solid #EDE4D3;">Tiling labour</td><td style="padding:9px 12px;border-bottom:1px solid #EDE4D3;font-weight:700;">{LABOUR.min} – {LABOUR.max}</td><td style="padding:9px 12px;border-bottom:1px solid #EDE4D3;">Depends on tile size, pattern &amp; location</td></tr>
+            <tr><td style="padding:9px 12px;border-bottom:1px solid #E2E8F0;">Tiling labour</td><td style="padding:9px 12px;border-bottom:1px solid #E2E8F0;font-weight:700;">{LABOUR.min} – {LABOUR.max}</td><td style="padding:9px 12px;border-bottom:1px solid #E2E8F0;">Depends on tile size, pattern &amp; location</td></tr>
             {ADHESIVE_TIERS.map(t => (
-              <tr><td style="padding:9px 12px;border-bottom:1px solid #EDE4D3;">Adhesive {t.name}</td><td style="padding:9px 12px;border-bottom:1px solid #EDE4D3;font-weight:700;">{t.rate}</td><td style="padding:9px 12px;border-bottom:1px solid #EDE4D3;">{t.sizes} — {t.desc}</td></tr>
+              <tr><td style="padding:9px 12px;border-bottom:1px solid #E2E8F0;">Adhesive {t.name}</td><td style="padding:9px 12px;border-bottom:1px solid #E2E8F0;font-weight:700;">{t.rate}</td><td style="padding:9px 12px;border-bottom:1px solid #E2E8F0;">{t.sizes} — {t.desc}</td></tr>
             ))}
-            <tr><td style="padding:9px 12px;border-bottom:1px solid #EDE4D3;">Level clips</td><td style="padding:9px 12px;border-bottom:1px solid #EDE4D3;font-weight:700;">{EXTRAS.levelClips}</td><td style="padding:9px 12px;border-bottom:1px solid #EDE4D3;">Levelling system for a lippage-free finish</td></tr>
-            <tr><td style="padding:9px 12px;border-bottom:1px solid #EDE4D3;">Grout</td><td style="padding:9px 12px;border-bottom:1px solid #EDE4D3;font-weight:700;">{EXTRAS.grout}</td><td style="padding:9px 12px;border-bottom:1px solid #EDE4D3;">All tile joints</td></tr>
+            <tr><td style="padding:9px 12px;border-bottom:1px solid #E2E8F0;">Level clips</td><td style="padding:9px 12px;border-bottom:1px solid #E2E8F0;font-weight:700;">{EXTRAS.levelClips}</td><td style="padding:9px 12px;border-bottom:1px solid #E2E8F0;">Levelling system for a lippage-free finish</td></tr>
+            <tr><td style="padding:9px 12px;border-bottom:1px solid #E2E8F0;">Grout</td><td style="padding:9px 12px;border-bottom:1px solid #E2E8F0;font-weight:700;">{EXTRAS.grout}</td><td style="padding:9px 12px;border-bottom:1px solid #E2E8F0;">All tile joints</td></tr>
             <tr><td style="padding:9px 12px;">Screed (if needed)</td><td style="padding:9px 12px;font-weight:700;">{EXTRAS.screed.min} – {EXTRAS.screed.max}</td><td style="padding:9px 12px;">Cement-sand base layer to level the floor</td></tr>
           </tbody>
         </table>
       </div>
 
       <!-- Tiles per 100 sqft table -->
-      <div style="background:#fff;border:1px solid #EDE4D3;border-radius:16px;padding:20px;overflow-x:auto;">
-        <h2 style="font-size:16px;font-weight:800;color:#1C1917;margin:0 0 12px;">How many tiles per 100 sq.ft? (includes 12% waste)</h2>
+      <div style="background:#fff;border:1px solid #E2E8F0;border-radius:16px;padding:20px;overflow-x:auto;">
+        <h2 style="font-size:16px;font-weight:800;color:#0F172A;margin:0 0 12px;">How many tiles per 100 sq.ft? (includes 12% waste)</h2>
         <table style="width:100%;border-collapse:collapse;font-size:13px;min-width:320px;">
           <thead>
             <tr>
-              <th style="background:#B45309;color:#fff;padding:9px 12px;text-align:left;font-size:12px;">Tile size</th>
-              <th style="background:#B45309;color:#fff;padding:9px 12px;text-align:left;font-size:12px;">Coverage / tile</th>
-              <th style="background:#B45309;color:#fff;padding:9px 12px;text-align:left;font-size:12px;">Tiles per 100 sq.ft</th>
+              <th style="background:#2563EB;color:#fff;padding:9px 12px;text-align:left;font-size:12px;">Tile size</th>
+              <th style="background:#2563EB;color:#fff;padding:9px 12px;text-align:left;font-size:12px;">Coverage / tile</th>
+              <th style="background:#2563EB;color:#fff;padding:9px 12px;text-align:left;font-size:12px;">Tiles per 100 sq.ft</th>
             </tr>
           </thead>
           <tbody>
             {TILE_SIZES.slice(0, 9).map(t => (
               <tr>
-                <td style="padding:9px 12px;border-bottom:1px solid #EDE4D3;font-weight:600;">{t.label}</td>
-                <td style="padding:9px 12px;border-bottom:1px solid #EDE4D3;">{t.sqft.toFixed(2)} sq.ft</td>
-                <td style="padding:9px 12px;border-bottom:1px solid #EDE4D3;font-weight:700;color:#B45309;">{tilesNeeded(100, t.sqft)} tiles</td>
+                <td style="padding:9px 12px;border-bottom:1px solid #E2E8F0;font-weight:600;">{t.label}</td>
+                <td style="padding:9px 12px;border-bottom:1px solid #E2E8F0;">{t.sqft.toFixed(2)} sq.ft</td>
+                <td style="padding:9px 12px;border-bottom:1px solid #E2E8F0;font-weight:700;color:#2563EB;">{tilesNeeded(100, t.sqft)} tiles</td>
               </tr>
             ))}
           </tbody>
         </table>
-        <p style="font-size:12px;color:#57534E;margin:10px 0 0;line-height:1.7;">
+        <p style="font-size:12px;color:#64748B;margin:10px 0 0;line-height:1.7;">
           Typical tile prices: {TILE_PRICE_RANGES.map((r, i) => `${r.size} ${r.range}${i < TILE_PRICE_RANGES.length - 1 ? ' · ' : ''}`)} —
-          see the full <a href="/guides/tile-prices-sri-lanka" style="color:#B45309;font-weight:700;">tile price list</a> and
-          <a href="/guides/tiling-labour-charges-sri-lanka" style="color:#B45309;font-weight:700;">labour charges guide</a>.
+          see the full <a href="/guides/tile-prices-sri-lanka" style="color:#2563EB;font-weight:700;">tile price list</a> and
+          <a href="/guides/tiling-labour-charges-sri-lanka" style="color:#2563EB;font-weight:700;">labour charges guide</a>.
         </p>
       </div>
 
       <!-- Material quantities per 100 sqft -->
-      <div style="background:#fff;border:1px solid #EDE4D3;border-radius:16px;padding:20px;overflow-x:auto;">
-        <h2 style="font-size:16px;font-weight:800;color:#1C1917;margin:0 0 12px;">Material quantities needed per 100 sq.ft</h2>
+      <div style="background:#fff;border:1px solid #E2E8F0;border-radius:16px;padding:20px;overflow-x:auto;">
+        <h2 style="font-size:16px;font-weight:800;color:#0F172A;margin:0 0 12px;">Material quantities needed per 100 sq.ft</h2>
         <table style="width:100%;border-collapse:collapse;font-size:13px;min-width:380px;">
           <thead>
             <tr>
-              <th style="background:#B45309;color:#fff;padding:9px 12px;text-align:left;font-size:12px;">Material</th>
-              <th style="background:#B45309;color:#fff;padding:9px 12px;text-align:left;font-size:12px;">Quantity / 100 sq.ft</th>
-              <th style="background:#B45309;color:#fff;padding:9px 12px;text-align:left;font-size:12px;">Basis</th>
+              <th style="background:#2563EB;color:#fff;padding:9px 12px;text-align:left;font-size:12px;">Material</th>
+              <th style="background:#2563EB;color:#fff;padding:9px 12px;text-align:left;font-size:12px;">Quantity / 100 sq.ft</th>
+              <th style="background:#2563EB;color:#fff;padding:9px 12px;text-align:left;font-size:12px;">Basis</th>
             </tr>
           </thead>
           <tbody>
-            <tr><td style="padding:9px 12px;border-bottom:1px solid #EDE4D3;font-weight:600;">Adhesive C1 / C2 (25kg bags)</td><td style="padding:9px 12px;border-bottom:1px solid #EDE4D3;font-weight:700;color:#B45309;">3 bags</td><td style="padding:9px 12px;border-bottom:1px solid #EDE4D3;">1 bag ≈ 30–35 sq.ft</td></tr>
-            <tr><td style="padding:9px 12px;border-bottom:1px solid #EDE4D3;font-weight:600;">Adhesive C2TE (25kg bags)</td><td style="padding:9px 12px;border-bottom:1px solid #EDE4D3;font-weight:700;color:#B45309;">3 – 4 bags</td><td style="padding:9px 12px;border-bottom:1px solid #EDE4D3;">Large format needs a thicker bed</td></tr>
-            <tr><td style="padding:9px 12px;border-bottom:1px solid #EDE4D3;font-weight:600;">Grout</td><td style="padding:9px 12px;border-bottom:1px solid #EDE4D3;font-weight:700;color:#B45309;">2 – 4 kg</td><td style="padding:9px 12px;border-bottom:1px solid #EDE4D3;">Depends on tile size and joint width</td></tr>
-            <tr><td style="padding:9px 12px;border-bottom:1px solid #EDE4D3;font-weight:600;">Level clips</td><td style="padding:9px 12px;border-bottom:1px solid #EDE4D3;font-weight:700;color:#B45309;">Depends on tile size</td><td style="padding:9px 12px;border-bottom:1px solid #EDE4D3;">~3–8 per tile; wedges are reusable</td></tr>
-            <tr><td style="padding:9px 12px;border-bottom:1px solid #EDE4D3;font-weight:600;">Screed cement (50kg bags)</td><td style="padding:9px 12px;border-bottom:1px solid #EDE4D3;font-weight:700;color:#B45309;">2 – 3 bags</td><td style="padding:9px 12px;border-bottom:1px solid #EDE4D3;">2 bags standard screed · 3 bags premium screed</td></tr>
-            <tr><td style="padding:9px 12px;font-weight:600;">Screed sand</td><td style="padding:9px 12px;font-weight:700;color:#B45309;">20 cu.ft</td><td style="padding:9px 12px;">River or manufactured sand</td></tr>
+            <tr><td style="padding:9px 12px;border-bottom:1px solid #E2E8F0;font-weight:600;">Adhesive C1 / C2 (25kg bags)</td><td style="padding:9px 12px;border-bottom:1px solid #E2E8F0;font-weight:700;color:#2563EB;">3 bags</td><td style="padding:9px 12px;border-bottom:1px solid #E2E8F0;">1 bag ≈ 30–35 sq.ft</td></tr>
+            <tr><td style="padding:9px 12px;border-bottom:1px solid #E2E8F0;font-weight:600;">Adhesive C2TE (25kg bags)</td><td style="padding:9px 12px;border-bottom:1px solid #E2E8F0;font-weight:700;color:#2563EB;">3 – 4 bags</td><td style="padding:9px 12px;border-bottom:1px solid #E2E8F0;">Large format needs a thicker bed</td></tr>
+            <tr><td style="padding:9px 12px;border-bottom:1px solid #E2E8F0;font-weight:600;">Grout</td><td style="padding:9px 12px;border-bottom:1px solid #E2E8F0;font-weight:700;color:#2563EB;">2 – 4 kg</td><td style="padding:9px 12px;border-bottom:1px solid #E2E8F0;">Depends on tile size and joint width</td></tr>
+            <tr><td style="padding:9px 12px;border-bottom:1px solid #E2E8F0;font-weight:600;">Level clips</td><td style="padding:9px 12px;border-bottom:1px solid #E2E8F0;font-weight:700;color:#2563EB;">Depends on tile size</td><td style="padding:9px 12px;border-bottom:1px solid #E2E8F0;">~3–8 per tile; wedges are reusable</td></tr>
+            <tr><td style="padding:9px 12px;border-bottom:1px solid #E2E8F0;font-weight:600;">Screed cement (50kg bags)</td><td style="padding:9px 12px;border-bottom:1px solid #E2E8F0;font-weight:700;color:#2563EB;">2 – 3 bags</td><td style="padding:9px 12px;border-bottom:1px solid #E2E8F0;">2 bags standard screed · 3 bags premium screed</td></tr>
+            <tr><td style="padding:9px 12px;font-weight:600;">Screed sand</td><td style="padding:9px 12px;font-weight:700;color:#2563EB;">20 cu.ft</td><td style="padding:9px 12px;">River or manufactured sand</td></tr>
           </tbody>
         </table>
-        <p style="font-size:12px;color:#57534E;margin:10px 0 0;line-height:1.7;">
+        <p style="font-size:12px;color:#64748B;margin:10px 0 0;line-height:1.7;">
           The calculator above shows these exact quantities for your area — bags of adhesive, kg of grout, clip count, and cement/sand for screed.
         </p>
       </div>
 
       <!-- Worked example -->
-      <div style="background:#FFFBEB;border:1px solid #FDE68A;border-radius:16px;padding:20px;">
-        <h2 style="font-size:16px;font-weight:800;color:#B45309;margin:0 0 12px;">Worked example: 100 sq.ft floor with 60×60 cm tiles</h2>
-        <div style="font-size:13px;color:#92400E;line-height:2;">
+      <div style="background:#EFF6FF;border:1px solid #BFDBFE;border-radius:16px;padding:20px;">
+        <h2 style="font-size:16px;font-weight:800;color:#2563EB;margin:0 0 12px;">Worked example: 100 sq.ft floor with 60×60 cm tiles</h2>
+        <div style="font-size:13px;color:#1E293B;line-height:2;">
           <div>• Tiles needed: 100 ÷ 3.875 × 1.12 = <strong>{tilesNeeded(100, 3.875)} tiles</strong> (at Rs. 900/tile → Rs. {(tilesNeeded(100, 3.875) * 900).toLocaleString('en-LK')})</div>
           <div>• Labour: 100 sq.ft × Rs. {LABOUR.default} = <strong>Rs. {(100 * LABOUR.default).toLocaleString('en-LK')}</strong></div>
           <div>• Adhesive C1: 100 × Rs. {ADHESIVE_TIERS[0].rate} = <strong>Rs. {(100 * ADHESIVE_TIERS[0].rate).toLocaleString('en-LK')}</strong></div>
           <div>• Level clips: 100 × Rs. {EXTRAS.levelClips} = <strong>Rs. {(100 * EXTRAS.levelClips).toLocaleString('en-LK')}</strong> · Grout: 100 × Rs. {EXTRAS.grout} = <strong>Rs. {(100 * EXTRAS.grout).toLocaleString('en-LK')}</strong></div>
-          <div style="border-top:1px solid #FDE68A;margin-top:6px;padding-top:6px;">≈ <strong>Rs. {(tilesNeeded(100, 3.875) * 900 + 100 * (LABOUR.default + ADHESIVE_TIERS[0].rate + EXTRAS.levelClips + EXTRAS.grout)).toLocaleString('en-LK')} total</strong> (no screed needed)</div>
+          <div style="border-top:1px solid #BFDBFE;margin-top:6px;padding-top:6px;">≈ <strong>Rs. {(tilesNeeded(100, 3.875) * 900 + 100 * (LABOUR.default + ADHESIVE_TIERS[0].rate + EXTRAS.levelClips + EXTRAS.grout)).toLocaleString('en-LK')} total</strong> (no screed needed)</div>
         </div>
       </div>
 
       <!-- FAQ -->
       <div>
-        <h2 style="font-family:'Playfair Display',serif;font-size:clamp(18px,4vw,24px);font-weight:700;color:#1C1917;margin:0 0 14px;">Tiling cost FAQ</h2>
+        <h2 style="font-family: 'Inter', sans-serif;font-size:clamp(18px,4vw,24px);font-weight:700;color:#0F172A;margin:0 0 14px;">Tiling cost FAQ</h2>
         <div style="display:flex;flex-direction:column;gap:10px;">
           {FAQS.map(f => (
-            <details style="background:#fff;border:1px solid #EDE4D3;border-radius:12px;padding:14px 16px;">
-              <summary style="font-size:13px;font-weight:700;color:#1C1917;cursor:pointer;">{f.q}</summary>
-              <p style="font-size:13px;color:#44403C;line-height:1.8;margin:10px 0 0;">{f.a}</p>
+            <details style="background:#fff;border:1px solid #E2E8F0;border-radius:12px;padding:14px 16px;">
+              <summary style="font-size:13px;font-weight:700;color:#0F172A;cursor:pointer;">{f.q}</summary>
+              <p style="font-size:13px;color:#334155;line-height:1.8;margin:10px 0 0;">{f.a}</p>
             </details>
           ))}
         </div>
@@ -428,12 +428,12 @@ const topDistricts = DISTRICT_INFO.filter(d => ['colombo','gampaha','kandy','gal
 
       <!-- Find tilers by district -->
       <div>
-        <h2 style="font-size:16px;font-weight:800;color:#1C1917;margin:0 0 10px;">Ready to hire? Find tilers near you</h2>
+        <h2 style="font-size:16px;font-weight:800;color:#0F172A;margin:0 0 10px;">Ready to hire? Find tilers near you</h2>
         <div style="display:flex;flex-wrap:wrap;gap:8px;">
           {topDistricts.map(d => (
-            <a href={districtPath(d)} style="font-size:12px;font-weight:700;color:#B45309;background:#fff;border:1px solid #FDE68A;border-radius:20px;padding:7px 14px;text-decoration:none;">Tilers in {d.name}</a>
+            <a href={districtPath(d)} style="font-size:12px;font-weight:700;color:#2563EB;background:#fff;border:1px solid #BFDBFE;border-radius:20px;padding:7px 14px;text-decoration:none;">Tilers in {d.name}</a>
           ))}
-          <a href="/providers?type=tiler" style="font-size:12px;font-weight:700;color:#fff;background:#B45309;border-radius:20px;padding:7px 14px;text-decoration:none;">All districts →</a>
+          <a href="/providers?type=tiler" style="font-size:12px;font-weight:700;color:#fff;background:#2563EB;border-radius:20px;padding:7px 14px;text-decoration:none;">All districts →</a>
         </div>
       </div>
 

@@ -33,7 +33,7 @@ const providers = (providersRaw||[]).filter((p:any) => matchesCat(p.services, p.
 const blogMap  = Object.fromEntries(BLOG_POSTS.map((p:any) => [p.slug, p]))
 const blogs    = cat.blogSlugs.map((s:string) => blogMap[s]).filter(Boolean)
 
-const AVATAR_COLORS = ['#B45309','#B45309','#7c3aed','#b45309','#0369a1','#B45309','#15803d','#be185d']
+const AVATAR_COLORS = ['#2563EB','#2563EB','#7c3aed','#2563EB','#0369a1','#2563EB','#15803d','#be185d']
 function avatarColor(name: string) {
   let h = 0; for (const c of name) h = (h*31+c.charCodeAt(0))>>>0
   return AVATAR_COLORS[h % AVATAR_COLORS.length]
@@ -76,26 +76,26 @@ const total     = providers.length
 <Layout title={pageTitle} description={cat.desc}>
 
   <!-- Header -->
-  <div style={`background:linear-gradient(135deg,#451A03,#78350F);padding:24px 20px 22px;text-align:center;`}>
+  <div style={`background:linear-gradient(135deg,#0F172A,#0F172A);padding:24px 20px 22px;text-align:center;`}>
     <div style="text-align:left;max-width:640px;margin:0 auto;"><Breadcrumbs items={[{ name: 'Categories', href: '/categories' }, { name: cat.label }]} light /></div>
     <div style={`width:56px;height:56px;border-radius:16px;background:${cat.bg};border:2px solid ${cat.border};display:flex;align-items:center;justify-content:center;font-size:28px;margin:0 auto 12px;`}>{cat.icon}</div>
-    <h1 style="font-family:'Playfair Display',serif;font-size:22px;font-weight:700;color:#fff;margin:0 0 8px;">{cat.label}</h1>
+    <h1 style="font-family: 'Inter', sans-serif;font-size:22px;font-weight:700;color:#fff;margin:0 0 8px;">{cat.label}</h1>
     <p style="font-size:12px;color:rgba(255,255,255,0.5);margin:0 0 18px;line-height:1.6;max-width:360px;margin-left:auto;margin-right:auto;">{cat.desc}</p>
-    <a href={`/post-project`} style="display:inline-flex;align-items:center;gap:7px;background:#B45309;color:#fff;border-radius:22px;padding:11px 22px;font-size:13px;font-weight:700;text-decoration:none;">
+    <a href={`/post-project`} style="display:inline-flex;align-items:center;gap:7px;background:#2563EB;color:#fff;border-radius:22px;padding:11px 22px;font-size:13px;font-weight:700;text-decoration:none;">
       📋 Post a {cat.label.replace(' Services','')} Project
     </a>
   </div>
 
   {cat.longDesc && (
     <section style="background:#fff;padding:18px 16px 0;">
-      <p style="font-size:13px;color:#44403C;line-height:1.9;margin:0;max-width:720px;">{cat.longDesc}</p>
+      <p style="font-size:13px;color:#334155;line-height:1.9;margin:0;max-width:720px;">{cat.longDesc}</p>
     </section>
   )}
 
   <!-- Sub-services -->
   <section style="background:#fff;padding:20px 0 20px;">
     <div style="padding:0 16px 12px;display:flex;align-items:center;justify-content:space-between;">
-      <span style="font-size:13px;font-weight:700;color:#44403C;">Services in this category</span>
+      <span style="font-size:13px;font-weight:700;color:#334155;">Services in this category</span>
     </div>
     <div style="display:grid;grid-template-columns:repeat(4,1fr);gap:8px;padding:0 16px;">
       {catServices.map((s:any) => (
@@ -111,21 +111,21 @@ const total     = providers.length
   </section>
 
   <!-- Providers -->
-  <section style="background:#FFFBF5;padding:20px 0 24px;">
+  <section style="background:#F8FAFC;padding:20px 0 24px;">
     <div style="padding:0 16px 14px;display:flex;align-items:center;justify-content:space-between;">
       <div>
-        <span style="font-size:15px;font-weight:700;color:#1C1917;">Providers</span>
-        {total > 0 && <span style="font-size:11px;color:#A8A29E;margin-left:7px;">{total} found</span>}
+        <span style="font-size:15px;font-weight:700;color:#0F172A;">Providers</span>
+        {total > 0 && <span style="font-size:11px;color:#94A3B8;margin-left:7px;">{total} found</span>}
       </div>
       <a href={`/providers?q=${encodeURIComponent(cat.label.replace(' Services',''))}`}
-        style="font-size:12px;font-weight:600;color:#B45309;text-decoration:none;">View All ›</a>
+        style="font-size:12px;font-weight:600;color:#2563EB;text-decoration:none;">View All ›</a>
     </div>
 
     {total === 0
       ? (
-        <div style="text-align:center;padding:32px 20px;color:#A8A29E;font-size:13px;">
+        <div style="text-align:center;padding:32px 20px;color:#94A3B8;font-size:13px;">
           No providers listed yet for this category. <br />
-          <a href="/join-tilershub" style="color:#B45309;text-decoration:none;font-weight:600;">Join TilersHub →</a>
+          <a href="/join-tilershub" style="color:#2563EB;text-decoration:none;font-weight:600;">Join TilersHub →</a>
         </div>
       )
       : (
@@ -140,34 +140,34 @@ const total     = providers.length
             const isShop = SHOP_TYPES_CAT.has(p.provider_type)
 
             return isShop ? (
-              <a href={p.slug ? `/providers/${p.slug}` : '#'} style="display:flex;background:#fff;border-radius:20px;border:1px solid #EDE4D3;overflow:hidden;box-shadow:0 2px 12px rgba(0,0,0,0.06);min-height:160px;text-decoration:none;color:inherit;transition:box-shadow 0.2s,transform 0.2s;" onmouseover="this.style.transform='translateY(-3px)';this.style.boxShadow='0 12px 32px rgba(0,0,0,0.12)'" onmouseout="this.style.transform='';this.style.boxShadow='0 2px 12px rgba(0,0,0,0.06)'">
+              <a href={p.slug ? `/providers/${p.slug}` : '#'} style="display:flex;background:#fff;border-radius:20px;border:1px solid #E2E8F0;overflow:hidden;box-shadow:0 2px 12px rgba(0,0,0,0.06);min-height:160px;text-decoration:none;color:inherit;transition:box-shadow 0.2s,transform 0.2s;" onmouseover="this.style.transform='translateY(-3px)';this.style.boxShadow='0 12px 32px rgba(0,0,0,0.12)'" onmouseout="this.style.transform='';this.style.boxShadow='0 2px 12px rgba(0,0,0,0.06)'">
                 <div style="width:42%;flex-shrink:0;position:relative;min-height:160px;">
                   {coverSrc
                     ? <img src={coverSrc} alt={p.name} style="width:100%;height:100%;object-fit:cover;display:block;" loading="lazy" />
-                    : <div style="width:100%;height:100%;background:#F7EFE2;background-image:repeating-linear-gradient(0deg,transparent,transparent 19px,#EDE4D3 19px,#EDE4D3 20px),repeating-linear-gradient(90deg,transparent,transparent 19px,#EDE4D3 19px,#EDE4D3 20px);display:flex;align-items:center;justify-content:center;">
+                    : <div style="width:100%;height:100%;background:#F1F5F9;background-image:repeating-linear-gradient(0deg,transparent,transparent 19px,#E2E8F0 19px,#E2E8F0 20px),repeating-linear-gradient(90deg,transparent,transparent 19px,#E2E8F0 19px,#E2E8F0 20px);display:flex;align-items:center;justify-content:center;">
                         <span style="font-size:34px;opacity:0.15;">🏪</span>
                       </div>
                   }
-                  {p.is_featured && <div style="position:absolute;top:9px;left:9px;background:#D4AF37;color:#1C1917;font-size:9px;font-weight:700;padding:4px 8px;border-radius:20px;box-shadow:0 2px 8px rgba(0,0,0,0.3);white-space:nowrap;">⭐ Top Rated</div>}
+                  {p.is_featured && <div style="position:absolute;top:9px;left:9px;background:#60A5FA;color:#0F172A;font-size:9px;font-weight:700;padding:4px 8px;border-radius:20px;box-shadow:0 2px 8px rgba(0,0,0,0.3);white-space:nowrap;">⭐ Top Rated</div>}
                   {!p.is_featured && isVerified && <div style="position:absolute;top:9px;left:9px;background:rgba(22,163,74,0.9);color:#fff;font-size:9px;font-weight:700;padding:4px 8px;border-radius:20px;box-shadow:0 2px 8px rgba(0,0,0,0.25);white-space:nowrap;">✓ Verified</div>}
                 </div>
                 <div style="flex:1;padding:14px 16px;display:flex;flex-direction:column;min-width:0;">
-                  <div style="font-size:9px;font-weight:700;color:#A8A29E;letter-spacing:1.2px;text-transform:uppercase;margin-bottom:3px;">{shopTaglineCat(p.provider_type, p.services||[])}</div>
-                  <div style="font-family:'Playfair Display',serif;font-size:16px;font-weight:700;color:#1C1917;line-height:1.2;margin-bottom:5px;overflow:hidden;text-overflow:ellipsis;white-space:nowrap;">{p.name}</div>
+                  <div style="font-size:9px;font-weight:700;color:#94A3B8;letter-spacing:1.2px;text-transform:uppercase;margin-bottom:3px;">{shopTaglineCat(p.provider_type, p.services||[])}</div>
+                  <div style="font-family: 'Inter', sans-serif;font-size:16px;font-weight:700;color:#0F172A;line-height:1.2;margin-bottom:5px;overflow:hidden;text-overflow:ellipsis;white-space:nowrap;">{p.name}</div>
                   {p.avg_rating > 0 && (
                     <div style="display:flex;align-items:center;gap:4px;margin-bottom:7px;">
                       <span style="font-size:12px;">⭐</span>
-                      <span style="font-size:13px;font-weight:700;color:#92400e;">{Number(p.avg_rating).toFixed(1)}</span>
+                      <span style="font-size:13px;font-weight:700;color:#1E293B;">{Number(p.avg_rating).toFixed(1)}</span>
                     </div>
                   )}
-                  {p.description && <p style="font-size:11px;color:#57534E;line-height:1.6;margin:0 0 9px;display:-webkit-box;-webkit-line-clamp:2;-webkit-box-orient:vertical;overflow:hidden;">{p.description}</p>}
+                  {p.description && <p style="font-size:11px;color:#64748B;line-height:1.6;margin:0 0 9px;display:-webkit-box;-webkit-line-clamp:2;-webkit-box-orient:vertical;overflow:hidden;">{p.description}</p>}
                   <div style="margin-top:auto;">
-                    <span style="display:inline-flex;align-items:center;gap:4px;background:#1C1917;color:#fff;border-radius:10px;padding:8px 14px;font-size:11px;font-weight:700;white-space:nowrap;">View Shop ›</span>
+                    <span style="display:inline-flex;align-items:center;gap:4px;background:#0F172A;color:#fff;border-radius:10px;padding:8px 14px;font-size:11px;font-weight:700;white-space:nowrap;">View Shop ›</span>
                   </div>
                 </div>
               </a>
             ) : (
-              <a href={p.slug ? `/providers/${p.slug}` : '#'} style="display:block;background:#fff;border-radius:20px;border:1px solid #EDE4D3;overflow:hidden;box-shadow:0 2px 12px rgba(0,0,0,0.06);text-decoration:none;color:inherit;transition:box-shadow 0.2s,transform 0.2s;" onmouseover="this.style.transform='translateY(-3px)';this.style.boxShadow='0 10px 28px rgba(0,0,0,0.12)'" onmouseout="this.style.transform='';this.style.boxShadow='0 2px 12px rgba(0,0,0,0.06)'">
+              <a href={p.slug ? `/providers/${p.slug}` : '#'} style="display:block;background:#fff;border-radius:20px;border:1px solid #E2E8F0;overflow:hidden;box-shadow:0 2px 12px rgba(0,0,0,0.06);text-decoration:none;color:inherit;transition:box-shadow 0.2s,transform 0.2s;" onmouseover="this.style.transform='translateY(-3px)';this.style.boxShadow='0 10px 28px rgba(0,0,0,0.12)'" onmouseout="this.style.transform='';this.style.boxShadow='0 2px 12px rgba(0,0,0,0.06)'">
                 <div style={`height:160px;position:relative;overflow:hidden;background:${color};`}>
                   {coverSrc
                     ? <img src={coverSrc} alt={p.name} style="width:100%;height:100%;object-fit:cover;display:block;" loading="lazy" />
@@ -179,18 +179,18 @@ const total     = providers.length
                   {isVerified && <div style="position:absolute;top:10px;right:10px;background:#16a34a;color:#fff;font-size:11px;font-weight:700;padding:4px 11px;border-radius:20px;box-shadow:0 2px 8px rgba(0,0,0,0.22);">✓ Verified</div>}
                 </div>
                 <div style="padding:14px 16px 16px;">
-                  <div style="font-size:12px;color:#57534E;font-weight:600;margin-bottom:6px;">{typeLabel}</div>
-                  <div style="font-size:16px;font-weight:700;color:#1C1917;margin-bottom:5px;overflow:hidden;white-space:nowrap;text-overflow:ellipsis;">{p.name}</div>
+                  <div style="font-size:12px;color:#64748B;font-weight:600;margin-bottom:6px;">{typeLabel}</div>
+                  <div style="font-size:16px;font-weight:700;color:#0F172A;margin-bottom:5px;overflow:hidden;white-space:nowrap;text-overflow:ellipsis;">{p.name}</div>
                   {p.avg_rating > 0 && (
                     <div style="display:flex;align-items:center;gap:5px;margin-bottom:8px;">
                       <span>⭐</span>
-                      <span style="font-size:13px;font-weight:700;color:#92400e;">{Number(p.avg_rating).toFixed(1)}</span>
+                      <span style="font-size:13px;font-weight:700;color:#1E293B;">{Number(p.avg_rating).toFixed(1)}</span>
                     </div>
                   )}
-                  {p.description && <div style="font-size:13px;color:#57534E;line-height:1.65;margin-bottom:14px;overflow:hidden;display:-webkit-box;-webkit-line-clamp:2;-webkit-box-orient:vertical;">{p.description}</div>}
-                  <div style="display:flex;align-items:center;gap:8px;border-top:1px solid #F7EFE2;padding-top:12px;flex-wrap:wrap;">
-                    {p.experience_years > 0 && <span style="font-size:11px;color:#44403C;flex-shrink:0;"><span style="color:#22c55e;font-weight:700;">✓</span> {p.experience_years}+ Yrs</span>}
-                    {(p.city||p.district) && <span style="font-size:11px;color:#44403C;overflow:hidden;white-space:nowrap;text-overflow:ellipsis;">📍 {p.city||p.district}</span>}
+                  {p.description && <div style="font-size:13px;color:#64748B;line-height:1.65;margin-bottom:14px;overflow:hidden;display:-webkit-box;-webkit-line-clamp:2;-webkit-box-orient:vertical;">{p.description}</div>}
+                  <div style="display:flex;align-items:center;gap:8px;border-top:1px solid #F1F5F9;padding-top:12px;flex-wrap:wrap;">
+                    {p.experience_years > 0 && <span style="font-size:11px;color:#334155;flex-shrink:0;"><span style="color:#22c55e;font-weight:700;">✓</span> {p.experience_years}+ Yrs</span>}
+                    {(p.city||p.district) && <span style="font-size:11px;color:#334155;overflow:hidden;white-space:nowrap;text-overflow:ellipsis;">📍 {p.city||p.district}</span>}
                     <div style="margin-left:auto;display:flex;gap:6px;flex-shrink:0;">
                       {phone && (
                         <a href={waLink(phone, p.name)} target="_blank" rel="noopener noreferrer" onclick="event.stopPropagation()"
@@ -198,7 +198,7 @@ const total     = providers.length
                           💬
                         </a>
                       )}
-                      {p.slug && <span style="display:inline-flex;align-items:center;gap:4px;background:#B45309;color:#fff;border-radius:10px;padding:7px 14px;font-size:12px;font-weight:700;white-space:nowrap;">View Profile ›</span>}
+                      {p.slug && <span style="display:inline-flex;align-items:center;gap:4px;background:#2563EB;color:#fff;border-radius:10px;padding:7px 14px;font-size:12px;font-weight:700;white-space:nowrap;">View Profile ›</span>}
                     </div>
                   </div>
                 </div>
@@ -212,21 +212,21 @@ const total     = providers.length
 
   <!-- Blog posts -->
   {blogs.length > 0 && (
-    <section style="background:#fff;padding:20px 0 24px;border-top:1px solid #F7EFE2;">
+    <section style="background:#fff;padding:20px 0 24px;border-top:1px solid #F1F5F9;">
       <div style="padding:0 16px 12px;display:flex;align-items:center;justify-content:space-between;">
-        <span style="font-size:15px;font-weight:700;color:#1C1917;">📰 Tips &amp; Guides</span>
-        <a href="/blog" style="font-size:12px;font-weight:600;color:#B45309;text-decoration:none;">View All ›</a>
+        <span style="font-size:15px;font-weight:700;color:#0F172A;">📰 Tips &amp; Guides</span>
+        <a href="/blog" style="font-size:12px;font-weight:600;color:#2563EB;text-decoration:none;">View All ›</a>
       </div>
       <div style="display:flex;flex-direction:column;gap:8px;padding:0 16px;">
         {blogs.map((post:any) => (
           <a href={`/blog/${post.slug}`}
-            style="display:flex;align-items:center;gap:0;background:#FFFBF5;border-radius:14px;overflow:hidden;border:1px solid #EDE4D3;text-decoration:none;color:inherit;">
+            style="display:flex;align-items:center;gap:0;background:#F8FAFC;border-radius:14px;overflow:hidden;border:1px solid #E2E8F0;text-decoration:none;color:inherit;">
             <div style={`width:64px;height:64px;background:${post.color};flex-shrink:0;display:flex;align-items:center;justify-content:center;font-size:24px;`}>{post.icon}</div>
             <div style="flex:1;padding:11px 13px;min-width:0;">
-              <span style="font-size:9px;font-weight:700;color:#B45309;background:#FFF7ED;border:1px solid #FDE68A;border-radius:20px;padding:1px 7px;">{post.category}</span>
-              <div style="font-size:12px;font-weight:700;color:#1C1917;line-height:1.4;margin-top:5px;overflow:hidden;display:-webkit-box;-webkit-line-clamp:2;-webkit-box-orient:vertical;">{post.title}</div>
+              <span style="font-size:9px;font-weight:700;color:#2563EB;background:#EFF6FF;border:1px solid #BFDBFE;border-radius:20px;padding:1px 7px;">{post.category}</span>
+              <div style="font-size:12px;font-weight:700;color:#0F172A;line-height:1.4;margin-top:5px;overflow:hidden;display:-webkit-box;-webkit-line-clamp:2;-webkit-box-orient:vertical;">{post.title}</div>
             </div>
-            <div style="padding:0 14px;font-size:18px;color:#D6CFC4;flex-shrink:0;">›</div>
+            <div style="padding:0 14px;font-size:18px;color:#CBD5E1;flex-shrink:0;">›</div>
           </a>
         ))}
       </div>
@@ -234,13 +234,13 @@ const total     = providers.length
   )}
 
   <!-- Post project CTA -->
-  <section style="background:#B45309;padding:24px 20px;">
+  <section style="background:#2563EB;padding:24px 20px;">
     <div style="max-width:480px;margin:0 auto;display:flex;align-items:center;justify-content:space-between;gap:16px;flex-wrap:wrap;">
       <div>
         <div style="font-size:15px;font-weight:800;color:#fff;margin-bottom:4px;">Need a {cat.label.replace(' Services','')} specialist?</div>
         <div style="font-size:12px;color:rgba(255,255,255,0.72);">Post a project free — get bids on WhatsApp.</div>
       </div>
-      <a href="/post-project" style="display:inline-flex;align-items:center;gap:7px;background:#fff;color:#B45309;border-radius:12px;padding:11px 20px;font-size:13px;font-weight:800;text-decoration:none;white-space:nowrap;flex-shrink:0;">
+      <a href="/post-project" style="display:inline-flex;align-items:center;gap:7px;background:#fff;color:#2563EB;border-radius:12px;padding:11px 20px;font-size:13px;font-weight:800;text-decoration:none;white-space:nowrap;flex-shrink:0;">
         📋 Post Free
       </a>
     </div>

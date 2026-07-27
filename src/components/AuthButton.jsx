@@ -40,6 +40,8 @@ export default function AuthButton({ initialUser }) {
     <>
       <button
         onClick={() => setShowModal(true)}
+        className="signin-btn"
+        aria-label="Sign in"
         style={{
           fontSize: 13, fontWeight: 600,
           padding: '7px 14px',
@@ -51,7 +53,10 @@ export default function AuthButton({ initialUser }) {
           whiteSpace: 'nowrap',
         }}
       >
-        Sign In
+        {/* Narrow phones show the icon only — the label would push the menu
+            button off screen, and the bottom nav already has Account. */}
+        <span className="signin-label">Sign In</span>
+        <span className="signin-icon" aria-hidden="true">👤</span>
       </button>
       {showModal && <AuthModal onClose={() => setShowModal(false)} />}
     </>
@@ -78,7 +83,7 @@ function AuthModal({ onClose }) {
       }}>
         <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', marginBottom: 24 }}>
           <div>
-            <div style={{ fontFamily: "'Playfair Display', serif", fontSize: 20, fontWeight: 700, color: 'var(--text)' }}>
+            <div style={{ fontFamily: "'Inter', sans-serif", fontSize: 20, fontWeight: 700, color: 'var(--text)' }}>
               Sign in to TilersHub
             </div>
             <div style={{ fontSize: 12, color: 'var(--text-3)', marginTop: 4 }}>Use your Google account to continue</div>
@@ -91,7 +96,7 @@ function AuthModal({ onClose }) {
           onClick={() => signInWithGoogle()}
           style={{
             width: '100%', padding: '13px', marginBottom: 14,
-            background: '#fff', color: '#44403C',
+            background: '#fff', color: '#334155',
             border: '1.5px solid #d1d5db', borderRadius: 10,
             fontSize: 14, fontWeight: 600, cursor: 'pointer',
             display: 'flex', alignItems: 'center', justifyContent: 'center', gap: 10,

@@ -52,7 +52,7 @@ export default function Notifications() {
           time: proj.created_at,
           href: jobPath(proj),
           cta: 'Bid →',
-          ctaBg: '#B45309',
+          ctaBg: '#2563EB',
         })))
       } else {
         // Homeowner: show bids received on their projects
@@ -85,7 +85,7 @@ export default function Notifications() {
               time: b.created_at,
               href: '/dashboard',
               cta: 'View',
-              ctaBg: '#B45309',
+              ctaBg: '#2563EB',
             }
           }))
         }
@@ -102,11 +102,11 @@ export default function Notifications() {
     return (
       <div style={{ maxWidth:480, margin:'48px auto', padding:'0 20px', textAlign:'center' }}>
         <div style={{ fontSize:48, marginBottom:16 }}>🔔</div>
-        <h2 style={{ fontFamily:"'Playfair Display',serif", fontSize:22, fontWeight:700, color:'#1C1917', marginBottom:8 }}>Notifications</h2>
-        <p style={{ fontSize:14, color:'#57534E', marginBottom:24, lineHeight:1.7 }}>
+        <h2 style={{ fontFamily:"'Inter', sans-serif", fontSize:22, fontWeight:700, color:'#0F172A', marginBottom:8 }}>Notifications</h2>
+        <p style={{ fontSize:14, color:'#64748B', marginBottom:24, lineHeight:1.7 }}>
           Sign in to see your notifications — bid alerts, project updates, and more.
         </p>
-        <a href="/login" style={{ display:'inline-flex', alignItems:'center', gap:8, background:'#B45309', color:'#fff', borderRadius:12, padding:'12px 28px', fontSize:14, fontWeight:700, textDecoration:'none', boxShadow:'0 4px 16px rgba(180,83,9,0.35)' }}>
+        <a href="/login" style={{ display:'inline-flex', alignItems:'center', gap:8, background:'#2563EB', color:'#fff', borderRadius:12, padding:'12px 28px', fontSize:14, fontWeight:700, textDecoration:'none', boxShadow:'0 4px 16px rgba(37,99,235,0.35)' }}>
           Sign In →
         </a>
       </div>
@@ -118,13 +118,13 @@ export default function Notifications() {
   if (state === 'loading') {
     return (
       <div style={{ maxWidth:560, margin:'0 auto', padding:'24px 16px' }}>
-        <div style={{ height:24, background:'#F7EFE2', borderRadius:8, width:'40%', marginBottom:20 }} />
+        <div style={{ height:24, background:'#F1F5F9', borderRadius:8, width:'40%', marginBottom:20 }} />
         {Array.from({ length: 5 }).map((_, i) => (
-          <div key={i} style={{ display:'flex', gap:12, alignItems:'center', padding:'14px 0', borderBottom:'1px solid #F7EFE2' }}>
-            <div style={{ width:40, height:40, borderRadius:12, background:'#F7EFE2', flexShrink:0 }} />
+          <div key={i} style={{ display:'flex', gap:12, alignItems:'center', padding:'14px 0', borderBottom:'1px solid #F1F5F9' }}>
+            <div style={{ width:40, height:40, borderRadius:12, background:'#F1F5F9', flexShrink:0 }} />
             <div style={{ flex:1 }}>
-              <div style={{ height:12, background:'#F7EFE2', borderRadius:6, width:'60%', marginBottom:6 }} />
-              <div style={{ height:10, background:'#F7EFE2', borderRadius:6, width:'80%' }} />
+              <div style={{ height:12, background:'#F1F5F9', borderRadius:6, width:'60%', marginBottom:6 }} />
+              <div style={{ height:10, background:'#F1F5F9', borderRadius:6, width:'80%' }} />
             </div>
           </div>
         ))}
@@ -147,13 +147,13 @@ export default function Notifications() {
       {/* Header */}
       <div style={{ display:'flex', alignItems:'center', justifyContent:'space-between', marginBottom:20 }}>
         <div>
-          <h1 style={{ fontFamily:"'Playfair Display',serif", fontSize:22, fontWeight:700, color:'#1C1917', margin:'0 0 2px' }}>Notifications</h1>
-          <p style={{ fontSize:12, color:'#A8A29E', margin:0 }}>
+          <h1 style={{ fontFamily:"'Inter', sans-serif", fontSize:22, fontWeight:700, color:'#0F172A', margin:'0 0 2px' }}>Notifications</h1>
+          <p style={{ fontSize:12, color:'#94A3B8', margin:0 }}>
             {role === 'provider' ? 'Open projects you can bid on' : 'Bids on your projects'}
           </p>
         </div>
         {items.length > 0 && (
-          <span style={{ fontSize:11, fontWeight:700, color:'#B45309', background:'#FFFBEB', border:'1px solid #FDE68A', borderRadius:20, padding:'3px 10px' }}>
+          <span style={{ fontSize:11, fontWeight:700, color:'#2563EB', background:'#EFF6FF', border:'1px solid #BFDBFE', borderRadius:20, padding:'3px 10px' }}>
             {items.length} new
           </span>
         )}
@@ -163,8 +163,8 @@ export default function Notifications() {
       {items.length === 0 && (
         <div style={{ textAlign:'center', padding:'48px 20px' }}>
           <div style={{ fontSize:40, marginBottom:12 }}>🔔</div>
-          <p style={{ fontSize:14, color:'#A8A29E', marginBottom:20 }}>{emptyMsg}</p>
-          <a href={emptyCta.href} style={{ display:'inline-flex', alignItems:'center', gap:6, background:'#B45309', color:'#fff', borderRadius:10, padding:'10px 22px', fontSize:13, fontWeight:700, textDecoration:'none' }}>
+          <p style={{ fontSize:14, color:'#94A3B8', marginBottom:20 }}>{emptyMsg}</p>
+          <a href={emptyCta.href} style={{ display:'inline-flex', alignItems:'center', gap:6, background:'#2563EB', color:'#fff', borderRadius:10, padding:'10px 22px', fontSize:13, fontWeight:700, textDecoration:'none' }}>
             {emptyCta.label} →
           </a>
         </div>
@@ -173,7 +173,7 @@ export default function Notifications() {
       {/* Items */}
       {items.map(item => (
         <a key={item.id} href={item.href}
-          style={{ display:'flex', alignItems:'center', gap:12, padding:'14px 0', borderBottom:'1px solid #F7EFE2', textDecoration:'none', color:'inherit', transition:'opacity 0.15s' }}
+          style={{ display:'flex', alignItems:'center', gap:12, padding:'14px 0', borderBottom:'1px solid #F1F5F9', textDecoration:'none', color:'inherit', transition:'opacity 0.15s' }}
           onMouseOver={e => e.currentTarget.style.opacity='0.75'}
           onMouseOut={e  => e.currentTarget.style.opacity='1'}
         >
@@ -184,13 +184,13 @@ export default function Notifications() {
 
           {/* text */}
           <div style={{ flex:1, minWidth:0 }}>
-            <div style={{ fontSize:13, fontWeight:700, color:'#1C1917', marginBottom:2, overflow:'hidden', whiteSpace:'nowrap', textOverflow:'ellipsis' }}>{item.title}</div>
-            <div style={{ fontSize:11, color:'#57534E', overflow:'hidden', whiteSpace:'nowrap', textOverflow:'ellipsis' }}>{item.subtitle}</div>
+            <div style={{ fontSize:13, fontWeight:700, color:'#0F172A', marginBottom:2, overflow:'hidden', whiteSpace:'nowrap', textOverflow:'ellipsis' }}>{item.title}</div>
+            <div style={{ fontSize:11, color:'#64748B', overflow:'hidden', whiteSpace:'nowrap', textOverflow:'ellipsis' }}>{item.subtitle}</div>
           </div>
 
           {/* time + cta */}
           <div style={{ flexShrink:0, display:'flex', flexDirection:'column', alignItems:'flex-end', gap:5 }}>
-            <span style={{ fontSize:10, color:'#A8A29E' }}>{timeAgo(item.time)}</span>
+            <span style={{ fontSize:10, color:'#94A3B8' }}>{timeAgo(item.time)}</span>
             <span style={{ fontSize:10, fontWeight:700, color:'#fff', background:item.ctaBg, borderRadius:6, padding:'3px 8px' }}>{item.cta}</span>
           </div>
         </a>

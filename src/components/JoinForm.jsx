@@ -65,10 +65,10 @@ function Field({ label, id, req, error, hint, children }) {
   return (
     <div style={{ marginBottom: 20 }}>
       <label htmlFor={id} style={{ display: 'block', fontSize: 11, fontWeight: 700, color: '#334155', textTransform: 'uppercase', letterSpacing: '0.6px', marginBottom: 7 }}>
-        {label}{req && <span style={{ color: '#B45309', marginLeft: 3 }}>*</span>}
+        {label}{req && <span style={{ color: '#2563EB', marginLeft: 3 }}>*</span>}
       </label>
       {children}
-      {hint && !error && <p style={{ fontSize: 11, color: '#A8A29E', marginTop: 5, lineHeight: 1.5 }}>{hint}</p>}
+      {hint && !error && <p style={{ fontSize: 11, color: '#94A3B8', marginTop: 5, lineHeight: 1.5 }}>{hint}</p>}
       {error && <p style={{ fontSize: 11, color: '#dc2626', marginTop: 5 }}>⚠ {error}</p>}
     </div>
   )
@@ -77,7 +77,7 @@ function Field({ label, id, req, error, hint, children }) {
 function inputStyle(hasError) {
   return {
     width: '100%', padding: '11px 14px',
-    border: `1.5px solid ${hasError ? '#fca5a5' : '#EDE4D3'}`,
+    border: `1.5px solid ${hasError ? '#fca5a5' : '#E2E8F0'}`,
     borderRadius: 10, fontSize: 13, outline: 'none', fontFamily: 'inherit',
     background: hasError ? '#fef2f2' : '#fff', transition: 'border-color 0.2s', boxSizing: 'border-box',
   }
@@ -156,11 +156,11 @@ export default function JoinForm({ initialUser = null }) {
   // ── Success / pending-approval screen ──────────────────────────────────────
   if (success) {
     return (
-      <div style={{ textAlign: 'center', padding: '48px 24px', background: '#fff', borderRadius: 20, border: '1px solid #EDE4D3', maxWidth: 520, margin: '0 auto' }}>
+      <div style={{ textAlign: 'center', padding: '48px 24px', background: '#fff', borderRadius: 20, border: '1px solid #E2E8F0', maxWidth: 520, margin: '0 auto' }}>
         <div style={{ fontSize: 56, marginBottom: 16 }}>🎉</div>
-        <h2 style={{ fontFamily: "'Playfair Display', serif", fontSize: 24, fontWeight: 700, color: '#1C1917', marginBottom: 12 }}>{t.pendingTitle}</h2>
-        <p style={{ fontSize: 14, color: '#57534E', lineHeight: 1.8, maxWidth: 400, margin: '0 auto 24px' }}>{t.pendingBody}</p>
-        <a href="/provider" style={{ display: 'inline-flex', alignItems: 'center', gap: 8, background: '#B45309', color: '#fff', borderRadius: 12, padding: '12px 24px', fontSize: 14, fontWeight: 700, textDecoration: 'none' }}>
+        <h2 style={{ fontFamily: "'Inter', sans-serif", fontSize: 24, fontWeight: 700, color: '#0F172A', marginBottom: 12 }}>{t.pendingTitle}</h2>
+        <p style={{ fontSize: 14, color: '#64748B', lineHeight: 1.8, maxWidth: 400, margin: '0 auto 24px' }}>{t.pendingBody}</p>
+        <a href="/provider" style={{ display: 'inline-flex', alignItems: 'center', gap: 8, background: '#2563EB', color: '#fff', borderRadius: 12, padding: '12px 24px', fontSize: 14, fontWeight: 700, textDecoration: 'none' }}>
           {t.goDashboard}
         </a>
       </div>
@@ -170,20 +170,20 @@ export default function JoinForm({ initialUser = null }) {
   // ── Step 1: Google sign-in gate (shown until authenticated) ────────────────
   if (!user) {
     return (
-      <div style={{ maxWidth: 480, margin: '0 auto', background: '#fff', border: '1px solid #EDE4D3', borderRadius: 20, padding: '32px 28px', textAlign: 'center' }}>
+      <div style={{ maxWidth: 480, margin: '0 auto', background: '#fff', border: '1px solid #E2E8F0', borderRadius: 20, padding: '32px 28px', textAlign: 'center' }}>
         <div style={{ fontSize: 44, marginBottom: 14 }}>👷</div>
-        <h2 style={{ fontFamily: "'Playfair Display', serif", fontSize: 22, fontWeight: 700, color: '#1C1917', marginBottom: 8 }}>{t.gateTitle}</h2>
-        <p style={{ fontSize: 13, color: '#57534E', lineHeight: 1.7, marginBottom: 22 }}>{t.gateSub}</p>
+        <h2 style={{ fontFamily: "'Inter', sans-serif", fontSize: 22, fontWeight: 700, color: '#0F172A', marginBottom: 8 }}>{t.gateTitle}</h2>
+        <p style={{ fontSize: 13, color: '#64748B', lineHeight: 1.7, marginBottom: 22 }}>{t.gateSub}</p>
 
         <button onClick={signInGoogle} disabled={!authReady}
-          style={{ width: '100%', display: 'flex', alignItems: 'center', justifyContent: 'center', gap: 10, padding: '13px', background: '#fff', color: '#1C1917', border: '1.5px solid #EDE4D3', borderRadius: 12, fontSize: 15, fontWeight: 700, cursor: authReady ? 'pointer' : 'wait', boxShadow: '0 1px 4px rgba(0,0,0,0.05)' }}>
+          style={{ width: '100%', display: 'flex', alignItems: 'center', justifyContent: 'center', gap: 10, padding: '13px', background: '#fff', color: '#0F172A', border: '1.5px solid #E2E8F0', borderRadius: 12, fontSize: 15, fontWeight: 700, cursor: authReady ? 'pointer' : 'wait', boxShadow: '0 1px 4px rgba(0,0,0,0.05)' }}>
           <svg width="18" height="18" viewBox="0 0 24 24" aria-hidden="true"><path fill="#4285F4" d="M22.56 12.25c0-.78-.07-1.53-.2-2.25H12v4.26h5.92a5.06 5.06 0 0 1-2.2 3.32v2.77h3.57c2.08-1.92 3.28-4.74 3.28-8.1z"/><path fill="#34A853" d="M12 23c2.97 0 5.46-.98 7.28-2.66l-3.57-2.77c-.98.66-2.23 1.06-3.71 1.06-2.86 0-5.29-1.93-6.16-4.53H2.18v2.84A11 11 0 0 0 12 23z"/><path fill="#FBBC05" d="M5.84 14.1a6.6 6.6 0 0 1 0-4.2V7.06H2.18a11 11 0 0 0 0 9.88l3.66-2.84z"/><path fill="#EA4335" d="M12 5.38c1.62 0 3.06.56 4.21 1.64l3.15-3.15C17.45 2.09 14.97 1 12 1 7.7 1 3.99 3.47 2.18 7.06l3.66 2.84C6.71 7.31 9.14 5.38 12 5.38z"/></svg>
           {t.googleBtn}
         </button>
 
         <div style={{ marginTop: 22, display: 'flex', flexDirection: 'column', gap: 8, textAlign: 'left' }}>
           {t.gateSteps.map(s => (
-            <div key={s} style={{ fontSize: 12, color: '#44403C', fontWeight: 600 }}>{s}</div>
+            <div key={s} style={{ fontSize: 12, color: '#334155', fontWeight: 600 }}>{s}</div>
           ))}
         </div>
       </div>
@@ -194,12 +194,12 @@ export default function JoinForm({ initialUser = null }) {
   if (!category) {
     return (
       <div style={{ maxWidth: 600, margin: '0 auto' }}>
-        <div style={{ textAlign: 'center', marginBottom: 8, fontSize: 11, color: '#A8A29E' }}>
-          {t.signedInAs} <strong style={{ color: '#44403C' }}>{user.email}</strong>
+        <div style={{ textAlign: 'center', marginBottom: 8, fontSize: 11, color: '#94A3B8' }}>
+          {t.signedInAs} <strong style={{ color: '#334155' }}>{user.email}</strong>
         </div>
         <div style={{ textAlign: 'center', marginBottom: 24 }}>
-          <div style={{ fontSize: 14, fontWeight: 700, color: '#44403C', marginBottom: 4 }}>{t.pickTitle}</div>
-          <div style={{ fontSize: 12, color: '#A8A29E' }}>{t.pickSub}</div>
+          <div style={{ fontSize: 14, fontWeight: 700, color: '#334155', marginBottom: 4 }}>{t.pickTitle}</div>
+          <div style={{ fontSize: 12, color: '#94A3B8' }}>{t.pickSub}</div>
         </div>
         <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fill, minmax(140px, 1fr))', gap: 10 }}>
           {PROFESSIONS.map(prof => (
@@ -207,12 +207,12 @@ export default function JoinForm({ initialUser = null }) {
               key={prof.value}
               type="button"
               onClick={() => setCategory(prof)}
-              style={{ display: 'flex', flexDirection: 'column', alignItems: 'center', gap: 8, padding: '18px 12px', borderRadius: 14, border: '2px solid #EDE4D3', background: '#fff', cursor: 'pointer', textAlign: 'center', transition: 'all 0.15s', boxShadow: '0 1px 4px rgba(0,0,0,0.04)' }}
-              onMouseOver={e => { e.currentTarget.style.borderColor = '#B45309'; e.currentTarget.style.boxShadow = '0 4px 16px rgba(180,83,9,0.12)'; e.currentTarget.style.background = '#FFFBEB' }}
-              onMouseOut={e => { e.currentTarget.style.borderColor = '#EDE4D3'; e.currentTarget.style.boxShadow = '0 1px 4px rgba(0,0,0,0.04)'; e.currentTarget.style.background = '#fff' }}
+              style={{ display: 'flex', flexDirection: 'column', alignItems: 'center', gap: 8, padding: '18px 12px', borderRadius: 14, border: '2px solid #E2E8F0', background: '#fff', cursor: 'pointer', textAlign: 'center', transition: 'all 0.15s', boxShadow: '0 1px 4px rgba(0,0,0,0.04)' }}
+              onMouseOver={e => { e.currentTarget.style.borderColor = '#2563EB'; e.currentTarget.style.boxShadow = '0 4px 16px rgba(37,99,235,0.12)'; e.currentTarget.style.background = '#EFF6FF' }}
+              onMouseOut={e => { e.currentTarget.style.borderColor = '#E2E8F0'; e.currentTarget.style.boxShadow = '0 1px 4px rgba(0,0,0,0.04)'; e.currentTarget.style.background = '#fff' }}
             >
               <span style={{ fontSize: 30 }}>{prof.icon}</span>
-              <div style={{ fontSize: 12, fontWeight: 700, color: '#1C1917', lineHeight: 1.3 }}>{prof.label}</div>
+              <div style={{ fontSize: 12, fontWeight: 700, color: '#0F172A', lineHeight: 1.3 }}>{prof.label}</div>
             </button>
           ))}
         </div>
@@ -228,9 +228,9 @@ export default function JoinForm({ initialUser = null }) {
         <button
           type="button"
           onClick={() => setCategory(null)}
-          style={{ display: 'inline-flex', alignItems: 'center', gap: 8, background: '#FFFBEB', border: '1.5px solid #FDE68A', borderRadius: 10, padding: '7px 14px', cursor: 'pointer', fontSize: 12, fontWeight: 700, color: '#B45309' }}
+          style={{ display: 'inline-flex', alignItems: 'center', gap: 8, background: '#EFF6FF', border: '1.5px solid #BFDBFE', borderRadius: 10, padding: '7px 14px', cursor: 'pointer', fontSize: 12, fontWeight: 700, color: '#2563EB' }}
         >
-          {category.icon} {category.label} <span style={{ fontSize: 10, color: '#A8A29E', fontWeight: 400 }}>{t.change}</span>
+          {category.icon} {category.label} <span style={{ fontSize: 10, color: '#94A3B8', fontWeight: 400 }}>{t.change}</span>
         </button>
       </div>
 
@@ -262,7 +262,7 @@ export default function JoinForm({ initialUser = null }) {
       <button
         type="submit"
         disabled={submitting}
-        style={{ width: '100%', padding: 14, background: submitting ? '#A8A29E' : '#B45309', color: '#fff', border: 'none', borderRadius: 12, fontSize: 15, fontWeight: 700, cursor: submitting ? 'not-allowed' : 'pointer', display: 'flex', alignItems: 'center', justifyContent: 'center', gap: 8, transition: 'background 0.2s' }}
+        style={{ width: '100%', padding: 14, background: submitting ? '#94A3B8' : '#2563EB', color: '#fff', border: 'none', borderRadius: 12, fontSize: 15, fontWeight: 700, cursor: submitting ? 'not-allowed' : 'pointer', display: 'flex', alignItems: 'center', justifyContent: 'center', gap: 8, transition: 'background 0.2s' }}
       >
         {submitting ? t.submitting : t.submit}
       </button>

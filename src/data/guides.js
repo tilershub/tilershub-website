@@ -5,8 +5,8 @@ export const GUIDES = [
     title: 'How to Choose the Right Tile Size for Your Room',
     excerpt: 'Larger tiles make rooms look bigger, but installation requires more precision. Learn the pros and cons of each size before you buy.',
     icon: '📐',
-    bg: 'linear-gradient(135deg,#78350F,#92400E)',
-    accentColor: '#78350F',
+    bg: 'linear-gradient(135deg,#0F172A,#1E293B)',
+    accentColor: '#0F172A',
     readTime: '5 min read',
     sections: [
       {
@@ -267,8 +267,8 @@ export const GUIDES = [
     title: 'Tile Prices in Sri Lanka (2026): Ceramic, Porcelain & Large Format',
     excerpt: 'Current tile price ranges by size and type — ceramic, porcelain, vitrified and large format — plus what drives the price up or down.',
     icon: '🏷️',
-    bg: 'linear-gradient(135deg,#B45309,#B45309)',
-    accentColor: '#B45309',
+    bg: 'linear-gradient(135deg,#2563EB,#2563EB)',
+    accentColor: '#2563EB',
     readTime: '6 min read',
     sections: [
       {
@@ -325,8 +325,8 @@ export const GUIDES = [
     title: 'Tiling Labour Charges in Sri Lanka (2026): Rates Per Square Foot',
     excerpt: 'What tilers actually charge in 2026 — floor vs wall rates, large-format premiums, Colombo vs regional prices, and how to avoid overpaying.',
     icon: '👷',
-    bg: 'linear-gradient(135deg,#B45309,#134e4a)',
-    accentColor: '#B45309',
+    bg: 'linear-gradient(135deg,#2563EB,#134e4a)',
+    accentColor: '#2563EB',
     readTime: '5 min read',
     sections: [
       {

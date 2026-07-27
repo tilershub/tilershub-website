@@ -14,13 +14,13 @@ export const JOB_TYPE_ICONS = {
 }
 
 export const JOB_TYPE_COLORS = {
-  'Floor Tiling': '#B45309', 'Bathroom Tiling': '#B45309', 'Bathroom Renovation': '#B45309',
-  'Granite Works': '#7c3aed', 'Tile Cutting': '#b45309', 'Waterproofing': '#0369a1',
-  'Tile Shop Inquiry': '#B45309', 'Large Format Tiling': '#7c3aed', 'Mosaic Tiling': '#7c3aed',
-  'House Painting': '#b45309', 'Landscaping & Gardening': '#15803d', 'Carpentry Works': '#92400e',
-  'Glass Railing': '#0891b2', 'Aluminium & Glass Works': '#44403C', 'Electrical Repairs': '#7c3aed',
+  'Floor Tiling': '#2563EB', 'Bathroom Tiling': '#2563EB', 'Bathroom Renovation': '#2563EB',
+  'Granite Works': '#7c3aed', 'Tile Cutting': '#2563EB', 'Waterproofing': '#0369a1',
+  'Tile Shop Inquiry': '#2563EB', 'Large Format Tiling': '#7c3aed', 'Mosaic Tiling': '#7c3aed',
+  'House Painting': '#2563EB', 'Landscaping & Gardening': '#15803d', 'Carpentry Works': '#1E293B',
+  'Glass Railing': '#0891b2', 'Aluminium & Glass Works': '#334155', 'Electrical Repairs': '#7c3aed',
   'House Wiring': '#7c3aed', 'Gypsum Ceiling': '#166534', 'IPanel Ceiling': '#166534',
-  'Demolition Work': '#be185d', 'Debris Removal': '#57534E', 'Granite Countertops': '#4b5563',
+  'Demolition Work': '#be185d', 'Debris Removal': '#64748B', 'Granite Countertops': '#4b5563',
   'Pool Tiling': '#0369a1', 'Outdoor Tiling': '#15803d',
 }
 
