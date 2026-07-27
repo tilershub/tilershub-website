@@ -11,9 +11,9 @@ const BIDDER_TYPES = [
 
 function inp(extra = {}) {
   return {
-    width: '100%', padding: '12px 14px', border: '1.5px solid #EDE4D3', borderRadius: 10,
+    width: '100%', padding: '12px 14px', border: '1.5px solid #E2E8F0', borderRadius: 10,
     fontSize: 13, fontFamily: 'inherit', outline: 'none', background: '#fff',
-    boxSizing: 'border-box', color: '#1C1917', transition: 'border-color 0.15s',
+    boxSizing: 'border-box', color: '#0F172A', transition: 'border-color 0.15s',
     ...extra,
   }
 }
@@ -23,14 +23,14 @@ function BidSuccess({ projectType, city }) {
     <div style={{ textAlign: 'center', padding: '40px 24px' }}>
       <div style={{ width: 80, height: 80, borderRadius: '50%', background: '#f0fdf4', border: '3px solid #bbf7d0', display: 'flex', alignItems: 'center', justifyContent: 'center', fontSize: 36, margin: '0 auto 20px' }}>✅</div>
       <h3 style={{ fontSize: 20, fontWeight: 700, color: '#166534', marginBottom: 8 }}>Bid Submitted!</h3>
-      <p style={{ fontSize: 14, color: '#44403C', lineHeight: 1.75, maxWidth: 380, margin: '0 auto 24px' }}>
+      <p style={{ fontSize: 14, color: '#334155', lineHeight: 1.75, maxWidth: 380, margin: '0 auto 24px' }}>
         Your bid for the <strong>{projectType}</strong> in <strong>{city}</strong> has been received. If the homeowner selects you, they'll contact you directly on WhatsApp.
       </p>
       <div style={{ display: 'flex', gap: 10, justifyContent: 'center', flexWrap: 'wrap' }}>
-        <a href="/jobs" style={{ display: 'inline-flex', alignItems: 'center', gap: 6, fontSize: 13, fontWeight: 700, color: '#B45309', textDecoration: 'none', background: '#FFFBEB', border: '1.5px solid #B4530922', borderRadius: 10, padding: '11px 20px' }}>
+        <a href="/jobs" style={{ display: 'inline-flex', alignItems: 'center', gap: 6, fontSize: 13, fontWeight: 700, color: '#2563EB', textDecoration: 'none', background: '#EFF6FF', border: '1.5px solid #2563EB22', borderRadius: 10, padding: '11px 20px' }}>
           ← Browse More Projects
         </a>
-        <a href="/providers?type=tiler" style={{ display: 'inline-flex', alignItems: 'center', gap: 6, fontSize: 13, fontWeight: 700, color: '#fff', textDecoration: 'none', background: '#B45309', borderRadius: 10, padding: '11px 20px' }}>
+        <a href="/providers?type=tiler" style={{ display: 'inline-flex', alignItems: 'center', gap: 6, fontSize: 13, fontWeight: 700, color: '#fff', textDecoration: 'none', background: '#2563EB', borderRadius: 10, padding: '11px 20px' }}>
           ✅ Create Your Profile
         </a>
       </div>
@@ -72,7 +72,7 @@ export default function BidForm({ jobId, bidCount = 0, projectType = '', city = 
 
   if (submitted) return <BidSuccess projectType={projectType} city={city} />
 
-  const labelStyle = { display: 'block', fontSize: 11, fontWeight: 700, color: '#57534E', textTransform: 'uppercase', letterSpacing: 0.8, marginBottom: 6 }
+  const labelStyle = { display: 'block', fontSize: 11, fontWeight: 700, color: '#64748B', textTransform: 'uppercase', letterSpacing: 0.8, marginBottom: 6 }
   const msgLen = form.message.length
 
   return (
@@ -80,9 +80,9 @@ export default function BidForm({ jobId, bidCount = 0, projectType = '', city = 
 
       {/* Competition notice */}
       {bidCount > 0 && (
-        <div style={{ background: '#fffbeb', border: '1px solid #fde68a', borderRadius: 10, padding: '10px 14px', display: 'flex', alignItems: 'center', gap: 8 }}>
+        <div style={{ background: '#EFF6FF', border: '1px solid #BFDBFE', borderRadius: 10, padding: '10px 14px', display: 'flex', alignItems: 'center', gap: 8 }}>
           <span style={{ fontSize: 16 }}>⚡</span>
-          <span style={{ fontSize: 12, color: '#92400e', fontWeight: 600 }}>
+          <span style={{ fontSize: 12, color: '#1E293B', fontWeight: 600 }}>
             {bidCount} provider{bidCount !== 1 ? 's' : ''} already submitted {bidCount !== 1 ? 'bids' : 'a bid'} — stand out with a detailed offer!
           </span>
         </div>
@@ -107,13 +107,13 @@ export default function BidForm({ jobId, bidCount = 0, projectType = '', city = 
           {BIDDER_TYPES.map(t => (
             <button key={t.value} type="button" onClick={() => set('bidder_type', t.value)}
               style={{ display: 'flex', flexDirection: 'column', alignItems: 'center', gap: 4, padding: '10px 4px', borderRadius: 12, cursor: 'pointer', border: '1.5px solid', transition: 'all 0.15s',
-                background: form.bidder_type === t.value ? '#B45309' : '#FFFBF5',
-                borderColor: form.bidder_type === t.value ? '#B45309' : '#EDE4D3',
+                background: form.bidder_type === t.value ? '#2563EB' : '#F8FAFC',
+                borderColor: form.bidder_type === t.value ? '#2563EB' : '#E2E8F0',
               }}
             >
               <span style={{ fontSize: 18 }}>{t.icon}</span>
-              <span style={{ fontSize: 10, fontWeight: 700, color: form.bidder_type === t.value ? '#fff' : '#44403C' }}>{t.label}</span>
-              <span style={{ fontSize: 9, color: form.bidder_type === t.value ? 'rgba(255,255,255,0.6)' : '#A8A29E', textAlign: 'center', lineHeight: 1.2 }}>{t.desc}</span>
+              <span style={{ fontSize: 10, fontWeight: 700, color: form.bidder_type === t.value ? '#fff' : '#334155' }}>{t.label}</span>
+              <span style={{ fontSize: 9, color: form.bidder_type === t.value ? 'rgba(255,255,255,0.6)' : '#94A3B8', textAlign: 'center', lineHeight: 1.2 }}>{t.desc}</span>
             </button>
           ))}
         </div>
@@ -122,14 +122,14 @@ export default function BidForm({ jobId, bidCount = 0, projectType = '', city = 
       {/* Quote + Timeline */}
       <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: 12 }}>
         <div>
-          <label style={labelStyle}>Your Quote <span style={{ color: '#A8A29E', fontWeight: 400, textTransform: 'none' }}>(optional)</span></label>
+          <label style={labelStyle}>Your Quote <span style={{ color: '#94A3B8', fontWeight: 400, textTransform: 'none' }}>(optional)</span></label>
           <div style={{ position: 'relative' }}>
-            <span style={{ position: 'absolute', left: 12, top: '50%', transform: 'translateY(-50%)', fontSize: 12, fontWeight: 600, color: '#57534E' }}>Rs.</span>
+            <span style={{ position: 'absolute', left: 12, top: '50%', transform: 'translateY(-50%)', fontSize: 12, fontWeight: 600, color: '#64748B' }}>Rs.</span>
             <input type="number" value={form.quote_amount} onChange={e => set('quote_amount', e.target.value)} placeholder="e.g. 85000" style={inp({ paddingLeft: 38 })} />
           </div>
         </div>
         <div>
-          <label style={labelStyle}>Timeline <span style={{ color: '#A8A29E', fontWeight: 400, textTransform: 'none' }}>(optional)</span></label>
+          <label style={labelStyle}>Timeline <span style={{ color: '#94A3B8', fontWeight: 400, textTransform: 'none' }}>(optional)</span></label>
           <input value={form.timeline} onChange={e => set('timeline', e.target.value)} placeholder="e.g. 3–5 days" style={inp()} />
         </div>
       </div>
@@ -138,7 +138,7 @@ export default function BidForm({ jobId, bidCount = 0, projectType = '', city = 
       <div>
         <div style={{ display: 'flex', alignItems: 'baseline', justifyContent: 'space-between', marginBottom: 6 }}>
           <label style={labelStyle}>Your Pitch *</label>
-          <span style={{ fontSize: 10, color: msgLen > MAX_MSG * 0.9 ? '#dc2626' : '#A8A29E' }}>{msgLen}/{MAX_MSG}</span>
+          <span style={{ fontSize: 10, color: msgLen > MAX_MSG * 0.9 ? '#dc2626' : '#94A3B8' }}>{msgLen}/{MAX_MSG}</span>
         </div>
         <textarea
           value={form.message}
@@ -147,7 +147,7 @@ export default function BidForm({ jobId, bidCount = 0, projectType = '', city = 
           rows={5}
           style={{ ...inp(), resize: 'vertical', lineHeight: 1.7 }}
         />
-        <p style={{ fontSize: 11, color: '#A8A29E', margin: '5px 0 0' }}>Tip: mention your experience level, past similar jobs, and your waterproofing process.</p>
+        <p style={{ fontSize: 11, color: '#94A3B8', margin: '5px 0 0' }}>Tip: mention your experience level, past similar jobs, and your waterproofing process.</p>
       </div>
 
       {error && (
@@ -157,14 +157,14 @@ export default function BidForm({ jobId, bidCount = 0, projectType = '', city = 
       )}
 
       <button type="submit" disabled={loading}
-        style={{ padding: '15px', background: loading ? '#A8A29E' : 'linear-gradient(135deg,#B45309,#92400E)', color: '#fff', border: 'none', borderRadius: 12, fontSize: 15, fontWeight: 700, cursor: loading ? 'not-allowed' : 'pointer', boxShadow: loading ? 'none' : '0 4px 14px rgba(180,83,9,0.3)', transition: 'all 0.2s' }}>
+        style={{ padding: '15px', background: loading ? '#94A3B8' : 'linear-gradient(135deg,#2563EB,#1E293B)', color: '#fff', border: 'none', borderRadius: 12, fontSize: 15, fontWeight: 700, cursor: loading ? 'not-allowed' : 'pointer', boxShadow: loading ? 'none' : '0 4px 14px rgba(37,99,235,0.3)', transition: 'all 0.2s' }}>
         {loading ? '⏳ Submitting your bid…' : '📨 Submit Bid Now'}
       </button>
 
       {/* Trust strip */}
       <div style={{ display: 'flex', gap: 16, justifyContent: 'center', flexWrap: 'wrap' }}>
         {['🔒 No login required', '💬 Homeowner contacts you via WhatsApp', '🚫 No commission'].map(t => (
-          <span key={t} style={{ fontSize: 11, color: '#57534E', fontWeight: 500 }}>{t}</span>
+          <span key={t} style={{ fontSize: 11, color: '#64748B', fontWeight: 500 }}>{t}</span>
         ))}
       </div>
     </form>

@@ -54,7 +54,7 @@ const orgSchema = JSON.stringify({
   <title>{title}</title>
   <meta name="description" content={description} />
   <meta name="robots" content={noindex ? 'noindex, nofollow' : 'index, follow'} />
-  <meta name="theme-color" content="#B45309" />
+  <meta name="theme-color" content="#2563EB" />
   <link rel="canonical" href={canonicalUrl} />
   <link rel="sitemap" href="/sitemap.xml" />
   <!-- Open Graph -->
@@ -89,8 +89,8 @@ const orgSchema = JSON.stringify({
   <meta name="apple-mobile-web-app-title" content="TilersHub" />
   <link rel="preconnect" href="https://fonts.googleapis.com" />
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
-  <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,400;0,600;0,700;1,400&display=swap" rel="stylesheet" media="print" onload="this.media='all'" />
-  <noscript><link href="https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,400;0,600;0,700;1,400&display=swap" rel="stylesheet" /></noscript>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet" media="print" onload="this.media='all'" />
+  <noscript><link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet" /></noscript>
   <slot name="head" />
   <style is:global>
     html:not([data-lang="si"]) .si-text { display: none; }
@@ -114,15 +114,15 @@ const orgSchema = JSON.stringify({
       #pwa-splash { display: flex; }
     }
   </style>
-  <div id="pwa-splash" style="position:fixed;inset:0;z-index:99999;background:#451A03;flex-direction:column;align-items:center;justify-content:center;gap:20px;transition:opacity 0.45s ease;pointer-events:none;">
+  <div id="pwa-splash" style="position:fixed;inset:0;z-index:99999;background:#0F172A;flex-direction:column;align-items:center;justify-content:center;gap:20px;transition:opacity 0.45s ease;pointer-events:none;">
     <div style="display:grid;grid-template-columns:repeat(3,1fr);gap:5px;width:78px;height:78px;">
       {[0,1,2,3,4,5,6,7,8].map((i) => (
         <div style={`border-radius:3px;background:${[1,3,4,5,7].includes(i)?'#8B5E3C':'#5E4130'};opacity:${[0,2,6,8].includes(i)?'0.55':'1'};`}></div>
       ))}
     </div>
-    <div style="font-family:'Playfair Display',Georgia,serif;font-size:20px;font-weight:700;color:rgba(255,255,255,0.9);letter-spacing:1.5px;">TILERS<span style="color:#B45309;">HUB</span></div>
+    <div style="font-family:'Inter',sans-serif;font-size:20px;font-weight:700;color:rgba(255,255,255,0.9);letter-spacing:1.5px;">TILERS<span style="color:#2563EB;">HUB</span></div>
     <div style="width:32px;height:3px;border-radius:2px;background:rgba(255,255,255,0.15);overflow:hidden;margin-top:4px;">
-      <div id="pwa-splash-bar" style="height:100%;width:0;background:#B45309;border-radius:2px;transition:width 1.2s ease;"></div>
+      <div id="pwa-splash-bar" style="height:100%;width:0;background:#2563EB;border-radius:2px;transition:width 1.2s ease;"></div>
     </div>
   </div>
   <script is:inline>
@@ -170,7 +170,7 @@ const orgSchema = JSON.stringify({
   <div class="mobile-drawer-overlay" id="drawer-overlay"></div>
   <div class="mobile-drawer" id="mobile-drawer">
     <div class="drawer-header">
-      <span style="font-family:'Playfair Display',serif;font-size:16px;font-weight:700;color:#fff;">TILERS<span style="color:#B45309;">HUB</span></span>
+      <span style="font-family: 'Inter', sans-serif;font-size:16px;font-weight:700;color:#fff;">TILERS<span style="color:#2563EB;">HUB</span></span>
       <button id="close-drawer" style="background:transparent;border:none;color:rgba(255,255,255,0.5);font-size:22px;cursor:pointer;padding:4px;">✕</button>
     </div>
     <a href="/" class={`drawer-link${path==='/'?' active':''}`}>🏠 Home</a>
@@ -205,7 +205,7 @@ const orgSchema = JSON.stringify({
       <div>
         <div style="display:flex;align-items:center;gap:8px;margin-bottom:10px;">
           <div class="site-logo-grid">{[0,1,2,3,4,5,6,7,8].map(()=><div class="site-logo-tile"></div>)}</div>
-          <span style="font-family:'Playfair Display',serif;font-size:16px;font-weight:700;color:rgba(255,255,255,0.88);">TILERS<strong>HUB</strong></span>
+          <span style="font-family: 'Inter', sans-serif;font-size:16px;font-weight:700;color:rgba(255,255,255,0.88);">TILERS<strong>HUB</strong></span>
         </div>
         <p class="footer-brand-text">The home of Sri Lanka's tile trade — homeowners post projects free, tilers win work, and shops, brands &amp; suppliers reach customers islandwide.</p>
         <div style="display:flex;gap:10px;margin-top:16px;">
@@ -259,7 +259,7 @@ const orgSchema = JSON.stringify({
     </div>
     <div class="footer-bottom">
       <span>© 2025 <strong>TilersHub</strong> · tilershub.lk · 🇱🇰 Sri Lanka</span>
-      <span style="color:rgba(245,158,11,0.5);font-weight:600;">♥ Made in Sri Lanka</span>
+      <span style="color:rgba(37,99,235,0.5);font-weight:600;">♥ Made in Sri Lanka</span>
     </div>
   </footer>
 
@@ -280,7 +280,7 @@ const orgSchema = JSON.stringify({
       <a href="/jobs" class={`bottom-nav-item${path==='/jobs'?' active':''}`}>
         <span class="bottom-nav-icon" style="position:relative;display:inline-block;">
           📋
-          <span id="jobs-badge" style="display:none;position:absolute;top:-5px;right:-8px;background:#B45309;color:#fff;font-size:8px;font-weight:800;border-radius:20px;padding:1px 4px;min-width:14px;text-align:center;line-height:14px;border:1.5px solid #fff;"></span>
+          <span id="jobs-badge" style="display:none;position:absolute;top:-5px;right:-8px;background:#2563EB;color:#fff;font-size:8px;font-weight:800;border-radius:20px;padding:1px 4px;min-width:14px;text-align:center;line-height:14px;border:1.5px solid #fff;"></span>
         </span>
         Projects
       </a>
@@ -316,16 +316,16 @@ const orgSchema = JSON.stringify({
   </script>
   <!-- ═══ FIRST-VISIT LANGUAGE CHOOSER ═══ -->
   <div id="lang-chooser" hidden style="position:fixed;inset:0;z-index:9999;">
-    <div id="lang-chooser-bg" style="position:absolute;inset:0;background:rgba(69,26,3,0.55);opacity:0;transition:opacity 0.3s;"></div>
+    <div id="lang-chooser-bg" style="position:absolute;inset:0;background:rgba(15,23,42,0.55);opacity:0;transition:opacity 0.3s;"></div>
     <div id="lang-chooser-sheet" style="position:absolute;left:0;right:0;bottom:0;background:#fff;border-radius:22px 22px 0 0;padding:26px 22px calc(26px + env(safe-area-inset-bottom,0px));box-shadow:0 -8px 40px rgba(0,0,0,0.2);transform:translateY(100%);transition:transform 0.3s ease;max-width:480px;margin:0 auto;">
       <div style="text-align:center;margin-bottom:18px;">
         <div style="font-size:30px;margin-bottom:8px;">🇱🇰</div>
-        <div style="font-size:16px;font-weight:800;color:#1C1917;margin-bottom:4px;">භාෂාව තෝරන්න · Choose your language</div>
-        <div style="font-size:12px;color:#57534E;">ඕනෑම වේලාවක ඉහළින් වෙනස් කළ හැක · Change anytime from the top bar</div>
+        <div style="font-size:16px;font-weight:800;color:#0F172A;margin-bottom:4px;">භාෂාව තෝරන්න · Choose your language</div>
+        <div style="font-size:12px;color:#64748B;">ඕනෑම වේලාවක ඉහළින් වෙනස් කළ හැක · Change anytime from the top bar</div>
       </div>
       <div style="display:flex;gap:10px;">
-        <button data-pick="si" style="flex:1;background:#B45309;color:#fff;border:none;border-radius:14px;padding:16px 10px;font-size:16px;font-weight:800;cursor:pointer;font-family:inherit;">සිංහල</button>
-        <button data-pick="en" style="flex:1;background:#fff;color:#B45309;border:2px solid #FDE68A;border-radius:14px;padding:16px 10px;font-size:16px;font-weight:800;cursor:pointer;font-family:inherit;">English</button>
+        <button data-pick="si" style="flex:1;background:#2563EB;color:#fff;border:none;border-radius:14px;padding:16px 10px;font-size:16px;font-weight:800;cursor:pointer;font-family:inherit;">සිංහල</button>
+        <button data-pick="en" style="flex:1;background:#fff;color:#2563EB;border:2px solid #BFDBFE;border-radius:14px;padding:16px 10px;font-size:16px;font-weight:800;cursor:pointer;font-family:inherit;">English</button>
       </div>
     </div>
   </div>

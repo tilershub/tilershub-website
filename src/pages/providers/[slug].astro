@@ -75,8 +75,8 @@ const heroCoverSrc = item.cover_image || item.profile_image || gallery[0] || nul
 
 // Verification
 function verBadge(vs: string | null) {
-  if (vs === 'th_master')         return { label: 'TH Master ★',      bg: '#92400e', color: '#fef3c7' }
-  if (vs === 'th_certified_pro')  return { label: 'Certified Pro ✦',  bg: '#B45309', color: '#bfdbfe' }
+  if (vs === 'th_master')         return { label: 'TH Master ★',      bg: '#1E293B', color: '#DBEAFE' }
+  if (vs === 'th_certified_pro')  return { label: 'Certified Pro ✦',  bg: '#2563EB', color: '#bfdbfe' }
   if (vs === 'th_verified' || vs === 'verified') return { label: '✓ Verified', bg: 'rgba(22,163,74,0.92)', color: '#fff' }
   return null
 }
@@ -199,7 +199,7 @@ const shopVisitLink = phone ? waLink(phone, name, 'visit') : null
 function initials(n: string) {
   return n.split(' ').slice(0,2).map((w:string) => w[0]||'').join('').toUpperCase() || '?'
 }
-const AVATAR_COLORS = ['#B45309','#B45309','#7c3aed','#b45309','#0369a1','#B45309','#15803d']
+const AVATAR_COLORS = ['#2563EB','#2563EB','#7c3aed','#2563EB','#0369a1','#2563EB','#15803d']
 function avatarColor(n: string) {
   let h = 0; for (const c of n) h = (h*31+c.charCodeAt(0))>>>0
   return AVATAR_COLORS[h % AVATAR_COLORS.length]
@@ -276,7 +276,7 @@ const breadcrumbSchema = JSON.stringify({
   {layoutType === 'professional' && (
     <div>
       <!-- Hero: 220px, personal feel -->
-      <div style="position:relative;height:220px;overflow:hidden;background:#451A03;">
+      <div style="position:relative;height:220px;overflow:hidden;background:#0F172A;">
         {heroCoverSrc
           ? <img src={heroCoverSrc} alt={name} style="position:absolute;inset:0;width:100%;height:100%;object-fit:cover;" />
           : <div style="position:absolute;inset:0;background-image:repeating-linear-gradient(0deg,transparent,transparent 29px,rgba(255,255,255,0.06) 29px,rgba(255,255,255,0.06) 30px),repeating-linear-gradient(90deg,transparent,transparent 29px,rgba(255,255,255,0.06) 29px,rgba(255,255,255,0.06) 30px);pointer-events:none;"></div>
@@ -297,7 +297,7 @@ const breadcrumbSchema = JSON.stringify({
               {avatarSrc ? <img src={avatarSrc} alt={name} style="width:100%;height:100%;object-fit:cover;" /> : initials(name)}
             </div>
             <div style="flex:1;min-width:0;">
-              <h1 style="font-family:'Playfair Display',serif;font-size:clamp(19px,5vw,26px);font-weight:700;color:#fff;margin:0 0 3px;line-height:1.2;overflow:hidden;white-space:nowrap;text-overflow:ellipsis;">{name}</h1>
+              <h1 style="font-family: 'Inter', sans-serif;font-size:clamp(19px,5vw,26px);font-weight:700;color:#fff;margin:0 0 3px;line-height:1.2;overflow:hidden;white-space:nowrap;text-overflow:ellipsis;">{name}</h1>
               <div style="font-size:11px;color:rgba(255,255,255,0.6);margin-bottom:4px;">📍 {city}{item.district && item.district !== item.city ? `, ${item.district}` : ''}</div>
               <div style="display:flex;align-items:center;gap:8px;flex-wrap:wrap;">
                 {avgRating > 0 && <span style="font-size:11px;color:rgba(255,255,255,0.85);font-weight:600;">⭐ {avgRating.toFixed(1)}{reviewCount > 0 ? ` (${reviewCount})` : ''}</span>}
@@ -310,7 +310,7 @@ const breadcrumbSchema = JSON.stringify({
 
       <!-- CTA: WhatsApp only -->
       {phone && (
-        <div style="background:#fff;padding:14px 16px;border-bottom:1px solid #EDE4D3;">
+        <div style="background:#fff;padding:14px 16px;border-bottom:1px solid #E2E8F0;">
           <a href={waLink(phone, name)} target="_blank" rel="noopener noreferrer"
             style="display:flex;align-items:center;justify-content:center;gap:8px;width:100%;background:#25D366;color:#fff;border-radius:14px;padding:14px;font-size:14px;font-weight:700;text-decoration:none;box-shadow:0 4px 12px rgba(37,211,102,0.3);">
             <svg width="18" height="18" viewBox="0 0 24 24" fill="currentColor"><path d="M17.472 14.382c-.297-.149-1.758-.867-2.03-.967-.273-.099-.471-.148-.67.15-.197.297-.767.966-.94 1.164-.173.199-.347.223-.644.075-.297-.15-1.255-.463-2.39-1.475-.883-.788-1.48-1.761-1.653-2.059-.173-.297-.018-.458.13-.606.134-.133.298-.347.446-.52.149-.174.198-.298.298-.497.099-.198.05-.371-.025-.52-.075-.149-.669-1.612-.916-2.207-.242-.579-.487-.5-.669-.51-.173-.008-.371-.01-.57-.01-.198 0-.52.074-.792.372-.272.297-1.04 1.016-1.04 2.479 0 1.462 1.065 2.875 1.213 3.074.149.198 2.096 3.2 5.077 4.487.709.306 1.262.489 1.694.625.712.227 1.36.195 1.871.118.571-.085 1.758-.719 2.006-1.413.248-.694.248-1.289.173-1.413-.074-.124-.272-.198-.57-.347m-5.421 7.403h-.004a9.87 9.87 0 01-5.031-1.378l-.361-.214-3.741.982.998-3.648-.235-.374a9.86 9.86 0 01-1.51-5.26c.001-5.45 4.436-9.884 9.888-9.884 2.64 0 5.122 1.03 6.988 2.898a9.825 9.825 0 012.893 6.994c-.003 5.45-4.437 9.884-9.885 9.884m8.413-18.297A11.815 11.815 0 0012.05 0C5.495 0 .16 5.335.157 11.892c0 2.096.547 4.142 1.588 5.945L.057 24l6.305-1.654a11.882 11.882 0 005.683 1.448h.005c6.554 0 11.89-5.335 11.893-11.893a11.821 11.821 0 00-3.48-8.413z"/></svg>
@@ -321,43 +321,43 @@ const breadcrumbSchema = JSON.stringify({
 
       <!-- Stats: experience | daily rate | rating -->
       {(expYears > 0 || item.daily_rate_min || avgRating > 0) && (
-        <div style="background:#FFFBF5;border-bottom:1px solid #EDE4D3;padding:14px 16px;display:grid;grid-template-columns:repeat(auto-fit,minmax(72px,1fr));gap:4px;text-align:center;">
+        <div style="background:#F8FAFC;border-bottom:1px solid #E2E8F0;padding:14px 16px;display:grid;grid-template-columns:repeat(auto-fit,minmax(72px,1fr));gap:4px;text-align:center;">
           {expYears > 0 && (
             <div style="padding:8px 4px;">
-              <div style="font-size:18px;font-weight:800;color:#78350F;font-family:'Playfair Display',serif;line-height:1;">{expYears}+</div>
-              <div style="font-size:9px;color:#57534E;margin-top:3px;line-height:1.3;">Years<br/>Experience</div>
+              <div style="font-size:18px;font-weight:800;color:#0F172A;font-family: 'Inter', sans-serif;line-height:1;">{expYears}+</div>
+              <div style="font-size:9px;color:#64748B;margin-top:3px;line-height:1.3;">Years<br/>Experience</div>
             </div>
           )}
           {item.daily_rate_min && (
             <div style="padding:8px 4px;">
-              <div style="font-size:13px;font-weight:800;color:#78350F;font-family:'Playfair Display',serif;line-height:1;">Rs.{item.daily_rate_min}{item.daily_rate_max ? `–${item.daily_rate_max}` : '+'}</div>
-              <div style="font-size:9px;color:#57534E;margin-top:3px;line-height:1.3;">Per<br/>sq.ft</div>
+              <div style="font-size:13px;font-weight:800;color:#0F172A;font-family: 'Inter', sans-serif;line-height:1;">Rs.{item.daily_rate_min}{item.daily_rate_max ? `–${item.daily_rate_max}` : '+'}</div>
+              <div style="font-size:9px;color:#64748B;margin-top:3px;line-height:1.3;">Per<br/>sq.ft</div>
             </div>
           )}
           {avgRating > 0 && (
             <div style="padding:8px 4px;">
-              <div style="font-size:18px;font-weight:800;color:#78350F;font-family:'Playfair Display',serif;line-height:1;">{avgRating.toFixed(1)}</div>
-              <div style="font-size:9px;color:#57534E;margin-top:3px;line-height:1.3;">Rating<br/>{reviewCount > 0 ? `${reviewCount} reviews` : ''}</div>
+              <div style="font-size:18px;font-weight:800;color:#0F172A;font-family: 'Inter', sans-serif;line-height:1;">{avgRating.toFixed(1)}</div>
+              <div style="font-size:9px;color:#64748B;margin-top:3px;line-height:1.3;">Rating<br/>{reviewCount > 0 ? `${reviewCount} reviews` : ''}</div>
             </div>
           )}
         </div>
       )}
 
       {isUnverified && (
-        <div style="background:#fef9f0;border-bottom:1px solid #fde68a;padding:12px 16px;font-size:12px;color:#78716c;line-height:1.7;">
+        <div style="background:#fef9f0;border-bottom:1px solid #BFDBFE;padding:12px 16px;font-size:12px;color:#78716c;line-height:1.7;">
           ℹ️ මෙම ගොනුව ප්‍රජාව ඉදිරිපත් කළ තොරතුරු ආශ්‍රිතව TilersHub විසින් තවම සත්‍යාපනය කර නොමැත.
         </div>
       )}
 
       <!-- Services -->
       {services.length > 0 && (
-        <section style="background:#FFFBF5;padding:20px 16px 24px;border-bottom:1px solid #F7EFE2;">
-          <h2 style="font-size:15px;font-weight:700;color:#1C1917;margin:0 0 14px;">ශිල්ප සේවාවන්</h2>
+        <section style="background:#F8FAFC;padding:20px 16px 24px;border-bottom:1px solid #F1F5F9;">
+          <h2 style="font-size:15px;font-weight:700;color:#0F172A;margin:0 0 14px;">ශිල්ප සේවාවන්</h2>
           <div style="display:grid;grid-template-columns:1fr 1fr;gap:8px;">
             {services.map((s: string) => (
-              <div style="display:flex;align-items:center;gap:10px;background:#fff;border:1px solid #EDE4D3;border-radius:12px;padding:11px 12px;">
+              <div style="display:flex;align-items:center;gap:10px;background:#fff;border:1px solid #E2E8F0;border-radius:12px;padding:11px 12px;">
                 <span style="font-size:20px;flex-shrink:0;">{SERVICE_ICONS[s] || '🔧'}</span>
-                <span style="font-size:11px;font-weight:600;color:#44403C;line-height:1.3;">{s}</span>
+                <span style="font-size:11px;font-weight:600;color:#334155;line-height:1.3;">{s}</span>
               </div>
             ))}
           </div>
@@ -366,18 +366,18 @@ const breadcrumbSchema = JSON.stringify({
 
       <!-- Bio -->
       {item.description && (
-        <section style="background:#fff;padding:20px 16px 24px;border-bottom:1px solid #F7EFE2;">
-          <h2 style="font-size:15px;font-weight:700;color:#1C1917;margin:0 0 10px;">ගැන {name}</h2>
-          <p style="font-size:13px;color:#57534E;line-height:1.8;margin:0;">{item.description}</p>
+        <section style="background:#fff;padding:20px 16px 24px;border-bottom:1px solid #F1F5F9;">
+          <h2 style="font-size:15px;font-weight:700;color:#0F172A;margin:0 0 10px;">ගැන {name}</h2>
+          <p style="font-size:13px;color:#64748B;line-height:1.8;margin:0;">{item.description}</p>
         </section>
       )}
 
       <!-- Portfolio: "My Work" gallery -->
       {gallery.length > 0 && (
-        <section id="gallery-section" style="background:#fff;padding:20px 0 24px;border-bottom:1px solid #F7EFE2;">
+        <section id="gallery-section" style="background:#fff;padding:20px 0 24px;border-bottom:1px solid #F1F5F9;">
           <div style="display:flex;align-items:center;justify-content:space-between;padding:0 16px 12px;">
-            <span style="font-size:15px;font-weight:700;color:#1C1917;">📸 My Work</span>
-            <button id="all-photos-btn" style="font-size:12px;font-weight:600;color:#B45309;background:none;border:none;cursor:pointer;padding:0;">View All →</button>
+            <span style="font-size:15px;font-weight:700;color:#0F172A;">📸 My Work</span>
+            <button id="all-photos-btn" style="font-size:12px;font-weight:600;color:#2563EB;background:none;border:none;cursor:pointer;padding:0;">View All →</button>
           </div>
           <div style="display:flex;gap:12px;overflow-x:auto;padding:0 16px 4px;scrollbar-width:none;-webkit-overflow-scrolling:touch;">
             {gallery.map((img: string, i: number) => (
@@ -393,19 +393,19 @@ const breadcrumbSchema = JSON.stringify({
 
       <!-- Experience stats -->
       {(item.total_jobs > 0 || item.daily_rate_min) && (
-        <section style="background:#fff;padding:20px 16px 24px;border-bottom:1px solid #F7EFE2;">
-          <h2 style="font-size:15px;font-weight:700;color:#1C1917;margin:0 0 12px;">අත්දැකීම</h2>
+        <section style="background:#fff;padding:20px 16px 24px;border-bottom:1px solid #F1F5F9;">
+          <h2 style="font-size:15px;font-weight:700;color:#0F172A;margin:0 0 12px;">අත්දැකීම</h2>
           <div style="display:flex;gap:10px;flex-wrap:wrap;">
             {item.total_jobs > 0 && (
-              <div style="flex:1;min-width:80px;padding:14px;background:#FFFBF5;border:1px solid #EDE4D3;border-radius:14px;text-align:center;">
-                <div style="font-size:22px;font-weight:800;color:#78350F;font-family:'Playfair Display',serif;">{item.total_jobs}</div>
-                <div style="font-size:10px;color:#57534E;margin-top:3px;">සේවා ගණන</div>
+              <div style="flex:1;min-width:80px;padding:14px;background:#F8FAFC;border:1px solid #E2E8F0;border-radius:14px;text-align:center;">
+                <div style="font-size:22px;font-weight:800;color:#0F172A;font-family: 'Inter', sans-serif;">{item.total_jobs}</div>
+                <div style="font-size:10px;color:#64748B;margin-top:3px;">සේවා ගණන</div>
               </div>
             )}
             {item.daily_rate_min && (
-              <div style="flex:1;min-width:80px;padding:14px;background:#FFFBF5;border:1px solid #EDE4D3;border-radius:14px;text-align:center;">
-                <div style="font-size:14px;font-weight:800;color:#78350F;font-family:'Playfair Display',serif;">Rs.{item.daily_rate_min}–{item.daily_rate_max}/sqft</div>
-                <div style="font-size:10px;color:#57534E;margin-top:3px;">ගාස්තු (sq.ft ට)</div>
+              <div style="flex:1;min-width:80px;padding:14px;background:#F8FAFC;border:1px solid #E2E8F0;border-radius:14px;text-align:center;">
+                <div style="font-size:14px;font-weight:800;color:#0F172A;font-family: 'Inter', sans-serif;">Rs.{item.daily_rate_min}–{item.daily_rate_max}/sqft</div>
+                <div style="font-size:10px;color:#64748B;margin-top:3px;">ගාස්තු (sq.ft ට)</div>
               </div>
             )}
           </div>
@@ -419,14 +419,14 @@ const breadcrumbSchema = JSON.stringify({
 
       <!-- Bottom CTA -->
       {phone && (
-        <section style="background:#FFFBF5;border-top:1px solid #EDE4D3;padding:16px;display:flex;gap:8px;flex-wrap:wrap;">
+        <section style="background:#F8FAFC;border-top:1px solid #E2E8F0;padding:16px;display:flex;gap:8px;flex-wrap:wrap;">
           <a href={waLink(phone, name)} target="_blank" rel="noopener noreferrer"
             style="flex:1;display:flex;align-items:center;justify-content:center;gap:6px;background:#25D366;color:#fff;border-radius:12px;padding:12px 10px;font-size:12px;font-weight:700;text-decoration:none;">
             💬 WhatsApp
           </a>
           {gallery.length > 0 && (
             <a href="#gallery-section"
-              style="flex:1;display:flex;align-items:center;justify-content:center;gap:6px;background:#1C1917;color:#fff;border-radius:12px;padding:12px 10px;font-size:12px;font-weight:700;text-decoration:none;">
+              style="flex:1;display:flex;align-items:center;justify-content:center;gap:6px;background:#0F172A;color:#fff;border-radius:12px;padding:12px 10px;font-size:12px;font-weight:700;text-decoration:none;">
               📷 View Portfolio
             </a>
           )}
@@ -441,13 +441,13 @@ const breadcrumbSchema = JSON.stringify({
   {layoutType === 'contractor' && (
     <div>
       <!-- Hero: 300px full-bleed -->
-      <div style="position:relative;height:300px;overflow:hidden;background:#451A03;">
+      <div style="position:relative;height:300px;overflow:hidden;background:#0F172A;">
         {heroCoverSrc
           ? <img src={heroCoverSrc} alt={name} style="position:absolute;inset:0;width:100%;height:100%;object-fit:cover;" />
           : <div style="position:absolute;inset:0;background-image:repeating-linear-gradient(0deg,transparent,transparent 29px,rgba(255,255,255,0.06) 29px,rgba(255,255,255,0.06) 30px),repeating-linear-gradient(90deg,transparent,transparent 29px,rgba(255,255,255,0.06) 29px,rgba(255,255,255,0.06) 30px);pointer-events:none;"></div>
         }
         <div style="position:absolute;inset:0;background:linear-gradient(to top,rgba(0,0,0,0.92) 0%,rgba(0,0,0,0.5) 50%,rgba(0,0,0,0.15) 100%);"></div>
-        <div style="position:absolute;top:0;left:0;right:0;height:3px;background:linear-gradient(90deg,#D4AF37,#f0c94d);"></div>
+        <div style="position:absolute;top:0;left:0;right:0;height:3px;background:linear-gradient(90deg,#60A5FA,#f0c94d);"></div>
         <div style="position:absolute;top:16px;left:0;right:0;display:flex;align-items:center;justify-content:space-between;padding:0 16px;">
           <a href="/providers" style="display:inline-flex;align-items:center;gap:5px;font-size:11px;color:rgba(255,255,255,0.75);font-weight:600;text-decoration:none;background:rgba(0,0,0,0.3);padding:5px 10px;border-radius:20px;backdrop-filter:blur(6px);">← සියලු සේවා සපයන්නන්</a>
           {gallery.length > 0 && (
@@ -461,11 +461,11 @@ const breadcrumbSchema = JSON.stringify({
             </div>
           )}
           <div style="display:flex;align-items:flex-end;gap:14px;">
-            <div style={`width:72px;height:72px;border-radius:50%;background:${avatarBg};border:2.5px solid rgba(212,175,55,0.7);display:flex;align-items:center;justify-content:center;font-size:24px;font-weight:800;color:#fff;flex-shrink:0;overflow:hidden;box-shadow:0 4px 16px rgba(0,0,0,0.4);`}>
+            <div style={`width:72px;height:72px;border-radius:50%;background:${avatarBg};border:2.5px solid rgba(96,165,250,0.7);display:flex;align-items:center;justify-content:center;font-size:24px;font-weight:800;color:#fff;flex-shrink:0;overflow:hidden;box-shadow:0 4px 16px rgba(0,0,0,0.4);`}>
               {avatarSrc ? <img src={avatarSrc} alt={name} style="width:100%;height:100%;object-fit:cover;" /> : initials(name)}
             </div>
             <div style="flex:1;min-width:0;">
-              <h1 style="font-family:'Playfair Display',serif;font-size:clamp(20px,5vw,28px);font-weight:700;color:#fff;margin:0 0 3px;line-height:1.2;overflow:hidden;white-space:nowrap;text-overflow:ellipsis;">{name}</h1>
+              <h1 style="font-family: 'Inter', sans-serif;font-size:clamp(20px,5vw,28px);font-weight:700;color:#fff;margin:0 0 3px;line-height:1.2;overflow:hidden;white-space:nowrap;text-overflow:ellipsis;">{name}</h1>
               <div style="font-size:12px;color:rgba(255,255,255,0.7);margin-bottom:5px;font-weight:500;">{tagline}</div>
               {servingText && <div style="font-size:11px;color:rgba(255,255,255,0.6);margin-bottom:5px;">📍 {servingText}</div>}
               <div style="display:flex;align-items:center;gap:10px;flex-wrap:wrap;">
@@ -479,14 +479,14 @@ const breadcrumbSchema = JSON.stringify({
 
       <!-- CTA: WhatsApp + Book a Site Visit -->
       {phone && (
-        <div style="background:#fff;padding:14px 16px;display:flex;gap:10px;border-bottom:1px solid #EDE4D3;">
+        <div style="background:#fff;padding:14px 16px;display:flex;gap:10px;border-bottom:1px solid #E2E8F0;">
           <a href={waLink(phone, name)} target="_blank" rel="noopener noreferrer"
             style="flex:1;display:flex;align-items:center;justify-content:center;gap:7px;background:#25D366;color:#fff;border-radius:14px;padding:13px 10px;font-size:13px;font-weight:700;text-decoration:none;box-shadow:0 4px 12px rgba(37,211,102,0.3);">
             <svg width="16" height="16" viewBox="0 0 24 24" fill="currentColor"><path d="M17.472 14.382c-.297-.149-1.758-.867-2.03-.967-.273-.099-.471-.148-.67.15-.197.297-.767.966-.94 1.164-.173.199-.347.223-.644.075-.297-.15-1.255-.463-2.39-1.475-.883-.788-1.48-1.761-1.653-2.059-.173-.297-.018-.458.13-.606.134-.133.298-.347.446-.52.149-.174.198-.298.298-.497.099-.198.05-.371-.025-.52-.075-.149-.669-1.612-.916-2.207-.242-.579-.487-.5-.669-.51-.173-.008-.371-.01-.57-.01-.198 0-.52.074-.792.372-.272.297-1.04 1.016-1.04 2.479 0 1.462 1.065 2.875 1.213 3.074.149.198 2.096 3.2 5.077 4.487.709.306 1.262.489 1.694.625.712.227 1.36.195 1.871.118.571-.085 1.758-.719 2.006-1.413.248-.694.248-1.289.173-1.413-.074-.124-.272-.198-.57-.347m-5.421 7.403h-.004a9.87 9.87 0 01-5.031-1.378l-.361-.214-3.741.982.998-3.648-.235-.374a9.86 9.86 0 01-1.51-5.26c.001-5.45 4.436-9.884 9.888-9.884 2.64 0 5.122 1.03 6.988 2.898a9.825 9.825 0 012.893 6.994c-.003 5.45-4.437 9.884-9.885 9.884m8.413-18.297A11.815 11.815 0 0012.05 0C5.495 0 .16 5.335.157 11.892c0 2.096.547 4.142 1.588 5.945L.057 24l6.305-1.654a11.882 11.882 0 005.683 1.448h.005c6.554 0 11.89-5.335 11.893-11.893a11.821 11.821 0 00-3.48-8.413z"/></svg>
             WhatsApp {firstName}
           </a>
           <a href={waLink(phone, name, 'visit')} target="_blank" rel="noopener noreferrer"
-            style="flex:1;display:flex;align-items:center;justify-content:center;gap:7px;background:#78350F;color:#fff;border-radius:14px;padding:13px 10px;font-size:13px;font-weight:700;text-decoration:none;">
+            style="flex:1;display:flex;align-items:center;justify-content:center;gap:7px;background:#0F172A;color:#fff;border-radius:14px;padding:13px 10px;font-size:13px;font-weight:700;text-decoration:none;">
             📅 Book a Site Visit
           </a>
         </div>
@@ -494,17 +494,17 @@ const breadcrumbSchema = JSON.stringify({
 
       <!-- Stats bar -->
       {(expYears > 0 || avgRating > 0 || reviewCount > 0 || badge) && (
-        <div style="background:#FFFBF5;border-bottom:1px solid #EDE4D3;padding:14px 16px;display:grid;grid-template-columns:repeat(auto-fit,minmax(72px,1fr));gap:4px;text-align:center;">
+        <div style="background:#F8FAFC;border-bottom:1px solid #E2E8F0;padding:14px 16px;display:grid;grid-template-columns:repeat(auto-fit,minmax(72px,1fr));gap:4px;text-align:center;">
           {expYears > 0 && (
             <div style="padding:8px 4px;">
-              <div style="font-size:18px;font-weight:800;color:#78350F;font-family:'Playfair Display',serif;line-height:1;">{expYears}+</div>
-              <div style="font-size:9px;color:#57534E;margin-top:3px;line-height:1.3;">Years<br/>Experience</div>
+              <div style="font-size:18px;font-weight:800;color:#0F172A;font-family: 'Inter', sans-serif;line-height:1;">{expYears}+</div>
+              <div style="font-size:9px;color:#64748B;margin-top:3px;line-height:1.3;">Years<br/>Experience</div>
             </div>
           )}
           {avgRating > 0 && (
             <div style="padding:8px 4px;">
-              <div style="font-size:18px;font-weight:800;color:#78350F;font-family:'Playfair Display',serif;line-height:1;">{avgRating.toFixed(1)}</div>
-              <div style="font-size:9px;color:#57534E;margin-top:3px;line-height:1.3;">Rating<br/>{reviewCount > 0 ? `${reviewCount} reviews` : ''}</div>
+              <div style="font-size:18px;font-weight:800;color:#0F172A;font-family: 'Inter', sans-serif;line-height:1;">{avgRating.toFixed(1)}</div>
+              <div style="font-size:9px;color:#64748B;margin-top:3px;line-height:1.3;">Rating<br/>{reviewCount > 0 ? `${reviewCount} reviews` : ''}</div>
             </div>
           )}
           {badge && (
@@ -518,10 +518,10 @@ const breadcrumbSchema = JSON.stringify({
 
       <!-- Gallery: Featured Projects -->
       {gallery.length > 0 && (
-        <section id="gallery-section" style="background:#fff;padding:20px 0 24px;border-bottom:1px solid #F7EFE2;">
+        <section id="gallery-section" style="background:#fff;padding:20px 0 24px;border-bottom:1px solid #F1F5F9;">
           <div style="display:flex;align-items:center;justify-content:space-between;padding:0 16px 12px;">
-            <span style="font-size:15px;font-weight:700;color:#1C1917;">Featured Projects</span>
-            <button id="all-photos-btn" style="font-size:12px;font-weight:600;color:#B45309;background:none;border:none;cursor:pointer;padding:0;">View All →</button>
+            <span style="font-size:15px;font-weight:700;color:#0F172A;">Featured Projects</span>
+            <button id="all-photos-btn" style="font-size:12px;font-weight:600;color:#2563EB;background:none;border:none;cursor:pointer;padding:0;">View All →</button>
           </div>
           <div style="display:flex;gap:12px;overflow-x:auto;padding:0 16px 4px;scrollbar-width:none;-webkit-overflow-scrolling:touch;">
             {gallery.map((img: string, i: number) => (
@@ -537,13 +537,13 @@ const breadcrumbSchema = JSON.stringify({
 
       <!-- Services -->
       {services.length > 0 && (
-        <section style="background:#FFFBF5;padding:20px 16px 24px;border-bottom:1px solid #F7EFE2;">
-          <h2 style="font-size:15px;font-weight:700;color:#1C1917;margin:0 0 14px;">Our Services</h2>
+        <section style="background:#F8FAFC;padding:20px 16px 24px;border-bottom:1px solid #F1F5F9;">
+          <h2 style="font-size:15px;font-weight:700;color:#0F172A;margin:0 0 14px;">Our Services</h2>
           <div style="display:grid;grid-template-columns:1fr 1fr;gap:8px;">
             {services.map((s: string) => (
-              <div style="display:flex;align-items:center;gap:10px;background:#fff;border:1px solid #EDE4D3;border-radius:12px;padding:11px 12px;">
+              <div style="display:flex;align-items:center;gap:10px;background:#fff;border:1px solid #E2E8F0;border-radius:12px;padding:11px 12px;">
                 <span style="font-size:20px;flex-shrink:0;">{SERVICE_ICONS[s] || '🔧'}</span>
-                <span style="font-size:11px;font-weight:600;color:#44403C;line-height:1.3;">{s}</span>
+                <span style="font-size:11px;font-weight:600;color:#334155;line-height:1.3;">{s}</span>
               </div>
             ))}
           </div>
@@ -552,13 +552,13 @@ const breadcrumbSchema = JSON.stringify({
 
       <!-- Why Choose -->
       {whyBullets.length > 0 && (
-        <section style="background:#FFFBF5;padding:20px 16px 24px;border-bottom:1px solid #F7EFE2;">
-          <h2 style="font-size:15px;font-weight:700;color:#1C1917;margin:0 0 14px;">Why Homeowners Choose {firstName}</h2>
+        <section style="background:#F8FAFC;padding:20px 16px 24px;border-bottom:1px solid #F1F5F9;">
+          <h2 style="font-size:15px;font-weight:700;color:#0F172A;margin:0 0 14px;">Why Homeowners Choose {firstName}</h2>
           <div style="display:flex;flex-direction:column;gap:10px;">
             {whyBullets.map((b: string) => (
-              <div style="display:flex;align-items:center;gap:10px;background:#fff;border:1px solid #EDE4D3;border-radius:12px;padding:12px 14px;">
+              <div style="display:flex;align-items:center;gap:10px;background:#fff;border:1px solid #E2E8F0;border-radius:12px;padding:12px 14px;">
                 <span style="width:22px;height:22px;border-radius:50%;background:#dcfce7;display:flex;align-items:center;justify-content:center;font-size:12px;flex-shrink:0;">✅</span>
-                <span style="font-size:13px;color:#44403C;font-weight:500;">{b}</span>
+                <span style="font-size:13px;color:#334155;font-weight:500;">{b}</span>
               </div>
             ))}
           </div>
@@ -567,18 +567,18 @@ const breadcrumbSchema = JSON.stringify({
 
       <!-- About -->
       {item.description && (
-        <section style="background:#fff;padding:20px 16px 24px;border-bottom:1px solid #F7EFE2;">
-          <h2 style="font-size:15px;font-weight:700;color:#1C1917;margin:0 0 10px;">About {name}</h2>
-          <p style="font-size:13px;color:#57534E;line-height:1.8;margin:0 0 12px;">{item.description}</p>
+        <section style="background:#fff;padding:20px 16px 24px;border-bottom:1px solid #F1F5F9;">
+          <h2 style="font-size:15px;font-weight:700;color:#0F172A;margin:0 0 10px;">About {name}</h2>
+          <p style="font-size:13px;color:#64748B;line-height:1.8;margin:0 0 12px;">{item.description}</p>
           {serviceAreas.length > 0 && (
             <div style="display:flex;flex-wrap:wrap;gap:6px;margin-top:10px;">
               {serviceAreas.map((area: string) => (
-                <span style="font-size:11px;padding:3px 9px;border-radius:20px;background:#F7EFE2;color:#44403C;font-weight:600;border:1px solid #EDE4D3;">📍 {area}</span>
+                <span style="font-size:11px;padding:3px 9px;border-radius:20px;background:#F1F5F9;color:#334155;font-weight:600;border:1px solid #E2E8F0;">📍 {area}</span>
               ))}
             </div>
           )}
           {item.website_url && (
-            <a href={item.website_url} target="_blank" rel="noopener" style="display:inline-flex;align-items:center;gap:5px;font-size:12px;font-weight:700;color:#78350F;margin-top:12px;text-decoration:none;">🌐 {item.website_url.replace(/^https?:\/\//, '')} →</a>
+            <a href={item.website_url} target="_blank" rel="noopener" style="display:inline-flex;align-items:center;gap:5px;font-size:12px;font-weight:700;color:#0F172A;margin-top:12px;text-decoration:none;">🌐 {item.website_url.replace(/^https?:\/\//, '')} →</a>
           )}
         </section>
       )}
@@ -590,14 +590,14 @@ const breadcrumbSchema = JSON.stringify({
 
       <!-- Bottom CTA -->
       {phone && (
-        <section style="background:#FFFBF5;border-top:1px solid #EDE4D3;padding:16px;display:flex;gap:8px;flex-wrap:wrap;">
+        <section style="background:#F8FAFC;border-top:1px solid #E2E8F0;padding:16px;display:flex;gap:8px;flex-wrap:wrap;">
           <a href={waLink(phone, name)} target="_blank" rel="noopener noreferrer"
             style="flex:1;min-width:120px;display:flex;align-items:center;justify-content:center;gap:6px;background:#25D366;color:#fff;border-radius:12px;padding:12px 10px;font-size:12px;font-weight:700;text-decoration:none;">💬 WhatsApp</a>
           <a href={waLink(phone, name, 'visit')} target="_blank" rel="noopener noreferrer"
-            style="flex:1;min-width:120px;display:flex;align-items:center;justify-content:center;gap:6px;background:#B45309;color:#fff;border-radius:12px;padding:12px 10px;font-size:12px;font-weight:700;text-decoration:none;">📅 Book a Site Visit</a>
+            style="flex:1;min-width:120px;display:flex;align-items:center;justify-content:center;gap:6px;background:#2563EB;color:#fff;border-radius:12px;padding:12px 10px;font-size:12px;font-weight:700;text-decoration:none;">📅 Book a Site Visit</a>
           {gallery.length > 0 && (
             <a href="#gallery-section"
-              style="flex:1;min-width:100px;display:flex;align-items:center;justify-content:center;gap:6px;background:#1C1917;color:#fff;border-radius:12px;padding:12px 10px;font-size:12px;font-weight:700;text-decoration:none;">📷 View Portfolio</a>
+              style="flex:1;min-width:100px;display:flex;align-items:center;justify-content:center;gap:6px;background:#0F172A;color:#fff;border-radius:12px;padding:12px 10px;font-size:12px;font-weight:700;text-decoration:none;">📷 View Portfolio</a>
           )}
         </section>
       )}
@@ -610,13 +610,13 @@ const breadcrumbSchema = JSON.stringify({
   {layoutType === 'shop' && (
     <div>
       <!-- Hero: 260px, storefront image -->
-      <div style="position:relative;height:260px;overflow:hidden;background:#451A03;">
+      <div style="position:relative;height:260px;overflow:hidden;background:#0F172A;">
         {heroCoverSrc
           ? <img src={heroCoverSrc} alt={name} style="position:absolute;inset:0;width:100%;height:100%;object-fit:cover;" />
           : <div style="position:absolute;inset:0;background-image:repeating-linear-gradient(0deg,transparent,transparent 29px,rgba(255,255,255,0.06) 29px,rgba(255,255,255,0.06) 30px),repeating-linear-gradient(90deg,transparent,transparent 29px,rgba(255,255,255,0.06) 29px,rgba(255,255,255,0.06) 30px);pointer-events:none;"></div>
         }
         <div style="position:absolute;inset:0;background:linear-gradient(to top,rgba(0,0,0,0.92) 0%,rgba(0,0,0,0.45) 55%,rgba(0,0,0,0.1) 100%);"></div>
-        <div style="position:absolute;top:0;left:0;right:0;height:3px;background:linear-gradient(90deg,#78350F,#92400E);"></div>
+        <div style="position:absolute;top:0;left:0;right:0;height:3px;background:linear-gradient(90deg,#0F172A,#1E293B);"></div>
         <div style="position:absolute;top:16px;left:0;right:0;display:flex;align-items:center;justify-content:space-between;padding:0 16px;">
           <a href="/providers" style="display:inline-flex;align-items:center;gap:5px;font-size:11px;color:rgba(255,255,255,0.75);font-weight:600;text-decoration:none;background:rgba(0,0,0,0.3);padding:5px 10px;border-radius:20px;backdrop-filter:blur(6px);">← සියලු සේවා සපයන්නන්</a>
           {gallery.length > 0 && (
@@ -634,7 +634,7 @@ const breadcrumbSchema = JSON.stringify({
               {avatarSrc ? <img src={avatarSrc} alt={name} style="width:100%;height:100%;object-fit:cover;" /> : initials(name)}
             </div>
             <div style="flex:1;min-width:0;">
-              <h1 style="font-family:'Playfair Display',serif;font-size:clamp(19px,5vw,26px);font-weight:700;color:#fff;margin:0 0 3px;line-height:1.2;overflow:hidden;white-space:nowrap;text-overflow:ellipsis;">{name}</h1>
+              <h1 style="font-family: 'Inter', sans-serif;font-size:clamp(19px,5vw,26px);font-weight:700;color:#fff;margin:0 0 3px;line-height:1.2;overflow:hidden;white-space:nowrap;text-overflow:ellipsis;">{name}</h1>
               <div style="font-size:12px;color:rgba(255,255,255,0.7);margin-bottom:4px;">{tagline}</div>
               <div style="font-size:11px;color:rgba(255,255,255,0.6);margin-bottom:4px;">📍 {city}{item.district && item.district !== item.city ? `, ${item.district}` : ''}</div>
               {avgRating > 0 && <span style="font-size:11px;color:rgba(255,255,255,0.85);font-weight:600;">⭐ {avgRating.toFixed(1)}{reviewCount > 0 ? ` (${reviewCount} reviews)` : ''}</span>}
@@ -645,14 +645,14 @@ const breadcrumbSchema = JSON.stringify({
 
       <!-- CTA: WhatsApp + Visit Showroom -->
       {phone && (
-        <div style="background:#fff;padding:14px 16px;display:flex;gap:10px;border-bottom:1px solid #EDE4D3;">
+        <div style="background:#fff;padding:14px 16px;display:flex;gap:10px;border-bottom:1px solid #E2E8F0;">
           <a href={waLink(phone, name)} target="_blank" rel="noopener noreferrer"
             style="flex:1;display:flex;align-items:center;justify-content:center;gap:7px;background:#25D366;color:#fff;border-radius:14px;padding:13px 10px;font-size:13px;font-weight:700;text-decoration:none;box-shadow:0 4px 12px rgba(37,211,102,0.3);">
             <svg width="16" height="16" viewBox="0 0 24 24" fill="currentColor"><path d="M17.472 14.382c-.297-.149-1.758-.867-2.03-.967-.273-.099-.471-.148-.67.15-.197.297-.767.966-.94 1.164-.173.199-.347.223-.644.075-.297-.15-1.255-.463-2.39-1.475-.883-.788-1.48-1.761-1.653-2.059-.173-.297-.018-.458.13-.606.134-.133.298-.347.446-.52.149-.174.198-.298.298-.497.099-.198.05-.371-.025-.52-.075-.149-.669-1.612-.916-2.207-.242-.579-.487-.5-.669-.51-.173-.008-.371-.01-.57-.01-.198 0-.52.074-.792.372-.272.297-1.04 1.016-1.04 2.479 0 1.462 1.065 2.875 1.213 3.074.149.198 2.096 3.2 5.077 4.487.709.306 1.262.489 1.694.625.712.227 1.36.195 1.871.118.571-.085 1.758-.719 2.006-1.413.248-.694.248-1.289.173-1.413-.074-.124-.272-.198-.57-.347m-5.421 7.403h-.004a9.87 9.87 0 01-5.031-1.378l-.361-.214-3.741.982.998-3.648-.235-.374a9.86 9.86 0 01-1.51-5.26c.001-5.45 4.436-9.884 9.888-9.884 2.64 0 5.122 1.03 6.988 2.898a9.825 9.825 0 012.893 6.994c-.003 5.45-4.437 9.884-9.885 9.884m8.413-18.297A11.815 11.815 0 0012.05 0C5.495 0 .16 5.335.157 11.892c0 2.096.547 4.142 1.588 5.945L.057 24l6.305-1.654a11.882 11.882 0 005.683 1.448h.005c6.554 0 11.89-5.335 11.893-11.893a11.821 11.821 0 00-3.48-8.413z"/></svg>
             WhatsApp {firstName}
           </a>
           <a href={shopVisitLink || '#'} target="_blank" rel="noopener noreferrer"
-            style="flex:1;display:flex;align-items:center;justify-content:center;gap:7px;background:#78350F;color:#fff;border-radius:14px;padding:13px 10px;font-size:13px;font-weight:700;text-decoration:none;">
+            style="flex:1;display:flex;align-items:center;justify-content:center;gap:7px;background:#0F172A;color:#fff;border-radius:14px;padding:13px 10px;font-size:13px;font-weight:700;text-decoration:none;">
             🗺️ Visit Showroom
           </a>
         </div>
@@ -660,11 +660,11 @@ const breadcrumbSchema = JSON.stringify({
 
       <!-- Feature icons strip -->
       {shopFeatures.length > 0 && (
-        <div style="background:#FFFBF5;border-bottom:1px solid #EDE4D3;padding:14px 16px;display:grid;grid-template-columns:repeat(4,1fr);gap:8px;text-align:center;">
+        <div style="background:#F8FAFC;border-bottom:1px solid #E2E8F0;padding:14px 16px;display:grid;grid-template-columns:repeat(4,1fr);gap:8px;text-align:center;">
           {shopFeatures.map((f: {icon:string,label:string}) => (
-            <div style="display:flex;flex-direction:column;align-items:center;gap:4px;padding:8px 4px;background:#fff;border:1px solid #EDE4D3;border-radius:12px;">
+            <div style="display:flex;flex-direction:column;align-items:center;gap:4px;padding:8px 4px;background:#fff;border:1px solid #E2E8F0;border-radius:12px;">
               <span style="font-size:20px;">{f.icon}</span>
-              <span style="font-size:9px;font-weight:700;color:#44403C;line-height:1.2;">{f.label}</span>
+              <span style="font-size:9px;font-weight:700;color:#334155;line-height:1.2;">{f.label}</span>
             </div>
           ))}
         </div>
@@ -672,11 +672,11 @@ const breadcrumbSchema = JSON.stringify({
 
       <!-- Stats: rating | reviews | verified -->
       {(avgRating > 0 || badge) && (
-        <div style="background:#FFFBF5;border-bottom:1px solid #EDE4D3;padding:14px 16px;display:grid;grid-template-columns:repeat(auto-fit,minmax(72px,1fr));gap:4px;text-align:center;">
+        <div style="background:#F8FAFC;border-bottom:1px solid #E2E8F0;padding:14px 16px;display:grid;grid-template-columns:repeat(auto-fit,minmax(72px,1fr));gap:4px;text-align:center;">
           {avgRating > 0 && (
             <div style="padding:8px 4px;">
-              <div style="font-size:18px;font-weight:800;color:#78350F;font-family:'Playfair Display',serif;line-height:1;">{avgRating.toFixed(1)}</div>
-              <div style="font-size:9px;color:#57534E;margin-top:3px;line-height:1.3;">Rating<br/>{reviewCount > 0 ? `${reviewCount} reviews` : ''}</div>
+              <div style="font-size:18px;font-weight:800;color:#0F172A;font-family: 'Inter', sans-serif;line-height:1;">{avgRating.toFixed(1)}</div>
+              <div style="font-size:9px;color:#64748B;margin-top:3px;line-height:1.3;">Rating<br/>{reviewCount > 0 ? `${reviewCount} reviews` : ''}</div>
             </div>
           )}
           {badge && (
@@ -690,13 +690,13 @@ const breadcrumbSchema = JSON.stringify({
 
       <!-- What We Offer (services) -->
       {services.length > 0 && (
-        <section style="background:#FFFBF5;padding:20px 16px 24px;border-bottom:1px solid #F7EFE2;">
-          <h2 style="font-size:15px;font-weight:700;color:#1C1917;margin:0 0 14px;">What We Offer</h2>
+        <section style="background:#F8FAFC;padding:20px 16px 24px;border-bottom:1px solid #F1F5F9;">
+          <h2 style="font-size:15px;font-weight:700;color:#0F172A;margin:0 0 14px;">What We Offer</h2>
           <div style="display:grid;grid-template-columns:1fr 1fr;gap:8px;">
             {services.map((s: string) => (
-              <div style="display:flex;align-items:center;gap:10px;background:#fff;border:1px solid #EDE4D3;border-radius:12px;padding:11px 12px;">
+              <div style="display:flex;align-items:center;gap:10px;background:#fff;border:1px solid #E2E8F0;border-radius:12px;padding:11px 12px;">
                 <span style="font-size:20px;flex-shrink:0;">{SERVICE_ICONS[s] || '🏪'}</span>
-                <span style="font-size:11px;font-weight:600;color:#44403C;line-height:1.3;">{s}</span>
+                <span style="font-size:11px;font-weight:600;color:#334155;line-height:1.3;">{s}</span>
               </div>
             ))}
           </div>
@@ -705,21 +705,21 @@ const breadcrumbSchema = JSON.stringify({
 
       <!-- About -->
       {item.description && (
-        <section style="background:#fff;padding:20px 16px 24px;border-bottom:1px solid #F7EFE2;">
-          <h2 style="font-size:15px;font-weight:700;color:#1C1917;margin:0 0 10px;">About {name}</h2>
-          <p style="font-size:13px;color:#57534E;line-height:1.8;margin:0 0 12px;">{item.description}</p>
+        <section style="background:#fff;padding:20px 16px 24px;border-bottom:1px solid #F1F5F9;">
+          <h2 style="font-size:15px;font-weight:700;color:#0F172A;margin:0 0 10px;">About {name}</h2>
+          <p style="font-size:13px;color:#64748B;line-height:1.8;margin:0 0 12px;">{item.description}</p>
           {item.website_url && (
-            <a href={item.website_url} target="_blank" rel="noopener" style="display:inline-flex;align-items:center;gap:5px;font-size:12px;font-weight:700;color:#78350F;margin-top:4px;text-decoration:none;">🌐 {item.website_url.replace(/^https?:\/\//, '')} →</a>
+            <a href={item.website_url} target="_blank" rel="noopener" style="display:inline-flex;align-items:center;gap:5px;font-size:12px;font-weight:700;color:#0F172A;margin-top:4px;text-decoration:none;">🌐 {item.website_url.replace(/^https?:\/\//, '')} →</a>
           )}
         </section>
       )}
 
       <!-- Gallery: Showroom & Products -->
       {gallery.length > 0 && (
-        <section id="gallery-section" style="background:#fff;padding:20px 0 24px;border-bottom:1px solid #F7EFE2;">
+        <section id="gallery-section" style="background:#fff;padding:20px 0 24px;border-bottom:1px solid #F1F5F9;">
           <div style="display:flex;align-items:center;justify-content:space-between;padding:0 16px 12px;">
-            <span style="font-size:15px;font-weight:700;color:#1C1917;">🏪 Showroom & Products</span>
-            <button id="all-photos-btn" style="font-size:12px;font-weight:600;color:#B45309;background:none;border:none;cursor:pointer;padding:0;">View All →</button>
+            <span style="font-size:15px;font-weight:700;color:#0F172A;">🏪 Showroom & Products</span>
+            <button id="all-photos-btn" style="font-size:12px;font-weight:600;color:#2563EB;background:none;border:none;cursor:pointer;padding:0;">View All →</button>
           </div>
           <div style="display:flex;gap:12px;overflow-x:auto;padding:0 16px 4px;scrollbar-width:none;-webkit-overflow-scrolling:touch;">
             {gallery.map((img: string, i: number) => (
@@ -735,16 +735,16 @@ const breadcrumbSchema = JSON.stringify({
 
       <!-- Location & service areas -->
       {(serviceAreas.length > 0 || city) && (
-        <section style="background:#fff;padding:20px 16px 24px;border-bottom:1px solid #F7EFE2;">
-          <h2 style="font-size:15px;font-weight:700;color:#1C1917;margin:0 0 12px;">📍 Location & Coverage</h2>
-          <div style="background:#FFFBF5;border:1px solid #EDE4D3;border-radius:14px;padding:14px 16px;margin-bottom:10px;">
-            <div style="font-size:13px;font-weight:600;color:#1C1917;margin-bottom:4px;">{name}</div>
-            <div style="font-size:12px;color:#57534E;">{city}{item.district && item.district !== item.city ? `, ${item.district} District` : ''}, Sri Lanka</div>
+        <section style="background:#fff;padding:20px 16px 24px;border-bottom:1px solid #F1F5F9;">
+          <h2 style="font-size:15px;font-weight:700;color:#0F172A;margin:0 0 12px;">📍 Location & Coverage</h2>
+          <div style="background:#F8FAFC;border:1px solid #E2E8F0;border-radius:14px;padding:14px 16px;margin-bottom:10px;">
+            <div style="font-size:13px;font-weight:600;color:#0F172A;margin-bottom:4px;">{name}</div>
+            <div style="font-size:12px;color:#64748B;">{city}{item.district && item.district !== item.city ? `, ${item.district} District` : ''}, Sri Lanka</div>
           </div>
           {serviceAreas.length > 0 && (
             <div style="display:flex;flex-wrap:wrap;gap:6px;">
               {serviceAreas.map((area: string) => (
-                <span style="font-size:11px;padding:3px 9px;border-radius:20px;background:#F7EFE2;color:#44403C;font-weight:600;border:1px solid #EDE4D3;">📍 {area}</span>
+                <span style="font-size:11px;padding:3px 9px;border-radius:20px;background:#F1F5F9;color:#334155;font-weight:600;border:1px solid #E2E8F0;">📍 {area}</span>
               ))}
             </div>
           )}
@@ -758,14 +758,14 @@ const breadcrumbSchema = JSON.stringify({
 
       <!-- Bottom CTA -->
       {phone && (
-        <section style="background:#FFFBF5;border-top:1px solid #EDE4D3;padding:16px;display:flex;gap:8px;flex-wrap:wrap;">
+        <section style="background:#F8FAFC;border-top:1px solid #E2E8F0;padding:16px;display:flex;gap:8px;flex-wrap:wrap;">
           <a href={waLink(phone, name)} target="_blank" rel="noopener noreferrer"
             style="flex:1;min-width:120px;display:flex;align-items:center;justify-content:center;gap:6px;background:#25D366;color:#fff;border-radius:12px;padding:12px 10px;font-size:12px;font-weight:700;text-decoration:none;">💬 WhatsApp</a>
           <a href={shopVisitLink || '#'} target="_blank" rel="noopener noreferrer"
-            style="flex:1;min-width:120px;display:flex;align-items:center;justify-content:center;gap:6px;background:#78350F;color:#fff;border-radius:12px;padding:12px 10px;font-size:12px;font-weight:700;text-decoration:none;">🗺️ Visit Showroom</a>
+            style="flex:1;min-width:120px;display:flex;align-items:center;justify-content:center;gap:6px;background:#0F172A;color:#fff;border-radius:12px;padding:12px 10px;font-size:12px;font-weight:700;text-decoration:none;">🗺️ Visit Showroom</a>
           {gallery.length > 0 && (
             <a href="#gallery-section"
-              style="flex:1;min-width:100px;display:flex;align-items:center;justify-content:center;gap:6px;background:#1C1917;color:#fff;border-radius:12px;padding:12px 10px;font-size:12px;font-weight:700;text-decoration:none;">📷 View Showroom</a>
+              style="flex:1;min-width:100px;display:flex;align-items:center;justify-content:center;gap:6px;background:#0F172A;color:#fff;border-radius:12px;padding:12px 10px;font-size:12px;font-weight:700;text-decoration:none;">📷 View Showroom</a>
           )}
         </section>
       )}
@@ -775,11 +775,11 @@ const breadcrumbSchema = JSON.stringify({
   <!-- ════ SHARED: Admin / Utility ════ -->
   <div style="padding:12px 16px 32px;display:flex;gap:8px;flex-wrap:wrap;justify-content:center;">
     <button id="share-profile-btn"
-      style="display:flex;align-items:center;gap:5px;background:#F7EFE2;color:#44403C;border:1px solid #EDE4D3;border-radius:10px;padding:9px 14px;font-size:11px;font-weight:700;cursor:pointer;">
+      style="display:flex;align-items:center;gap:5px;background:#F1F5F9;color:#334155;border:1px solid #E2E8F0;border-radius:10px;padding:9px 14px;font-size:11px;font-weight:700;cursor:pointer;">
       🔗 Share Profile
     </button>
     <button id="hero-review-btn"
-      style="display:flex;align-items:center;gap:5px;background:#F7EFE2;color:#44403C;border:1px solid #EDE4D3;border-radius:10px;padding:9px 14px;font-size:11px;font-weight:700;cursor:pointer;">
+      style="display:flex;align-items:center;gap:5px;background:#F1F5F9;color:#334155;border:1px solid #E2E8F0;border-radius:10px;padding:9px 14px;font-size:11px;font-weight:700;cursor:pointer;">
       ⭐ Rate & Review
     </button>
     <EditProfileButton

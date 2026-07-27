@@ -29,7 +29,7 @@ const { data: similarRaw } = job.district
 const similar = similarRaw || []
 
 const icon = JOB_TYPE_ICONS[job.project_type] || '🏠'
-const color = JOB_TYPE_COLORS[job.project_type] || '#B45309'
+const color = JOB_TYPE_COLORS[job.project_type] || '#2563EB'
 const isActive = job.status === 'active' || !job.status
 const locationLabel = job.city || job.district || 'Sri Lanka'
 
@@ -114,7 +114,7 @@ const waShare = `https://wa.me/?text=${encodeURIComponent(`🏠 ${job.project_ty
               ⏱ {timeAgo(job.created_at)}
             </span>
           </div>
-          <h1 style="font-family:'Playfair Display',serif;font-size:clamp(22px,4vw,32px);font-weight:700;color:#fff;margin:0 0 8px;line-height:1.2;">{job.project_type}</h1>
+          <h1 style="font-family: 'Inter', sans-serif;font-size:clamp(22px,4vw,32px);font-weight:700;color:#fff;margin:0 0 8px;line-height:1.2;">{job.project_type}</h1>
           <div style="font-size:14px;color:rgba(255,255,255,0.7);">📍 {job.city}{job.district ? `, ${job.district} District` : ''}</div>
         </div>
       </div>
@@ -122,11 +122,11 @@ const waShare = `https://wa.me/?text=${encodeURIComponent(`🏠 ${job.project_ty
   </div>
 
   <!-- ── Main content ── -->
-  <div style="background:#FFFBF5;padding:24px 16px 80px;">
+  <div style="background:#F8FAFC;padding:24px 16px 80px;">
     <div style="max-width:760px;margin:0 auto;display:flex;flex-direction:column;gap:16px;">
 
       <!-- Project details card -->
-      <div style="background:#fff;border:1px solid #EDE4D3;border-radius:20px;padding:24px;box-shadow:0 2px 10px rgba(0,0,0,0.05);">
+      <div style="background:#fff;border:1px solid #E2E8F0;border-radius:20px;padding:24px;box-shadow:0 2px 10px rgba(0,0,0,0.05);">
 
         <!-- Chips row -->
         <div style="display:flex;flex-wrap:wrap;gap:8px;margin-bottom:18px;">
@@ -134,44 +134,44 @@ const waShare = `https://wa.me/?text=${encodeURIComponent(`🏠 ${job.project_ty
           {job.budget_range && (
             <span style="font-size:11px;padding:5px 13px;border-radius:20px;background:#f0fdf4;color:#15803d;font-weight:700;border:1px solid #bbf7d0;">💰 {job.budget_range}</span>
           )}
-          <span style="font-size:11px;padding:5px 13px;border-radius:20px;background:#FFFBEB;color:#92400E;font-weight:700;border:1px solid #FDE68A;">💬 {bidCount} bid{bidCount !== 1 ? 's' : ''} received</span>
+          <span style="font-size:11px;padding:5px 13px;border-radius:20px;background:#EFF6FF;color:#1E293B;font-weight:700;border:1px solid #BFDBFE;">💬 {bidCount} bid{bidCount !== 1 ? 's' : ''} received</span>
         </div>
 
         <!-- Description -->
         <div style="margin-bottom:20px;">
-          <div style="font-size:11px;font-weight:700;color:#A8A29E;text-transform:uppercase;letter-spacing:1.2px;margin-bottom:8px;">Project Description</div>
-          <p style="font-size:14px;color:#44403C;line-height:1.85;margin:0;border-left:3px solid #EDE4D3;padding-left:14px;">
+          <div style="font-size:11px;font-weight:700;color:#94A3B8;text-transform:uppercase;letter-spacing:1.2px;margin-bottom:8px;">Project Description</div>
+          <p style="font-size:14px;color:#334155;line-height:1.85;margin:0;border-left:3px solid #E2E8F0;padding-left:14px;">
             {descText || 'No description provided — contact the poster for full details.'}
           </p>
         </div>
 
         <!-- Info grid -->
         <div style="display:grid;grid-template-columns:repeat(auto-fill,minmax(140px,1fr));gap:10px;margin-bottom:20px;">
-          <div style="background:#FFFBF5;border-radius:12px;border:1px solid #EDE4D3;padding:12px 14px;">
-            <div style="font-size:9px;font-weight:700;color:#A8A29E;text-transform:uppercase;letter-spacing:1px;margin-bottom:4px;">Location</div>
-            <div style="font-size:13px;font-weight:600;color:#1C1917;">📍 {locationLabel}</div>
+          <div style="background:#F8FAFC;border-radius:12px;border:1px solid #E2E8F0;padding:12px 14px;">
+            <div style="font-size:9px;font-weight:700;color:#94A3B8;text-transform:uppercase;letter-spacing:1px;margin-bottom:4px;">Location</div>
+            <div style="font-size:13px;font-weight:600;color:#0F172A;">📍 {locationLabel}</div>
           </div>
           {job.budget_range && (
             <div style="background:#f0fdf4;border-radius:12px;border:1px solid #bbf7d0;padding:12px 14px;">
-              <div style="font-size:9px;font-weight:700;color:#A8A29E;text-transform:uppercase;letter-spacing:1px;margin-bottom:4px;">Budget</div>
+              <div style="font-size:9px;font-weight:700;color:#94A3B8;text-transform:uppercase;letter-spacing:1px;margin-bottom:4px;">Budget</div>
               <div style="font-size:13px;font-weight:700;color:#15803d;">{job.budget_range}</div>
             </div>
           )}
-          <div style="background:#FFFBF5;border-radius:12px;border:1px solid #EDE4D3;padding:12px 14px;">
-            <div style="font-size:9px;font-weight:700;color:#A8A29E;text-transform:uppercase;letter-spacing:1px;margin-bottom:4px;">Posted</div>
-            <div style="font-size:13px;font-weight:600;color:#1C1917;">⏱ {timeAgo(job.created_at)}</div>
+          <div style="background:#F8FAFC;border-radius:12px;border:1px solid #E2E8F0;padding:12px 14px;">
+            <div style="font-size:9px;font-weight:700;color:#94A3B8;text-transform:uppercase;letter-spacing:1px;margin-bottom:4px;">Posted</div>
+            <div style="font-size:13px;font-weight:600;color:#0F172A;">⏱ {timeAgo(job.created_at)}</div>
           </div>
-          <div style="background:#FFFBEB;border-radius:12px;border:1px solid #FDE68A;padding:12px 14px;">
-            <div style="font-size:9px;font-weight:700;color:#A8A29E;text-transform:uppercase;letter-spacing:1px;margin-bottom:4px;">Competition</div>
-            <div style="font-size:13px;font-weight:700;color:#92400E;">💬 {bidCount} bid{bidCount !== 1 ? 's' : ''}</div>
+          <div style="background:#EFF6FF;border-radius:12px;border:1px solid #BFDBFE;padding:12px 14px;">
+            <div style="font-size:9px;font-weight:700;color:#94A3B8;text-transform:uppercase;letter-spacing:1px;margin-bottom:4px;">Competition</div>
+            <div style="font-size:13px;font-weight:700;color:#1E293B;">💬 {bidCount} bid{bidCount !== 1 ? 's' : ''}</div>
           </div>
         </div>
 
         <!-- Share -->
-        <div style="border-top:1px solid #F7EFE2;padding-top:16px;">
-          <div style="font-size:11px;font-weight:700;color:#A8A29E;text-transform:uppercase;letter-spacing:1px;margin-bottom:10px;">Share this project</div>
+        <div style="border-top:1px solid #F1F5F9;padding-top:16px;">
+          <div style="font-size:11px;font-weight:700;color:#94A3B8;text-transform:uppercase;letter-spacing:1px;margin-bottom:10px;">Share this project</div>
           <div style="display:flex;gap:8px;flex-wrap:wrap;">
-            <button id="copy-link-btn" data-url={pageUrl} style="display:inline-flex;align-items:center;gap:6px;font-size:12px;font-weight:600;padding:8px 16px;border-radius:20px;background:#FFFBF5;color:#44403C;border:1px solid #EDE4D3;cursor:pointer;font-family:inherit;">
+            <button id="copy-link-btn" data-url={pageUrl} style="display:inline-flex;align-items:center;gap:6px;font-size:12px;font-weight:600;padding:8px 16px;border-radius:20px;background:#F8FAFC;color:#334155;border:1px solid #E2E8F0;cursor:pointer;font-family:inherit;">
               🔗 Copy Link
             </button>
             <a href={waShare} target="_blank" rel="noopener noreferrer"
@@ -183,8 +183,8 @@ const waShare = `https://wa.me/?text=${encodeURIComponent(`🏠 ${job.project_ty
       </div>
 
       <!-- Bid form card -->
-      <div style="background:#fff;border:1px solid #EDE4D3;border-radius:20px;overflow:hidden;box-shadow:0 2px 10px rgba(0,0,0,0.05);">
-        <div style="background:linear-gradient(135deg,#451A03,#B45309);padding:20px 24px;">
+      <div style="background:#fff;border:1px solid #E2E8F0;border-radius:20px;overflow:hidden;box-shadow:0 2px 10px rgba(0,0,0,0.05);">
+        <div style="background:linear-gradient(135deg,#0F172A,#2563EB);padding:20px 24px;">
           <h2 style="font-size:17px;font-weight:700;color:#fff;margin:0 0 4px;">Submit Your Bid</h2>
           <p style="font-size:12px;color:rgba(255,255,255,0.55);margin:0;">No login required · Free · Homeowner contacts you on WhatsApp if interested</p>
         </div>
@@ -197,22 +197,22 @@ const waShare = `https://wa.me/?text=${encodeURIComponent(`🏠 ${job.project_ty
       {similar.length > 0 && (
         <div>
           <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:12px;">
-            <div style="font-size:13px;font-weight:700;color:#1C1917;">More in {job.district || job.city}</div>
-            <a href="/jobs" style="font-size:12px;font-weight:600;color:#B45309;text-decoration:none;">View all →</a>
+            <div style="font-size:13px;font-weight:700;color:#0F172A;">More in {job.district || job.city}</div>
+            <a href="/jobs" style="font-size:12px;font-weight:600;color:#2563EB;text-decoration:none;">View all →</a>
           </div>
           <div style="display:flex;flex-direction:column;gap:8px;">
             {similar.map(s => {
               const sIcon = JOB_TYPE_ICONS[s.project_type] || '🏠'
-              const sColor = JOB_TYPE_COLORS[s.project_type] || '#B45309'
+              const sColor = JOB_TYPE_COLORS[s.project_type] || '#2563EB'
               return (
                 <a href={jobPath(s)}
-                  style="display:flex;align-items:center;gap:0;background:#fff;border-radius:12px;overflow:hidden;border:1px solid #EDE4D3;text-decoration:none;color:inherit;box-shadow:0 1px 4px rgba(0,0,0,0.04);">
+                  style="display:flex;align-items:center;gap:0;background:#fff;border-radius:12px;overflow:hidden;border:1px solid #E2E8F0;text-decoration:none;color:inherit;box-shadow:0 1px 4px rgba(0,0,0,0.04);">
                   <div style={`width:60px;height:60px;background:${sColor};flex-shrink:0;display:flex;align-items:center;justify-content:center;font-size:24px;`}>{sIcon}</div>
                   <div style="flex:1;padding:10px 12px;min-width:0;">
-                    <div style="font-size:13px;font-weight:700;color:#1C1917;overflow:hidden;white-space:nowrap;text-overflow:ellipsis;">{s.project_type}</div>
-                    <div style="font-size:11px;color:#57534E;margin-top:2px;">📍 {s.city || s.district}</div>
+                    <div style="font-size:13px;font-weight:700;color:#0F172A;overflow:hidden;white-space:nowrap;text-overflow:ellipsis;">{s.project_type}</div>
+                    <div style="font-size:11px;color:#64748B;margin-top:2px;">📍 {s.city || s.district}</div>
                   </div>
-                  <div style="padding:0 12px;font-size:18px;color:#D6CFC4;flex-shrink:0;">›</div>
+                  <div style="padding:0 12px;font-size:18px;color:#CBD5E1;flex-shrink:0;">›</div>
                 </a>
               )
             })}
@@ -221,12 +221,12 @@ const waShare = `https://wa.me/?text=${encodeURIComponent(`🏠 ${job.project_ty
       )}
 
       <!-- CTA for homeowners -->
-      <div style="background:#B45309;border-radius:16px;padding:20px 24px;display:flex;align-items:center;justify-content:space-between;gap:16px;flex-wrap:wrap;">
+      <div style="background:#2563EB;border-radius:16px;padding:20px 24px;display:flex;align-items:center;justify-content:space-between;gap:16px;flex-wrap:wrap;">
         <div>
           <div style="font-size:9px;font-weight:700;color:rgba(255,255,255,0.6);letter-spacing:2px;text-transform:uppercase;margin-bottom:3px;">Have a project?</div>
           <div style="font-size:14px;font-weight:700;color:#fff;">Post your project free — get competitive bids</div>
         </div>
-        <a href="/post-project" style="display:inline-flex;align-items:center;gap:6px;background:#fff;color:#B45309;border-radius:10px;padding:11px 20px;font-size:13px;font-weight:800;text-decoration:none;flex-shrink:0;">
+        <a href="/post-project" style="display:inline-flex;align-items:center;gap:6px;background:#fff;color:#2563EB;border-radius:10px;padding:11px 20px;font-size:13px;font-weight:800;text-decoration:none;flex-shrink:0;">
           📋 Post Free
         </a>
       </div>

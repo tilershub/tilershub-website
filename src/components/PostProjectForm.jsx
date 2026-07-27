@@ -110,10 +110,10 @@ function Field({ label, id, req, error, hint, children }) {
   return (
     <div style={{ marginBottom: 18 }}>
       <label htmlFor={id} style={{ display: 'block', fontSize: 12, fontWeight: 700, color: '#334155', textTransform: 'uppercase', letterSpacing: '0.5px', marginBottom: 6 }}>
-        {label} {req && <span style={{ color: '#B45309' }}>*</span>}
+        {label} {req && <span style={{ color: '#2563EB' }}>*</span>}
       </label>
       {children}
-      {hint && !error && <p style={{ fontSize: 11, color: '#A8A29E', marginTop: 4 }}>{hint}</p>}
+      {hint && !error && <p style={{ fontSize: 11, color: '#94A3B8', marginTop: 4 }}>{hint}</p>}
       {error && <p style={{ fontSize: 11, color: '#dc2626', marginTop: 4 }}>⚠ {error}</p>}
     </div>
   )
@@ -122,7 +122,7 @@ function Field({ label, id, req, error, hint, children }) {
 function inp(hasError) {
   return {
     width: '100%', padding: '11px 14px',
-    border: `1.5px solid ${hasError ? '#fca5a5' : '#EDE4D3'}`,
+    border: `1.5px solid ${hasError ? '#fca5a5' : '#E2E8F0'}`,
     borderRadius: 10, fontSize: 13, outline: 'none', fontFamily: 'inherit',
     background: hasError ? '#fef2f2' : '#fff', transition: 'border-color 0.2s',
     boxSizing: 'border-box',
@@ -149,8 +149,8 @@ function MagicLinkForm({ label, hint, t }) {
     return (
       <div style={{ textAlign: 'center', padding: '16px 0' }}>
         <div style={{ fontSize: 32, marginBottom: 8 }}>📬</div>
-        <div style={{ fontSize: 14, fontWeight: 700, color: '#1C1917', marginBottom: 6 }}>{t.checkEmail}</div>
-        <p style={{ fontSize: 12, color: '#57534E', lineHeight: 1.7 }}>
+        <div style={{ fontSize: 14, fontWeight: 700, color: '#0F172A', marginBottom: 6 }}>{t.checkEmail}</div>
+        <p style={{ fontSize: 12, color: '#64748B', lineHeight: 1.7 }}>
           <strong>{email}</strong> {t.sentBody}
         </p>
       </div>
@@ -160,7 +160,7 @@ function MagicLinkForm({ label, hint, t }) {
   return (
     <form onSubmit={send} style={{ marginTop: 4 }}>
       <div style={{ fontSize: 13, fontWeight: 600, color: '#334155', marginBottom: 10 }}>{label}</div>
-      {hint && <p style={{ fontSize: 12, color: '#57534E', marginBottom: 12, lineHeight: 1.6 }}>{hint}</p>}
+      {hint && <p style={{ fontSize: 12, color: '#64748B', marginBottom: 12, lineHeight: 1.6 }}>{hint}</p>}
       <div style={{ display: 'flex', gap: 8 }}>
         <input
           type="email"
@@ -168,14 +168,14 @@ function MagicLinkForm({ label, hint, t }) {
           onChange={e => setEmail(e.target.value)}
           placeholder="your@email.com"
           autoFocus
-          style={{ flex: 1, padding: '10px 14px', border: `1.5px solid ${err ? '#fca5a5' : '#EDE4D3'}`, borderRadius: 10, fontSize: 13, outline: 'none', fontFamily: 'inherit', background: err ? '#fef2f2' : '#fff', boxSizing: 'border-box' }}
+          style={{ flex: 1, padding: '10px 14px', border: `1.5px solid ${err ? '#fca5a5' : '#E2E8F0'}`, borderRadius: 10, fontSize: 13, outline: 'none', fontFamily: 'inherit', background: err ? '#fef2f2' : '#fff', boxSizing: 'border-box' }}
         />
-        <button type="submit" disabled={loading} style={{ padding: '10px 18px', background: loading ? '#A8A29E' : '#B45309', color: '#fff', border: 'none', borderRadius: 10, fontSize: 13, fontWeight: 700, cursor: loading ? 'not-allowed' : 'pointer', whiteSpace: 'nowrap' }}>
+        <button type="submit" disabled={loading} style={{ padding: '10px 18px', background: loading ? '#94A3B8' : '#2563EB', color: '#fff', border: 'none', borderRadius: 10, fontSize: 13, fontWeight: 700, cursor: loading ? 'not-allowed' : 'pointer', whiteSpace: 'nowrap' }}>
           {loading ? '⏳' : t.sendLink}
         </button>
       </div>
       {err && <p style={{ fontSize: 11, color: '#dc2626', marginTop: 4 }}>⚠ {err}</p>}
-      <p style={{ fontSize: 11, color: '#A8A29E', marginTop: 8 }}>{t.noPassword}</p>
+      <p style={{ fontSize: 11, color: '#94A3B8', marginTop: 8 }}>{t.noPassword}</p>
     </form>
   )
 }
@@ -256,20 +256,20 @@ export default function PostProjectForm() {
     return (
       <div style={{ maxWidth: 520, margin: '0 auto' }}>
         {/* Success header */}
-        <div style={{ textAlign: 'center', padding: '32px 20px 24px', background: '#fff', borderRadius: '20px 20px 0 0', border: '1px solid #EDE4D3', borderBottom: 'none' }}>
+        <div style={{ textAlign: 'center', padding: '32px 20px 24px', background: '#fff', borderRadius: '20px 20px 0 0', border: '1px solid #E2E8F0', borderBottom: 'none' }}>
           <div style={{ fontSize: 52, marginBottom: 12 }}>🎉</div>
-          <h2 style={{ fontFamily: "'Playfair Display', serif", fontSize: 24, fontWeight: 700, color: '#1C1917', marginBottom: 8 }}>{t.successTitle}</h2>
-          <p style={{ fontSize: 13, color: '#57534E', lineHeight: 1.8, maxWidth: 340, margin: '0 auto 16px' }}>
+          <h2 style={{ fontFamily: "'Inter', sans-serif", fontSize: 24, fontWeight: 700, color: '#0F172A', marginBottom: 8 }}>{t.successTitle}</h2>
+          <p style={{ fontSize: 13, color: '#64748B', lineHeight: 1.8, maxWidth: 340, margin: '0 auto 16px' }}>
             {t.successBody}
           </p>
           <div style={{ display: 'inline-flex', alignItems: 'center', gap: 6, background: '#f0fdf4', border: '1px solid #bbf7d0', borderRadius: 10, padding: '8px 14px', marginBottom: 14 }}>
             <span style={{ fontSize: 13, color: '#15803d' }}>✓ {t.whatsappNote} <strong>{form.whatsapp}</strong></span>
           </div>
           {/* What happens next */}
-          <div style={{ textAlign: 'left', background: '#FFFBEB', border: '1px solid #FDE68A', borderRadius: 12, padding: '14px 16px', margin: '0 auto', maxWidth: 360 }}>
-            <div style={{ fontSize: 12, fontWeight: 800, color: '#B45309', marginBottom: 8 }}>{t.nextTitle}</div>
+          <div style={{ textAlign: 'left', background: '#EFF6FF', border: '1px solid #BFDBFE', borderRadius: 12, padding: '14px 16px', margin: '0 auto', maxWidth: 360 }}>
+            <div style={{ fontSize: 12, fontWeight: 800, color: '#2563EB', marginBottom: 8 }}>{t.nextTitle}</div>
             {t.nextSteps.map(s => (
-              <div key={s} style={{ fontSize: 12, color: '#92400E', lineHeight: 1.9 }}>{s}</div>
+              <div key={s} style={{ fontSize: 12, color: '#1E293B', lineHeight: 1.9 }}>{s}</div>
             ))}
           </div>
           <a href={`https://wa.me/?text=${encodeURIComponent(t.shareText)}`} target="_blank" rel="noopener noreferrer"
@@ -280,20 +280,20 @@ export default function PostProjectForm() {
 
         {userId ? (
           /* Signed-in user: simple success with manage link */
-          <div style={{ background: '#fff', border: '1px solid #EDE4D3', borderTop: '1px solid #F7EFE2', borderRadius: '0 0 20px 20px', padding: '20px 24px' }}>
+          <div style={{ background: '#fff', border: '1px solid #E2E8F0', borderTop: '1px solid #F1F5F9', borderRadius: '0 0 20px 20px', padding: '20px 24px' }}>
             <div style={{ display: 'flex', gap: 10, justifyContent: 'center', flexWrap: 'wrap' }}>
-              <a href="/dashboard" style={{ padding: '11px 22px', background: '#B45309', color: '#fff', borderRadius: 12, fontSize: 14, fontWeight: 600, textDecoration: 'none' }}>{t.viewDashboard}</a>
+              <a href="/dashboard" style={{ padding: '11px 22px', background: '#2563EB', color: '#fff', borderRadius: 12, fontSize: 14, fontWeight: 600, textDecoration: 'none' }}>{t.viewDashboard}</a>
               <button onClick={resetForm}
-                style={{ padding: '11px 22px', background: '#F7EFE2', color: '#334155', borderRadius: 12, fontSize: 14, fontWeight: 600, border: 'none', cursor: 'pointer' }}>
+                style={{ padding: '11px 22px', background: '#F1F5F9', color: '#334155', borderRadius: 12, fontSize: 14, fontWeight: 600, border: 'none', cursor: 'pointer' }}>
                 {t.postAnother}
               </button>
             </div>
           </div>
         ) : (
           /* Anonymous user: auth prompt to finalize */
-          <div style={{ background: '#fff', border: '1px solid #EDE4D3', borderTop: 'none', borderRadius: '0 0 20px 20px', overflow: 'hidden' }}>
-            <div style={{ background: 'linear-gradient(135deg, #B45309, #451A03)', padding: '20px 24px' }}>
-              <div style={{ fontSize: 11, fontWeight: 700, color: 'rgba(245,158,11,0.8)', letterSpacing: 2, textTransform: 'uppercase', marginBottom: 8 }}>
+          <div style={{ background: '#fff', border: '1px solid #E2E8F0', borderTop: 'none', borderRadius: '0 0 20px 20px', overflow: 'hidden' }}>
+            <div style={{ background: 'linear-gradient(135deg, #2563EB, #0F172A)', padding: '20px 24px' }}>
+              <div style={{ fontSize: 11, fontWeight: 700, color: 'rgba(37,99,235,0.8)', letterSpacing: 2, textTransform: 'uppercase', marginBottom: 8 }}>
                 {t.oneMoreStep}
               </div>
               <div style={{ fontSize: 16, fontWeight: 700, color: '#fff', marginBottom: 6 }}>{t.createAccount}</div>
@@ -305,11 +305,11 @@ export default function PostProjectForm() {
             </div>
             <div style={{ padding: '20px 24px' }}>
               <MagicLinkForm label={t.emailLabel} hint={null} t={t} />
-              <div style={{ marginTop: 20, paddingTop: 16, borderTop: '1px solid #F7EFE2', display: 'flex', gap: 10, justifyContent: 'center', flexWrap: 'wrap' }}>
-                <a href="/providers" style={{ fontSize: 13, color: '#57534E', textDecoration: 'none', fontWeight: 600 }}>{t.viewProviders}</a>
-                <span style={{ color: '#EDE4D3' }}>·</span>
+              <div style={{ marginTop: 20, paddingTop: 16, borderTop: '1px solid #F1F5F9', display: 'flex', gap: 10, justifyContent: 'center', flexWrap: 'wrap' }}>
+                <a href="/providers" style={{ fontSize: 13, color: '#64748B', textDecoration: 'none', fontWeight: 600 }}>{t.viewProviders}</a>
+                <span style={{ color: '#E2E8F0' }}>·</span>
                 <button onClick={resetForm}
-                  style={{ fontSize: 13, color: '#57534E', background: 'none', border: 'none', cursor: 'pointer', fontWeight: 600, padding: 0 }}>
+                  style={{ fontSize: 13, color: '#64748B', background: 'none', border: 'none', cursor: 'pointer', fontWeight: 600, padding: 0 }}>
                   {t.postAnother}
                 </button>
               </div>
@@ -367,8 +367,8 @@ export default function PostProjectForm() {
         />
       </Field>
 
-      <div style={{ height: 1, background: '#F7EFE2', margin: '8px 0 20px' }} />
-      <p style={{ fontSize: 12, color: '#57534E', marginBottom: 18, display: 'flex', alignItems: 'center', gap: 6 }}>
+      <div style={{ height: 1, background: '#F1F5F9', margin: '8px 0 20px' }} />
+      <p style={{ fontSize: 12, color: '#64748B', marginBottom: 18, display: 'flex', alignItems: 'center', gap: 6 }}>
         {t.privacy}
       </p>
 
@@ -382,11 +382,11 @@ export default function PostProjectForm() {
       </div>
 
       <button type="submit" disabled={submitting}
-        style={{ width: '100%', padding: '13px', background: submitting ? '#A8A29E' : '#B45309', color: '#fff', border: 'none', borderRadius: 12, fontSize: 15, fontWeight: 700, cursor: submitting ? 'not-allowed' : 'pointer', display: 'flex', alignItems: 'center', justifyContent: 'center', gap: 8, transition: 'background 0.2s' }}>
+        style={{ width: '100%', padding: '13px', background: submitting ? '#94A3B8' : '#2563EB', color: '#fff', border: 'none', borderRadius: 12, fontSize: 15, fontWeight: 700, cursor: submitting ? 'not-allowed' : 'pointer', display: 'flex', alignItems: 'center', justifyContent: 'center', gap: 8, transition: 'background 0.2s' }}>
         {submitting ? t.submitting : t.submit}
       </button>
 
-      <p style={{ fontSize: 11, color: '#A8A29E', textAlign: 'center', marginTop: 12 }}>
+      <p style={{ fontSize: 11, color: '#94A3B8', textAlign: 'center', marginTop: 12 }}>
         {t.footer}
       </p>
     </form>

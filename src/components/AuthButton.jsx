@@ -78,7 +78,7 @@ function AuthModal({ onClose }) {
       }}>
         <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', marginBottom: 24 }}>
           <div>
-            <div style={{ fontFamily: "'Playfair Display', serif", fontSize: 20, fontWeight: 700, color: 'var(--text)' }}>
+            <div style={{ fontFamily: "'Inter', sans-serif", fontSize: 20, fontWeight: 700, color: 'var(--text)' }}>
               Sign in to TilersHub
             </div>
             <div style={{ fontSize: 12, color: 'var(--text-3)', marginTop: 4 }}>Use your Google account to continue</div>
@@ -91,7 +91,7 @@ function AuthModal({ onClose }) {
           onClick={() => signInWithGoogle()}
           style={{
             width: '100%', padding: '13px', marginBottom: 14,
-            background: '#fff', color: '#44403C',
+            background: '#fff', color: '#334155',
             border: '1.5px solid #d1d5db', borderRadius: 10,
             fontSize: 14, fontWeight: 600, cursor: 'pointer',
             display: 'flex', alignItems: 'center', justifyContent: 'center', gap: 10,
