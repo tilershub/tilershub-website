@@ -221,7 +221,7 @@ function ProviderDashboard({ user, claimedProfile, submission, showClaimedBanner
     if (!claimedProfile?.id) { setDataLoaded(p => ({ ...p, reviews: true })); return }
     setDataLoading(true)
     const { data, error } = await supabase
-      .from('reviews').select('*').eq('provider_id', claimedProfile.id)
+      .from('reviews').select('*').eq('provider_id', claimedProfile.id).eq('status', 'published')
       .order('created_at', { ascending: false })
     if (!error) setReviews(data || [])
     setDataLoaded(p => ({ ...p, reviews: true }))

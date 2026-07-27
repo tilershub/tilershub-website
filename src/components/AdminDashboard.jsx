@@ -786,6 +786,11 @@ function BidsTab() {
     load()
   }
 
+  async function setStatus(id, status) {
+    await supabase.from('bids').update({ status }).eq('id', id)
+    load()
+  }
+
   return (
     <div>
       <h2 style={S.h2}>Bids</h2>
@@ -793,7 +798,7 @@ function BidsTab() {
         <>
           <div style={S.card}>
             <Table
-              heads={['Project','Bidder','Type','WhatsApp','Quote','Timeline','Message','Status','Date','Del']}
+              heads={['Project','Bidder','Type','WhatsApp','Quote','Timeline','Message','Status','Date','Actions']}
               empty={rows.length === 0 ? 'No bids yet' : null}
             >
               {rows.map(r => {
@@ -809,7 +814,18 @@ function BidsTab() {
                     <td style={{ ...S.td, maxWidth: 200 }}>{r.message?.slice(0, 80)}{r.message?.length > 80 ? '…' : ''}</td>
                     <td style={S.td}><StatusBadge status={r.status} /></td>
                     <td style={S.td}>{timeAgo(r.created_at)}</td>
-                    <td style={S.td}><button onClick={() => del(r.id)} style={S.btn('#fef2f2','#dc2626')}>🗑</button></td>
+                    <td style={S.td}>
+                      <div style={{ display: 'flex', gap: 5, alignItems: 'center' }}>
+                        <select onChange={e => e.target.value && setStatus(r.id, e.target.value)} defaultValue=""
+                          style={{ fontSize: 11, padding: '4px 6px', borderRadius: 8, border: '1px solid #E2E8F0', cursor: 'pointer', fontFamily: 'inherit' }}>
+                          <option value="" disabled>Set…</option>
+                          <option value="new">New</option>
+                          <option value="accepted">Accepted</option>
+                          <option value="rejected">Rejected</option>
+                        </select>
+                        <button onClick={() => del(r.id)} style={S.btn('#fef2f2','#dc2626')}>🗑</button>
+                      </div>
+                    </td>
                   </tr>
                 )
               })}
@@ -866,6 +882,20 @@ function ReviewsTab() {
     await load()
   }
 
+  // Take a disputed review down without destroying it — reversible, and the
+  // provider's rating recomputes automatically via trg_sync_provider_rating.
+  async function setStatus(id, status) {
+    setDeleteError(null)
+    const { data, error } = await supabase
+      .from('reviews').update({ status }).eq('id', id).select('id')
+    if (error) { setDeleteError('Update failed: ' + error.message); return }
+    if (!data || data.length === 0) {
+      setDeleteError('Review was not updated — your session may have expired. Please refresh and sign in again.')
+      return
+    }
+    await load()
+  }
+
   function Stars({ n }) {
     return <span style={{ color: '#f59e0b' }}>{'★'.repeat(n)}{'☆'.repeat(5 - n)}</span>
   }
@@ -879,7 +909,7 @@ function ReviewsTab() {
           {deleteError && <p style={{ color: '#dc2626', fontSize: 13, marginBottom: 12, padding: '8px 12px', background: '#fef2f2', borderRadius: 8, border: '1px solid #fecaca' }}>{deleteError}</p>}
           <div style={S.card}>
             <Table
-              heads={['Reviewer','Rating','Job Type','Comment','Profile','Date','Del']}
+              heads={['Reviewer','Rating','Job Type','Comment','Profile','Date','Status','Actions']}
               empty={rows.length === 0 ? 'No reviews yet' : null}
             >
               {rows.map(r => (
@@ -893,7 +923,19 @@ function ReviewsTab() {
                     {r.provider_id && <span style={{ fontSize: 11, color: '#64748B' }}>Provider</span>}
                   </td>
                   <td style={S.td}>{timeAgo(r.created_at)}</td>
-                  <td style={S.td}><button onClick={() => del(r.id)} style={S.btn('#fef2f2','#dc2626')}>🗑</button></td>
+                  <td style={S.td}>
+                    <span style={{ fontSize: 11, fontWeight: 700, padding: '2px 8px', borderRadius: 20, background: r.status === 'hidden' ? '#F1F5F9' : '#f0fdf4', color: r.status === 'hidden' ? '#64748B' : '#166534' }}>
+                      {r.status === 'hidden' ? 'Hidden' : 'Published'}
+                    </span>
+                  </td>
+                  <td style={S.td}>
+                    <div style={{ display: 'flex', gap: 5 }}>
+                      {r.status === 'hidden'
+                        ? <button onClick={() => setStatus(r.id, 'published')} style={S.btn('#f0fdf4','#166534')}>Publish</button>
+                        : <button onClick={() => setStatus(r.id, 'hidden')} style={S.btn('#EFF6FF','#2563EB')}>Hide</button>}
+                      <button onClick={() => del(r.id)} style={S.btn('#fef2f2','#dc2626')}>🗑</button>
+                    </div>
+                  </td>
                 </tr>
               ))}
             </Table>

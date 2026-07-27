@@ -280,8 +280,8 @@ export default function ReviewsSection({ tilerId, providerId }) {
 
   useEffect(() => {
     const q = tilerId
-      ? supabase.from('reviews').select('*').eq('tiler_id',    tilerId).order('created_at', { ascending: false })
-      : supabase.from('reviews').select('*').eq('provider_id', providerId).order('created_at', { ascending: false })
+      ? supabase.from('reviews').select('*').eq('tiler_id',    tilerId).eq('status', 'published').order('created_at', { ascending: false })
+      : supabase.from('reviews').select('*').eq('provider_id', providerId).eq('status', 'published').order('created_at', { ascending: false })
     q.then(({ data }) => { setReviews(data || []); setLoading(false) })
   }, [tilerId, providerId])
 
@@ -300,8 +300,8 @@ export default function ReviewsSection({ tilerId, providerId }) {
     setShowForm(false)
     // Reload reviews so new one shows immediately
     const q = tilerId
-      ? supabase.from('reviews').select('*').eq('tiler_id',    tilerId).order('created_at', { ascending: false })
-      : supabase.from('reviews').select('*').eq('provider_id', providerId).order('created_at', { ascending: false })
+      ? supabase.from('reviews').select('*').eq('tiler_id',    tilerId).eq('status', 'published').order('created_at', { ascending: false })
+      : supabase.from('reviews').select('*').eq('provider_id', providerId).eq('status', 'published').order('created_at', { ascending: false })
     q.then(({ data }) => setReviews(data || []))
   }
 
