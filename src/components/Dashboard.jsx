@@ -3,6 +3,7 @@ import { supabase, getUser, signOut, onAuthStateChange, buildWhatsAppLink, phone
 import ProfileEditor from './ProfileEditor.jsx'
 import PortfolioEditor from './PortfolioEditor.jsx'
 import { useLang } from '../lib/useLang.js'
+import { jobPath } from '../lib/jobs.js'
 
 const TYPE_ICON = {
   'Floor Tiling':'🪨','Bathroom Tiling':'🚿','Bathroom Renovation':'🛁',
@@ -168,23 +169,26 @@ function ProviderDashboard({ user, claimedProfile, submission, showClaimedBanner
   async function loadQuotesData() {
     setDataLoading(true)
 
-    // Bids are submitted without a login, so they carry no account reference —
-    // the WhatsApp number is the only link back to the provider. Match against
-    // every number we know for this user (approved profile, pending
-    // registration, account phone) in all the formats it may have been typed.
+    // Quotes now carry user_id, so this is exact. Older quotes predate that
+    // column, so also match any WhatsApp number we know for this user, in
+    // every format it may have been typed, and merge the two.
+    const byId = new Map()
+    const { data: mine } = await supabase
+      .from('bids').select('*').eq('user_id', user.id).order('created_at', { ascending: false })
+    for (const b of mine || []) byId.set(b.id, b)
+
     const numbers = [
       claimedProfile?.whatsapp, claimedProfile?.phone,
       submission?.whatsapp,
       user.phone,
     ].filter(Boolean)
     const variants = [...new Set(numbers.flatMap(n => phoneVariants(n)))]
-
-    let bids = []
     if (variants.length > 0) {
-      const { data } = await supabase
+      const { data: legacy } = await supabase
         .from('bids').select('*').in('bidder_whatsapp', variants).order('created_at', { ascending: false })
-      bids = data || []
+      for (const b of legacy || []) byId.set(b.id, b)
     }
+    const bids = [...byId.values()].sort((a, b) => new Date(b.created_at) - new Date(a.created_at))
 
     if (bids.length > 0) {
       const jobIds = [...new Set(bids.map(b => b.job_id))]
@@ -454,6 +458,14 @@ function MyQuotesTab({ submittedBids, lang }) {
               <span style={{ fontSize:10, fontWeight:700, padding:'2px 8px', borderRadius:20, background: isNew ? '#DBEAFE' : '#F1F5F9', color: isNew ? '#1E293B' : '#64748B', whiteSpace:'nowrap', flexShrink:0 }}>{statusLabel}</span>
             </div>
             {bid.message && <p style={{ fontSize:13, color:'#334155', lineHeight:1.6, margin:0 }}>{bid.message.length > 200 ? bid.message.slice(0,200)+'…' : bid.message}</p>}
+            {bid.project && (
+              <div style={{ marginTop:12, paddingTop:10, borderTop:'1px solid var(--border)' }}>
+                <a href={jobPath({ ...bid.project, id: bid.job_id })}
+                  style={{ display:'inline-flex', alignItems:'center', gap:6, fontSize:12, fontWeight:700, color:'var(--terra)', background:'var(--terra-50)', border:'1px solid var(--navy-100)', borderRadius:8, padding:'8px 14px', textDecoration:'none', minHeight:36 }}>
+                  ✏️ Edit my quote
+                </a>
+              </div>
+            )}
           </div>
         )
       })}
