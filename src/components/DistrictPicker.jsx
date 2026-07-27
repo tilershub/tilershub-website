@@ -15,6 +15,7 @@ export default function DistrictPicker({ tone = 'light' }) {
       <button
         onClick={() => setOpen(true)}
         aria-label="Change your district"
+        className="district-pill"
         style={{
           display: 'inline-flex', alignItems: 'center', gap: 5,
           height: 34, padding: '0 12px', borderRadius: 20, cursor: 'pointer',

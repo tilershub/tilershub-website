@@ -40,6 +40,8 @@ export default function AuthButton({ initialUser }) {
     <>
       <button
         onClick={() => setShowModal(true)}
+        className="signin-btn"
+        aria-label="Sign in"
         style={{
           fontSize: 13, fontWeight: 600,
           padding: '7px 14px',
@@ -51,7 +53,10 @@ export default function AuthButton({ initialUser }) {
           whiteSpace: 'nowrap',
         }}
       >
-        Sign In
+        {/* Narrow phones show the icon only — the label would push the menu
+            button off screen, and the bottom nav already has Account. */}
+        <span className="signin-label">Sign In</span>
+        <span className="signin-icon" aria-hidden="true">👤</span>
       </button>
       {showModal && <AuthModal onClose={() => setShowModal(false)} />}
     </>

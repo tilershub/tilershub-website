@@ -2,6 +2,7 @@
 import '../index.css'
 import AuthButton from '../components/AuthButton.jsx'
 import DraftLinker from '../components/DraftLinker.jsx'
+import DistrictPicker from '../components/DistrictPicker.jsx'
 
 const user = Astro.locals.user
 
@@ -156,12 +157,12 @@ const orgSchema = JSON.stringify({
       <span class="site-logo-mark">TILERS<span>HUB</span></span>
     </a>
 
+    <!-- One bar, five things. Posting is already the hero CTA and the
+         bottom-nav + button, so it isn't repeated here. -->
     <div class="header-actions">
-      <button id="lang-toggle" aria-label="Switch language" style="min-width:40px;height:28px;padding:0 10px;border-radius:20px;border:1.5px solid var(--border);background:#fff;color:var(--text-2);font-size:11px;font-weight:800;letter-spacing:0.5px;cursor:pointer;font-family:inherit;">සිං</button>
-      <a href="/providers" class="header-icon-btn header-search-hide" title="Search" aria-label="Search providers">🔍</a>
-      <a href="/notifications" class="header-icon-btn" title="Notifications" aria-label="Notifications">🔔</a>
+      <DistrictPicker client:load />
+      <a href="/notifications" class="header-icon-btn header-bell" title="Notifications" aria-label="Notifications">🔔</a>
       <AuthButton initialUser={user} client:load />
-      <a href="/post-project" class="header-cta">Post Project</a>
       <button class="header-icon-btn" id="hamburger" aria-label="Menu">☰</button>
     </div>
   </header>
@@ -174,6 +175,7 @@ const orgSchema = JSON.stringify({
       <button id="close-drawer" style="background:transparent;border:none;color:rgba(255,255,255,0.5);font-size:22px;cursor:pointer;padding:4px;">✕</button>
     </div>
     <a href="/" class={`drawer-link${path==='/'?' active':''}`}>🏠 Home</a>
+    <a href="/notifications" class={`drawer-link${path==='/notifications'?' active':''}`}>🔔 Notifications</a>
     <a href="/providers?type=tiler" class={`drawer-link${path.startsWith('/providers')?' active':''}`}>👷 Find Tilers</a>
     <a href="/jobs" class={`drawer-link${path==='/jobs'?' active':''}`}>💼 View Projects</a>
     <a href="/tile" class={`drawer-link${path==='/tile'?' active':''}`}>🏪 Tile Shops & Brands</a>
@@ -189,6 +191,10 @@ const orgSchema = JSON.stringify({
     <div class="drawer-divider"></div>
     <a href="/about" class={`drawer-link${path==='/about'?' active':''}`} style="color:rgba(255,255,255,0.5);font-size:13px;">ℹ️ About TilersHub</a>
     <a href="/contact" class={`drawer-link${path==='/contact'?' active':''}`} style="color:rgba(255,255,255,0.5);font-size:13px;">📬 Contact Us</a>
+    <div class="drawer-divider"></div>
+    <!-- Language is a set-once preference, so it lives here rather than
+         taking a permanent slot in the app bar. -->
+    <button id="lang-toggle" class="drawer-link" style="width:100%;text-align:left;background:transparent;border:none;cursor:pointer;font-family:inherit;font-size:14px;">සිං</button>
   </div>
 
   <!-- Links anonymous drafts/claims to account after sign-in -->
@@ -337,7 +343,7 @@ const orgSchema = JSON.stringify({
         document.documentElement.setAttribute('data-lang',l)
         window.dispatchEvent(new CustomEvent('th-lang',{detail:l}))
         var t=document.getElementById('lang-toggle')
-        if(t) t.textContent = l==='si' ? 'EN' : 'සිං'
+        if(t) t.textContent = l==='si' ? '🌐 Switch to English' : '🌐 සිංහලට මාරු වන්න'
       }
       window.__thSetLang = setLang
 
@@ -345,7 +351,7 @@ const orgSchema = JSON.stringify({
       var toggle=document.getElementById('lang-toggle')
       if(toggle){
         var cur=document.documentElement.getAttribute('data-lang')||'en'
-        toggle.textContent = cur==='si' ? 'EN' : 'සිං'
+        toggle.textContent = cur==='si' ? '🌐 Switch to English' : '🌐 සිංහලට මාරු වන්න'
         toggle.addEventListener('click',function(){
           var now=document.documentElement.getAttribute('data-lang')||'en'
           setLang(now==='si' ? 'en' : 'si')
