@@ -58,7 +58,7 @@ export default function HomeHero({ heroImg }) {
 
   // Show/hide the static guest hero based on auth state
   useEffect(() => {
-    const el = document.getElementById('guest-hero-static')
+    const el = document.getElementById('homeowner-home')
     if (el) el.style.display = role === 'provider' ? 'none' : ''
   }, [role])
 

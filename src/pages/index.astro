@@ -1,470 +1,97 @@
 ---
 import Layout from '../layouts/Layout.astro'
 import HomeHero from '../components/HomeHero.jsx'
-import { HOME_GROUPS, SERVICES } from '../lib/services.js'
-import { jobPath } from '../lib/jobs.js'
-import { DISTRICT_INFO, districtPath } from '../lib/locations.js'
+import NearYou from '../components/NearYou.jsx'
+import DistrictPicker from '../components/DistrictPicker.jsx'
+import { DEFAULT_DISTRICT } from '../lib/district.js'
 
-const HERO_IMG = 'https://images.unsplash.com/photo-1552321554-5fefe8c9ef14?auto=format&fit=crop&w=1400&q=75'
+const supabase = Astro.locals.supabase
 
-const serviceBySlug = Object.fromEntries(SERVICES.map(s => [s.slug, s]))
+// Server-render the default district so the page is useful before JS runs
+// and crawlers see real content. The client re-queries when the user
+// changes district.
+const SHOP_TYPES = ['tile_shop', 'bathroom_shop', 'supplier', 'brand_dealer', 'tool_supplier', 'workshop']
+const COLS = 'id,name,slug,city,district,service_areas,provider_type,avg_rating,review_count,profile_image,cover_image'
 
-const BLOG_POSTS = [
-  { slug: 'how-to-choose-a-tiler',             icon: '👷', color: '#2563EB', category: 'Hiring Tips',          titleEn: 'How to Choose the Right Tiler for Your Project',                      titleSi: 'ඔබේ ව්‍යාපෘතිය සඳහා නිවැරදි ටයිලර් කෙනෙකු තෝරා ගන්නේ කෙසේද' },
-  { slug: 'bathroom-renovation-cost-sri-lanka', icon: '💰', color: '#2563EB', category: 'Cost Guide',           titleEn: 'Bathroom Renovation Cost in Sri Lanka (2025 Guide)',                    titleSi: 'ශ්‍රී ලංකාවේ නාන කාමර ප්‍රතිසංස්කරණ පිරිවැය (2025 මාර්ගෝපදේශ)' },
-  { slug: 'waterproofing-bathroom-guide',       icon: '💧', color: '#0369a1', category: 'How-to Guide',         titleEn: 'Why Waterproofing Is the Most Important Step',                         titleSi: 'ජලනිරෝධය වඩාත්ම වැදගත් පියවර වන්නේ ඇයි' },
-  { slug: 'large-format-tiles-guide',           icon: '📏', color: '#2563EB', category: 'Tile Guide',           titleEn: 'Large Format Tiles: Pros, Cons & Installation Tips',                   titleSi: 'විශාල ෆෝමැට් ටයිල්: වාසි, අවාසි සහ ස්ථාපන ඉඟි' },
-]
+const { data: allActive } = await supabase
+  .from('providers').select(COLS).eq('status', 'active')
+  .order('avg_rating', { ascending: false })
+  .order('review_count', { ascending: false })
+  .limit(60)
 
-const PROJECT_TYPE_ICONS: Record<string,string> = {
-  'Floor Tiling':'🪨','Bathroom Tiling':'🚿','Bathroom Renovation':'🛁',
-  'Granite Works':'💎','Tile Cutting':'✂️','Routering':'🔧',
-  'Waterproofing':'💧','Tile Shop Inquiry':'🏪',
-}
-const PROJECT_TYPE_COLORS: Record<string,string> = {
-  'Floor Tiling':'#2563EB','Bathroom Tiling':'#2563EB','Bathroom Renovation':'#2563EB',
-  'Granite Works':'#7c3aed','Tile Cutting':'#2563EB','Routering':'#2563EB',
-  'Waterproofing':'#0369a1','Tile Shop Inquiry':'#2563EB',
-}
+const isLocal = (p: any) =>
+  p.district === DEFAULT_DISTRICT ||
+  (p.service_areas || []).includes(DEFAULT_DISTRICT) ||
+  (p.city || '').toLowerCase().includes(DEFAULT_DISTRICT.toLowerCase())
 
-const { data: recentProjectsRaw } = await Astro.locals.supabase
-  .from('projects')
-  .select('id,project_type,city,district,description,budget_range,created_at')
-  .eq('status', 'active')
-  .order('created_at', { ascending: false })
-  .limit(3)
+const pool = allActive ?? []
+const prosAll  = pool.filter((p: any) => !SHOP_TYPES.includes(p.provider_type))
+const shopsAll = pool.filter((p: any) =>  SHOP_TYPES.includes(p.provider_type))
+const pros  = (prosAll.filter(isLocal).length  ? prosAll.filter(isLocal)  : prosAll ).slice(0, 10)
+const shops = (shopsAll.filter(isLocal).length ? shopsAll.filter(isLocal) : shopsAll).slice(0, 10)
 
-const recentProjects = recentProjectsRaw || []
-
-function projectTimeAgo(ts: string) {
-  const diff = Math.floor((Date.now() - new Date(ts).getTime()) / 1000)
-  if (diff < 60)     return 'just now'
-  if (diff < 3600)   return `${Math.floor(diff / 60)}m`
-  if (diff < 86400)  return `${Math.floor(diff / 3600)}h`
-  if (diff < 604800) return `${Math.floor(diff / 86400)}d`
-  return new Date(ts).toLocaleDateString('en-LK', { day:'numeric', month:'short' })
-}
-
-const WHY_ITEMS = [
-  { icon: '✅', en: 'Verified Providers', si: 'සත්‍යාපිත ශිල්පීන්', descEn: 'All professionals are reviewed before listing', descSi: 'සියලු ශිල්පීන් ලැයිස්තු කිරීමට පෙර සමාලෝචනය කෙරේ' },
-  { icon: '📊', en: 'Compare Quotations', si: 'ලංසු සංසන්දනය',    descEn: 'Receive multiple quotes and choose the best', descSi: 'ලංසු කිහිපයක් ලබා ගෙන හොඳම එක තෝරා ගන්න' },
-  { icon: '⭐', en: 'Reviews & Ratings',  si: 'සමාලෝචන',          descEn: 'Real reviews from verified customers',      descSi: 'සත්‍යාපිත ගනුදෙනුකරුවන්ගේ ඇත්ත සමාලෝචන' },
-  { icon: '🗺️', en: 'Islandwide Service', si: 'දිවයිනපුරා',        descEn: 'Covering all 25 districts across Sri Lanka', descSi: 'ශ්‍රී ලංකාවේ සියලු දිස්ත්‍රික්ක 25 ආවරණය' },
-]
+Astro.response.headers.set('Cache-Control', 'public, max-age=0, s-maxage=300')
 ---
 
 <Layout
-  title="TilersHub · Sri Lanka's Tile Marketplace — Tilers, Shops, Brands & Projects"
-  description="The home of Sri Lanka's tile trade: homeowners post projects free, tilers win jobs, and tile shops, brands and suppliers reach customers. All 25 districts."
+  title="TilersHub · Find Trusted Tilers in Sri Lanka"
+  description="Post your tiling or renovation job free and get quotes from verified professionals near you. Compare ratings, chat on WhatsApp, no commission."
 >
-  <meta slot="head" name="keywords" content="tilers Sri Lanka, tiling services, tile marketplace Sri Lanka, bathroom renovation, floor tiling, tile contractor Colombo, tile shop Sri Lanka, tile brands Sri Lanka, tile suppliers, waterproofing Sri Lanka, TilersHub" />
+  <meta slot="head" name="keywords" content="tilers Sri Lanka, tiling services Colombo, bathroom renovation, floor tiling, tile shop Sri Lanka, find a tiler, TilersHub" />
   <script slot="head" type="application/ld+json" set:html={JSON.stringify({
     '@context': 'https://schema.org',
-    '@type': 'WebPage',
-    name: "TilersHub · Sri Lanka's Tile Marketplace",
-    description: "The home of Sri Lanka's tile trade — projects, professionals, shops, brands and suppliers.",
+    '@type': 'WebSite',
+    name: 'TilersHub',
     url: 'https://www.tilershub.lk',
-    isPartOf: { '@id': 'https://www.tilershub.lk/#website' },
-    about: { '@type': 'Thing', name: 'Tile trade marketplace in Sri Lanka' },
+    description: 'Find trusted tilers and home-service professionals across Sri Lanka.',
+    potentialAction: {
+      '@type': 'SearchAction',
+      target: 'https://www.tilershub.lk/providers?search={search_term_string}',
+      'query-input': 'required name=search_term_string',
+    },
   })} />
-  <link slot="head" rel="preload" as="image" href={HERO_IMG} fetchpriority="high" />
 
-  <!-- ══ HERO ══ -->
-  <div id="guest-hero-static" style="position:relative;min-height:320px;display:flex;align-items:center;justify-content:center;overflow:hidden;padding:44px 20px 40px;background:#2A1505;">
-    <img src={HERO_IMG} alt="" width="1400" height="800"
-      style="position:absolute;inset:0;width:100%;height:100%;object-fit:cover;object-position:center 30%;opacity:0.5;"
-      loading="eager" fetchpriority="high" decoding="sync" />
-    <div style="position:absolute;inset:0;background:linear-gradient(175deg,rgba(15,23,42,0.5) 0%,rgba(15,23,42,0.55) 100%),radial-gradient(ellipse 90% 55% at 50% -5%,rgba(96,165,250,0.30) 0%,transparent 72%);pointer-events:none;"></div>
-    <div style="position:relative;text-align:center;max-width:560px;width:100%;">
-      <h1 style="font-family: 'Inter', sans-serif;font-size:clamp(24px,5vw,40px);font-weight:700;color:#fff;line-height:1.15;margin-bottom:10px;">
-        <span class="en-text">Find the Right Professional for Your Home</span>
-        <span class="si-text">ඔබේ නිවස සඳහා නිවැරදි ශිල්පියා සොයන්න</span>
+  <!-- Signed-in providers get their own view; HomeHero hides this wrapper -->
+  <div id="homeowner-home">
+
+  <!-- ══ 1. ONE ACTION ══ -->
+  <section style="background:linear-gradient(160deg,#0F172A 0%,#1E293B 100%);padding:36px 20px 32px;">
+    <div style="max-width:520px;margin:0 auto;text-align:center;">
+      <h1 style="font-size:clamp(24px,6vw,32px);font-weight:800;color:#fff;line-height:1.25;margin:0 0 10px;letter-spacing:-0.5px;">
+        <span class="en-text">Find trusted tilers near you</span>
+        <span class="si-text">ඔබ අසල විශ්වාසනීය ටයිලර්වරු</span>
       </h1>
-      <p style="font-size:13px;color:rgba(255,255,255,0.62);margin-bottom:22px;line-height:1.7;">
-        <span class="en-text">Post your project free and get quotes from verified specialists</span>
-        <span class="si-text">ව්‍යාපෘතිය නොමිලේ පළ කර සත්‍යාපිත ශිල්පීන්ගේ ලංසු ලබා ගන්න</span>
+      <p style="font-size:14px;color:rgba(255,255,255,0.7);line-height:1.7;margin:0 0 20px;">
+        <span class="en-text">Post your job free — verified professionals send you quotes on WhatsApp.</span>
+        <span class="si-text">නොමිලේ පලකරන්න — සත්‍යාපිත ශිල්පීන් WhatsApp හරහා ලංසු එවයි.</span>
       </p>
-      <!-- Search bar -->
-      <form id="hero-search" style="display:flex;gap:8px;margin-bottom:16px;max-width:480px;margin-left:auto;margin-right:auto;">
-        <input id="hero-q" type="search"
-          style="flex:1;padding:13px 16px;border-radius:24px;border:none;font-size:14px;outline:none;color:#0F172A;"
-          aria-label="Search services" />
-        <button type="submit"
-          style="flex-shrink:0;background:linear-gradient(135deg,#93C5FD 0%,#F59E0B 100%);color:#0F172A;border:none;border-radius:24px;padding:13px 22px;font-size:14px;font-weight:700;cursor:pointer;white-space:nowrap;">
-          <span class="en-text">Search</span>
-          <span class="si-text">සොයන්න</span>
-        </button>
-      </form>
-      <div>
-        <a href="/post-project" style="display:inline-flex;align-items:center;gap:8px;background:linear-gradient(135deg,#93C5FD 0%,#F59E0B 100%);color:#0F172A;border-radius:24px;padding:13px 26px;font-size:14px;font-weight:800;text-decoration:none;box-shadow:0 6px 24px rgba(37,99,235,0.45);margin-bottom:14px;">
-          📋
-          <span class="en-text">Post Your Project Free</span>
-          <span class="si-text">ව්‍යාපෘතිය නොමිලේ පලකරන්න</span>
-        </a>
+
+      <div style="display:flex;justify-content:center;margin-bottom:16px;">
+        <DistrictPicker client:load tone="dark" />
       </div>
-      <div style="display:flex;gap:8px;justify-content:center;flex-wrap:wrap;">
-        <span style="background:rgba(255,255,255,0.1);color:rgba(255,255,255,0.78);border-radius:20px;padding:5px 13px;font-size:11px;font-weight:600;border:1px solid rgba(255,255,255,0.15);">
-          <span class="en-text">✓ Free to post</span>
-          <span class="si-text">✓ නොමිලේ</span>
-        </span>
-        <span style="background:rgba(255,255,255,0.1);color:rgba(255,255,255,0.78);border-radius:20px;padding:5px 13px;font-size:11px;font-weight:600;border:1px solid rgba(255,255,255,0.15);">
-          <span class="en-text">✓ Multiple quotes</span>
-          <span class="si-text">✓ බහු ලංසු</span>
-        </span>
-        <span style="background:rgba(255,255,255,0.1);color:rgba(255,255,255,0.78);border-radius:20px;padding:5px 13px;font-size:11px;font-weight:600;border:1px solid rgba(255,255,255,0.15);">
-          <span class="en-text">✓ No commitment</span>
-          <span class="si-text">✓ බැඳීමක් නැත</span>
-        </span>
-      </div>
-    </div>
-  </div>
-  <!-- Provider-specific hero — replaces static hero if logged-in provider -->
-  <HomeHero client:load heroImg={HERO_IMG} />
 
-  <!-- ══ SERVICE GROUPS ══ -->
-  <section style="background:#fff;padding:20px 0 8px;border-bottom:1px solid #F1F5F9;">
-    <div style="padding:0 16px 10px;">
-      <h2 style="font-size:16px;font-weight:800;color:#0F172A;margin:0 0 2px;">
-        <span class="en-text">Browse by Service</span>
-        <span class="si-text">සේවාවෙන් සොයන්න</span>
-      </h2>
-    </div>
+      <a href="/post-project"
+        style="display:flex;align-items:center;justify-content:center;gap:8px;background:#2563EB;color:#fff;border-radius:14px;padding:16px 24px;font-size:16px;font-weight:700;text-decoration:none;box-shadow:0 6px 20px rgba(37,99,235,0.4);min-height:56px;">
+        <span class="en-text">Post your job — free</span>
+        <span class="si-text">ඔබේ රැකියාව පලකරන්න — නොමිලේ</span>
+      </a>
 
-    {HOME_GROUPS.map(group => {
-      const groupServices = group.services.map(slug => serviceBySlug[slug]).filter(Boolean)
-      return (
-        <div style="margin-bottom:20px;">
-          <!-- Group header -->
-          <div style="display:flex;align-items:center;justify-content:space-between;padding:0 16px 8px;">
-            <div style="display:flex;align-items:center;gap:7px;">
-              <span style="font-size:16px;">{group.icon}</span>
-              <span style="font-size:14px;font-weight:700;color:#0F172A;">
-                <span class="en-text">{group.label}</span>
-                <span class="si-text">{group.labelSi}</span>
-              </span>
-            </div>
-            <a href={group.viewAllHref} style="font-size:12px;font-weight:600;color:#2563EB;text-decoration:none;">
-              <span class="en-text">View all ›</span>
-              <span class="si-text">සියල්ල ›</span>
-            </a>
-          </div>
-          <!-- Scrollable service cards -->
-          <div style="display:flex;gap:8px;overflow-x:auto;padding:0 16px 4px;scrollbar-width:none;-webkit-overflow-scrolling:touch;">
-            {groupServices.map(svc => (
-              <a href={svc.externalUrl || `/services/${svc.slug}`}
-                target={svc.externalUrl ? '_blank' : undefined}
-                rel={svc.externalUrl ? 'noopener noreferrer' : undefined}
-                style="flex-shrink:0;display:flex;flex-direction:column;align-items:center;gap:6px;width:86px;padding:12px 6px 10px;background:#F8FAFC;border-radius:14px;border:1px solid #E2E8F0;text-decoration:none;color:#0F172A;transition:border-color 0.15s;">
-                <span style="font-size:26px;line-height:1;">{svc.icon}</span>
-                <span style="font-size:10px;font-weight:600;text-align:center;line-height:1.3;color:#334155;">{svc.label}</span>
-              </a>
-            ))}
-          </div>
-        </div>
-      )
-    })}
-  </section>
-
-  <!-- ══ HOW IT WORKS ══ -->
-  <section style="background:linear-gradient(135deg,#0F172A,#0F172A),radial-gradient(ellipse 80% 60% at 50% -10%,rgba(96,165,250,0.22) 0%,transparent 70%);background-blend-mode:screen;padding:28px 16px 24px;">
-    <div style="max-width:480px;margin:0 auto;">
-      <p style="font-size:9px;font-weight:700;color:rgba(255,255,255,0.4);letter-spacing:3px;text-transform:uppercase;text-align:center;margin:0 0 18px;">
-        <span class="en-text">HOW IT WORKS</span>
-        <span class="si-text">ක්‍රියාකාරී ආකාරය</span>
-      </p>
-      {[
-        { n:'1', icon:'📋',
-          titleEn:'Post Your Project', titleSi:'ව්‍යාපෘතිය පලකරන්න',
-          descEn:'Free — no login needed. Takes 2 minutes.', descSi:'නොමිලේ — ලොගිනය අවශ්‍ය නැත. මිනිත්තු 2 ක් ගනී.',
-          c:'#2563EB' },
-        { n:'2', icon:'💬',
-          titleEn:'Receive Quotes',    titleSi:'ලංසු ලැබේ',
-          descEn:'Verified specialists send quotes via WhatsApp.', descSi:'සත්‍යාපිත ශිල්පීවරු WhatsApp ට ලංසු යවති.',
-          c:'#60A5FA' },
-        { n:'3', icon:'✅',
-          titleEn:'Choose the Best',   titleSi:'ඔබ තෝරා ගන්න',
-          descEn:'Compare, chat directly, hire the best fit.', descSi:'සසඳන්න, කෙළින්ම කතා කරන්න, හොඳම අය තෝරන්න.',
-          c:'#25D366' },
-      ].map((s, i) => (
-        <div style={`display:flex;align-items:flex-start;gap:16px;padding:13px 0;${i<2?'border-bottom:1px solid rgba(255,255,255,0.07);':''}`}>
-          <div style={`width:38px;height:38px;border-radius:50%;background:${s.c};display:flex;align-items:center;justify-content:center;font-size:14px;font-weight:800;color:#fff;flex-shrink:0;`}>{s.n}</div>
-          <div style="padding-top:2px;">
-            <div style="font-size:14px;font-weight:700;color:#fff;margin-bottom:2px;">
-              <span class="en-text">{s.titleEn}</span>
-              <span class="si-text">{s.titleSi}</span>
-            </div>
-            <div style="font-size:12px;color:rgba(255,255,255,0.45);line-height:1.6;">
-              <span class="en-text">{s.descEn}</span>
-              <span class="si-text">{s.descSi}</span>
-            </div>
-          </div>
-        </div>
-      ))}
-    </div>
-  </section>
-
-  <!-- ══ RECENT PROJECTS ══ -->
-  <section style="background:#fff;padding:22px 0 24px;border-bottom:1px solid #F1F5F9;">
-    <div style="padding:0 16px 14px;display:flex;align-items:center;justify-content:space-between;">
-      <h2 style="font-size:16px;font-weight:800;color:#0F172A;margin:0;">
-        <span class="en-text">Recent Projects</span>
-        <span class="si-text">මෑත ව්‍යාපෘති</span>
-      </h2>
-      <a href="/jobs" style="font-size:12px;font-weight:600;color:#2563EB;text-decoration:none;">
-        <span class="en-text">View all ›</span>
-        <span class="si-text">සියල්ල ›</span>
+      <a href="/providers" style="display:inline-block;margin-top:14px;font-size:13px;color:rgba(255,255,255,0.65);text-decoration:none;">
+        <span class="en-text">or browse all services →</span>
+        <span class="si-text">නැතහොත් සියලු සේවා බලන්න →</span>
       </a>
     </div>
-    <div style="display:flex;flex-direction:column;gap:10px;padding:0 16px;">
-      {recentProjects.length === 0
-        ? (
-          <div style="padding:20px 0;font-size:13px;color:#94A3B8;text-align:center;">
-            <span class="en-text">No projects yet — </span>
-            <span class="si-text">දැනට ව්‍යාපෘති නොමැත — </span>
-            <a href="/post-project" style="color:#2563EB;font-weight:600;text-decoration:none;">
-              <span class="en-text">post yours free →</span>
-              <span class="si-text">නොමිලේ පලකරන්න →</span>
-            </a>
-          </div>
-        )
-        : recentProjects.map((p: any) => {
-          const icon  = PROJECT_TYPE_ICONS[p.project_type]  || '🏠'
-          const color = PROJECT_TYPE_COLORS[p.project_type] || '#2563EB'
-          const excerpt = p.description?.length > 90 ? p.description.slice(0, 90) + '…' : p.description
-          return (
-            <a href={jobPath(p)}
-              style="display:flex;align-items:center;gap:12px;background:#F8FAFC;border-radius:16px;border:1px solid #E2E8F0;padding:14px 16px;text-decoration:none;color:inherit;">
-              <div style={`width:48px;height:48px;border-radius:14px;background:${color}12;border:1.5px solid ${color}22;display:flex;align-items:center;justify-content:center;font-size:24px;flex-shrink:0;`}>{icon}</div>
-              <div style="flex:1;min-width:0;">
-                <div style="display:flex;align-items:center;gap:6px;margin-bottom:3px;">
-                  <span style="font-size:13px;font-weight:700;color:#0F172A;">{p.project_type}</span>
-                  <span style="font-size:11px;color:#94A3B8;margin-left:auto;white-space:nowrap;">{projectTimeAgo(p.created_at)}</span>
-                </div>
-                {(p.city || p.district) && <div style="font-size:11px;color:#64748B;margin-bottom:4px;">📍 {p.city}{p.district && p.district !== p.city ? `, ${p.district}` : ''}</div>}
-                {excerpt && <p style="font-size:12px;color:#64748B;margin:0 0 6px;line-height:1.5;overflow:hidden;white-space:nowrap;text-overflow:ellipsis;">{excerpt}</p>}
-                {p.budget_range && <span style="font-size:10px;padding:2px 8px;border-radius:20px;background:#f0fdf4;color:#15803d;font-weight:600;border:1px solid #bbf7d0;">💰 {p.budget_range}</span>}
-              </div>
-              <div style={`flex-shrink:0;background:${color};color:#fff;border-radius:10px;padding:9px 16px;font-size:12px;font-weight:700;white-space:nowrap;`}>
-                <span class="en-text">Bid →</span>
-                <span class="si-text">ලංසු →</span>
-              </div>
-            </a>
-          )
-        })
-      }
-    </div>
   </section>
 
-  <!-- ══ ESTIMATOR TEASER ══ -->
-  <div style="padding:14px 16px;background:#fff;border-top:1px solid #F1F5F9;">
-    <a href="/estimator"
-      style="display:flex;align-items:center;justify-content:space-between;gap:12px;background:linear-gradient(120deg,#2563EB,#1E293B);border-radius:18px;padding:16px 20px;text-decoration:none;">
-      <div style="display:flex;align-items:center;gap:14px;">
-        <div style="font-size:28px;flex-shrink:0;">📐</div>
-        <div>
-          <div style="font-size:14px;font-weight:800;color:#fff;margin-bottom:2px;">
-            <span class="en-text">Calculate Your Project Cost</span>
-            <span class="si-text">ඔබේ ව්‍යාපෘති පිරිවැය ගණනය කරන්න</span>
-          </div>
-          <div style="font-size:11px;color:rgba(255,255,255,0.55);">
-            <span class="en-text">Tiles · Labour · Materials — Free</span>
-            <span class="si-text">ටයිල් ප්‍රමාණය · කම්කරු · ද්‍රව්‍ය — නොමිලේ</span>
-          </div>
-        </div>
-      </div>
-      <div style="background:#fff;color:#2563EB;border-radius:12px;padding:9px 16px;font-size:12px;font-weight:800;white-space:nowrap;flex-shrink:0;">
-        <span class="en-text">Free ›</span>
-        <span class="si-text">නොමිලේ ›</span>
-      </div>
-    </a>
+  <!-- ══ 2. TOP RATED NEAR YOU ══ -->
+  <NearYou client:load initial={pros} />
+
+  <!-- ══ 3. TILE SHOPS NEAR YOU ══ -->
+  <NearYou client:load variant="shops" initial={shops} />
+
+  <div style="height:24px;"></div>
   </div>
 
-  <!-- ══ WHY TILERSHUB ══ -->
-  <section style="background:#F8FAFC;padding:28px 16px 24px;border-top:1px solid #F1F5F9;">
-    <div style="max-width:560px;margin:0 auto;">
-      <h2 style="font-size:16px;font-weight:800;color:#0F172A;text-align:center;margin:0 0 20px;">
-        <span class="en-text">Why TilersHub?</span>
-        <span class="si-text">ඇයි TilersHub?</span>
-      </h2>
-      <div style="display:grid;grid-template-columns:1fr 1fr;gap:12px;">
-        {WHY_ITEMS.map(item => (
-          <div style="background:#fff;border-radius:14px;border:1px solid #E2E8F0;padding:16px 14px;">
-            <div style="font-size:24px;margin-bottom:8px;">{item.icon}</div>
-            <div style="font-size:13px;font-weight:700;color:#0F172A;margin-bottom:4px;line-height:1.3;">
-              <span class="en-text">{item.en}</span>
-              <span class="si-text">{item.si}</span>
-            </div>
-            <div style="font-size:11px;color:#64748B;line-height:1.5;">
-              <span class="en-text">{item.descEn}</span>
-              <span class="si-text">{item.descSi}</span>
-            </div>
-          </div>
-        ))}
-      </div>
-    </div>
-  </section>
-
-  <!-- ══ ECOSYSTEM: EVERY PARTY IN THE TILE TRADE ══ -->
-  <section style="background:#fff;padding:24px 16px 28px;border-top:1px solid #F1F5F9;">
-    <h2 style="font-size:16px;font-weight:800;color:#0F172A;margin:0 0 4px;">
-      <span class="en-text">🧱 One Place for the Whole Tile Trade</span>
-      <span class="si-text">🧱 ටයිල් ක්ෂේත්‍රයේ සියල්ලන්ටම එකම තැන</span>
-    </h2>
-    <p style="font-size:12px;color:#64748B;margin:0 0 14px;line-height:1.6;">
-      <span class="en-text">Homeowners, tilers, shops, brands and suppliers — everyone in Sri Lanka's tile niche works through TilersHub.</span>
-      <span class="si-text">ගෙදර හිමිකරුවන්, ටයිලර්වරු, ටයිල් සාප්පු, brands සහ suppliers — සියල්ලන්ටම TilersHub.</span>
-    </p>
-    <div style="display:grid;grid-template-columns:1fr 1fr;gap:12px;">
-
-      <a href="/post-project" style="display:block;background:linear-gradient(135deg,#2563EB,#1E293B);border-radius:16px;padding:16px 14px;text-decoration:none;">
-        <div style="font-size:26px;margin-bottom:8px;">🏠</div>
-        <div style="font-size:13px;font-weight:800;color:#fff;margin-bottom:3px;">
-          <span class="en-text">Homeowners</span>
-          <span class="si-text">ගෙදර හිමිකරුවන්</span>
-        </div>
-        <div style="font-size:11px;color:rgba(255,255,255,0.75);line-height:1.5;">
-          <span class="en-text">Post a project free, compare quotes, hire with confidence</span>
-          <span class="si-text">නොමිලේ පලකරන්න, ලංසු සසඳන්න, විශ්වාසයෙන් කුලියට ගන්න</span>
-        </div>
-        <div style="font-size:11px;font-weight:800;color:#BFDBFE;margin-top:8px;"><span class="en-text">Post free →</span><span class="si-text">පලකරන්න →</span></div>
-      </a>
-
-      <a href="/jobs" style="display:block;background:#fff;border:1.5px solid #BFDBFE;border-radius:16px;padding:16px 14px;text-decoration:none;">
-        <div style="font-size:26px;margin-bottom:8px;">👷</div>
-        <div style="font-size:13px;font-weight:800;color:#0F172A;margin-bottom:3px;">
-          <span class="en-text">Tilers & Contractors</span>
-          <span class="si-text">ටයිලර්වරු</span>
-        </div>
-        <div style="font-size:11px;color:#64748B;line-height:1.5;">
-          <span class="en-text">Browse open projects, bid free, get listed islandwide</span>
-          <span class="si-text">විවෘත ව්‍යාපෘති බලන්න, නොමිලේ ලංසු දමන්න</span>
-        </div>
-        <div style="font-size:11px;font-weight:800;color:#2563EB;margin-top:8px;"><span class="en-text">Find jobs →</span><span class="si-text">රැකියා →</span></div>
-      </a>
-
-      <a href="/tile" style="display:block;background:#fff;border:1.5px solid #BFDBFE;border-radius:16px;padding:16px 14px;text-decoration:none;">
-        <div style="font-size:26px;margin-bottom:8px;">🏪</div>
-        <div style="font-size:13px;font-weight:800;color:#0F172A;margin-bottom:3px;">
-          <span class="en-text">Tile Shops & Brands</span>
-          <span class="si-text">ටයිල් සාප්පු සහ Brands</span>
-        </div>
-        <div style="font-size:11px;color:#64748B;line-height:1.5;">
-          <span class="en-text">Reach renovating customers; showcase collections & dealers</span>
-          <span class="si-text">ගනුදෙනුකරුවන් වෙත ළඟා වන්න</span>
-        </div>
-        <div style="font-size:11px;font-weight:800;color:#2563EB;margin-top:8px;"><span class="en-text">Shops & brands →</span><span class="si-text">සාප්පු →</span></div>
-      </a>
-
-      <a href="/tools" style="display:block;background:#fff;border:1.5px solid #BFDBFE;border-radius:16px;padding:16px 14px;text-decoration:none;">
-        <div style="font-size:26px;margin-bottom:8px;">🛠️</div>
-        <div style="font-size:13px;font-weight:800;color:#0F172A;margin-bottom:3px;">
-          <span class="en-text">Suppliers & Workshops</span>
-          <span class="si-text">Suppliers සහ Workshops</span>
-        </div>
-        <div style="font-size:11px;color:#64748B;line-height:1.5;">
-          <span class="en-text">Tools, adhesives, cutting services — list your business free</span>
-          <span class="si-text">මෙවලම්, ඇලවුම්, කැපුම් සේවා</span>
-        </div>
-        <div style="font-size:11px;font-weight:800;color:#2563EB;margin-top:8px;"><span class="en-text">Tools & supplies →</span><span class="si-text">මෙවලම් →</span></div>
-      </a>
-
-    </div>
-    <a href="/join-tilershub" style="display:flex;align-items:center;justify-content:center;gap:8px;margin-top:12px;background:#EFF6FF;border:1.5px solid #BFDBFE;border-radius:14px;padding:13px;font-size:13px;font-weight:800;color:#2563EB;text-decoration:none;">
-      ✅ <span class="en-text">In the tile trade? Get listed free →</span><span class="si-text">ටයිල් ක්ෂේත්‍රයේද? නොමිලේ ලියාපදිංචි වන්න →</span>
-    </a>
-  </section>
-
-  <!-- ══ BLOG / TIPS ══ -->
-  <section style="background:#fff;padding:20px 0 24px;border-top:1px solid #F1F5F9;">
-    <div style="padding:0 16px 12px;display:flex;align-items:center;justify-content:space-between;">
-      <h2 style="font-size:16px;font-weight:800;color:#0F172A;margin:0;">
-        <span class="en-text">📰 Tips & Guides</span>
-        <span class="si-text">📰 ඉඟි සහ මාර්ගෝපදේශ</span>
-      </h2>
-      <a href="/blog" style="font-size:12px;font-weight:600;color:#2563EB;text-decoration:none;">
-        <span class="en-text">View all ›</span>
-        <span class="si-text">සියල්ල ›</span>
-      </a>
-    </div>
-    <div style="display:flex;flex-direction:column;gap:8px;padding:0 16px;">
-      {BLOG_POSTS.slice(0,2).map(post => (
-        <a href={`/blog/${post.slug}`}
-          style="display:flex;align-items:center;gap:0;background:#fff;border-radius:14px;overflow:hidden;border:1px solid #E2E8F0;text-decoration:none;color:inherit;">
-          <div style={`width:64px;height:64px;background:${post.color};flex-shrink:0;display:flex;align-items:center;justify-content:center;font-size:24px;`}>{post.icon}</div>
-          <div style="flex:1;padding:11px 13px;min-width:0;">
-            <span style="font-size:9px;font-weight:700;color:#2563EB;background:#EFF6FF;border:1px solid #BFDBFE;border-radius:20px;padding:1px 7px;">{post.category}</span>
-            <div style="font-size:12px;font-weight:700;color:#0F172A;line-height:1.4;margin-top:5px;overflow:hidden;display:-webkit-box;-webkit-line-clamp:2;-webkit-box-orient:vertical;">
-              <span class="en-text">{post.titleEn}</span>
-              <span class="si-text">{post.titleSi}</span>
-            </div>
-          </div>
-          <div style="padding:0 14px;font-size:18px;color:#CBD5E1;flex-shrink:0;">›</div>
-        </a>
-      ))}
-    </div>
-  </section>
-
-  <!-- ══ FIND TILERS BY DISTRICT ══ -->
-  <section style="background:#F8FAFC;padding:24px 16px 28px;border-top:1px solid #F1F5F9;">
-    <h2 style="font-size:16px;font-weight:800;color:#0F172A;margin:0 0 4px;">
-      <span class="en-text">📍 Find Tilers by District</span>
-      <span class="si-text">📍 දිස්ත්‍රික්කය අනුව ටයිලර්වරු</span>
-    </h2>
-    <p style="font-size:12px;color:#64748B;margin:0 0 14px;">
-      <span class="en-text">Verified tiling professionals across all 25 districts of Sri Lanka</span>
-      <span class="si-text">ශ්‍රී ලංකාවේ දිස්ත්‍රික්ක 25 පුරා සත්‍යාපිත ටයිලර්වරු</span>
-    </p>
-    <div style="display:flex;flex-wrap:wrap;gap:8px;">
-      {DISTRICT_INFO.map(d => (
-        <a href={districtPath(d)} style="font-size:12px;font-weight:600;color:#2563EB;background:#fff;border:1px solid #BFDBFE;border-radius:20px;padding:6px 13px;text-decoration:none;">
-          {d.name}
-        </a>
-      ))}
-    </div>
-  </section>
-
-  <!-- ══ BOTTOM CTA ══ -->
-  <section style="background:linear-gradient(135deg,#0F172A,#0F172A),radial-gradient(ellipse 80% 60% at 50% -10%,rgba(96,165,250,0.22) 0%,transparent 70%);background-blend-mode:screen;padding:36px 20px;">
-    <div style="max-width:480px;margin:0 auto;text-align:center;">
-      <div style="font-size:32px;margin-bottom:12px;">🏠</div>
-      <h2 style="font-family: 'Inter', sans-serif;font-size:20px;font-weight:700;color:#fff;margin:0 0 10px;line-height:1.3;">
-        <span class="en-text">Ready to start your project?</span>
-        <span class="si-text">ව්‍යාපෘතිය ආරම්භ කිරීමට සූදානම්ද?</span>
-      </h2>
-      <p style="font-size:13px;color:rgba(255,255,255,0.55);line-height:1.7;margin:0 0 22px;">
-        <span class="en-text">Post it free — receive quotes from verified professionals across Sri Lanka.</span>
-        <span class="si-text">නොමිලේ පලකරන්න — ශ්‍රී ලංකාව පුරා සත්‍යාපිත ශිල්පීන්ගේ ලංසු ලබා ගන්න.</span>
-      </p>
-      <div style="display:flex;gap:12px;justify-content:center;flex-wrap:wrap;">
-        <a href="/post-project" style="display:inline-flex;align-items:center;gap:8px;background:linear-gradient(135deg,#93C5FD 0%,#F59E0B 100%);color:#0F172A;border-radius:14px;padding:14px 28px;font-size:14px;font-weight:800;text-decoration:none;box-shadow:0 6px 24px rgba(37,99,235,0.4);">
-          📋
-          <span class="en-text">Post Your Project Free</span>
-          <span class="si-text">ව්‍යාපෘතිය නොමිලේ පලකරන්න</span>
-        </a>
-        <a href="/join-tilershub" style="display:inline-flex;align-items:center;gap:8px;background:rgba(255,255,255,0.1);color:#fff;border-radius:14px;padding:14px 22px;font-size:13px;font-weight:700;text-decoration:none;border:1px solid rgba(255,255,255,0.2);">
-          ✅
-          <span class="en-text">Join as Provider</span>
-          <span class="si-text">සේවා සපයන්නෙකු ලෙස එකතු වන්න</span>
-        </a>
-      </div>
-    </div>
-  </section>
-
-  <script>
-    const form = document.getElementById('hero-search')
-    const input = document.getElementById('hero-q') as HTMLInputElement
-    form?.addEventListener('submit', e => {
-      e.preventDefault()
-      const q = input?.value.trim()
-      if (q) window.location.href = `/providers?q=${encodeURIComponent(q)}`
-    })
-    // Update search placeholder based on language
-    function updatePlaceholder() {
-      if (!input) return
-      const lang = document.documentElement.getAttribute('data-lang') || 'en'
-      input.placeholder = lang === 'si' ? 'ඔබ සොයන සේවාව කුමක්ද?' : 'What service are you looking for?'
-    }
-    updatePlaceholder()
-    new MutationObserver(updatePlaceholder).observe(document.documentElement, { attributes: true, attributeFilter: ['data-lang'] })
-  </script>
+  <!-- Provider view — replaces everything above once signed in as a provider -->
+  <HomeHero client:load />
 </Layout>
