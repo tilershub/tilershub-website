@@ -95,7 +95,7 @@ export default function Dashboard({ initialUser, initialProjects, initialProvide
   if (loading) return <Spinner full />
   if (!user)   return <SignInPrompt />
   if (loadError) return (
-    <div style={{ minHeight: '60vh', display: 'flex', alignItems: 'center', justifyContent: 'center', padding: 24 }}>
+    <div style={{ minHeight: 'var(--th-fill)', display: 'flex', alignItems: 'center', justifyContent: 'center', padding: 24 }}>
       <div style={{ textAlign: 'center', maxWidth: 400 }}>
         <div style={{ fontSize: 40, marginBottom: 12 }}>⚠️</div>
         <h3 style={{ fontSize: 16, fontWeight: 700, color: '#C0392B', marginBottom: 8 }}>Could not load your dashboard</h3>
@@ -244,7 +244,7 @@ function ProviderDashboard({ user, claimedProfile, submission, showClaimedBanner
   const profileHref = claimedProfile?.slug ? `/providers/${claimedProfile.slug}` : null
 
   return (
-    <div style={{ minHeight:'100dvh', background:'#FBFAF8', paddingBottom:80 }}>
+    <div style={{ minHeight:'var(--th-fill)', background:'#FBFAF8' }}>
       <style>{MOBILE_STYLES}</style>
 
       {/* ── Provider header ── */}
@@ -691,7 +691,7 @@ function ConsumerDashboard({ user, projects, bids, submission, dataLoading, show
   ]
 
   return (
-    <div style={{ minHeight:'100dvh', background:'#FBFAF8', paddingBottom:80 }}>
+    <div style={{ minHeight:'var(--th-fill)', background:'#FBFAF8' }}>
       <style>{MOBILE_STYLES}</style>
 
       {/* ── Consumer header ── */}
@@ -770,7 +770,7 @@ function ConsumerDashboard({ user, projects, bids, submission, dataLoading, show
 
 function Spinner({ full }) {
   return (
-    <div style={{ ...(full ? { minHeight:'60vh' } : { padding:40 }), display:'flex', alignItems:'center', justifyContent:'center' }}>
+    <div style={{ ...(full ? { minHeight:'var(--th-fill)' } : { padding:40 }), display:'flex', alignItems:'center', justifyContent:'center' }}>
       <div style={{ textAlign:'center' }}>
         <div className="spinner" style={{ margin:'0 auto 10px', borderColor:'rgba(20,23,26,0.15)', borderTopColor:'var(--navy)' }} />
         <p style={{ fontSize:13, color:'var(--text-3)' }}>Loading…</p>
@@ -781,7 +781,7 @@ function Spinner({ full }) {
 
 function SignInPrompt() {
   return (
-    <div style={{ minHeight:'60vh', display:'flex', alignItems:'center', justifyContent:'center', padding:20 }}>
+    <div style={{ minHeight:'var(--th-fill)', display:'flex', alignItems:'center', justifyContent:'center', padding:20 }}>
       <div style={{ textAlign:'center', maxWidth:380 }}>
         <div style={{ fontSize:56, marginBottom:14 }}>🔒</div>
         <h2 style={{ fontFamily:"var(--th-display)", fontSize:22, fontWeight:700, color:'var(--text)', marginBottom:10 }}>Sign in to your account</h2>

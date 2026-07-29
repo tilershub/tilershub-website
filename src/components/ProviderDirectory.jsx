@@ -1,5 +1,6 @@
 import { useState, useEffect, useRef } from 'react'
 import { supabase, buildWhatsAppLink, DISTRICTS, DISTRICTS_EN, PROVIDER_TYPES, VERIFICATION_BADGES } from '../lib/supabase.js'
+import CoverImage from './CoverImage.jsx'
 
 // ─── Translations ──────────────────────────────────────────────────────────────
 const TRANS = {
@@ -208,13 +209,11 @@ function ShopCard({ provider, onClick, T, savedIds, savingId, onToggleSave }) {
       <div style={{ display: 'flex', minHeight: 168 }}>
         {/* Left image panel */}
         <div style={{ width: '42%', flexShrink: 0, position: 'relative', background: '#E4E0D9' }}>
-          {coverImg ? (
-            <img src={coverImg} alt={provider.name} loading="lazy" style={{ width: '100%', height: '100%', objectFit: 'cover', display: 'block' }} />
-          ) : (
+          <CoverImage src={coverImg} alt={provider.name} loading="lazy" style={{ width: '100%', height: '100%', objectFit: 'cover', display: 'block' }} fallback={(
             <div style={{ width: '100%', height: '100%', background: '#EFEBE4', backgroundImage: 'repeating-linear-gradient(0deg,transparent,transparent 19px,#E4E0D9 19px,#E4E0D9 20px),repeating-linear-gradient(90deg,transparent,transparent 19px,#E4E0D9 19px,#E4E0D9 20px)', display: 'flex', alignItems: 'center', justifyContent: 'center' }}>
               <span style={{ fontSize: 34, opacity: 0.15 }}>🏪</span>
             </div>
-          )}
+          )} />
           {/* Badge top-left */}
           {(isFeatured || isVerified) && (
             <div style={{ position: 'absolute', top: 9, left: 9, background: isFeatured ? '#E08A5F' : 'rgba(22,163,74,0.92)', color: '#fff', fontSize: 9, fontWeight: 700, padding: '4px 8px', borderRadius: 20, boxShadow: '0 2px 8px rgba(0,0,0,0.25)', whiteSpace: 'nowrap' }}>
@@ -369,12 +368,12 @@ function ContractorCard({ provider, onClick, T, savedIds, savingId, onToggleSave
     >
       {/* Full-width cover image at top */}
       <div style={{ height: 160, position: 'relative', overflow: 'hidden', background: color }}>
-        {coverSrc
-          ? <img src={coverSrc} alt={provider.name} style={{ width: '100%', height: '100%', objectFit: 'cover', display: 'block' }} loading="lazy" />
-          : <div style={{ width: '100%', height: '100%', display: 'flex', alignItems: 'center', justifyContent: 'center' }}>
+        <CoverImage src={coverSrc} alt={provider.name} loading="lazy" style={{ width: '100%', height: '100%', objectFit: 'cover', display: 'block' }}
+          fallback={
+            <div style={{ width: '100%', height: '100%', display: 'flex', alignItems: 'center', justifyContent: 'center' }}>
               <span style={{ fontSize: 52, fontWeight: 800, color: 'rgba(255,255,255,0.75)' }}>{inits}</span>
             </div>
-        }
+          } />
         <div style={{ position: 'absolute', inset: 0, background: 'linear-gradient(to bottom, rgba(0,0,0,0.02) 60%, rgba(0,0,0,0.2) 100%)' }} />
         {isVerified && (
           <div style={{ position: 'absolute', top: 10, right: 10, background: '#2F6B4F', color: '#fff', fontSize: 11, fontWeight: 700, padding: '4px 11px', borderRadius: 20, boxShadow: '0 2px 8px rgba(0,0,0,0.22)' }}>

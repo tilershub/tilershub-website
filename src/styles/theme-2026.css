@@ -324,6 +324,7 @@ textarea.th-field { padding: 12px 13px; line-height: 1.5; resize: vertical; }
      bar goes away and the body reclaims its bottom padding. */
   .th-tabbar { display: none; }
   body { padding-bottom: 0; }
+  :root { --th-chrome: calc(61px + env(safe-area-inset-top, 0px)); }
 
   .th-appbar { padding-left: 28px; padding-right: 28px; gap: 8px; }
   .th-wordmark { font-size: 17px; }

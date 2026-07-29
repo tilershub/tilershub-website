@@ -5,11 +5,14 @@ import { SERVICES, HOME_GROUPS } from '../lib/services.js'
 import { CATEGORIES } from '../lib/categories.js'
 
 // ─── Design tokens ────────────────────────────────────────────────────────────
-const NAVY  = '#C2542B'
+// Ink for chrome and structure, terracotta for actions. The palette sweep
+// collapsed both of these onto the action colour, which left the whole panel
+// one hue with nothing to rank by.
+const NAVY  = '#14171A'
 const TERRA = '#C2542B'
 const S = {
-  page:    { display: 'flex', minHeight: '100vh' },
-  sidebar: { width: 220, background: NAVY, color: '#fff', flexShrink: 0, display: 'flex', flexDirection: 'column', position: 'sticky', top: 0, height: '100vh', overflowY: 'auto' },
+  page:    { display: 'flex', minHeight: 'var(--th-fill)' },
+  sidebar: { width: 220, background: NAVY, color: '#fff', flexShrink: 0, display: 'flex', flexDirection: 'column', position: 'sticky', top: 0, height: 'var(--th-fill)', overflowY: 'auto' },
   main:    { flex: 1, padding: '28px 32px', overflowX: 'auto' },
   card:    { background: '#fff', border: '1px solid #E4E0D9', borderRadius: 14, padding: 20 },
   h2:      { fontSize: 20, fontWeight: 700, color: '#14171A', marginBottom: 18, marginTop: 0 },
@@ -25,11 +28,11 @@ const STATUS_BADGE = {
   listed:         ['#F3E7DF','#7A3218'],
   rejected:       ['#FBEDEB','#8E2A1F'],
   active:         ['#E9F1EC','#22513B'],
-  matched:        ['#EDE9FE','#5B21B6'],
+  matched:        ['#EDE9FE','#8E3C1E'],
   completed:      ['#F4F1EC','#3A4046'],
   pending_code:   ['#F3E7DF','#2A2F35'],
   verified:       ['#E9F1EC','#22513B'],
-  featured:       ['#EDE9FE','#5B21B6'],
+  featured:       ['#EDE9FE','#8E3C1E'],
   none:           ['#F4F1EC','#6B7076'],
   new:            ['#F3E7DF','#2A2F35'],
   seen:           ['#F4F1EC','#3A4046'],
@@ -468,7 +471,7 @@ function SignIn() {
   }
 
   return (
-    <div style={{ minHeight: '100vh', display: 'flex', alignItems: 'center', justifyContent: 'center', background: '#EFEBE4' }}>
+    <div style={{ minHeight: 'var(--th-fill)', display: 'flex', alignItems: 'center', justifyContent: 'center', background: '#EFEBE4' }}>
       <div style={{ ...S.card, maxWidth: 380, width: '100%', textAlign: 'center', padding: 36 }}>
         <div style={{ fontSize: 36, marginBottom: 12 }}>🔐</div>
         <h1 style={{ fontSize: 20, fontWeight: 700, color: '#14171A', marginBottom: 6 }}>TilersHub Admin</h1>
@@ -1386,7 +1389,7 @@ export default function AdminDashboard({ initialUser }) {
 
   if (loading) {
     return (
-      <div style={{ minHeight: '100vh', display: 'flex', alignItems: 'center', justifyContent: 'center' }}>
+      <div style={{ minHeight: 'var(--th-fill)', display: 'flex', alignItems: 'center', justifyContent: 'center' }}>
         <div style={{ textAlign: 'center', color: '#6B7076' }}>
           <div style={{ fontSize: 32, marginBottom: 10 }}>⏳</div>
           <p>Checking access…</p>
@@ -1399,7 +1402,7 @@ export default function AdminDashboard({ initialUser }) {
 
   if (!isAdmin) {
     return (
-      <div style={{ minHeight: '100vh', display: 'flex', alignItems: 'center', justifyContent: 'center' }}>
+      <div style={{ minHeight: 'var(--th-fill)', display: 'flex', alignItems: 'center', justifyContent: 'center' }}>
         <div style={{ textAlign: 'center', maxWidth: 340 }}>
           <div style={{ fontSize: 48, marginBottom: 12 }}>🚫</div>
           <h2 style={{ fontSize: 20, fontWeight: 700, color: '#14171A', marginBottom: 8 }}>Access Denied</h2>

@@ -33,6 +33,9 @@
   --th-cream-2: #E6E0D7;
   --th-tabbar-h: 68px;
   --th-gutter: 20px;
+  /* Height of the app bar + tab bar, and what's left for a screen. */
+  --th-chrome: calc(61px + env(safe-area-inset-top, 0px) + 62px + env(safe-area-inset-bottom, 0px));
+  --th-fill: calc(100dvh - var(--th-chrome));
 
   /* Neutrals */
   --surface: #ffffff;
@@ -213,7 +216,12 @@ img { max-width: 100%; display: block; }
 /* ═══ LAYOUT ═══ */
 .container { max-width: 1140px; margin: 0 auto; padding: 0 16px; }
 .container-sm { max-width: 720px; margin: 0 auto; padding: 0 16px; }
-.page-wrap { min-height: calc(100dvh - 61px - env(safe-area-inset-top, 0px)); }
+.page-wrap { min-height: var(--th-fill); }
+
+/* A screen that fills what's left between the two fixed bars. Anything that
+   centres itself vertically must measure against this, not 100dvh — the bars
+   are outside the viewport budget and the content sinks below the fold. */
+.th-fill { min-height: var(--th-fill); }
 
 /* ═══ SEARCH SECTION ═══ */
 .search-section {
