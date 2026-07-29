@@ -61,11 +61,16 @@ export function shortDate(ts, withYear = false) {
   return withYear ? `${base} ${d.getFullYear()}` : base
 }
 
-export function timeAgo(ts) {
+// Relative time depends on Date.now(), which differs between the server
+// render and hydration — enough to cross a bucket boundary and break
+// hydration. Components that render during SSR should show shortDate first
+// and call this from an effect. See JobCard.
+export function timeAgo(ts, lang = 'en') {
   const diff = Math.floor((Date.now() - new Date(ts)) / 1000)
-  if (diff < 60) return 'just now'
-  if (diff < 3600) return `${Math.floor(diff / 60)}m ago`
-  if (diff < 86400) return `${Math.floor(diff / 3600)}h ago`
-  if (diff < 604800) return `${Math.floor(diff / 86400)}d ago`
+  const si = lang === 'si'
+  if (diff < 60)     return si ? 'දැන්ම' : 'just now'
+  if (diff < 3600)   return `${Math.floor(diff / 60)}${si ? ' මිනි' : 'm ago'}`
+  if (diff < 86400)  return `${Math.floor(diff / 3600)}${si ? ' පැය' : 'h ago'}`
+  if (diff < 604800) return `${Math.floor(diff / 86400)}${si ? ' දින' : 'd ago'}`
   return shortDate(ts, true)
 }

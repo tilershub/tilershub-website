@@ -1,26 +1,11 @@
 import { useState, useEffect } from 'react'
 import { supabase, PROJECT_TYPES, DISTRICTS_EN } from '../lib/supabase.js'
-import { jobPath, shortDate } from '../lib/jobs.js'
+import JobCard from './JobCard.jsx'
 
 const TYPE_ICONS = {
   'Floor Tiling': '🪨', 'Bathroom Tiling': '🚿', 'Bathroom Renovation': '🛁',
   'Granite Works': '💎', 'Tile Cutting': '✂️', 'Routering': '🔧',
   'Waterproofing': '💧', 'Tile Shop Inquiry': '🏪',
-}
-
-const TYPE_COLORS = {
-  'Floor Tiling': '#C2542B', 'Bathroom Tiling': '#C2542B', 'Bathroom Renovation': '#C2542B',
-  'Granite Works': '#8E3C1E', 'Tile Cutting': '#C2542B', 'Routering': '#C2542B',
-  'Waterproofing': '#2F6B4F', 'Tile Shop Inquiry': '#C2542B',
-}
-
-function timeAgo(ts) {
-  const diff = Math.floor((Date.now() - new Date(ts)) / 1000)
-  if (diff < 60) return 'දැන්ම'
-  if (diff < 3600) return `${Math.floor(diff / 60)} මිනි`
-  if (diff < 86400) return `${Math.floor(diff / 3600)} පැය`
-  if (diff < 604800) return `${Math.floor(diff / 86400)} දින`
-  return shortDate(ts)
 }
 
 function selectStyle() {
@@ -29,42 +14,6 @@ function selectStyle() {
     fontSize: 13, fontFamily: 'inherit', background: '#fff', outline: 'none',
     cursor: 'pointer', WebkitAppearance: 'none', appearance: 'none',
   }
-}
-
-function JobCard({ project, bidCount, blurred }) {
-  const icon  = TYPE_ICONS[project.project_type] || '🏠'
-  const color = TYPE_COLORS[project.project_type] || '#C2542B'
-  const excerpt = project.description?.length > 120 ? project.description.slice(0, 120) + '…' : project.description
-
-  return (
-    <div style={{ background: '#fff', borderRadius: 16, border: '1px solid #E4E0D9', padding: '22px 24px', display: 'flex', flexDirection: 'column', gap: 12, boxShadow: '0 1px 4px rgba(0,0,0,0.04)', filter: blurred ? 'blur(5px)' : 'none', userSelect: blurred ? 'none' : 'auto', pointerEvents: blurred ? 'none' : 'auto' }}>
-      <div style={{ display: 'flex', alignItems: 'flex-start', justifyContent: 'space-between', gap: 10 }}>
-        <div style={{ display: 'flex', alignItems: 'center', gap: 10 }}>
-          <div style={{ width: 44, height: 44, borderRadius: 12, background: `${color}12`, border: `1.5px solid ${color}22`, display: 'flex', alignItems: 'center', justifyContent: 'center', fontSize: 22, flexShrink: 0 }}>{icon}</div>
-          <div>
-            <div style={{ fontSize: 15, fontWeight: 700, color: '#14171A', lineHeight: 1.2 }}>{project.project_type}</div>
-            <div style={{ fontSize: 12, color: '#6B7076', marginTop: 2 }}>📍 {project.city}{project.district ? `, ${project.district}` : ''}</div>
-          </div>
-        </div>
-        <span style={{ fontSize: 11, color: '#8A8F95', whiteSpace: 'nowrap', paddingTop: 2 }}>{timeAgo(project.created_at)}</span>
-      </div>
-      <p style={{ fontSize: 13, color: '#3A4046', lineHeight: 1.7, margin: 0 }}>{excerpt}</p>
-      <div style={{ display: 'flex', flexWrap: 'wrap', gap: 6 }}>
-        <span style={{ fontSize: 11, padding: '3px 10px', borderRadius: 20, background: `${color}10`, color, fontWeight: 600, border: `1px solid ${color}20` }}>{project.project_type}</span>
-        {project.budget_range && (
-          <span style={{ fontSize: 11, padding: '3px 10px', borderRadius: 20, background: '#E9F1EC', color: '#285C43', fontWeight: 600, border: '1px solid #C6DDCF' }}>💰 {project.budget_range}</span>
-        )}
-        {bidCount > 0 && (
-          <span style={{ fontSize: 11, padding: '3px 10px', borderRadius: 20, background: '#F7EFE9', color: '#8E3C1E', fontWeight: 600, border: '1px solid #E7D9CE' }}>💬 {bidCount} ලංසු</span>
-        )}
-      </div>
-      <div style={{ borderTop: '1px solid #EFEBE4', paddingTop: 12, marginTop: 2 }}>
-        <a href={jobPath(project)} style={{ display: 'inline-flex', alignItems: 'center', gap: 7, background: '#C2542B', color: '#fff', borderRadius: 10, padding: '9px 18px', fontSize: 13, fontWeight: 700, textDecoration: 'none' }}>
-          බලන්න සහ ලංසු →
-        </a>
-      </div>
-    </div>
-  )
 }
 
 function ProviderGate({ previewProjects, bidCounts }) {
@@ -90,7 +39,7 @@ function ProviderGate({ previewProjects, bidCounts }) {
       <div style={{ position: 'relative', marginBottom: 4 }}>
         <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fill, minmax(300px, 1fr))', gap: 18 }}>
           {previewProjects.slice(0, 3).map(p => (
-            <JobCard key={p.id} project={p} bidCount={bidCounts[p.id] || 0} blurred />
+            <div key={p.id} style={{ filter: 'blur(5px)', userSelect: 'none', pointerEvents: 'none' }}><JobCard job={p} bidCount={bidCounts[p.id] || 0} /></div>
           ))}
         </div>
         <div style={{ position: 'absolute', bottom: 0, left: 0, right: 0, height: 140, background: 'linear-gradient(transparent, #FBFAF8)', pointerEvents: 'none' }} />
@@ -238,7 +187,7 @@ export default function JobsBoard({ initialProjects = null, initialBidCounts = n
         ) : (
           <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fill, minmax(300px, 1fr))', gap: 18 }}>
             {filtered.map(p => (
-              <JobCard key={p.id} project={p} bidCount={bidCounts[p.id] || 0} />
+              <JobCard key={p.id} job={p} bidCount={bidCounts[p.id] || 0} />
             ))}
           </div>
         )}

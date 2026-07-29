@@ -1,6 +1,23 @@
 import { useState, useEffect } from 'react'
 import { supabase } from '../lib/supabase.js'
 import { useDistrict } from '../lib/district.js'
+import { useLang } from '../lib/useLang.js'
+
+const T = {
+  topRated: { en: 'Top rated',        si: 'ඉහළම ශ්‍රේණිගත' },
+  shops:    { en: 'Tile shops',       si: 'ටයිල් සාප්පු' },
+  island:   { en: 'across Sri Lanka', si: 'ලංකාව පුරා' },
+  seeAll:   { en: 'See all',          si: 'සියල්ල' },
+  postCta:  { en: 'Post your job free', si: 'නොමිලේ රැකියාව පලකරන්න' },
+  noShops:  {
+    en: d => `No tile shops listed in ${d} yet.`,
+    si: d => `${d} හි ටයිල් සාප්පු තවම ලැයිස්තුගත කර නැත.`,
+  },
+  noPros:   {
+    en: d => `No providers listed in ${d} yet — post your job and nearby pros will quote.`,
+    si: d => `${d} හි සේවා දායකයන් තවම නැත — රැකියාව පලකරන්න, ආසන්නයේ අය ලංසු දෙනු ඇත.`,
+  },
+}
 
 const SHOP_TYPES = ['tile_shop', 'bathroom_shop', 'supplier', 'brand_dealer', 'tool_supplier', 'workshop']
 
@@ -76,6 +93,11 @@ function Skeleton() {
  */
 export default function NearYou({ variant = 'pros', initial = [] }) {
   const district = useDistrict()
+  const lang = useLang()
+  const t = (k, ...a) => {
+    const v = T[k]?.[lang] ?? T[k]?.en
+    return typeof v === 'function' ? v(...a) : v
+  }
   const [rows, setRows] = useState(initial)
   const [loading, setLoading] = useState(false)
   // True when nobody serves the chosen district and we widened to the whole
@@ -111,8 +133,8 @@ export default function NearYou({ variant = 'pros', initial = [] }) {
     return () => { cancelled = true }
   }, [district, variant])
 
-  const where = widened ? 'across Sri Lanka' : `in ${district}`
-  const title = variant === 'shops' ? `🏪 Tile shops ${where}` : `⭐ Top rated ${where}`
+  const where = widened ? t('island') : (lang === 'si' ? `${district} හි` : `in ${district}`)
+  const title = variant === 'shops' ? `🏪 ${t('shops')} ${where}` : `⭐ ${t('topRated')} ${where}`
   const href = variant === 'shops' ? '/tile' : '/providers'
 
   if (loading && rows.length === 0) return (
@@ -127,11 +149,9 @@ export default function NearYou({ variant = 'pros', initial = [] }) {
       <h2 style={{ fontSize: 16, fontWeight: 800, color: 'var(--text)', margin: '0 0 10px' }}>{title}</h2>
       <div style={{ background: '#fff', border: '1px solid var(--border)', borderRadius: 14, padding: '20px 16px', textAlign: 'center' }}>
         <p style={{ fontSize: 13, color: 'var(--text-3)', margin: '0 0 12px', lineHeight: 1.6 }}>
-          {variant === 'shops'
-            ? `No tile shops listed in ${district} yet.`
-            : `No providers listed in ${district} yet — post your job and nearby pros will quote.`}
+          {variant === 'shops' ? t('noShops', district) : t('noPros', district)}
         </p>
-        <a href="/post-project" className="btn btn-terra btn-sm">Post your job free</a>
+        <a href="/post-project" className="btn btn-terra btn-sm">{t('postCta')}</a>
       </div>
     </section>
   )
@@ -140,7 +160,7 @@ export default function NearYou({ variant = 'pros', initial = [] }) {
     <section style={{ padding: '20px 0 4px' }}>
       <div style={{ padding: '0 16px 12px', display: 'flex', alignItems: 'center', justifyContent: 'space-between', gap: 10 }}>
         <h2 style={{ fontSize: 16, fontWeight: 800, color: 'var(--text)', margin: 0 }}>{title}</h2>
-        <a href={href} style={{ fontSize: 13, fontWeight: 600, color: 'var(--terra)', textDecoration: 'none', whiteSpace: 'nowrap' }}>See all ›</a>
+        <a href={href} style={{ fontSize: 13, fontWeight: 600, color: 'var(--terra)', textDecoration: 'none', whiteSpace: 'nowrap' }}>{t('seeAll')} ›</a>
       </div>
       <div style={{ display: 'flex', gap: 10, overflowX: 'auto', padding: '0 16px 8px', scrollbarWidth: 'none', WebkitOverflowScrolling: 'touch' }}>
         {rows.map(p => <Card key={p.id} p={p} />)}

@@ -198,6 +198,20 @@ export default function PostProjectForm() {
     if (!token) { token = genToken(); localStorage.setItem(DRAFT_KEY, token) }
     setDraftToken(token)
     supabase.auth.getUser().then(({ data: { user } }) => setUserId(user?.id ?? null))
+
+    // Arriving from a trade shortcut or the district picker: prefill rather
+    // than making the visitor re-enter what they already told us. Applied
+    // after mount so the first render still matches the server HTML.
+    const q = new URLSearchParams(window.location.search)
+    const type = q.get('type')
+    const district = q.get('district')
+    if (type || district) {
+      setForm(f => ({
+        ...f,
+        project_type: type || f.project_type,
+        district: DISTRICTS_EN.includes(district) ? district : f.district,
+      }))
+    }
   }, [])
 
   const set = (k, v) => setForm(f => ({ ...f, [k]: v }))

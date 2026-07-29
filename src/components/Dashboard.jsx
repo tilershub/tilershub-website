@@ -2,6 +2,7 @@ import { useState, useEffect } from 'react'
 import { supabase, getUser, signOut, onAuthStateChange, buildWhatsAppLink, phoneVariants } from '../lib/supabase.js'
 import ProfileEditor from './ProfileEditor.jsx'
 import PortfolioEditor from './PortfolioEditor.jsx'
+import BidCard from './BidCard.jsx'
 import { useLang } from '../lib/useLang.js'
 import { jobPath } from '../lib/jobs.js'
 
@@ -836,58 +837,9 @@ function BidsPanel({ projectBids }) {
 
       {open && (
         <div style={{ marginTop:12, display:'flex', flexDirection:'column', gap:10 }}>
-          {projectBids.map(bid => {
-            const wa = bid.bidder_whatsapp?.replace(/\D/g,'')
-            const norm = wa?.startsWith('94') ? wa : '94' + (wa?.replace(/^0/,'') || '')
-            const waLink = `https://wa.me/${norm}?text=${encodeURIComponent('Hi! 👋\n\nI saw your bid on TilersHub. Let\'s discuss your quote.\n\nThank you!')}`
-            const prov = bid.provider_slug ? providerMap[bid.provider_slug] : null
-            const profileUrl = bid.provider_slug ? `/providers/${bid.provider_slug}` : null
-            const CardTag = profileUrl ? 'a' : 'div'
-            const cardStyle = { padding:'14px 16px', background:'#fff', borderRadius:12, border:`1.5px solid ${bid.status==='new'?'#E7D9CE':'#E4E0D9'}`, borderLeft:`4px solid ${bid.status==='new'?'#f59e0b':'#E4E0D9'}`, ...(profileUrl ? { cursor:'pointer', textDecoration:'none', color:'inherit', display:'block' } : {}) }
-            return (
-              <CardTag
-                key={bid.id}
-                {...(profileUrl ? { href:profileUrl, target:'_blank', rel:'noopener' } : {})}
-                style={cardStyle}
-                onMouseOver={profileUrl ? e => { e.currentTarget.style.boxShadow='0 4px 16px rgba(0,0,0,0.1)'; e.currentTarget.style.background='#f8faff' } : undefined}
-                onMouseOut={profileUrl ? e => { e.currentTarget.style.boxShadow=''; e.currentTarget.style.background='#fff' } : undefined}
-              >
-                <div style={{ display:'flex', alignItems:'flex-start', justifyContent:'space-between', gap:10, marginBottom:8 }}>
-                  <div style={{ display:'flex', alignItems:'center', gap:10, flex:1, minWidth:0 }}>
-                    <div style={{ flexShrink:0 }}>
-                      {prov?.profile_image
-                        ? <img src={prov.profile_image} alt={bid.bidder_name} style={{ width:44, height:44, borderRadius:'50%', objectFit:'cover', border:'2px solid #E4E0D9' }} />
-                        : <div style={{ width:44, height:44, borderRadius:'50%', background: profileUrl ? '#C2542B' : '#E4E0D9', display:'flex', alignItems:'center', justifyContent:'center', fontSize:16, color: profileUrl ? '#fff' : '#6B7076', fontWeight:700 }}>{(bid.bidder_name||'?')[0].toUpperCase()}</div>
-                      }
-                    </div>
-                    <div style={{ minWidth:0 }}>
-                      <div style={{ fontSize:13, fontWeight:700, color: profileUrl ? '#C2542B' : '#14171A' }}>{bid.bidder_name}{profileUrl ? ' ↗' : ''}</div>
-                      <div style={{ fontSize:11, color:'#6B7076', marginTop:2, display:'flex', flexWrap:'wrap', gap:'0 8px' }}>
-                        {prov && (prov.avg_rating > 0
-                          ? <span style={{ color:'#C2542B' }}>⭐ {Number(prov.avg_rating).toFixed(1)} ({prov.review_count || 0})</span>
-                          : <span style={{ color:'#8A8F95' }}>⭐ New · No reviews yet</span>
-                        )}
-                        {prov?.city && <span>📍 {prov.city}</span>}
-                        {!prov && <span style={{ textTransform:'capitalize' }}>{bid.bidder_type}</span>}
-                        {bid.quote_amount && <span style={{ color:'#22513B', fontWeight:600 }}>Rs. {bid.quote_amount.toLocaleString()}</span>}
-                        {bid.timeline     && <span>· {bid.timeline}</span>}
-                      </div>
-                    </div>
-                  </div>
-                  {bid.status === 'new' && <span style={{ fontSize:10, fontWeight:700, padding:'2px 8px', borderRadius:20, background:'#F3E7DF', color:'#2A2F35', whiteSpace:'nowrap' }}>New</span>}
-                </div>
-                {bid.message && <p style={{ fontSize:12, color:'#3A4046', lineHeight:1.6, margin:'0 0 10px' }}>
-                  {bid.message.length > 200 ? bid.message.slice(0,200)+'…' : bid.message}
-                </p>}
-                <div style={{ display:'flex', alignItems:'center', gap:10, flexWrap:'wrap' }}>
-                  <a href={waLink} target="_blank" rel="noopener noreferrer" onClick={e => e.stopPropagation()} style={{ display:'inline-flex', alignItems:'center', gap:6, fontSize:12, fontWeight:700, background:'#25D366', color:'#fff', borderRadius:8, padding:'7px 14px', textDecoration:'none' }}>
-                    💬 Contact via WhatsApp
-                  </a>
-                  {profileUrl && <span style={{ fontSize:11, color:'#8A8F95' }}>Tap card to view profile ↗</span>}
-                </div>
-              </CardTag>
-            )
-          })}
+          {projectBids.map(bid => (
+            <BidCard key={bid.id} bid={bid} provider={bid.provider_slug ? providerMap[bid.provider_slug] : null} />
+          ))}
         </div>
       )}
     </div>
