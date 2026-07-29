@@ -3,7 +3,7 @@ import ContentStudio   from './components/ContentStudio.jsx'
 import ContentCalendar from './components/ContentCalendar.jsx'
 import PostQueue       from './components/PostQueue.jsx'
 
-const NAVY   = '#C2542B'
+const NAVY   = '#14171A'
 const GOLD   = '#E8B341'
 const ORANGE = '#D96234'
 
@@ -27,7 +27,7 @@ export default function SocialHub() {
         </div>
         <p style={{ fontSize: 13, color: '#6B7076', margin: 0 }}>
           Generate, plan, and queue social content for two campaigns —
-          <span style={{ color: '#3B82F6', fontWeight: 600 }}> 🏠 attract homeowners</span> to post projects and
+          <span style={{ color: '#C2542B', fontWeight: 600 }}> 🏠 attract homeowners</span> to post projects and
           <span style={{ color: ORANGE, fontWeight: 600 }}> 🔨 attract tilers</span> to join and bid.
           Make.com pushes <strong>READY</strong> posts to Facebook &amp; Instagram automatically.
         </p>

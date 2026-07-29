@@ -3,7 +3,7 @@ import { planWeek, ANGLES } from '../lib/claudeApi.js'
 import { getQueue, saveToLocalQueue } from '../lib/contentQueue.js'
 import { useSupabaseStats } from '../hooks/useSupabaseStats.js'
 
-const NAVY   = '#C2542B'
+const NAVY   = '#14171A'
 const GOLD   = '#E8B341'
 const ORANGE = '#D96234'
 
@@ -28,7 +28,7 @@ function CampaignDot({ campaign }) {
   return (
     <span style={{
       display: 'inline-block', width: 8, height: 8, borderRadius: '50%',
-      background: campaign === 'user' ? '#3B82F6' : ORANGE, flexShrink: 0,
+      background: campaign === 'user' ? '#C2542B' : ORANGE, flexShrink: 0,
     }} />
   )
 }

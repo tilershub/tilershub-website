@@ -3,7 +3,7 @@ import { generatePosts, ANGLES } from '../lib/claudeApi.js'
 import { saveToLocalQueue, copyRowToClipboard, copyAllToClipboard } from '../lib/contentQueue.js'
 import { useSupabaseStats } from '../hooks/useSupabaseStats.js'
 
-const NAVY  = '#C2542B'
+const NAVY  = '#14171A'
 const GOLD  = '#E8B341'
 const ORANGE = '#D96234'
 
@@ -50,7 +50,7 @@ function PostCard({ post, index, campaign, onSave, onDiscard, onRegenerate, save
   const [copied,  setCopied]    = useState(false)
 
   const iUser = campaign === 'user'
-  const campColor = iUser ? '#3B82F6' : ORANGE
+  const campColor = iUser ? '#C2542B' : ORANGE
   const campLabel = iUser ? '🏠 User' : '🔨 Provider'
   const fmtLabel  = post.format === 'carousel' ? '🎴 Carousel' : post.format === 'reel' ? '🎬 Reel' : '🖼 Single'
 

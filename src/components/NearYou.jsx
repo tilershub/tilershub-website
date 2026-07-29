@@ -2,6 +2,7 @@ import { useState, useEffect } from 'react'
 import { supabase } from '../lib/supabase.js'
 import { useDistrict } from '../lib/district.js'
 import { useLang } from '../lib/useLang.js'
+import CoverImage from './CoverImage.jsx'
 
 const T = {
   topRated: { en: 'Top rated',        si: 'ඉහළම ශ්‍රේණිගත' },
@@ -34,7 +35,6 @@ function initials(name) {
 function Card({ p }) {
   const rating = Number(p.avg_rating) || 0
   const reviews = p.review_count || 0
-  const [imgOk, setImgOk] = useState(true)
   const src = p.profile_image || p.cover_image
   return (
     <a
@@ -45,17 +45,13 @@ function Card({ p }) {
         boxShadow: 'var(--shadow-sm)',
       }}
     >
-      {src && imgOk ? (
-        // Fall back to the initials tile if the remote image 404s, rather
-        // than leaving a broken-image icon in the card.
-        <img src={src} alt="" loading="lazy" width="172" height="104"
-          onError={() => setImgOk(false)}
-          style={{ width: '100%', height: 104, objectFit: 'cover', background: 'var(--surface-3)' }} />
-      ) : (
-        <div style={{ height: 104, background: avatarColor(p.name), display: 'flex', alignItems: 'center', justifyContent: 'center', color: '#fff', fontSize: 30, fontWeight: 800 }}>
-          {initials(p.name)}
-        </div>
-      )}
+      <CoverImage src={src} alt="" loading="lazy" width="172" height="104"
+        style={{ width: '100%', height: 104, objectFit: 'cover', background: 'var(--surface-3)' }}
+        fallback={
+          <div style={{ height: 104, background: avatarColor(p.name), display: 'flex', alignItems: 'center', justifyContent: 'center', color: '#fff', fontSize: 30, fontWeight: 800 }}>
+            {initials(p.name)}
+          </div>
+        } />
       <div style={{ padding: '10px 12px 12px' }}>
         <div style={{ fontSize: 13, fontWeight: 700, color: 'var(--text)', lineHeight: 1.3, overflow: 'hidden', display: '-webkit-box', WebkitLineClamp: 2, WebkitBoxOrient: 'vertical', minHeight: 34 }}>
           {p.name}

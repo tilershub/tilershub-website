@@ -20,7 +20,7 @@ export const JOB_TYPE_COLORS = {
   'House Painting': '#C2542B', 'Landscaping & Gardening': '#285C43', 'Carpentry Works': '#2A2F35',
   'Glass Railing': '#2F6B4F', 'Aluminium & Glass Works': '#3A4046', 'Electrical Repairs': '#8E3C1E',
   'House Wiring': '#8E3C1E', 'Gypsum Ceiling': '#22513B', 'IPanel Ceiling': '#22513B',
-  'Demolition Work': '#C2542B', 'Debris Removal': '#6B7076', 'Granite Countertops': '#4b5563',
+  'Demolition Work': '#C2542B', 'Debris Removal': '#6B7076', 'Granite Countertops': '#3A4046',
   'Pool Tiling': '#2F6B4F', 'Outdoor Tiling': '#285C43',
 }
 
