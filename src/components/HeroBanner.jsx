@@ -6,8 +6,8 @@ const DEFAULT_BANNERS = [
     description: 'Connect with skilled tiling professionals across Sri Lanka via WhatsApp — free service, no middlemen.',
     cta_text: 'Find Tilers Now',
     cta_link: '/providers',
-    accent: '#2563EB',
-    gradient: 'linear-gradient(135deg, #2563EB 0%, #0F172A 100%)',
+    accent: '#C2542B',
+    gradient: 'linear-gradient(135deg, #C2542B 0%, #14171A 100%)',
     icon: '👷',
     pattern: 'tiles',
   },
@@ -17,7 +17,7 @@ const DEFAULT_BANNERS = [
     cta_text: 'Post a Project',
     cta_link: '/post-project',
     accent: '#F59E0B',
-    gradient: 'linear-gradient(135deg, #1f2937 0%, #0F172A 100%)',
+    gradient: 'linear-gradient(135deg, #2A2F35 0%, #14171A 100%)',
     icon: '📋',
     pattern: 'grid',
   },
@@ -27,7 +27,7 @@ const DEFAULT_BANNERS = [
     cta_text: 'Try the Estimator',
     cta_link: '/estimator',
     accent: '#22c55e',
-    gradient: 'linear-gradient(135deg, #0F172A 0%, #2563EB 100%)',
+    gradient: 'linear-gradient(135deg, #14171A 0%, #C2542B 100%)',
     icon: '📐',
     pattern: 'dots',
   },
@@ -37,7 +37,7 @@ const DEFAULT_BANNERS = [
     cta_text: 'Find Workshops',
     cta_link: '/providers?type=workshop',
     accent: '#a78bfa',
-    gradient: 'linear-gradient(135deg, #1e1b4b 0%, #312e81 60%, #1e1b4b 100%)',
+    gradient: 'linear-gradient(135deg, #1e1b4b 0%, #2A2F35 60%, #1e1b4b 100%)',
     icon: '🏭',
     pattern: 'tiles',
   },
@@ -46,7 +46,7 @@ const DEFAULT_BANNERS = [
     description: 'Browse premium tile brands, explore collections, and find authorised dealers near you.',
     cta_text: 'Explore Brands',
     cta_link: '/brands',
-    accent: '#60A5FA',
+    accent: '#E08A5F',
     gradient: 'linear-gradient(135deg, #140d04 0%, #241508 60%, #140d04 100%)',
     icon: '🏷️',
     pattern: 'grid',
@@ -142,7 +142,7 @@ export default function HeroBanner({ banners: propBanners }) {
           <div style={{ fontSize: 9, fontWeight: 700, color: `${b.accent}cc`, letterSpacing: 3, textTransform: 'uppercase', marginBottom: 16 }}>
             TILERSHUB.LK
           </div>
-          <h1 style={{ fontFamily: "'Inter', sans-serif", fontSize: 'clamp(26px, 4.5vw, 46px)', fontWeight: 700, color: '#fff', lineHeight: 1.15, marginBottom: 16 }}>
+          <h1 style={{ fontFamily: "var(--th-display)", fontSize: 'clamp(26px, 4.5vw, 46px)', fontWeight: 700, color: '#fff', lineHeight: 1.15, marginBottom: 16 }}>
             {b.title}
           </h1>
           <p style={{ fontSize: 15, color: 'rgba(255,255,255,0.65)', lineHeight: 1.8, maxWidth: 480, marginBottom: 32 }}>

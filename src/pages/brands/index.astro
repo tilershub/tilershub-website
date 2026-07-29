@@ -20,17 +20,17 @@ const bathroomBrands = brands.filter(b => isBathroom(b) && !isChemical(b) && !is
 const BRAND_META = {
   'rocell':      { color: '#FFFFFF', bg: '#002B5B' },
   'lanka-tile':  { color: '#FFFFFF', bg: '#CC2229' },
-  'macktiles':   { color: '#FFFFFF', bg: '#2E7D32' },
+  'macktiles':   { color: '#FFFFFF', bg: '#2F6B4F' },
   'megatile':    { color: '#FFFFFF', bg: '#5D4037' },
   'swisstek':    { color: '#FFFFFF', bg: '#1565C0' },
-  'tokyo-super': { color: '#FFFFFF', bg: '#C62828' },
-  'dr-fixit':    { color: '#FFFFFF', bg: '#E65100' },
+  'tokyo-super': { color: '#FFFFFF', bg: '#C0392B' },
+  'dr-fixit':    { color: '#FFFFFF', bg: '#C2542B' },
   'sika':        { color: '#FFFFFF', bg: '#B71C1C' },
   'finex':       { color: '#FFFFFF', bg: '#1A237E' },
 }
 
 function meta(brand) {
-  return BRAND_META[brand.slug] || { color: '#fff', bg: '#2563EB' }
+  return BRAND_META[brand.slug] || { color: '#fff', bg: '#C2542B' }
 }
 
 function logoText(name) {
@@ -47,7 +47,7 @@ function logoText(name) {
     <div style="position:absolute;inset:0;opacity:0.04;background-image:repeating-linear-gradient(0deg,transparent,transparent 39px,rgba(255,255,255,0.8) 39px,rgba(255,255,255,0.8) 40px),repeating-linear-gradient(90deg,transparent,transparent 39px,rgba(255,255,255,0.8) 39px,rgba(255,255,255,0.8) 40px);pointer-events:none;"></div>
     <div style="position:relative;max-width:600px;margin:0 auto;">
       <span class="section-label" style="border-color:rgba(255,255,255,0.15);color:rgba(255,255,255,0.5);background:rgba(255,255,255,0.06);">🏷️ Brands</span>
-      <h1 style="font-family: 'Inter', sans-serif;font-size:clamp(26px,4vw,42px);font-weight:700;color:#fff;margin:12px 0 10px;line-height:1.2;">
+      <h1 style="font-family: var(--th-display);font-size:clamp(26px,4vw,42px);font-weight:700;color:#fff;margin:12px 0 10px;line-height:1.2;">
         Brands in <span style="color:var(--terra);">Sri Lanka</span>
       </h1>
       <p style="font-size:14px;color:rgba(255,255,255,0.5);">Tile brands, adhesives, grouts and waterproofing products</p>
@@ -61,7 +61,7 @@ function logoText(name) {
       {tileBrands.length > 0 && (
         <div style="margin-bottom:56px;">
           <div style="display:flex;align-items:center;gap:12px;margin-bottom:24px;">
-            <div style="width:36px;height:36px;background:linear-gradient(135deg,var(--navy),#1E293B);border-radius:10px;display:flex;align-items:center;justify-content:center;font-size:18px;">🪨</div>
+            <div style="width:36px;height:36px;background:linear-gradient(135deg,var(--navy),#2A2F35);border-radius:10px;display:flex;align-items:center;justify-content:center;font-size:18px;">🪨</div>
             <div>
               <div style="font-size:18px;font-weight:700;color:var(--text);">Tile Brands</div>
               <div style="font-size:12px;color:var(--text-4);">Floor tiles, wall tiles, porcelain &amp; ceramic collections</div>
@@ -73,12 +73,12 @@ function logoText(name) {
               const href = brand.dedicated_page_url || `/brands/${brand.slug}`
               const isFeaturedPage = !!brand.dedicated_page_url
               return (
-                <a href={href} style={`background:#fff;border-radius:16px;border:${isFeaturedPage ? '2px solid var(--gold)' : '1px solid #E2E8F0'};padding:22px;display:block;text-decoration:none;color:inherit;position:relative;overflow:hidden;transition:box-shadow 0.2s,transform 0.2s;`}
-                  onmouseover="this.style.boxShadow='0 8px 28px rgba(37,99,235,0.12)';this.style.transform='translateY(-3px)'"
+                <a href={href} style={`background:#fff;border-radius:16px;border:${isFeaturedPage ? '2px solid var(--gold)' : '1px solid #E4E0D9'};padding:22px;display:block;text-decoration:none;color:inherit;position:relative;overflow:hidden;transition:box-shadow 0.2s,transform 0.2s;`}
+                  onmouseover="this.style.boxShadow='0 8px 28px rgba(194,84,43,0.12)';this.style.transform='translateY(-3px)'"
                   onmouseout="this.style.boxShadow='';this.style.transform=''">
                   {isFeaturedPage && <div style="position:absolute;top:0;right:0;background:var(--gold);color:#0d0b08;font-size:9px;font-weight:800;letter-spacing:1.5px;text-transform:uppercase;padding:4px 12px;border-bottom-left-radius:10px;">Sponsored</div>}
                   <div style="display:flex;align-items:center;gap:14px;margin-bottom:14px;">
-                    <div style={`width:56px;height:56px;border-radius:14px;background:${m.bg};display:flex;align-items:center;justify-content:center;font-size:18px;font-weight:800;color:${m.color};letter-spacing:-0.5px;flex-shrink:0;font-family: 'Inter', sans-serif;`}>{logoText(brand.name)}</div>
+                    <div style={`width:56px;height:56px;border-radius:14px;background:${m.bg};display:flex;align-items:center;justify-content:center;font-size:18px;font-weight:800;color:${m.color};letter-spacing:-0.5px;flex-shrink:0;font-family: var(--th-display);`}>{logoText(brand.name)}</div>
                     <div>
                       <div style="font-size:16px;font-weight:700;color:var(--text);">{brand.name}</div>
                       {isFeaturedPage
@@ -90,7 +90,7 @@ function logoText(name) {
                   <p style="font-size:12px;color:var(--text-3);line-height:1.65;margin-bottom:14px;">{brand.description}</p>
                   <div style="display:flex;flex-wrap:wrap;gap:5px;margin-bottom:14px;">
                     {(brand.categories || []).slice(0,3).map(c => (
-                      <span style={`font-size:10px;padding:2px 9px;border-radius:20px;background:${m.bg}18;color:${m.bg === '#FFFFFF' ? '#2563EB' : m.bg};border:1px solid ${m.bg}30;font-weight:600;`}>{c}</span>
+                      <span style={`font-size:10px;padding:2px 9px;border-radius:20px;background:${m.bg}18;color:${m.bg === '#FFFFFF' ? '#C2542B' : m.bg};border:1px solid ${m.bg}30;font-weight:600;`}>{c}</span>
                     ))}
                   </div>
                   <div style="font-size:12px;font-weight:700;color:var(--navy);">{isFeaturedPage ? 'View Sponsor Page →' : 'View Brand →'}</div>
@@ -105,7 +105,7 @@ function logoText(name) {
       {renoBrands.length > 0 && (
         <div style="margin-bottom:56px;">
           <div style="display:flex;align-items:center;gap:12px;margin-bottom:24px;">
-            <div style="width:36px;height:36px;background:linear-gradient(135deg,#1E293B,#0F172A);border-radius:10px;display:flex;align-items:center;justify-content:center;font-size:18px;">🛁</div>
+            <div style="width:36px;height:36px;background:linear-gradient(135deg,#2A2F35,#14171A);border-radius:10px;display:flex;align-items:center;justify-content:center;font-size:18px;">🛁</div>
             <div>
               <div style="font-size:18px;font-weight:700;color:var(--text);">Renovation &amp; Interior Design</div>
               <div style="font-size:12px;color:var(--text-4);">Bathroom construction, renovation packages &amp; interior design services</div>
@@ -121,7 +121,7 @@ function logoText(name) {
                   onmouseout="this.style.boxShadow='';this.style.transform=''">
                   <div style="position:absolute;top:0;right:0;background:var(--gold);color:#0d0b08;font-size:9px;font-weight:800;letter-spacing:1.5px;text-transform:uppercase;padding:4px 12px;border-bottom-left-radius:10px;">Sponsored</div>
                   <div style="display:flex;align-items:center;gap:14px;margin-bottom:14px;">
-                    <div style={`width:56px;height:56px;border-radius:14px;background:${m.bg};display:flex;align-items:center;justify-content:center;font-size:18px;font-weight:800;color:${m.color};letter-spacing:-0.5px;flex-shrink:0;font-family: 'Inter', sans-serif;`}>{logoText(brand.name)}</div>
+                    <div style={`width:56px;height:56px;border-radius:14px;background:${m.bg};display:flex;align-items:center;justify-content:center;font-size:18px;font-weight:800;color:${m.color};letter-spacing:-0.5px;flex-shrink:0;font-family: var(--th-display);`}>{logoText(brand.name)}</div>
                     <div>
                       <div style="font-size:16px;font-weight:700;color:var(--text);">{brand.name}</div>
                       <span style="font-size:10px;color:#92762a;font-weight:700;">⭐ Premium Partner</span>
@@ -145,7 +145,7 @@ function logoText(name) {
       {bathroomBrands.length > 0 && (
         <div style="margin-bottom:56px;">
           <div style="display:flex;align-items:center;gap:12px;margin-bottom:24px;">
-            <div style="width:36px;height:36px;background:linear-gradient(135deg,#0F172A,#2563EB);border-radius:10px;display:flex;align-items:center;justify-content:center;font-size:18px;">🚿</div>
+            <div style="width:36px;height:36px;background:linear-gradient(135deg,#14171A,#C2542B);border-radius:10px;display:flex;align-items:center;justify-content:center;font-size:18px;">🚿</div>
             <div>
               <div style="font-size:18px;font-weight:700;color:var(--text);">Bathroom Products &amp; Fittings</div>
               <div style="font-size:12px;color:var(--text-4);">Sanitary ware, faucets, showers, bathtubs &amp; bathroom accessories</div>
@@ -157,21 +157,21 @@ function logoText(name) {
               const href = brand.dedicated_page_url || `/brands/${brand.slug}`
               const isFeaturedPage = !!brand.dedicated_page_url
               return (
-                <a href={href} style={`background:#fff;border-radius:16px;border:${isFeaturedPage ? '2px solid var(--gold)' : '1px solid #E2E8F0'};padding:22px;display:block;text-decoration:none;color:inherit;position:relative;overflow:hidden;transition:box-shadow 0.2s,transform 0.2s;`}
-                  onmouseover="this.style.boxShadow='0 8px 28px rgba(37,99,235,0.12)';this.style.transform='translateY(-3px)'"
+                <a href={href} style={`background:#fff;border-radius:16px;border:${isFeaturedPage ? '2px solid var(--gold)' : '1px solid #E4E0D9'};padding:22px;display:block;text-decoration:none;color:inherit;position:relative;overflow:hidden;transition:box-shadow 0.2s,transform 0.2s;`}
+                  onmouseover="this.style.boxShadow='0 8px 28px rgba(194,84,43,0.12)';this.style.transform='translateY(-3px)'"
                   onmouseout="this.style.boxShadow='';this.style.transform=''">
                   {isFeaturedPage && <div style="position:absolute;top:0;right:0;background:var(--gold);color:#0d0b08;font-size:9px;font-weight:800;letter-spacing:1.5px;text-transform:uppercase;padding:4px 12px;border-bottom-left-radius:10px;">Sponsored</div>}
                   <div style="display:flex;align-items:center;gap:14px;margin-bottom:14px;">
-                    <div style={`width:56px;height:56px;border-radius:14px;background:${m.bg};display:flex;align-items:center;justify-content:center;font-size:18px;font-weight:800;color:${m.color};letter-spacing:-0.5px;flex-shrink:0;font-family: 'Inter', sans-serif;`}>{logoText(brand.name)}</div>
+                    <div style={`width:56px;height:56px;border-radius:14px;background:${m.bg};display:flex;align-items:center;justify-content:center;font-size:18px;font-weight:800;color:${m.color};letter-spacing:-0.5px;flex-shrink:0;font-family: var(--th-display);`}>{logoText(brand.name)}</div>
                     <div>
                       <div style="font-size:16px;font-weight:700;color:var(--text);">{brand.name}</div>
-                      <span style="font-size:10px;color:#0F172A;font-weight:700;">🚿 Bathroom Products</span>
+                      <span style="font-size:10px;color:#14171A;font-weight:700;">🚿 Bathroom Products</span>
                     </div>
                   </div>
                   <p style="font-size:12px;color:var(--text-3);line-height:1.65;margin-bottom:14px;">{brand.description}</p>
                   <div style="display:flex;flex-wrap:wrap;gap:5px;margin-bottom:14px;">
                     {(brand.categories || []).slice(0,3).map(c => (
-                      <span style="font-size:10px;padding:2px 9px;border-radius:20px;background:#EFF6FF;color:#2563EB;border:1px solid #BFDBFE;font-weight:600;">{c}</span>
+                      <span style="font-size:10px;padding:2px 9px;border-radius:20px;background:#F7EFE9;color:#C2542B;border:1px solid #E7D9CE;font-weight:600;">{c}</span>
                     ))}
                   </div>
                   <div style="font-size:12px;font-weight:700;color:var(--navy);">{isFeaturedPage ? 'View Sponsor Page →' : 'View Brand →'}</div>
@@ -186,7 +186,7 @@ function logoText(name) {
       {chemBrands.length > 0 && (
         <div>
           <div style="display:flex;align-items:center;gap:12px;margin-bottom:24px;">
-            <div style="width:36px;height:36px;background:linear-gradient(135deg,#0369a1,#075985);border-radius:10px;display:flex;align-items:center;justify-content:center;font-size:18px;">💧</div>
+            <div style="width:36px;height:36px;background:linear-gradient(135deg,#2F6B4F,#075985);border-radius:10px;display:flex;align-items:center;justify-content:center;font-size:18px;">💧</div>
             <div>
               <div style="font-size:18px;font-weight:700;color:var(--text);">Adhesives &amp; Waterproofing</div>
               <div style="font-size:12px;color:var(--text-4);">Tile adhesives, grouts, waterproofing &amp; construction chemicals</div>
@@ -196,14 +196,14 @@ function logoText(name) {
             {chemBrands.map(brand => {
               const m = meta(brand)
               return (
-                <a href={`/brands/${brand.slug}`} style="background:#fff;border-radius:16px;border:1px solid #E2E8F0;padding:22px;display:block;text-decoration:none;color:inherit;transition:box-shadow 0.2s,transform 0.2s;"
-                  onmouseover="this.style.boxShadow='0 8px 28px rgba(37,99,235,0.10)';this.style.transform='translateY(-3px)'"
+                <a href={`/brands/${brand.slug}`} style="background:#fff;border-radius:16px;border:1px solid #E4E0D9;padding:22px;display:block;text-decoration:none;color:inherit;transition:box-shadow 0.2s,transform 0.2s;"
+                  onmouseover="this.style.boxShadow='0 8px 28px rgba(194,84,43,0.10)';this.style.transform='translateY(-3px)'"
                   onmouseout="this.style.boxShadow='';this.style.transform=''">
                   <div style="display:flex;align-items:center;gap:14px;margin-bottom:14px;">
-                    <div style={`width:56px;height:56px;border-radius:14px;background:${m.bg};display:flex;align-items:center;justify-content:center;font-size:18px;font-weight:800;color:${m.color};letter-spacing:-0.5px;flex-shrink:0;font-family: 'Inter', sans-serif;`}>{logoText(brand.name)}</div>
+                    <div style={`width:56px;height:56px;border-radius:14px;background:${m.bg};display:flex;align-items:center;justify-content:center;font-size:18px;font-weight:800;color:${m.color};letter-spacing:-0.5px;flex-shrink:0;font-family: var(--th-display);`}>{logoText(brand.name)}</div>
                     <div>
                       <div style="font-size:16px;font-weight:700;color:var(--text);">{brand.name}</div>
-                      <span style="font-size:10px;color:#0369a1;font-weight:700;">💧 Construction Chemicals</span>
+                      <span style="font-size:10px;color:#2F6B4F;font-weight:700;">💧 Construction Chemicals</span>
                     </div>
                   </div>
                   <p style="font-size:12px;color:var(--text-3);line-height:1.65;margin-bottom:14px;">{brand.description}</p>

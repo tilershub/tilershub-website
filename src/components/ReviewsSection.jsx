@@ -19,9 +19,9 @@ const JOB_TYPES = [
 ]
 
 const RATING_LABELS = { 5: 'ඉතා හොඳ', 4: 'හොඳ', 3: 'සාධාරණ', 2: 'යෝග්‍ය', 1: 'දුර්වල' }
-const RATING_COLORS = { 5: '#16a34a', 4: '#65a30d', 3: '#2563EB', 2: '#ea580c', 1: '#dc2626' }
+const RATING_COLORS = { 5: '#2F6B4F', 4: '#2F6B4F', 3: '#C2542B', 2: '#ea580c', 1: '#C0392B' }
 
-const AVATAR_COLORS = ['#2563EB','#2563EB','#7c3aed','#2563EB','#0369a1','#2563EB','#15803d','#be185d']
+const AVATAR_COLORS = ['#C2542B','#C2542B','#8E3C1E','#C2542B','#2F6B4F','#C2542B','#285C43','#C2542B']
 function avatarColor(name) {
   let h = 0
   for (const c of (name || '')) h = (h * 31 + c.charCodeAt(0)) >>> 0
@@ -44,7 +44,7 @@ function Stars({ rating, size = 13 }) {
   return (
     <span style={{ display: 'inline-flex', gap: 1 }}>
       {[1,2,3,4,5].map(n => (
-        <span key={n} style={{ fontSize: size, color: n <= rating ? '#f59e0b' : '#E2E8F0', lineHeight: 1 }}>★</span>
+        <span key={n} style={{ fontSize: size, color: n <= rating ? '#f59e0b' : '#E4E0D9', lineHeight: 1 }}>★</span>
       ))}
     </span>
   )
@@ -63,7 +63,7 @@ function StarPicker({ value, onChange }) {
             onMouseEnter={() => setHovered(n)}
             onMouseLeave={() => setHovered(0)}
             onClick={() => onChange(n)}
-            style={{ fontSize: 36, cursor: 'pointer', color: n <= active ? '#f59e0b' : '#E2E8F0', transition: 'color 0.1s, transform 0.1s', transform: hovered === n ? 'scale(1.2)' : 'scale(1)', userSelect: 'none', lineHeight: 1 }}
+            style={{ fontSize: 36, cursor: 'pointer', color: n <= active ? '#f59e0b' : '#E4E0D9', transition: 'color 0.1s, transform 0.1s', transform: hovered === n ? 'scale(1.2)' : 'scale(1)', userSelect: 'none', lineHeight: 1 }}
           >★</span>
         ))}
         {active > 0 && (
@@ -110,20 +110,20 @@ function ReviewForm({ tilerId, providerId, onSubmitted }) {
   }
 
   const inp = {
-    width: '100%', padding: '10px 14px', border: '1.5px solid #E2E8F0',
+    width: '100%', padding: '10px 14px', border: '1.5px solid #E4E0D9',
     borderRadius: 10, fontSize: 13, fontFamily: 'inherit', outline: 'none',
     boxSizing: 'border-box', background: '#fff',
   }
   const labelStyle = {
-    display: 'block', fontSize: 11, fontWeight: 700, color: '#64748B',
+    display: 'block', fontSize: 11, fontWeight: 700, color: '#6B7076',
     textTransform: 'uppercase', letterSpacing: 0.8, marginBottom: 6,
   }
   const charCount = form.comment.length
   const charOk    = charCount >= 20
 
   return (
-    <form onSubmit={submit} style={{ display: 'flex', flexDirection: 'column', gap: 16, background: '#F8FAFC', borderRadius: 14, padding: '20px 18px', border: '1.5px solid #E2E8F0' }}>
-      <div style={{ fontSize: 15, fontWeight: 700, color: '#0F172A' }}>සමාලෝචනයක් ලියන්න</div>
+    <form onSubmit={submit} style={{ display: 'flex', flexDirection: 'column', gap: 16, background: '#FBFAF8', borderRadius: 14, padding: '20px 18px', border: '1.5px solid #E4E0D9' }}>
+      <div style={{ fontSize: 15, fontWeight: 700, color: '#14171A' }}>සමාලෝචනයක් ලියන්න</div>
 
       {/* Stars */}
       <div>
@@ -141,8 +141,8 @@ function ReviewForm({ tilerId, providerId, onSubmitted }) {
             placeholder="නිදසුන: නිමල් සිල්වා"
             maxLength={60}
             style={inp}
-            onFocus={e => e.target.style.borderColor = '#2563EB'}
-            onBlur={e  => e.target.style.borderColor = '#E2E8F0'}
+            onFocus={e => e.target.style.borderColor = '#C2542B'}
+            onBlur={e  => e.target.style.borderColor = '#E4E0D9'}
           />
         </div>
         <div>
@@ -151,8 +151,8 @@ function ReviewForm({ tilerId, providerId, onSubmitted }) {
             value={form.job_type}
             onChange={e => set('job_type', e.target.value)}
             style={{ ...inp, cursor: 'pointer' }}
-            onFocus={e => e.target.style.borderColor = '#2563EB'}
-            onBlur={e  => e.target.style.borderColor = '#E2E8F0'}
+            onFocus={e => e.target.style.borderColor = '#C2542B'}
+            onBlur={e  => e.target.style.borderColor = '#E4E0D9'}
           >
             <option value="">තෝරන්න…</option>
             {JOB_TYPES.map(t => <option key={t} value={t}>{t}</option>)}
@@ -164,7 +164,7 @@ function ReviewForm({ tilerId, providerId, onSubmitted }) {
       <div>
         <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'baseline', marginBottom: 6 }}>
           <label style={labelStyle}>ඔබේ සමාලෝචනය *</label>
-          <span style={{ fontSize: 10, color: charOk ? '#16a34a' : '#94A3B8' }}>{charCount}/500</span>
+          <span style={{ fontSize: 10, color: charOk ? '#2F6B4F' : '#8A8F95' }}>{charCount}/500</span>
         </div>
         <textarea
           value={form.comment}
@@ -172,16 +172,16 @@ function ReviewForm({ tilerId, providerId, onSubmitted }) {
           placeholder="කාර්යයේ ගුණාත්මකභාවය, කාලානුරූපභාවය, පිරිසිදුකම සහ මුදල් වටිනාකම ගැන ලියන්න"
           rows={4}
           style={{ ...inp, resize: 'vertical', lineHeight: 1.65 }}
-          onFocus={e => e.target.style.borderColor = '#2563EB'}
-          onBlur={e  => e.target.style.borderColor = '#E2E8F0'}
+          onFocus={e => e.target.style.borderColor = '#C2542B'}
+          onBlur={e  => e.target.style.borderColor = '#E4E0D9'}
         />
         {charCount > 0 && !charOk && (
-          <div style={{ fontSize: 10, color: '#94A3B8', marginTop: 4 }}>තවත් අකුරු {20 - charCount}ක් අවශ්‍යයි</div>
+          <div style={{ fontSize: 10, color: '#8A8F95', marginTop: 4 }}>තවත් අකුරු {20 - charCount}ක් අවශ්‍යයි</div>
         )}
       </div>
 
       {error && (
-        <div style={{ fontSize: 12, color: '#dc2626', background: '#fef2f2', border: '1px solid #fecaca', borderRadius: 8, padding: '8px 12px' }}>
+        <div style={{ fontSize: 12, color: '#C0392B', background: '#FBEDEB', border: '1px solid #F2C9C3', borderRadius: 8, padding: '8px 12px' }}>
           ⚠ {error}
         </div>
       )}
@@ -189,7 +189,7 @@ function ReviewForm({ tilerId, providerId, onSubmitted }) {
       <button
         type="submit"
         disabled={loading}
-        style={{ padding: '12px', background: loading ? '#94A3B8' : '#2563EB', color: '#fff', border: 'none', borderRadius: 10, fontSize: 13, fontWeight: 700, cursor: loading ? 'not-allowed' : 'pointer', transition: 'background 0.15s' }}
+        style={{ padding: '12px', background: loading ? '#8A8F95' : '#C2542B', color: '#fff', border: 'none', borderRadius: 10, fontSize: 13, fontWeight: 700, cursor: loading ? 'not-allowed' : 'pointer', transition: 'background 0.15s' }}
       >
         {loading ? '⏳ ඉදිරිපත් කෙරෙමින්…' : '⭐ සමාලෝචනය ඉදිරිපත් කරන්න'}
       </button>
@@ -203,17 +203,17 @@ function ReviewCard({ r }) {
   const inits = initials(r.reviewer_name)
   const ratingColor = RATING_COLORS[r.rating] || '#f59e0b'
   return (
-    <div style={{ padding: '16px 18px', background: '#fff', borderRadius: 14, border: '1px solid #E2E8F0', boxShadow: '0 1px 4px rgba(0,0,0,0.04)' }}>
+    <div style={{ padding: '16px 18px', background: '#fff', borderRadius: 14, border: '1px solid #E4E0D9', boxShadow: '0 1px 4px rgba(0,0,0,0.04)' }}>
       <div style={{ display: 'flex', alignItems: 'flex-start', justifyContent: 'space-between', gap: 10, marginBottom: 10 }}>
         <div style={{ display: 'flex', alignItems: 'center', gap: 10 }}>
           <div style={{ width: 36, height: 36, borderRadius: '50%', background: color, color: '#fff', display: 'flex', alignItems: 'center', justifyContent: 'center', fontSize: 13, fontWeight: 700, flexShrink: 0 }}>
             {inits}
           </div>
           <div>
-            <div style={{ fontSize: 13, fontWeight: 700, color: '#0F172A', lineHeight: 1.2 }}>{r.reviewer_name}</div>
+            <div style={{ fontSize: 13, fontWeight: 700, color: '#14171A', lineHeight: 1.2 }}>{r.reviewer_name}</div>
             <div style={{ display: 'flex', alignItems: 'center', gap: 6, marginTop: 3 }}>
               {r.job_type && (
-                <span style={{ fontSize: 9, fontWeight: 700, color: '#2563EB', background: '#eef3fb', border: '1px solid #d5e2f5', borderRadius: 20, padding: '1px 7px' }}>
+                <span style={{ fontSize: 9, fontWeight: 700, color: '#C2542B', background: '#F7EFE9', border: '1px solid #EDDFD5', borderRadius: 20, padding: '1px 7px' }}>
                   {r.job_type}
                 </span>
               )}
@@ -225,11 +225,11 @@ function ReviewCard({ r }) {
             <Stars rating={r.rating} size={13} />
             <span style={{ fontSize: 11, fontWeight: 700, color: ratingColor }}>{RATING_LABELS[r.rating]}</span>
           </div>
-          <span style={{ fontSize: 10, color: '#94A3B8' }}>{timeAgo(r.created_at)}</span>
+          <span style={{ fontSize: 10, color: '#8A8F95' }}>{timeAgo(r.created_at)}</span>
         </div>
       </div>
       {r.comment && (
-        <p style={{ fontSize: 13, color: '#334155', lineHeight: 1.7, margin: 0, paddingTop: 8, borderTop: '1px solid #F1F5F9' }}>
+        <p style={{ fontSize: 13, color: '#3A4046', lineHeight: 1.7, margin: 0, paddingTop: 8, borderTop: '1px solid #EFEBE4' }}>
           {r.comment}
         </p>
       )}
@@ -244,23 +244,23 @@ function RatingSummary({ avg, reviews }) {
     pct: reviews.length > 0 ? Math.round((reviews.filter(r => r.rating === n).length / reviews.length) * 100) : 0,
   }))
   return (
-    <div style={{ display: 'flex', gap: 20, alignItems: 'center', flexWrap: 'wrap', background: '#F8FAFC', borderRadius: 14, padding: '18px 20px', border: '1px solid #E2E8F0', marginBottom: 20 }}>
+    <div style={{ display: 'flex', gap: 20, alignItems: 'center', flexWrap: 'wrap', background: '#FBFAF8', borderRadius: 14, padding: '18px 20px', border: '1px solid #E4E0D9', marginBottom: 20 }}>
       <div style={{ textAlign: 'center', minWidth: 72 }}>
-        <div style={{ fontSize: 42, fontWeight: 800, color: '#0F172A', lineHeight: 1 }}>{avg.toFixed(1)}</div>
+        <div style={{ fontSize: 42, fontWeight: 800, color: '#14171A', lineHeight: 1 }}>{avg.toFixed(1)}</div>
         <Stars rating={Math.round(avg)} size={16} />
-        <div style={{ fontSize: 11, color: '#94A3B8', marginTop: 5 }}>
+        <div style={{ fontSize: 11, color: '#8A8F95', marginTop: 5 }}>
           සමාලෝචන {reviews.length}ක්
         </div>
       </div>
       <div style={{ flex: 1, minWidth: 160 }}>
         {breakdown.map(({ n, count, pct }) => (
           <div key={n} style={{ display: 'flex', alignItems: 'center', gap: 8, marginBottom: 5 }}>
-            <span style={{ fontSize: 11, color: '#64748B', width: 10, textAlign: 'right' }}>{n}</span>
+            <span style={{ fontSize: 11, color: '#6B7076', width: 10, textAlign: 'right' }}>{n}</span>
             <span style={{ fontSize: 11, color: '#f59e0b', lineHeight: 1 }}>★</span>
-            <div style={{ flex: 1, height: 7, background: '#E2E8F0', borderRadius: 4, overflow: 'hidden' }}>
+            <div style={{ flex: 1, height: 7, background: '#E4E0D9', borderRadius: 4, overflow: 'hidden' }}>
               <div style={{ height: '100%', background: RATING_COLORS[n], borderRadius: 4, width: `${pct}%`, transition: 'width 0.4s' }} />
             </div>
-            <span style={{ fontSize: 10, color: pct > 0 ? '#334155' : '#CBD5E1', width: 28, textAlign: 'right', fontWeight: pct > 0 ? 600 : 400 }}>{pct > 0 ? `${pct}%` : '—'}</span>
+            <span style={{ fontSize: 10, color: pct > 0 ? '#3A4046' : '#D6D0C6', width: 28, textAlign: 'right', fontWeight: pct > 0 ? 600 : 400 }}>{pct > 0 ? `${pct}%` : '—'}</span>
           </div>
         ))}
       </div>
@@ -308,17 +308,17 @@ export default function ReviewsSection({ tilerId, providerId }) {
   const avg = reviews.length > 0 ? reviews.reduce((s, r) => s + r.rating, 0) / reviews.length : 0
 
   return (
-    <div id="reviews-section" style={{ background: '#fff', border: '1px solid #E2E8F0', borderRadius: 16, padding: '24px 20px', marginBottom: 20 }}>
+    <div id="reviews-section" style={{ background: '#fff', border: '1px solid #E4E0D9', borderRadius: 16, padding: '24px 20px', marginBottom: 20 }}>
 
       {/* Section header */}
       <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', marginBottom: 18 }}>
-        <h2 style={{ fontSize: 15, fontWeight: 700, color: '#0F172A', margin: 0 }}>
-          ⭐ Reviews {reviews.length > 0 && <span style={{ fontSize: 12, color: '#94A3B8', fontWeight: 400 }}>({reviews.length})</span>}
+        <h2 style={{ fontSize: 15, fontWeight: 700, color: '#14171A', margin: 0 }}>
+          ⭐ Reviews {reviews.length > 0 && <span style={{ fontSize: 12, color: '#8A8F95', fontWeight: 400 }}>({reviews.length})</span>}
         </h2>
         {!submitted && !showForm && (
           <button
             onClick={() => setShowForm(true)}
-            style={{ fontSize: 12, fontWeight: 700, color: '#2563EB', background: '#eef3fb', border: '1.5px solid #d5e2f5', borderRadius: 8, padding: '7px 14px', cursor: 'pointer' }}
+            style={{ fontSize: 12, fontWeight: 700, color: '#C2542B', background: '#F7EFE9', border: '1.5px solid #EDDFD5', borderRadius: 8, padding: '7px 14px', cursor: 'pointer' }}
           >
             + සමාලෝචනයක් ලියන්න
           </button>
@@ -326,7 +326,7 @@ export default function ReviewsSection({ tilerId, providerId }) {
       </div>
 
       {loading ? (
-        <div style={{ textAlign: 'center', padding: '32px 0', color: '#94A3B8', fontSize: 13 }}>සමාලෝචන පූරණය වෙමින්…</div>
+        <div style={{ textAlign: 'center', padding: '32px 0', color: '#8A8F95', fontSize: 13 }}>සමාලෝචන පූරණය වෙමින්…</div>
       ) : (
         <>
           {/* Rating summary — only if reviews exist */}
@@ -336,11 +336,11 @@ export default function ReviewsSection({ tilerId, providerId }) {
           {reviews.length === 0 && !showForm && (
             <div style={{ textAlign: 'center', padding: '28px 0' }}>
               <div style={{ fontSize: 36, marginBottom: 10 }}>💬</div>
-              <p style={{ fontSize: 14, fontWeight: 600, color: '#334155', marginBottom: 4 }}>සමාලෝචන නොමැත</p>
-              <p style={{ fontSize: 12, color: '#94A3B8', marginBottom: 20 }}>ඔබේ අත්දැකීම පළමුව බෙදා ගන්න.</p>
+              <p style={{ fontSize: 14, fontWeight: 600, color: '#3A4046', marginBottom: 4 }}>සමාලෝචන නොමැත</p>
+              <p style={{ fontSize: 12, color: '#8A8F95', marginBottom: 20 }}>ඔබේ අත්දැකීම පළමුව බෙදා ගන්න.</p>
               <button
                 onClick={() => setShowForm(true)}
-                style={{ fontSize: 13, fontWeight: 700, color: '#fff', background: '#2563EB', border: 'none', borderRadius: 10, padding: '10px 24px', cursor: 'pointer' }}
+                style={{ fontSize: 13, fontWeight: 700, color: '#fff', background: '#C2542B', border: 'none', borderRadius: 10, padding: '10px 24px', cursor: 'pointer' }}
               >
                 ⭐ සමාලෝචනයක් ලියන්න
               </button>
@@ -358,7 +358,7 @@ export default function ReviewsSection({ tilerId, providerId }) {
           {reviews.length > visible && (
             <button
               onClick={() => setVisible(v => v + PAGE)}
-              style={{ width: '100%', padding: '10px', background: '#F8FAFC', color: '#334155', border: '1.5px solid #E2E8F0', borderRadius: 10, fontSize: 12, fontWeight: 600, cursor: 'pointer', marginBottom: 14 }}
+              style={{ width: '100%', padding: '10px', background: '#FBFAF8', color: '#3A4046', border: '1.5px solid #E4E0D9', borderRadius: 10, fontSize: 12, fontWeight: 600, cursor: 'pointer', marginBottom: 14 }}
             >
               තවත් බලන්න ({reviews.length - visible})
             </button>
@@ -373,7 +373,7 @@ export default function ReviewsSection({ tilerId, providerId }) {
 
           {/* Success message */}
           {submitted && (
-            <div style={{ display: 'flex', alignItems: 'center', gap: 8, fontSize: 13, color: '#16a34a', fontWeight: 600, background: '#f0fdf4', border: '1px solid #bbf7d0', borderRadius: 10, padding: '10px 16px', marginTop: 8 }}>
+            <div style={{ display: 'flex', alignItems: 'center', gap: 8, fontSize: 13, color: '#2F6B4F', fontWeight: 600, background: '#E9F1EC', border: '1px solid #C6DDCF', borderRadius: 10, padding: '10px 16px', marginTop: 8 }}>
               ✅ ස්තූතියි — ඔබේ සමාලෝචනය ප්‍රකාශිත විය!
             </div>
           )}

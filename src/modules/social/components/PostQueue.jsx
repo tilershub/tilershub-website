@@ -1,16 +1,16 @@
 import { useState, useEffect } from 'react'
 import { getQueue, updateStatus, removeFromQueue, copyRowToClipboard, copyAllToClipboard } from '../lib/contentQueue.js'
 
-const NAVY   = '#2563EB'
+const NAVY   = '#C2542B'
 const GOLD   = '#E8B341'
-const ORANGE = '#E8580A'
+const ORANGE = '#D96234'
 const SHEET_URL = 'https://docs.google.com/spreadsheets/d/1umnpXIFhPT8-D31_dbiS_Iz5Ebw9ZfexwrBPD7YPENw/edit'
 
 const STATUS_COLORS = {
-  DRAFT:  { bg: '#F3F4F6', color: '#334155' },
-  PLAN:   { bg: '#F3F4F6', color: '#334155' },
-  READY:  { bg: '#DBEAFE', color: '#1E40AF' },
-  POSTED: { bg: '#D1FAE5', color: '#065F46' },
+  DRAFT:  { bg: '#F4F1EC', color: '#3A4046' },
+  PLAN:   { bg: '#F4F1EC', color: '#3A4046' },
+  READY:  { bg: '#F3E7DF', color: '#7A3218' },
+  POSTED: { bg: '#E9F1EC', color: '#22513B' },
 }
 
 function StatusBadge({ status }) {
@@ -27,7 +27,7 @@ function CampaignBadge({ campaign }) {
   return (
     <span style={{
       display: 'inline-block', padding: '2px 8px', borderRadius: 20, fontSize: 11, fontWeight: 700,
-      background: isUser ? '#EFF6FF' : '#EFF6FF', color: isUser ? '#1E40AF' : '#C2410C',
+      background: isUser ? '#F7EFE9' : '#F7EFE9', color: isUser ? '#7A3218' : '#C2542B',
     }}>
       {isUser ? '🏠 User' : '🔨 Provider'}
     </span>
@@ -65,8 +65,8 @@ export default function PostQueue() {
     POSTED: queue.filter(p => p.status === 'POSTED').length,
   }
 
-  const th = { fontSize: 11, fontWeight: 700, color: '#64748B', textTransform: 'uppercase', letterSpacing: '0.5px', padding: '8px 12px', textAlign: 'left', borderBottom: '2px solid #F1F5F9', whiteSpace: 'nowrap' }
-  const td = { padding: '10px 12px', fontSize: 13, color: '#334155', borderBottom: '1px solid #F8FAFC', verticalAlign: 'top' }
+  const th = { fontSize: 11, fontWeight: 700, color: '#6B7076', textTransform: 'uppercase', letterSpacing: '0.5px', padding: '8px 12px', textAlign: 'left', borderBottom: '2px solid #EFEBE4', whiteSpace: 'nowrap' }
+  const td = { padding: '10px 12px', fontSize: 13, color: '#3A4046', borderBottom: '1px solid #FBFAF8', verticalAlign: 'top' }
 
   return (
     <div style={{ fontFamily: 'Montserrat, system-ui, sans-serif' }}>
@@ -74,12 +74,12 @@ export default function PostQueue() {
       {/* Header */}
       <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', marginBottom: 20, flexWrap: 'wrap', gap: 12 }}>
         <div>
-          <div style={{ fontSize: 15, fontWeight: 700, color: '#0F172A' }}>Post Queue</div>
-          <div style={{ fontSize: 12, color: '#64748B', marginTop: 3 }}>{queue.length} post{queue.length !== 1 ? 's' : ''} in queue</div>
+          <div style={{ fontSize: 15, fontWeight: 700, color: '#14171A' }}>Post Queue</div>
+          <div style={{ fontSize: 12, color: '#6B7076', marginTop: 3 }}>{queue.length} post{queue.length !== 1 ? 's' : ''} in queue</div>
         </div>
         <div style={{ display: 'flex', gap: 10, alignItems: 'center', flexWrap: 'wrap' }}>
           <button onClick={handleCopyAll} disabled={filtered.length === 0}
-            style={{ padding: '8px 16px', background: GOLD, color: '#0F172A', border: 'none', borderRadius: 8, fontSize: 12, fontWeight: 700, cursor: 'pointer', opacity: filtered.length === 0 ? 0.5 : 1 }}>
+            style={{ padding: '8px 16px', background: GOLD, color: '#14171A', border: 'none', borderRadius: 8, fontSize: 12, fontWeight: 700, cursor: 'pointer', opacity: filtered.length === 0 ? 0.5 : 1 }}>
             {copyAllMsg || '📋 Copy All to Sheet'}
           </button>
           <a href={SHEET_URL} target="_blank" rel="noreferrer"
@@ -90,9 +90,9 @@ export default function PostQueue() {
       </div>
 
       {/* Sheet info banner */}
-      <div style={{ background: '#EFF6FF', border: '1px solid #BFDBFE', borderRadius: 10, padding: '12px 16px', marginBottom: 20, fontSize: 12, color: '#1E40AF', lineHeight: 1.7 }}>
+      <div style={{ background: '#F7EFE9', border: '1px solid #E7D9CE', borderRadius: 10, padding: '12px 16px', marginBottom: 20, fontSize: 12, color: '#7A3218', lineHeight: 1.7 }}>
         📌 <strong>Workflow:</strong> Copy rows → Paste into{' '}
-        <a href={SHEET_URL} target="_blank" rel="noreferrer" style={{ color: '#1E40AF', fontWeight: 700 }}>Google Sheet ↗</a>
+        <a href={SHEET_URL} target="_blank" rel="noreferrer" style={{ color: '#7A3218', fontWeight: 700 }}>Google Sheet ↗</a>
         {' '}→ Set status to <strong>READY</strong> → Make.com posts to Facebook &amp; Instagram automatically every hour.
         <br />Sheet columns: <code style={{ background: '#fff', padding: '1px 5px', borderRadius: 4 }}>date · time · platform · campaign · caption · image_url · status · post_id</code>
       </div>
@@ -103,7 +103,7 @@ export default function PostQueue() {
           <button key={key} onClick={() => setFilter(key)}
             style={{
               padding: '7px 14px', borderRadius: 20, fontSize: 12, fontWeight: 600, cursor: 'pointer', border: 'none',
-              background: filter === key ? NAVY : '#F1F5F9', color: filter === key ? '#fff' : '#334155',
+              background: filter === key ? NAVY : '#EFEBE4', color: filter === key ? '#fff' : '#3A4046',
             }}>
             {label} {counts[key] != null && <span style={{ opacity: 0.7 }}>({counts[key]})</span>}
           </button>
@@ -112,13 +112,13 @@ export default function PostQueue() {
 
       {/* Table */}
       {filtered.length === 0 ? (
-        <div style={{ textAlign: 'center', padding: '60px 0', color: '#94A3B8' }}>
+        <div style={{ textAlign: 'center', padding: '60px 0', color: '#8A8F95' }}>
           <div style={{ fontSize: 32, marginBottom: 10 }}>📭</div>
           <div style={{ fontSize: 14, fontWeight: 600 }}>No posts in queue</div>
           <div style={{ fontSize: 12, marginTop: 6 }}>Generate content in Studio and save posts here.</div>
         </div>
       ) : (
-        <div style={{ background: '#fff', border: '1px solid #E5E9F0', borderRadius: 14, overflow: 'hidden' }}>
+        <div style={{ background: '#fff', border: '1px solid #E7E2D9', borderRadius: 14, overflow: 'hidden' }}>
           <div style={{ overflowX: 'auto' }}>
             <table style={{ width: '100%', borderCollapse: 'collapse', fontSize: 13 }}>
               <thead>
@@ -139,13 +139,13 @@ export default function PostQueue() {
                       {post.format === 'carousel' ? '🎴 Carousel' : post.format === 'reel' ? '🎬 Reel' : '🖼 Single'}
                     </td>
                     <td style={{ ...td, maxWidth: 280 }}>
-                      <div style={{ overflow: 'hidden', display: '-webkit-box', WebkitLineClamp: 2, WebkitBoxOrient: 'vertical', color: '#334155' }}>
+                      <div style={{ overflow: 'hidden', display: '-webkit-box', WebkitLineClamp: 2, WebkitBoxOrient: 'vertical', color: '#3A4046' }}>
                         {post.caption || post.note || '—'}
                       </div>
                     </td>
                     <td style={td}>
                       <select value={post.status || 'DRAFT'} onChange={e => handleStatus(post.id, e.target.value)}
-                        style={{ padding: '4px 8px', border: '1.5px solid #E2E8F0', borderRadius: 7, fontSize: 12, fontFamily: 'inherit', background: '#fff', cursor: 'pointer' }}>
+                        style={{ padding: '4px 8px', border: '1.5px solid #E4E0D9', borderRadius: 7, fontSize: 12, fontFamily: 'inherit', background: '#fff', cursor: 'pointer' }}>
                         <option value="DRAFT">DRAFT</option>
                         <option value="PLAN">PLAN</option>
                         <option value="READY">READY</option>
@@ -155,17 +155,17 @@ export default function PostQueue() {
                     <td style={{ ...td, whiteSpace: 'nowrap' }}>
                       <div style={{ display: 'flex', gap: 6 }}>
                         <button onClick={() => handleCopyRow(post)} title="Copy row as TSV"
-                          style={{ padding: '5px 10px', background: '#F1F5F9', color: '#334155', border: 'none', borderRadius: 7, fontSize: 11, fontWeight: 700, cursor: 'pointer' }}>
+                          style={{ padding: '5px 10px', background: '#EFEBE4', color: '#3A4046', border: 'none', borderRadius: 7, fontSize: 11, fontWeight: 700, cursor: 'pointer' }}>
                           {copiedId === post.id ? '✓' : '📋'}
                         </button>
                         {post.status !== 'POSTED' && (
                           <button onClick={() => handleStatus(post.id, 'POSTED')} title="Mark as Posted"
-                            style={{ padding: '5px 10px', background: '#D1FAE5', color: '#065F46', border: 'none', borderRadius: 7, fontSize: 11, fontWeight: 700, cursor: 'pointer' }}>
+                            style={{ padding: '5px 10px', background: '#E9F1EC', color: '#22513B', border: 'none', borderRadius: 7, fontSize: 11, fontWeight: 700, cursor: 'pointer' }}>
                             ✓ Posted
                           </button>
                         )}
                         <button onClick={() => handleDelete(post.id)} title="Remove"
-                          style={{ padding: '5px 10px', background: '#FEE2E2', color: '#991B1B', border: 'none', borderRadius: 7, fontSize: 11, fontWeight: 700, cursor: 'pointer' }}>
+                          style={{ padding: '5px 10px', background: '#FBEDEB', color: '#8E2A1F', border: 'none', borderRadius: 7, fontSize: 11, fontWeight: 700, cursor: 'pointer' }}>
                           🗑
                         </button>
                       </div>
@@ -181,7 +181,7 @@ export default function PostQueue() {
       {filtered.length > 0 && (
         <div style={{ marginTop: 16, display: 'flex', justifyContent: 'flex-end', gap: 10 }}>
           <button onClick={handleCopyAll}
-            style={{ padding: '10px 20px', background: GOLD, color: '#0F172A', border: 'none', borderRadius: 10, fontSize: 13, fontWeight: 700, cursor: 'pointer' }}>
+            style={{ padding: '10px 20px', background: GOLD, color: '#14171A', border: 'none', borderRadius: 10, fontSize: 13, fontWeight: 700, cursor: 'pointer' }}>
             {copyAllMsg || `📋 Copy ${filtered.length} Row${filtered.length !== 1 ? 's' : ''} to Sheet`}
           </button>
           <a href={SHEET_URL} target="_blank" rel="noreferrer"

@@ -11,9 +11,9 @@ const BIDDER_TYPES = [
 
 function inp(extra = {}) {
   return {
-    width: '100%', padding: '12px 14px', border: '1.5px solid #E2E8F0', borderRadius: 10,
+    width: '100%', padding: '12px 14px', border: '1.5px solid #E4E0D9', borderRadius: 10,
     fontSize: 13, fontFamily: 'inherit', outline: 'none', background: '#fff',
-    boxSizing: 'border-box', color: '#0F172A', transition: 'border-color 0.15s',
+    boxSizing: 'border-box', color: '#14171A', transition: 'border-color 0.15s',
     ...extra,
   }
 }
@@ -21,18 +21,18 @@ function inp(extra = {}) {
 function BidSuccess({ projectType, city, updated }) {
   return (
     <div style={{ textAlign: 'center', padding: '40px 24px' }}>
-      <div style={{ width: 80, height: 80, borderRadius: '50%', background: '#f0fdf4', border: '3px solid #bbf7d0', display: 'flex', alignItems: 'center', justifyContent: 'center', fontSize: 36, margin: '0 auto 20px' }}>✅</div>
-      <h3 style={{ fontSize: 20, fontWeight: 700, color: '#166534', marginBottom: 8 }}>
+      <div style={{ width: 80, height: 80, borderRadius: '50%', background: '#E9F1EC', border: '3px solid #C6DDCF', display: 'flex', alignItems: 'center', justifyContent: 'center', fontSize: 36, margin: '0 auto 20px' }}>✅</div>
+      <h3 style={{ fontSize: 20, fontWeight: 700, color: '#22513B', marginBottom: 8 }}>
         {updated ? 'Quote Updated!' : 'Quote Sent!'}
       </h3>
-      <p style={{ fontSize: 14, color: '#334155', lineHeight: 1.75, maxWidth: 380, margin: '0 auto 24px' }}>
+      <p style={{ fontSize: 14, color: '#3A4046', lineHeight: 1.75, maxWidth: 380, margin: '0 auto 24px' }}>
         Your quote for the <strong>{projectType}</strong> in <strong>{city}</strong> has been {updated ? 'updated' : 'received'}. If the homeowner selects you, they'll contact you directly on WhatsApp.
       </p>
       <div style={{ display: 'flex', gap: 10, justifyContent: 'center', flexWrap: 'wrap' }}>
-        <a href="/jobs" style={{ display: 'inline-flex', alignItems: 'center', gap: 6, fontSize: 13, fontWeight: 700, color: '#2563EB', textDecoration: 'none', background: '#EFF6FF', border: '1.5px solid #2563EB22', borderRadius: 10, padding: '11px 20px' }}>
+        <a href="/jobs" style={{ display: 'inline-flex', alignItems: 'center', gap: 6, fontSize: 13, fontWeight: 700, color: '#C2542B', textDecoration: 'none', background: '#F7EFE9', border: '1.5px solid #C2542B22', borderRadius: 10, padding: '11px 20px' }}>
           ← Browse More Projects
         </a>
-        <a href="/providers?type=tiler" style={{ display: 'inline-flex', alignItems: 'center', gap: 6, fontSize: 13, fontWeight: 700, color: '#fff', textDecoration: 'none', background: '#2563EB', borderRadius: 10, padding: '11px 20px' }}>
+        <a href="/providers?type=tiler" style={{ display: 'inline-flex', alignItems: 'center', gap: 6, fontSize: 13, fontWeight: 700, color: '#fff', textDecoration: 'none', background: '#C2542B', borderRadius: 10, padding: '11px 20px' }}>
           ✅ Create Your Profile
         </a>
       </div>
@@ -134,36 +134,36 @@ export default function BidForm({ jobId, bidCount = 0, projectType = '', city = 
   if (submitted) return <BidSuccess projectType={projectType} city={city} updated={!!existingId} />
 
   if (!ready) return (
-    <div style={{ padding: '32px 24px', textAlign: 'center', color: '#64748B', fontSize: 13 }}>Loading…</div>
+    <div style={{ padding: '32px 24px', textAlign: 'center', color: '#6B7076', fontSize: 13 }}>Loading…</div>
   )
 
   // Quoting requires an account: it is what ties a quote to a provider so it
   // can be edited later and shown under "My Quotes".
   if (!user) return (
-    <div style={{ textAlign: 'center', padding: '32px 24px', background: '#F8FAFC', border: '1.5px solid #E2E8F0', borderRadius: 14 }}>
+    <div style={{ textAlign: 'center', padding: '32px 24px', background: '#FBFAF8', border: '1.5px solid #E4E0D9', borderRadius: 14 }}>
       <div style={{ fontSize: 40, marginBottom: 12 }}>💬</div>
-      <h3 style={{ fontSize: 17, fontWeight: 800, color: '#0F172A', marginBottom: 8 }}>Sign in to send your quote</h3>
-      <p style={{ fontSize: 13, color: '#64748B', lineHeight: 1.7, maxWidth: 340, margin: '0 auto 20px' }}>
+      <h3 style={{ fontSize: 17, fontWeight: 800, color: '#14171A', marginBottom: 8 }}>Sign in to send your quote</h3>
+      <p style={{ fontSize: 13, color: '#6B7076', lineHeight: 1.7, maxWidth: 340, margin: '0 auto 20px' }}>
         Signing in keeps your quote yours — you can edit it any time and track it under My Quotes.
       </p>
       <button onClick={signIn}
-        style={{ display: 'inline-flex', alignItems: 'center', gap: 10, background: '#fff', color: '#0F172A', border: '1.5px solid #E2E8F0', borderRadius: 12, padding: '13px 22px', fontSize: 15, fontWeight: 700, cursor: 'pointer', minHeight: 48 }}>
+        style={{ display: 'inline-flex', alignItems: 'center', gap: 10, background: '#fff', color: '#14171A', border: '1.5px solid #E4E0D9', borderRadius: 12, padding: '13px 22px', fontSize: 15, fontWeight: 700, cursor: 'pointer', minHeight: 48 }}>
         <svg width="18" height="18" viewBox="0 0 24 24" aria-hidden="true"><path fill="#4285F4" d="M22.56 12.25c0-.78-.07-1.53-.2-2.25H12v4.26h5.92a5.06 5.06 0 0 1-2.2 3.32v2.77h3.57c2.08-1.92 3.28-4.74 3.28-8.1z"/><path fill="#34A853" d="M12 23c2.97 0 5.46-.98 7.28-2.66l-3.57-2.77c-.98.66-2.23 1.06-3.71 1.06-2.86 0-5.29-1.93-6.16-4.53H2.18v2.84A11 11 0 0 0 12 23z"/><path fill="#FBBC05" d="M5.84 14.1a6.6 6.6 0 0 1 0-4.2V7.06H2.18a11 11 0 0 0 0 9.88l3.66-2.84z"/><path fill="#EA4335" d="M12 5.38c1.62 0 3.06.56 4.21 1.64l3.15-3.15C17.45 2.09 14.97 1 12 1 7.7 1 3.99 3.47 2.18 7.06l3.66 2.84C6.71 7.31 9.14 5.38 12 5.38z"/></svg>
         Continue with Google
       </button>
     </div>
   )
 
-  const labelStyle = { display: 'block', fontSize: 11, fontWeight: 700, color: '#64748B', textTransform: 'uppercase', letterSpacing: 0.8, marginBottom: 6 }
+  const labelStyle = { display: 'block', fontSize: 11, fontWeight: 700, color: '#6B7076', textTransform: 'uppercase', letterSpacing: 0.8, marginBottom: 6 }
   const msgLen = form.message.length
 
   return (
     <form onSubmit={submit} style={{ display: 'flex', flexDirection: 'column', gap: 18 }}>
 
       {existingId && (
-        <div style={{ background: '#EFF6FF', border: '1px solid #BFDBFE', borderRadius: 10, padding: '10px 14px', display: 'flex', alignItems: 'center', gap: 8 }}>
+        <div style={{ background: '#F7EFE9', border: '1px solid #E7D9CE', borderRadius: 10, padding: '10px 14px', display: 'flex', alignItems: 'center', gap: 8 }}>
           <span style={{ fontSize: 16 }}>✏️</span>
-          <span style={{ fontSize: 12, color: '#1E293B', fontWeight: 600 }}>
+          <span style={{ fontSize: 12, color: '#2A2F35', fontWeight: 600 }}>
             You already quoted this job — editing your existing quote.
           </span>
         </div>
@@ -171,9 +171,9 @@ export default function BidForm({ jobId, bidCount = 0, projectType = '', city = 
 
       {/* Competition notice */}
       {!existingId && bidCount > 0 && (
-        <div style={{ background: '#EFF6FF', border: '1px solid #BFDBFE', borderRadius: 10, padding: '10px 14px', display: 'flex', alignItems: 'center', gap: 8 }}>
+        <div style={{ background: '#F7EFE9', border: '1px solid #E7D9CE', borderRadius: 10, padding: '10px 14px', display: 'flex', alignItems: 'center', gap: 8 }}>
           <span style={{ fontSize: 16 }}>⚡</span>
-          <span style={{ fontSize: 12, color: '#1E293B', fontWeight: 600 }}>
+          <span style={{ fontSize: 12, color: '#2A2F35', fontWeight: 600 }}>
             {bidCount} provider{bidCount !== 1 ? 's' : ''} already submitted {bidCount !== 1 ? 'bids' : 'a bid'} — stand out with a detailed offer!
           </span>
         </div>
@@ -198,13 +198,13 @@ export default function BidForm({ jobId, bidCount = 0, projectType = '', city = 
           {BIDDER_TYPES.map(t => (
             <button key={t.value} type="button" onClick={() => set('bidder_type', t.value)}
               style={{ display: 'flex', flexDirection: 'column', alignItems: 'center', gap: 4, padding: '10px 4px', borderRadius: 12, cursor: 'pointer', border: '1.5px solid', transition: 'all 0.15s',
-                background: form.bidder_type === t.value ? '#2563EB' : '#F8FAFC',
-                borderColor: form.bidder_type === t.value ? '#2563EB' : '#E2E8F0',
+                background: form.bidder_type === t.value ? '#C2542B' : '#FBFAF8',
+                borderColor: form.bidder_type === t.value ? '#C2542B' : '#E4E0D9',
               }}
             >
               <span style={{ fontSize: 18 }}>{t.icon}</span>
-              <span style={{ fontSize: 10, fontWeight: 700, color: form.bidder_type === t.value ? '#fff' : '#334155' }}>{t.label}</span>
-              <span style={{ fontSize: 9, color: form.bidder_type === t.value ? 'rgba(255,255,255,0.6)' : '#94A3B8', textAlign: 'center', lineHeight: 1.2 }}>{t.desc}</span>
+              <span style={{ fontSize: 10, fontWeight: 700, color: form.bidder_type === t.value ? '#fff' : '#3A4046' }}>{t.label}</span>
+              <span style={{ fontSize: 9, color: form.bidder_type === t.value ? 'rgba(255,255,255,0.6)' : '#8A8F95', textAlign: 'center', lineHeight: 1.2 }}>{t.desc}</span>
             </button>
           ))}
         </div>
@@ -213,14 +213,14 @@ export default function BidForm({ jobId, bidCount = 0, projectType = '', city = 
       {/* Quote + Timeline */}
       <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: 12 }}>
         <div>
-          <label style={labelStyle}>Your Quote <span style={{ color: '#94A3B8', fontWeight: 400, textTransform: 'none' }}>(optional)</span></label>
+          <label style={labelStyle}>Your Quote <span style={{ color: '#8A8F95', fontWeight: 400, textTransform: 'none' }}>(optional)</span></label>
           <div style={{ position: 'relative' }}>
-            <span style={{ position: 'absolute', left: 12, top: '50%', transform: 'translateY(-50%)', fontSize: 12, fontWeight: 600, color: '#64748B' }}>Rs.</span>
+            <span style={{ position: 'absolute', left: 12, top: '50%', transform: 'translateY(-50%)', fontSize: 12, fontWeight: 600, color: '#6B7076' }}>Rs.</span>
             <input type="number" value={form.quote_amount} onChange={e => set('quote_amount', e.target.value)} placeholder="e.g. 85000" style={inp({ paddingLeft: 38 })} />
           </div>
         </div>
         <div>
-          <label style={labelStyle}>Timeline <span style={{ color: '#94A3B8', fontWeight: 400, textTransform: 'none' }}>(optional)</span></label>
+          <label style={labelStyle}>Timeline <span style={{ color: '#8A8F95', fontWeight: 400, textTransform: 'none' }}>(optional)</span></label>
           <input value={form.timeline} onChange={e => set('timeline', e.target.value)} placeholder="e.g. 3–5 days" style={inp()} />
         </div>
       </div>
@@ -229,7 +229,7 @@ export default function BidForm({ jobId, bidCount = 0, projectType = '', city = 
       <div>
         <div style={{ display: 'flex', alignItems: 'baseline', justifyContent: 'space-between', marginBottom: 6 }}>
           <label style={labelStyle}>Your Pitch *</label>
-          <span style={{ fontSize: 10, color: msgLen > MAX_MSG * 0.9 ? '#dc2626' : '#94A3B8' }}>{msgLen}/{MAX_MSG}</span>
+          <span style={{ fontSize: 10, color: msgLen > MAX_MSG * 0.9 ? '#C0392B' : '#8A8F95' }}>{msgLen}/{MAX_MSG}</span>
         </div>
         <textarea
           value={form.message}
@@ -238,24 +238,24 @@ export default function BidForm({ jobId, bidCount = 0, projectType = '', city = 
           rows={5}
           style={{ ...inp(), resize: 'vertical', lineHeight: 1.7 }}
         />
-        <p style={{ fontSize: 11, color: '#94A3B8', margin: '5px 0 0' }}>Tip: mention your experience level, past similar jobs, and your waterproofing process.</p>
+        <p style={{ fontSize: 11, color: '#8A8F95', margin: '5px 0 0' }}>Tip: mention your experience level, past similar jobs, and your waterproofing process.</p>
       </div>
 
       {error && (
-        <div style={{ fontSize: 13, color: '#dc2626', background: '#fef2f2', border: '1px solid #fecaca', borderRadius: 10, padding: '11px 14px', display: 'flex', alignItems: 'center', gap: 8 }}>
+        <div style={{ fontSize: 13, color: '#C0392B', background: '#FBEDEB', border: '1px solid #F2C9C3', borderRadius: 10, padding: '11px 14px', display: 'flex', alignItems: 'center', gap: 8 }}>
           ⚠ {error}
         </div>
       )}
 
       <button type="submit" disabled={loading}
-        style={{ padding: '15px', background: loading ? '#94A3B8' : 'linear-gradient(135deg,#2563EB,#1E293B)', color: '#fff', border: 'none', borderRadius: 12, fontSize: 15, fontWeight: 700, cursor: loading ? 'not-allowed' : 'pointer', boxShadow: loading ? 'none' : '0 4px 14px rgba(37,99,235,0.3)', transition: 'all 0.2s' }}>
+        style={{ padding: '15px', background: loading ? '#8A8F95' : 'linear-gradient(135deg,#C2542B,#2A2F35)', color: '#fff', border: 'none', borderRadius: 12, fontSize: 15, fontWeight: 700, cursor: loading ? 'not-allowed' : 'pointer', boxShadow: loading ? 'none' : '0 4px 14px rgba(194,84,43,0.3)', transition: 'all 0.2s' }}>
         {loading ? (existingId ? '⏳ Updating…' : '⏳ Sending…') : (existingId ? '💾 Update My Quote' : '📨 Send My Quote')}
       </button>
 
       {/* Trust strip */}
       <div style={{ display: 'flex', gap: 16, justifyContent: 'center', flexWrap: 'wrap' }}>
         {['✏️ Editable any time', '💬 Homeowner contacts you via WhatsApp', '🚫 No commission'].map(t => (
-          <span key={t} style={{ fontSize: 11, color: '#64748B', fontWeight: 500 }}>{t}</span>
+          <span key={t} style={{ fontSize: 11, color: '#6B7076', fontWeight: 500 }}>{t}</span>
         ))}
       </div>
     </form>

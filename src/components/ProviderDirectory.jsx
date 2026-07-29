@@ -95,7 +95,7 @@ const TYPE_LABELS_EN = { tiler: 'Professionals', contractor: 'Contractors', supp
 const TYPE_LABELS_SI = { tiler: 'වෘත්තිකයෝ', contractor: 'කොන්ත්‍රාත්කරුවන්', supplier: 'සැපයුම්කරුවන්' }
 
 // ─── Shared helpers ────────────────────────────────────────────────────────────
-const AVATAR_COLORS = ['#2563EB','#2563EB','#7c3aed','#2563EB','#0369a1','#2563EB','#15803d','#be185d']
+const AVATAR_COLORS = ['#C2542B','#C2542B','#8E3C1E','#C2542B','#2F6B4F','#C2542B','#285C43','#C2542B']
 function avatarColor(name) {
   let h = 0
   for (const c of (name || '')) h = (h * 31 + c.charCodeAt(0)) >>> 0
@@ -160,9 +160,9 @@ function SaveHeartButton({ providerId, savedIds, savingId, onToggleSave }) {
       style={{
         display:'inline-flex', alignItems:'center', gap:4,
         fontSize:11, fontWeight:700, padding:'5px 10px', borderRadius:8,
-        border: isSaved ? '1px solid #fecaca' : '1px solid #E2E8F0',
-        background: isSaved ? '#fef2f2' : '#F8FAFC',
-        color: isSaved ? '#2563EB' : '#94A3B8',
+        border: isSaved ? '1px solid #F2C9C3' : '1px solid #E4E0D9',
+        background: isSaved ? '#FBEDEB' : '#FBFAF8',
+        color: isSaved ? '#C2542B' : '#8A8F95',
         cursor: isLoading ? 'wait' : 'pointer',
         transition:'all 0.15s',
       }}
@@ -200,24 +200,24 @@ function ShopCard({ provider, onClick, T, savedIds, savingId, onToggleSave }) {
   return (
     <div
       onClick={() => provider.slug ? (window.location.href = `/providers/${provider.slug}`) : onClick(provider)}
-      style={{ background: '#fff', border: '1px solid #E2E8F0', borderRadius: 20, overflow: 'hidden', cursor: 'pointer', display: 'flex', flexDirection: 'column', boxShadow: '0 2px 12px rgba(0,0,0,0.06)', transition: 'all 0.2s' }}
+      style={{ background: '#fff', border: '1px solid #E4E0D9', borderRadius: 20, overflow: 'hidden', cursor: 'pointer', display: 'flex', flexDirection: 'column', boxShadow: '0 2px 12px rgba(0,0,0,0.06)', transition: 'all 0.2s' }}
       onMouseOver={e => { e.currentTarget.style.transform = 'translateY(-3px)'; e.currentTarget.style.boxShadow = '0 12px 32px rgba(0,0,0,0.12)' }}
       onMouseOut={e => { e.currentTarget.style.transform = ''; e.currentTarget.style.boxShadow = '0 2px 12px rgba(0,0,0,0.06)' }}
     >
       {/* Main row: image left + content right */}
       <div style={{ display: 'flex', minHeight: 168 }}>
         {/* Left image panel */}
-        <div style={{ width: '42%', flexShrink: 0, position: 'relative', background: '#E2E8F0' }}>
+        <div style={{ width: '42%', flexShrink: 0, position: 'relative', background: '#E4E0D9' }}>
           {coverImg ? (
             <img src={coverImg} alt={provider.name} loading="lazy" style={{ width: '100%', height: '100%', objectFit: 'cover', display: 'block' }} />
           ) : (
-            <div style={{ width: '100%', height: '100%', background: '#F1F5F9', backgroundImage: 'repeating-linear-gradient(0deg,transparent,transparent 19px,#E2E8F0 19px,#E2E8F0 20px),repeating-linear-gradient(90deg,transparent,transparent 19px,#E2E8F0 19px,#E2E8F0 20px)', display: 'flex', alignItems: 'center', justifyContent: 'center' }}>
+            <div style={{ width: '100%', height: '100%', background: '#EFEBE4', backgroundImage: 'repeating-linear-gradient(0deg,transparent,transparent 19px,#E4E0D9 19px,#E4E0D9 20px),repeating-linear-gradient(90deg,transparent,transparent 19px,#E4E0D9 19px,#E4E0D9 20px)', display: 'flex', alignItems: 'center', justifyContent: 'center' }}>
               <span style={{ fontSize: 34, opacity: 0.15 }}>🏪</span>
             </div>
           )}
           {/* Badge top-left */}
           {(isFeatured || isVerified) && (
-            <div style={{ position: 'absolute', top: 9, left: 9, background: isFeatured ? '#60A5FA' : 'rgba(22,163,74,0.92)', color: '#fff', fontSize: 9, fontWeight: 700, padding: '4px 8px', borderRadius: 20, boxShadow: '0 2px 8px rgba(0,0,0,0.25)', whiteSpace: 'nowrap' }}>
+            <div style={{ position: 'absolute', top: 9, left: 9, background: isFeatured ? '#E08A5F' : 'rgba(22,163,74,0.92)', color: '#fff', fontSize: 9, fontWeight: 700, padding: '4px 8px', borderRadius: 20, boxShadow: '0 2px 8px rgba(0,0,0,0.25)', whiteSpace: 'nowrap' }}>
               {isFeatured ? '⭐ Top Rated' : '✓ Verified'}
             </div>
           )}
@@ -225,24 +225,24 @@ function ShopCard({ provider, onClick, T, savedIds, savingId, onToggleSave }) {
 
         {/* Right content panel */}
         <div style={{ flex: 1, padding: '14px 14px 10px', display: 'flex', flexDirection: 'column', minWidth: 0 }}>
-          <div style={{ fontSize: 9, fontWeight: 700, color: '#94A3B8', letterSpacing: 1.2, textTransform: 'uppercase', marginBottom: 3 }}>{tagline}</div>
-          <div style={{ fontFamily: "'Inter', sans-serif", fontSize: 15, fontWeight: 700, color: '#0F172A', lineHeight: 1.2, marginBottom: 4, overflow: 'hidden', textOverflow: 'ellipsis', whiteSpace: 'nowrap' }}>{provider.name}</div>
+          <div style={{ fontSize: 9, fontWeight: 700, color: '#8A8F95', letterSpacing: 1.2, textTransform: 'uppercase', marginBottom: 3 }}>{tagline}</div>
+          <div style={{ fontFamily: "var(--th-display)", fontSize: 15, fontWeight: 700, color: '#14171A', lineHeight: 1.2, marginBottom: 4, overflow: 'hidden', textOverflow: 'ellipsis', whiteSpace: 'nowrap' }}>{provider.name}</div>
           {rating > 0 && (
             <div style={{ display: 'flex', alignItems: 'center', gap: 4, marginBottom: 6 }}>
               <span style={{ fontSize: 12 }}>⭐</span>
-              <span style={{ fontSize: 12, fontWeight: 700, color: '#1E293B' }}>{Number(rating).toFixed(1)}</span>
-              {reviewCount > 0 && <span style={{ fontSize: 10, color: '#94A3B8' }}>({T.reviewsLabel(reviewCount)})</span>}
+              <span style={{ fontSize: 12, fontWeight: 700, color: '#2A2F35' }}>{Number(rating).toFixed(1)}</span>
+              {reviewCount > 0 && <span style={{ fontSize: 10, color: '#8A8F95' }}>({T.reviewsLabel(reviewCount)})</span>}
             </div>
           )}
           {provider.description && (
-            <p style={{ fontSize: 11, color: '#64748B', lineHeight: 1.55, margin: '0 0 8px', display: '-webkit-box', WebkitLineClamp: 2, WebkitBoxOrient: 'vertical', overflow: 'hidden' }}>{provider.description}</p>
+            <p style={{ fontSize: 11, color: '#6B7076', lineHeight: 1.55, margin: '0 0 8px', display: '-webkit-box', WebkitLineClamp: 2, WebkitBoxOrient: 'vertical', overflow: 'hidden' }}>{provider.description}</p>
           )}
           {/* 2×2 feature icons grid */}
           <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: 5, marginTop: 'auto' }}>
             {features.map(f => (
-              <div key={f.label} style={{ display: 'flex', alignItems: 'center', gap: 5, background: '#F8FAFC', border: '1px solid #F1F5F9', borderRadius: 8, padding: '5px 7px' }}>
+              <div key={f.label} style={{ display: 'flex', alignItems: 'center', gap: 5, background: '#FBFAF8', border: '1px solid #EFEBE4', borderRadius: 8, padding: '5px 7px' }}>
                 <span style={{ fontSize: 13 }}>{f.icon}</span>
-                <span style={{ fontSize: 10, fontWeight: 600, color: '#334155' }}>{f.label}</span>
+                <span style={{ fontSize: 10, fontWeight: 600, color: '#3A4046' }}>{f.label}</span>
               </div>
             ))}
           </div>
@@ -250,18 +250,18 @@ function ShopCard({ provider, onClick, T, savedIds, savingId, onToggleSave }) {
       </div>
 
       {/* Bottom strip: location + Save + View Shop button */}
-      <div style={{ borderTop: '1px solid #F1F5F9', padding: '9px 14px', display: 'flex', alignItems: 'center', justifyContent: 'space-between', background: '#fafbfc', gap: 8 }}>
-        <span style={{ fontSize: 11, color: '#64748B', flexShrink: 0 }}>📍 {provider.city || provider.district || 'Sri Lanka'}</span>
+      <div style={{ borderTop: '1px solid #EFEBE4', padding: '9px 14px', display: 'flex', alignItems: 'center', justifyContent: 'space-between', background: '#fafbfc', gap: 8 }}>
+        <span style={{ fontSize: 11, color: '#6B7076', flexShrink: 0 }}>📍 {provider.city || provider.district || 'Sri Lanka'}</span>
         <div style={{ display: 'flex', gap: 6, alignItems: 'center' }}>
           {onToggleSave && <SaveHeartButton providerId={provider.id} savedIds={savedIds} savingId={savingId} onToggleSave={onToggleSave} />}
           {provider.slug ? (
             <a href={`/providers/${provider.slug}`} onClick={e => e.stopPropagation()}
-              style={{ fontSize: 11, fontWeight: 700, background: '#0F172A', color: '#fff', border: 'none', borderRadius: 8, padding: '5px 12px', cursor: 'pointer', textDecoration: 'none', whiteSpace: 'nowrap' }}>
+              style={{ fontSize: 11, fontWeight: 700, background: '#14171A', color: '#fff', border: 'none', borderRadius: 8, padding: '5px 12px', cursor: 'pointer', textDecoration: 'none', whiteSpace: 'nowrap' }}>
               {T.viewShop} ›
             </a>
           ) : waLink ? (
             <a href={waLink} target="_blank" rel="noopener noreferrer" onClick={e => e.stopPropagation()}
-              style={{ fontSize: 11, fontWeight: 700, background: '#0F172A', color: '#fff', border: 'none', borderRadius: 8, padding: '5px 12px', cursor: 'pointer', textDecoration: 'none', whiteSpace: 'nowrap' }}>
+              style={{ fontSize: 11, fontWeight: 700, background: '#14171A', color: '#fff', border: 'none', borderRadius: 8, padding: '5px 12px', cursor: 'pointer', textDecoration: 'none', whiteSpace: 'nowrap' }}>
               {T.viewShop} ›
             </a>
           ) : null}
@@ -282,7 +282,7 @@ function TilerCard({ tiler, onClick, T, savedIds, savingId, onToggleSave }) {
   return (
     <div
       onClick={() => tiler.slug ? (window.location.href = `/providers/${tiler.slug}`) : onClick(tiler)}
-      style={{ background: '#fff', borderRadius: 20, border: '1px solid #E2E8F0', overflow: 'hidden', cursor: 'pointer', boxShadow: '0 2px 12px rgba(0,0,0,0.06)', transition: 'box-shadow 0.2s,transform 0.2s' }}
+      style={{ background: '#fff', borderRadius: 20, border: '1px solid #E4E0D9', overflow: 'hidden', cursor: 'pointer', boxShadow: '0 2px 12px rgba(0,0,0,0.06)', transition: 'box-shadow 0.2s,transform 0.2s' }}
       onMouseOver={e => { e.currentTarget.style.transform = 'translateY(-3px)'; e.currentTarget.style.boxShadow = '0 10px 28px rgba(0,0,0,0.12)' }}
       onMouseOut={e  => { e.currentTarget.style.transform = ''; e.currentTarget.style.boxShadow = '0 2px 12px rgba(0,0,0,0.06)' }}
     >
@@ -296,7 +296,7 @@ function TilerCard({ tiler, onClick, T, savedIds, savingId, onToggleSave }) {
         }
         <div style={{ position: 'absolute', inset: 0, background: 'linear-gradient(to bottom, rgba(0,0,0,0.02) 60%, rgba(0,0,0,0.2) 100%)' }} />
         {isVerified && (
-          <div style={{ position: 'absolute', top: 10, right: 10, background: '#16a34a', color: '#fff', fontSize: 11, fontWeight: 700, padding: '4px 11px', borderRadius: 20, boxShadow: '0 2px 8px rgba(0,0,0,0.22)' }}>
+          <div style={{ position: 'absolute', top: 10, right: 10, background: '#2F6B4F', color: '#fff', fontSize: 11, fontWeight: 700, padding: '4px 11px', borderRadius: 20, boxShadow: '0 2px 8px rgba(0,0,0,0.22)' }}>
             ✓ Verified
           </div>
         )}
@@ -305,42 +305,42 @@ function TilerCard({ tiler, onClick, T, savedIds, savingId, onToggleSave }) {
       {/* Content below image */}
       <div style={{ padding: '14px 16px 16px' }}>
         <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', marginBottom: 6 }}>
-          <span style={{ fontSize: 12, color: '#64748B', fontWeight: 600 }}>Professional</span>
+          <span style={{ fontSize: 12, color: '#6B7076', fontWeight: 600 }}>Professional</span>
           {tiler.daily_rate_min > 0 && (
-            <span style={{ fontSize: 12, color: '#64748B' }}>{T.from} <span style={{ fontSize: 15, fontWeight: 800, color: '#0F172A' }}>Rs.{tiler.daily_rate_min}</span>/{T.dayLabel}</span>
+            <span style={{ fontSize: 12, color: '#6B7076' }}>{T.from} <span style={{ fontSize: 15, fontWeight: 800, color: '#14171A' }}>Rs.{tiler.daily_rate_min}</span>/{T.dayLabel}</span>
           )}
         </div>
-        <div style={{ fontSize: 16, fontWeight: 700, color: '#0F172A', marginBottom: 5, overflow: 'hidden', whiteSpace: 'nowrap', textOverflow: 'ellipsis' }}>{tiler.full_name}</div>
+        <div style={{ fontSize: 16, fontWeight: 700, color: '#14171A', marginBottom: 5, overflow: 'hidden', whiteSpace: 'nowrap', textOverflow: 'ellipsis' }}>{tiler.full_name}</div>
         {tiler.avg_rating > 0 && (
           <div style={{ display: 'flex', alignItems: 'center', gap: 5, marginBottom: 8 }}>
             <span>⭐</span>
-            <span style={{ fontSize: 13, fontWeight: 700, color: '#1E293B' }}>{Number(tiler.avg_rating).toFixed(1)}</span>
-            {tiler.review_count > 0 && <span style={{ fontSize: 12, color: '#94A3B8' }}>({T.reviewsLabel(tiler.review_count)})</span>}
+            <span style={{ fontSize: 13, fontWeight: 700, color: '#2A2F35' }}>{Number(tiler.avg_rating).toFixed(1)}</span>
+            {tiler.review_count > 0 && <span style={{ fontSize: 12, color: '#8A8F95' }}>({T.reviewsLabel(tiler.review_count)})</span>}
           </div>
         )}
         {tiler.bio && (
-          <div style={{ fontSize: 13, color: '#64748B', lineHeight: 1.65, marginBottom: 14, overflow: 'hidden', display: '-webkit-box', WebkitLineClamp: 2, WebkitBoxOrient: 'vertical' }}>
+          <div style={{ fontSize: 13, color: '#6B7076', lineHeight: 1.65, marginBottom: 14, overflow: 'hidden', display: '-webkit-box', WebkitLineClamp: 2, WebkitBoxOrient: 'vertical' }}>
             {tiler.bio}
           </div>
         )}
-        <div style={{ display: 'flex', alignItems: 'center', gap: 8, borderTop: '1px solid #F1F5F9', paddingTop: 12, flexWrap: 'wrap' }}>
+        <div style={{ display: 'flex', alignItems: 'center', gap: 8, borderTop: '1px solid #EFEBE4', paddingTop: 12, flexWrap: 'wrap' }}>
           {tiler.experience_years > 0 && (
-            <span style={{ fontSize: 11, color: '#334155', flexShrink: 0 }}><span style={{ color: '#22c55e', fontWeight: 700 }}>✓</span> {tiler.experience_years}+ {T.yrsExp}</span>
+            <span style={{ fontSize: 11, color: '#3A4046', flexShrink: 0 }}><span style={{ color: '#22c55e', fontWeight: 700 }}>✓</span> {tiler.experience_years}+ {T.yrsExp}</span>
           )}
           {(tiler.city || tiler.district) && (
-            <span style={{ fontSize: 11, color: '#334155', overflow: 'hidden', whiteSpace: 'nowrap', textOverflow: 'ellipsis' }}>📍 {tiler.city || tiler.district}</span>
+            <span style={{ fontSize: 11, color: '#3A4046', overflow: 'hidden', whiteSpace: 'nowrap', textOverflow: 'ellipsis' }}>📍 {tiler.city || tiler.district}</span>
           )}
           <div style={{ marginLeft: 'auto', display: 'flex', gap: 6, flexShrink: 0 }}>
             {onToggleSave && <SaveHeartButton providerId={tiler.id} savedIds={savedIds} savingId={savingId} onToggleSave={onToggleSave} />}
             {phone && (
               <a href={buildWhatsAppLink(phone, tiler.full_name)} target="_blank" rel="noopener noreferrer" onClick={e => e.stopPropagation()}
-                style={{ display: 'inline-flex', alignItems: 'center', background: '#dcfce7', color: '#16a34a', border: '1px solid #86efac', borderRadius: 8, padding: '6px 10px', fontSize: 13, fontWeight: 700, textDecoration: 'none' }}>
+                style={{ display: 'inline-flex', alignItems: 'center', background: '#E9F1EC', color: '#2F6B4F', border: '1px solid #A9CBB8', borderRadius: 8, padding: '6px 10px', fontSize: 13, fontWeight: 700, textDecoration: 'none' }}>
                 💬
               </a>
             )}
             {tiler.slug && (
               <a href={`/providers/${tiler.slug}`} onClick={e => e.stopPropagation()}
-                style={{ display: 'inline-flex', alignItems: 'center', gap: 4, background: '#2563EB', color: '#fff', borderRadius: 10, padding: '7px 14px', fontSize: 12, fontWeight: 700, textDecoration: 'none', whiteSpace: 'nowrap' }}>
+                style={{ display: 'inline-flex', alignItems: 'center', gap: 4, background: '#C2542B', color: '#fff', borderRadius: 10, padding: '7px 14px', fontSize: 12, fontWeight: 700, textDecoration: 'none', whiteSpace: 'nowrap' }}>
                 {T.viewProfile} ›
               </a>
             )}
@@ -363,7 +363,7 @@ function ContractorCard({ provider, onClick, T, savedIds, savingId, onToggleSave
   return (
     <div
       onClick={() => provider.slug ? (window.location.href = `/providers/${provider.slug}`) : onClick(provider)}
-      style={{ background: '#fff', borderRadius: 20, border: '1px solid #E2E8F0', overflow: 'hidden', cursor: 'pointer', boxShadow: '0 2px 12px rgba(0,0,0,0.06)', transition: 'box-shadow 0.2s,transform 0.2s' }}
+      style={{ background: '#fff', borderRadius: 20, border: '1px solid #E4E0D9', overflow: 'hidden', cursor: 'pointer', boxShadow: '0 2px 12px rgba(0,0,0,0.06)', transition: 'box-shadow 0.2s,transform 0.2s' }}
       onMouseOver={e => { e.currentTarget.style.transform = 'translateY(-3px)'; e.currentTarget.style.boxShadow = '0 10px 28px rgba(0,0,0,0.12)' }}
       onMouseOut={e  => { e.currentTarget.style.transform = ''; e.currentTarget.style.boxShadow = '0 2px 12px rgba(0,0,0,0.06)' }}
     >
@@ -377,7 +377,7 @@ function ContractorCard({ provider, onClick, T, savedIds, savingId, onToggleSave
         }
         <div style={{ position: 'absolute', inset: 0, background: 'linear-gradient(to bottom, rgba(0,0,0,0.02) 60%, rgba(0,0,0,0.2) 100%)' }} />
         {isVerified && (
-          <div style={{ position: 'absolute', top: 10, right: 10, background: '#16a34a', color: '#fff', fontSize: 11, fontWeight: 700, padding: '4px 11px', borderRadius: 20, boxShadow: '0 2px 8px rgba(0,0,0,0.22)' }}>
+          <div style={{ position: 'absolute', top: 10, right: 10, background: '#2F6B4F', color: '#fff', fontSize: 11, fontWeight: 700, padding: '4px 11px', borderRadius: 20, boxShadow: '0 2px 8px rgba(0,0,0,0.22)' }}>
             ✓ Verified
           </div>
         )}
@@ -386,36 +386,36 @@ function ContractorCard({ provider, onClick, T, savedIds, savingId, onToggleSave
       {/* Content below image */}
       <div style={{ padding: '14px 16px 16px' }}>
         <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', marginBottom: 6 }}>
-          <span style={{ fontSize: 12, color: '#64748B', fontWeight: 600 }}>{typeLabel}</span>
+          <span style={{ fontSize: 12, color: '#6B7076', fontWeight: 600 }}>{typeLabel}</span>
         </div>
-        <div style={{ fontSize: 16, fontWeight: 700, color: '#0F172A', marginBottom: 5, overflow: 'hidden', whiteSpace: 'nowrap', textOverflow: 'ellipsis' }}>{provider.name}</div>
+        <div style={{ fontSize: 16, fontWeight: 700, color: '#14171A', marginBottom: 5, overflow: 'hidden', whiteSpace: 'nowrap', textOverflow: 'ellipsis' }}>{provider.name}</div>
         {provider.avg_rating > 0 && (
           <div style={{ display: 'flex', alignItems: 'center', gap: 5, marginBottom: 8 }}>
             <span>⭐</span>
-            <span style={{ fontSize: 13, fontWeight: 700, color: '#1E293B' }}>{Number(provider.avg_rating).toFixed(1)}</span>
-            {provider.review_count > 0 && <span style={{ fontSize: 12, color: '#94A3B8' }}>({T.reviewsLabel(provider.review_count)})</span>}
+            <span style={{ fontSize: 13, fontWeight: 700, color: '#2A2F35' }}>{Number(provider.avg_rating).toFixed(1)}</span>
+            {provider.review_count > 0 && <span style={{ fontSize: 12, color: '#8A8F95' }}>({T.reviewsLabel(provider.review_count)})</span>}
           </div>
         )}
         {provider.description && (
-          <div style={{ fontSize: 13, color: '#64748B', lineHeight: 1.65, marginBottom: 14, overflow: 'hidden', display: '-webkit-box', WebkitLineClamp: 2, WebkitBoxOrient: 'vertical' }}>
+          <div style={{ fontSize: 13, color: '#6B7076', lineHeight: 1.65, marginBottom: 14, overflow: 'hidden', display: '-webkit-box', WebkitLineClamp: 2, WebkitBoxOrient: 'vertical' }}>
             {provider.description}
           </div>
         )}
-        <div style={{ display: 'flex', alignItems: 'center', gap: 8, borderTop: '1px solid #F1F5F9', paddingTop: 12, flexWrap: 'wrap' }}>
+        <div style={{ display: 'flex', alignItems: 'center', gap: 8, borderTop: '1px solid #EFEBE4', paddingTop: 12, flexWrap: 'wrap' }}>
           {(provider.city || provider.district) && (
-            <span style={{ fontSize: 11, color: '#334155', overflow: 'hidden', whiteSpace: 'nowrap', textOverflow: 'ellipsis' }}>📍 {provider.city || provider.district}</span>
+            <span style={{ fontSize: 11, color: '#3A4046', overflow: 'hidden', whiteSpace: 'nowrap', textOverflow: 'ellipsis' }}>📍 {provider.city || provider.district}</span>
           )}
           <div style={{ marginLeft: 'auto', display: 'flex', gap: 6, flexShrink: 0 }}>
             {onToggleSave && <SaveHeartButton providerId={provider.id} savedIds={savedIds} savingId={savingId} onToggleSave={onToggleSave} />}
             {phone && (
               <a href={buildWhatsAppLink(phone, provider.name)} target="_blank" rel="noopener noreferrer" onClick={e => e.stopPropagation()}
-                style={{ display: 'inline-flex', alignItems: 'center', background: '#dcfce7', color: '#16a34a', border: '1px solid #86efac', borderRadius: 8, padding: '6px 10px', fontSize: 13, fontWeight: 700, textDecoration: 'none' }}>
+                style={{ display: 'inline-flex', alignItems: 'center', background: '#E9F1EC', color: '#2F6B4F', border: '1px solid #A9CBB8', borderRadius: 8, padding: '6px 10px', fontSize: 13, fontWeight: 700, textDecoration: 'none' }}>
                 💬
               </a>
             )}
             {provider.slug && (
               <a href={`/providers/${provider.slug}`} onClick={e => e.stopPropagation()}
-                style={{ display: 'inline-flex', alignItems: 'center', gap: 4, background: '#2563EB', color: '#fff', borderRadius: 10, padding: '7px 14px', fontSize: 12, fontWeight: 700, textDecoration: 'none', whiteSpace: 'nowrap' }}>
+                style={{ display: 'inline-flex', alignItems: 'center', gap: 4, background: '#C2542B', color: '#fff', borderRadius: 10, padding: '7px 14px', fontSize: 12, fontWeight: 700, textDecoration: 'none', whiteSpace: 'nowrap' }}>
                 {T.viewProfile} ›
               </a>
             )}
@@ -443,7 +443,7 @@ function ProviderModal({ item, onClose, T }) {
           {coverImage
             ? <img src={coverImage} alt={name} style={{ width: '100%', height: '100%', objectFit: 'cover' }} />
             : <>
-                <div style={{ position: 'absolute', inset: 0, background: 'linear-gradient(135deg, #0F172A 0%, #2563EB 100%)' }} />
+                <div style={{ position: 'absolute', inset: 0, background: 'linear-gradient(135deg, #14171A 0%, #C2542B 100%)' }} />
                 <div style={{ position: 'absolute', inset: 0, opacity: 0.04, backgroundImage: 'repeating-linear-gradient(0deg,transparent,transparent 19px,rgba(255,255,255,0.8) 19px,rgba(255,255,255,0.8) 20px),repeating-linear-gradient(90deg,transparent,transparent 19px,rgba(255,255,255,0.8) 19px,rgba(255,255,255,0.8) 20px)' }} />
               </>
           }
@@ -452,30 +452,30 @@ function ProviderModal({ item, onClose, T }) {
         </div>
 
         <div style={{ position: 'relative' }}>
-          <div style={{ position: 'absolute', top: -32, left: 24, width: 64, height: 64, borderRadius: '50%', border: '3px solid #fff', background: '#2563EB', display: 'flex', alignItems: 'center', justifyContent: 'center', fontSize: 22, fontWeight: 700, color: '#fff', overflow: 'hidden', boxShadow: '0 2px 12px rgba(0,0,0,0.18)' }}>
+          <div style={{ position: 'absolute', top: -32, left: 24, width: 64, height: 64, borderRadius: '50%', border: '3px solid #fff', background: '#C2542B', display: 'flex', alignItems: 'center', justifyContent: 'center', fontSize: 22, fontWeight: 700, color: '#fff', overflow: 'hidden', boxShadow: '0 2px 12px rgba(0,0,0,0.18)' }}>
             {avatarImage ? <img src={avatarImage} alt={name} style={{ width: '100%', height: '100%', objectFit: 'cover' }} /> : initials(name)}
           </div>
         </div>
 
         <div style={{ padding: '10px 24px 24px', paddingTop: 40 }}>
           <div style={{ marginBottom: 14 }}>
-            <div style={{ fontSize: 20, fontWeight: 700, color: '#0F172A', marginBottom: 3 }}>{name}</div>
-            <div style={{ fontSize: 13, color: '#64748B' }}>📍 {item.city || item.district}{item.district && item.city ? `, ${item.district}` : ''}</div>
+            <div style={{ fontSize: 20, fontWeight: 700, color: '#14171A', marginBottom: 3 }}>{name}</div>
+            <div style={{ fontSize: 13, color: '#6B7076' }}>📍 {item.city || item.district}{item.district && item.city ? `, ${item.district}` : ''}</div>
           </div>
 
           <div style={{ display: 'flex', flexWrap: 'wrap', gap: 6, marginBottom: 16 }}>
-            {pts && <span style={{ fontSize: 11, fontWeight: 700, padding: '3px 10px', borderRadius: 20, background: '#eef3fb', color: '#2563EB' }}>{pts.icon} {pts.label}</span>}
+            {pts && <span style={{ fontSize: 11, fontWeight: 700, padding: '3px 10px', borderRadius: 20, background: '#F7EFE9', color: '#C2542B' }}>{pts.icon} {pts.label}</span>}
             <VerificationBadge status={item.verification_status} />
           </div>
 
           {item.verification_status === 'listed' && (
-            <div style={{ fontSize: 12, color: '#78716c', background: '#fef9f0', border: '1px solid #BFDBFE', borderRadius: 10, padding: '10px 14px', marginBottom: 16, lineHeight: 1.6 }}>
+            <div style={{ fontSize: 12, color: '#78716c', background: '#fef9f0', border: '1px solid #E7D9CE', borderRadius: 10, padding: '10px 14px', marginBottom: 16, lineHeight: 1.6 }}>
               {T.unverifiedNotice}
             </div>
           )}
 
           {item.description && (
-            <p style={{ fontSize: 13, color: '#334155', lineHeight: 1.75, marginBottom: 18, padding: 14, background: '#F8FAFC', borderRadius: 10 }}>
+            <p style={{ fontSize: 13, color: '#3A4046', lineHeight: 1.75, marginBottom: 18, padding: 14, background: '#FBFAF8', borderRadius: 10 }}>
               {item.description}
             </p>
           )}
@@ -483,21 +483,21 @@ function ProviderModal({ item, onClose, T }) {
           {(item.experience_years || item.daily_rate_min || item.avg_rating > 0) && (
             <div style={{ display: 'flex', gap: 10, marginBottom: 18, flexWrap: 'wrap' }}>
               {item.experience_years > 0 && (
-                <div style={{ padding: '10px 16px', background: '#F8FAFC', borderRadius: 10, border: '1px solid #E2E8F0', textAlign: 'center', flex: 1 }}>
-                  <div style={{ fontSize: 17, fontWeight: 700, color: '#2563EB' }}>{item.experience_years}+</div>
-                  <div style={{ fontSize: 10, color: '#94A3B8' }}>{T.yearsExpLabel}</div>
+                <div style={{ padding: '10px 16px', background: '#FBFAF8', borderRadius: 10, border: '1px solid #E4E0D9', textAlign: 'center', flex: 1 }}>
+                  <div style={{ fontSize: 17, fontWeight: 700, color: '#C2542B' }}>{item.experience_years}+</div>
+                  <div style={{ fontSize: 10, color: '#8A8F95' }}>{T.yearsExpLabel}</div>
                 </div>
               )}
               {item.daily_rate_min && (
-                <div style={{ padding: '10px 16px', background: '#F8FAFC', borderRadius: 10, border: '1px solid #E2E8F0', textAlign: 'center', flex: 1 }}>
-                  <div style={{ fontSize: 13, fontWeight: 700, color: '#2563EB' }}>Rs.{item.daily_rate_min}–{item.daily_rate_max || '?'}</div>
-                  <div style={{ fontSize: 10, color: '#94A3B8' }}>{T.perSqftLabel}</div>
+                <div style={{ padding: '10px 16px', background: '#FBFAF8', borderRadius: 10, border: '1px solid #E4E0D9', textAlign: 'center', flex: 1 }}>
+                  <div style={{ fontSize: 13, fontWeight: 700, color: '#C2542B' }}>Rs.{item.daily_rate_min}–{item.daily_rate_max || '?'}</div>
+                  <div style={{ fontSize: 10, color: '#8A8F95' }}>{T.perSqftLabel}</div>
                 </div>
               )}
               {item.avg_rating > 0 && (
-                <div style={{ padding: '10px 16px', background: '#EFF6FF', borderRadius: 10, border: '1px solid #BFDBFE', textAlign: 'center', flex: 1 }}>
-                  <div style={{ fontSize: 17, fontWeight: 700, color: '#1E293B' }}>⭐ {Number(item.avg_rating).toFixed(1)}</div>
-                  <div style={{ fontSize: 10, color: '#94A3B8' }}>{T.reviewsLabel(item.review_count || 0)}</div>
+                <div style={{ padding: '10px 16px', background: '#F7EFE9', borderRadius: 10, border: '1px solid #E7D9CE', textAlign: 'center', flex: 1 }}>
+                  <div style={{ fontSize: 17, fontWeight: 700, color: '#2A2F35' }}>⭐ {Number(item.avg_rating).toFixed(1)}</div>
+                  <div style={{ fontSize: 10, color: '#8A8F95' }}>{T.reviewsLabel(item.review_count || 0)}</div>
                 </div>
               )}
             </div>
@@ -505,10 +505,10 @@ function ProviderModal({ item, onClose, T }) {
 
           {(item.services || []).length > 0 && (
             <div style={{ marginBottom: 18 }}>
-              <div style={{ fontSize: 11, fontWeight: 700, color: '#94A3B8', letterSpacing: 1, textTransform: 'uppercase', marginBottom: 8 }}>{T.servicesLabel}</div>
+              <div style={{ fontSize: 11, fontWeight: 700, color: '#8A8F95', letterSpacing: 1, textTransform: 'uppercase', marginBottom: 8 }}>{T.servicesLabel}</div>
               <div style={{ display: 'flex', flexWrap: 'wrap', gap: 6 }}>
                 {(item.services || []).map(s => (
-                  <span key={s} style={{ fontSize: 12, padding: '4px 10px', borderRadius: 20, background: '#eef3fb', color: '#2563EB', border: '1px solid #d5e2f5' }}>{s}</span>
+                  <span key={s} style={{ fontSize: 12, padding: '4px 10px', borderRadius: 20, background: '#F7EFE9', color: '#C2542B', border: '1px solid #EDDFD5' }}>{s}</span>
                 ))}
               </div>
             </div>
@@ -519,9 +519,9 @@ function ProviderModal({ item, onClose, T }) {
             if (!imgs.length) return null
             return (
               <div style={{ marginBottom: 18 }}>
-                <div style={{ fontSize: 11, fontWeight: 700, color: '#94A3B8', letterSpacing: 1, textTransform: 'uppercase', marginBottom: 8 }}>{T.portfolioLabel}</div>
+                <div style={{ fontSize: 11, fontWeight: 700, color: '#8A8F95', letterSpacing: 1, textTransform: 'uppercase', marginBottom: 8 }}>{T.portfolioLabel}</div>
                 <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fill, minmax(90px, 1fr))', gap: 6 }}>
-                  {imgs.map((img, i) => <img key={i} src={img} alt="" style={{ width: '100%', aspectRatio: '1', borderRadius: 8, objectFit: 'cover', border: '1px solid #E2E8F0' }} />)}
+                  {imgs.map((img, i) => <img key={i} src={img} alt="" style={{ width: '100%', aspectRatio: '1', borderRadius: 8, objectFit: 'cover', border: '1px solid #E4E0D9' }} />)}
                 </div>
               </div>
             )
@@ -529,10 +529,10 @@ function ProviderModal({ item, onClose, T }) {
 
           {(item.service_areas || []).length > 0 && (
             <div style={{ marginBottom: 18 }}>
-              <div style={{ fontSize: 11, fontWeight: 700, color: '#94A3B8', letterSpacing: 1, textTransform: 'uppercase', marginBottom: 8 }}>{T.serviceAreasLabel}</div>
+              <div style={{ fontSize: 11, fontWeight: 700, color: '#8A8F95', letterSpacing: 1, textTransform: 'uppercase', marginBottom: 8 }}>{T.serviceAreasLabel}</div>
               <div style={{ display: 'flex', flexWrap: 'wrap', gap: 6 }}>
                 {(item.service_areas || []).map(a => (
-                  <span key={a} style={{ fontSize: 11, padding: '3px 9px', borderRadius: 20, background: '#F1F5F9', color: '#334155' }}>{a}</span>
+                  <span key={a} style={{ fontSize: 11, padding: '3px 9px', borderRadius: 20, background: '#EFEBE4', color: '#3A4046' }}>{a}</span>
                 ))}
               </div>
             </div>
@@ -548,7 +548,7 @@ function ProviderModal({ item, onClose, T }) {
           </div>
           {altWaPhone && (
             <a href={buildWhatsAppLink(altWaPhone, name)} target="_blank" rel="noopener noreferrer"
-              style={{ display: 'flex', alignItems: 'center', justifyContent: 'center', gap: 8, width: '100%', marginTop: 8, background: '#f0fdf4', color: '#16a34a', border: '1px solid #bbf7d0', borderRadius: 12, padding: 11, fontSize: 13, fontWeight: 700, textDecoration: 'none' }}>
+              style={{ display: 'flex', alignItems: 'center', justifyContent: 'center', gap: 8, width: '100%', marginTop: 8, background: '#E9F1EC', color: '#2F6B4F', border: '1px solid #C6DDCF', borderRadius: 12, padding: 11, fontSize: 13, fontWeight: 700, textDecoration: 'none' }}>
               {T.altNumber}
             </a>
           )}
@@ -604,30 +604,30 @@ function SuggestedContent({ type, providers, onSelectProvider, T, savedIds, savi
 
   return (
     <div>
-      <div style={{ background: '#fff', borderRadius: 16, border: '2px dashed #E2E8F0', padding: '36px 24px', textAlign: 'center', marginBottom: 36 }}>
+      <div style={{ background: '#fff', borderRadius: 16, border: '2px dashed #E4E0D9', padding: '36px 24px', textAlign: 'center', marginBottom: 36 }}>
         <div style={{ fontSize: 44, marginBottom: 12 }}>🏗️</div>
-        <h3 style={{ fontSize: 18, fontWeight: 700, color: '#0F172A', marginBottom: 8 }}>
+        <h3 style={{ fontSize: 18, fontWeight: 700, color: '#14171A', marginBottom: 8 }}>
           {T.noTypeListed(typeLabel)}
         </h3>
-        <p style={{ fontSize: 13, color: '#64748B', marginBottom: 20, maxWidth: 360, margin: '0 auto 20px' }}>
+        <p style={{ fontSize: 13, color: '#6B7076', marginBottom: 20, maxWidth: 360, margin: '0 auto 20px' }}>
           {T.noTypeHint(typeLabel)}
         </p>
-        <a href="/join-tilershub" style={{ display: 'inline-flex', alignItems: 'center', gap: 7, background: '#2563EB', color: '#fff', borderRadius: 10, padding: '10px 22px', fontSize: 13, fontWeight: 700, textDecoration: 'none' }}>
+        <a href="/join-tilershub" style={{ display: 'inline-flex', alignItems: 'center', gap: 7, background: '#C2542B', color: '#fff', borderRadius: 10, padding: '10px 22px', fontSize: 13, fontWeight: 700, textDecoration: 'none' }}>
           {T.joinAs(typeLabel)}
         </a>
       </div>
 
       {infoCards.length > 0 && (
         <div style={{ marginBottom: 36 }}>
-          <div style={{ fontSize: 12, fontWeight: 700, color: '#94A3B8', textTransform: 'uppercase', letterSpacing: 1, marginBottom: 14 }}>
+          <div style={{ fontSize: 12, fontWeight: 700, color: '#8A8F95', textTransform: 'uppercase', letterSpacing: 1, marginBottom: 14 }}>
             {T.whatTheyDo(typeLabel)}
           </div>
           <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fill, minmax(220px, 1fr))', gap: 12 }}>
             {infoCards.map(c => (
-              <div key={c.title} style={{ background: '#fff', borderRadius: 14, border: '1px solid #E2E8F0', padding: '18px 18px' }}>
-                <div style={{ width: 40, height: 40, borderRadius: 11, background: '#eef3fb', display: 'flex', alignItems: 'center', justifyContent: 'center', fontSize: 18, marginBottom: 10 }}>{c.icon}</div>
-                <div style={{ fontWeight: 700, fontSize: 13, color: '#0F172A', marginBottom: 4 }}>{c.title}</div>
-                <div style={{ fontSize: 11, color: '#64748B', lineHeight: 1.65 }}>{c.body}</div>
+              <div key={c.title} style={{ background: '#fff', borderRadius: 14, border: '1px solid #E4E0D9', padding: '18px 18px' }}>
+                <div style={{ width: 40, height: 40, borderRadius: 11, background: '#F7EFE9', display: 'flex', alignItems: 'center', justifyContent: 'center', fontSize: 18, marginBottom: 10 }}>{c.icon}</div>
+                <div style={{ fontWeight: 700, fontSize: 13, color: '#14171A', marginBottom: 4 }}>{c.title}</div>
+                <div style={{ fontSize: 11, color: '#6B7076', lineHeight: 1.65 }}>{c.body}</div>
               </div>
             ))}
           </div>
@@ -637,8 +637,8 @@ function SuggestedContent({ type, providers, onSelectProvider, T, savedIds, savi
       {otherProviders.length > 0 && (
         <div>
           <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', marginBottom: 14 }}>
-            <div style={{ fontSize: 12, fontWeight: 700, color: '#94A3B8', textTransform: 'uppercase', letterSpacing: 1 }}>{T.otherProviders}</div>
-            <a href="/providers" style={{ fontSize: 12, color: '#2563EB', fontWeight: 600, textDecoration: 'none' }}>{T.seeAll}</a>
+            <div style={{ fontSize: 12, fontWeight: 700, color: '#8A8F95', textTransform: 'uppercase', letterSpacing: 1 }}>{T.otherProviders}</div>
+            <a href="/providers" style={{ fontSize: 12, color: '#C2542B', fontWeight: 600, textDecoration: 'none' }}>{T.seeAll}</a>
           </div>
           <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fill, minmax(280px, 1fr))', gap: 16 }}>
             {otherProviders.map(p => <ProviderCard key={p.id} provider={p} onClick={onSelectProvider} T={T} savedIds={savedIds} savingId={savingId} onToggleSave={onToggleSave} />)}
@@ -725,9 +725,9 @@ export default function ProviderDirectory({ initialType, initialSearch, initialP
     : null
 
   return (
-    <div style={{ background: '#F8FAFC', minHeight: '60vh' }}>
+    <div style={{ background: '#FBFAF8', minHeight: '60vh' }}>
       {/* Sticky filter bar */}
-      <div style={{ background: '#fff', borderBottom: '1px solid #E2E8F0', padding: '16px 0', position: 'sticky', top: 60, zIndex: 100, boxShadow: '0 2px 8px rgba(0,0,0,0.04)' }}>
+      <div style={{ background: '#fff', borderBottom: '1px solid #E4E0D9', padding: '16px 0', position: 'sticky', top: 60, zIndex: 100, boxShadow: '0 2px 8px rgba(0,0,0,0.04)' }}>
         <div style={{ maxWidth: 1100, margin: '0 auto', padding: '0 20px', display: 'flex', gap: 10, flexWrap: 'wrap', alignItems: 'center' }}>
           {/* Search */}
           <div style={{ position: 'relative', flex: '1 1 200px', minWidth: 160 }}>
@@ -741,14 +741,14 @@ export default function ProviderDirectory({ initialType, initialSearch, initialP
                 debounceRef.current = setTimeout(() => setSearch(val), 280)
               }}
               placeholder={T.searchPh}
-              style={{ width: '100%', padding: '9px 12px 9px 32px', border: '1.5px solid #E2E8F0', borderRadius: 10, fontSize: 13, outline: 'none', fontFamily: 'inherit' }}
-              onFocus={e => e.target.style.borderColor = '#2563EB'}
-              onBlur={e => e.target.style.borderColor = '#E2E8F0'}
+              style={{ width: '100%', padding: '9px 12px 9px 32px', border: '1.5px solid #E4E0D9', borderRadius: 10, fontSize: 13, outline: 'none', fontFamily: 'inherit' }}
+              onFocus={e => e.target.style.borderColor = '#C2542B'}
+              onBlur={e => e.target.style.borderColor = '#E4E0D9'}
             />
           </div>
 
           {/* Type filter */}
-          <select value={type} onChange={e => setType(e.target.value)} style={{ padding: '9px 12px', border: '1.5px solid #E2E8F0', borderRadius: 10, fontSize: 13, outline: 'none', background: '#fff', fontFamily: 'inherit', cursor: 'pointer' }}>
+          <select value={type} onChange={e => setType(e.target.value)} style={{ padding: '9px 12px', border: '1.5px solid #E4E0D9', borderRadius: 10, fontSize: 13, outline: 'none', background: '#fff', fontFamily: 'inherit', cursor: 'pointer' }}>
             <option value="">{T.all}</option>
             <option value="tiler">🪚 Tiler</option>
             <option value="contractor">🏗️ Contractor</option>
@@ -768,7 +768,7 @@ export default function ProviderDirectory({ initialType, initialSearch, initialP
           </select>
 
           {/* District filter */}
-          <select value={district} onChange={e => setDistrict(e.target.value)} style={{ padding: '9px 12px', border: '1.5px solid #E2E8F0', borderRadius: 10, fontSize: 13, outline: 'none', background: '#fff', fontFamily: 'inherit', cursor: 'pointer' }}>
+          <select value={district} onChange={e => setDistrict(e.target.value)} style={{ padding: '9px 12px', border: '1.5px solid #E4E0D9', borderRadius: 10, fontSize: 13, outline: 'none', background: '#fff', fontFamily: 'inherit', cursor: 'pointer' }}>
             <option value="">{T.allDistricts}</option>
             {DISTRICTS_EN.map((d, i) => (
               <option key={d} value={d}>{d}</option>
@@ -776,28 +776,28 @@ export default function ProviderDirectory({ initialType, initialSearch, initialP
           </select>
 
           {(inputValue || type || district) && (
-            <button onClick={() => { setInputValue(''); setSearch(''); setType(''); setDistrict('') }} style={{ padding: '9px 14px', background: '#fee2e2', color: '#dc2626', border: 'none', borderRadius: 10, fontSize: 12, fontWeight: 600, cursor: 'pointer' }}>
+            <button onClick={() => { setInputValue(''); setSearch(''); setType(''); setDistrict('') }} style={{ padding: '9px 14px', background: '#FBEDEB', color: '#C0392B', border: 'none', borderRadius: 10, fontSize: 12, fontWeight: 600, cursor: 'pointer' }}>
               {T.clear(clearLabel)}
             </button>
           )}
 
-          <span style={{ fontSize: 12, color: '#94A3B8', marginLeft: 'auto' }}>{T.found(total)}</span>
+          <span style={{ fontSize: 12, color: '#8A8F95', marginLeft: 'auto' }}>{T.found(total)}</span>
 
         </div>
       </div>
 
       <div style={{ maxWidth: 1100, margin: '0 auto', padding: '32px 20px' }}>
         {loading ? (
-          <div style={{ textAlign: 'center', padding: '80px 0', color: '#94A3B8' }}>
+          <div style={{ textAlign: 'center', padding: '80px 0', color: '#8A8F95' }}>
             <div style={{ fontSize: 36, marginBottom: 16 }}>⏳</div>
             <p>{T.loading}</p>
           </div>
         ) : loadError ? (
-          <div style={{ textAlign: 'center', padding: '60px 20px', background: '#fff', borderRadius: 16, border: '1px solid #fecaca' }}>
+          <div style={{ textAlign: 'center', padding: '60px 20px', background: '#fff', borderRadius: 16, border: '1px solid #F2C9C3' }}>
             <div style={{ fontSize: 40, marginBottom: 12 }}>⚠️</div>
-            <h3 style={{ fontSize: 16, fontWeight: 700, color: '#dc2626', marginBottom: 8 }}>Could not load providers</h3>
-            <p style={{ fontSize: 13, color: '#64748B', marginBottom: 20 }}>{loadError}</p>
-            <button onClick={() => window.location.reload()} style={{ padding: '10px 24px', background: '#2563EB', color: '#fff', border: 'none', borderRadius: 10, fontSize: 14, fontWeight: 600, cursor: 'pointer' }}>
+            <h3 style={{ fontSize: 16, fontWeight: 700, color: '#C0392B', marginBottom: 8 }}>Could not load providers</h3>
+            <p style={{ fontSize: 13, color: '#6B7076', marginBottom: 20 }}>{loadError}</p>
+            <button onClick={() => window.location.reload()} style={{ padding: '10px 24px', background: '#C2542B', color: '#fff', border: 'none', borderRadius: 10, fontSize: 14, fontWeight: 600, cursor: 'pointer' }}>
               Try Again
             </button>
           </div>
@@ -809,17 +809,17 @@ export default function ProviderDirectory({ initialType, initialSearch, initialP
               T={T} savedIds={savedIds} savingId={savingId} onToggleSave={toggleSaveProvider}
             />
           ) : (
-            <div style={{ textAlign: 'center', padding: '80px 20px', background: '#fff', borderRadius: 16, border: '1px solid #E2E8F0' }}>
+            <div style={{ textAlign: 'center', padding: '80px 20px', background: '#fff', borderRadius: 16, border: '1px solid #E4E0D9' }}>
               <div style={{ fontSize: 48, marginBottom: 16 }}>🔍</div>
-              <h3 style={{ fontSize: 18, fontWeight: 700, color: '#0F172A', marginBottom: 8 }}>{T.noResults}</h3>
-              <p style={{ color: '#64748B', marginBottom: 24 }}>{T.noResultsHint}</p>
+              <h3 style={{ fontSize: 18, fontWeight: 700, color: '#14171A', marginBottom: 8 }}>{T.noResults}</h3>
+              <p style={{ color: '#6B7076', marginBottom: 24 }}>{T.noResultsHint}</p>
               <div style={{ display: 'flex', gap: 10, justifyContent: 'center', flexWrap: 'wrap' }}>
                 {(search || district) && (
-                  <button onClick={() => { setSearch(''); setInputValue(''); setDistrict('') }} style={{ padding: '10px 20px', background: '#2563EB', color: '#fff', border: 'none', borderRadius: 10, fontSize: 14, fontWeight: 600, cursor: 'pointer' }}>
+                  <button onClick={() => { setSearch(''); setInputValue(''); setDistrict('') }} style={{ padding: '10px 20px', background: '#C2542B', color: '#fff', border: 'none', borderRadius: 10, fontSize: 14, fontWeight: 600, cursor: 'pointer' }}>
                     {T.clearSearch}
                   </button>
                 )}
-                <a href="/providers" style={{ padding: '10px 20px', background: '#F1F5F9', color: '#334155', borderRadius: 10, fontSize: 14, fontWeight: 600, textDecoration: 'none', display: 'inline-block' }}>
+                <a href="/providers" style={{ padding: '10px 20px', background: '#EFEBE4', color: '#3A4046', borderRadius: 10, fontSize: 14, fontWeight: 600, textDecoration: 'none', display: 'inline-block' }}>
                   {T.browseAll}
                 </a>
               </div>

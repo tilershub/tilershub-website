@@ -79,10 +79,10 @@ export const PROFESSION_LABELS = Object.fromEntries(PROFESSIONS.map(p => [p.valu
 export const PROVIDER_TYPES = PROFESSIONS
 
 export const VERIFICATION_BADGES = {
-  listed: { label: 'Listed', color: '#64748B', bg: '#F1F5F9' },
-  th_verified: { label: 'TH Verified', color: '#2563EB', bg: '#EFF6FF' },
-  th_certified_pro: { label: 'Certified Pro', color: '#1d4ed8', bg: '#eff6ff' },
-  th_master: { label: 'TH Master', color: '#7c3aed', bg: '#f5f3ff' },
+  listed: { label: 'Listed', color: '#6B7076', bg: '#EFEBE4' },
+  th_verified: { label: 'TH Verified', color: '#C2542B', bg: '#F7EFE9' },
+  th_certified_pro: { label: 'Certified Pro', color: '#8E3C1E', bg: '#F7EFE9' },
+  th_master: { label: 'TH Master', color: '#8E3C1E', bg: '#F7EFE9' },
 }
 
 export const BUDGET_RANGES = [

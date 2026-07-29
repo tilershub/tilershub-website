@@ -1,36 +1,78 @@
 ---
 import Layout from '../layouts/Layout.astro'
-import HomeHero from '../components/HomeHero.jsx'
+import HomeClient from '../components/HomeClient.jsx'
+import HomeProvider from '../components/HomeProvider.jsx'
 import NearYou from '../components/NearYou.jsx'
-import DistrictPicker from '../components/DistrictPicker.jsx'
 import { DEFAULT_DISTRICT } from '../lib/district.js'
 
 const supabase = Astro.locals.supabase
+const user = Astro.locals.user
 
-// Server-render the default district so the page is useful before JS runs
-// and crawlers see real content. The client re-queries when the user
-// changes district.
-const SHOP_TYPES = ['tile_shop', 'bathroom_shop', 'supplier', 'brand_dealer', 'tool_supplier', 'workshop']
-const COLS = 'id,name,slug,city,district,service_areas,provider_type,avg_rating,review_count,profile_image,cover_image'
+// Which home a visitor gets is decided here, not in the browser: resolving it
+// client-side would paint the homeowner page first and then swap it out.
+let provider: any = null
+if (user) {
+  const { data } = await supabase.from('providers').select('*').eq('user_id', user.id).maybeSingle()
+  provider = data
+}
+const isProvider = !!provider
 
-const { data: allActive } = await supabase
-  .from('providers').select(COLS).eq('status', 'active')
-  .order('avg_rating', { ascending: false })
-  .order('review_count', { ascending: false })
-  .limit(60)
+const PROJECT_COLS = 'id,project_type,city,district,description,budget_range,status,created_at'
+const WEEK_AGO = new Date(Date.now() - 7 * 86400000).toISOString()
 
-const isLocal = (p: any) =>
-  p.district === DEFAULT_DISTRICT ||
-  (p.service_areas || []).includes(DEFAULT_DISTRICT) ||
-  (p.city || '').toLowerCase().includes(DEFAULT_DISTRICT.toLowerCase())
+let clientJobs: any[] = []
+let openJobs: any[] = []
+let newThisWeek = 0
+let pros: any[] = []
+let shops: any[] = []
+let providerCount = 0
 
-const pool = allActive ?? []
-const prosAll  = pool.filter((p: any) => !SHOP_TYPES.includes(p.provider_type))
-const shopsAll = pool.filter((p: any) =>  SHOP_TYPES.includes(p.provider_type))
-const pros  = (prosAll.filter(isLocal).length  ? prosAll.filter(isLocal)  : prosAll ).slice(0, 10)
-const shops = (shopsAll.filter(isLocal).length ? shopsAll.filter(isLocal) : shopsAll).slice(0, 10)
+if (isProvider) {
+  // Provider home: what is open to quote on, theirs first by district.
+  const [{ data: open }, { count }] = await Promise.all([
+    supabase.from('projects').select(PROJECT_COLS).eq('status', 'active')
+      .order('created_at', { ascending: false }).limit(30),
+    supabase.from('projects').select('id', { count: 'exact', head: true })
+      .eq('status', 'active').gte('created_at', WEEK_AGO),
+  ])
+  const home = provider.district
+  const pool = open ?? []
+  const local = pool.filter((p: any) => p.district === home || p.city === home)
+  openJobs = [...local, ...pool.filter((p: any) => !local.includes(p))].slice(0, 5)
+  newThisWeek = count ?? 0
+} else {
+  // Homeowner home. Server-render the default district so the page is useful
+  // before JS runs and crawlers see real content; NearYou re-queries when the
+  // visitor changes district.
+  const SHOP_TYPES = ['tile_shop', 'bathroom_shop', 'supplier', 'brand_dealer', 'tool_supplier', 'workshop']
+  const COLS = 'id,name,slug,city,district,service_areas,provider_type,avg_rating,review_count,profile_image,cover_image'
 
-Astro.response.headers.set('Cache-Control', 'public, max-age=0, s-maxage=300')
+  const [{ data: allActive }, mine] = await Promise.all([
+    supabase.from('providers').select(COLS).eq('status', 'active')
+      .order('avg_rating', { ascending: false })
+      .order('review_count', { ascending: false })
+      .limit(60),
+    user
+      ? supabase.from('projects').select(PROJECT_COLS).eq('user_id', user.id)
+          .order('created_at', { ascending: false }).limit(3)
+      : Promise.resolve({ data: [] as any[] }),
+  ])
+
+  const isLocal = (p: any) =>
+    p.district === DEFAULT_DISTRICT ||
+    (p.service_areas || []).includes(DEFAULT_DISTRICT) ||
+    (p.city || '').toLowerCase().includes(DEFAULT_DISTRICT.toLowerCase())
+
+  const pool = allActive ?? []
+  const prosAll = pool.filter((p: any) => !SHOP_TYPES.includes(p.provider_type))
+  const shopsAll = pool.filter((p: any) => SHOP_TYPES.includes(p.provider_type))
+  pros = (prosAll.filter(isLocal).length ? prosAll.filter(isLocal) : prosAll).slice(0, 10)
+  shops = (shopsAll.filter(isLocal).length ? shopsAll.filter(isLocal) : shopsAll).slice(0, 10)
+  providerCount = prosAll.filter(isLocal).length
+  clientJobs = mine.data ?? []
+}
+
+Astro.response.headers.set('Cache-Control', user ? 'private, no-store' : 'public, max-age=0, s-maxage=300')
 ---
 
 <Layout
@@ -51,47 +93,14 @@ Astro.response.headers.set('Cache-Control', 'public, max-age=0, s-maxage=300')
     },
   })} />
 
-  <!-- Signed-in providers get their own view; HomeHero hides this wrapper -->
-  <div id="homeowner-home">
-
-  <!-- ══ 1. ONE ACTION ══ -->
-  <section style="background:linear-gradient(160deg,#0F172A 0%,#1E293B 100%);padding:36px 20px 32px;">
-    <div style="max-width:520px;margin:0 auto;text-align:center;">
-      <h1 style="font-size:clamp(24px,6vw,32px);font-weight:800;color:#fff;line-height:1.25;margin:0 0 10px;letter-spacing:-0.5px;">
-        <span class="en-text">Find trusted tilers near you</span>
-        <span class="si-text">ඔබ අසල විශ්වාසනීය ටයිලර්වරු</span>
-      </h1>
-      <p style="font-size:14px;color:rgba(255,255,255,0.7);line-height:1.7;margin:0 0 20px;">
-        <span class="en-text">Post your job free — verified professionals send you quotes on WhatsApp.</span>
-        <span class="si-text">නොමිලේ පලකරන්න — සත්‍යාපිත ශිල්පීන් WhatsApp හරහා ලංසු එවයි.</span>
-      </p>
-
-      <div style="display:flex;justify-content:center;margin-bottom:16px;">
-        <DistrictPicker client:load tone="dark" />
-      </div>
-
-      <a href="/post-project"
-        style="display:flex;align-items:center;justify-content:center;gap:8px;background:#2563EB;color:#fff;border-radius:14px;padding:16px 24px;font-size:16px;font-weight:700;text-decoration:none;box-shadow:0 6px 20px rgba(37,99,235,0.4);min-height:56px;">
-        <span class="en-text">Post your job — free</span>
-        <span class="si-text">ඔබේ රැකියාව පලකරන්න — නොමිලේ</span>
-      </a>
-
-      <a href="/providers" style="display:inline-block;margin-top:14px;font-size:13px;color:rgba(255,255,255,0.65);text-decoration:none;">
-        <span class="en-text">or browse all services →</span>
-        <span class="si-text">නැතහොත් සියලු සේවා බලන්න →</span>
-      </a>
-    </div>
-  </section>
-
-  <!-- ══ 2. TOP RATED NEAR YOU ══ -->
-  <NearYou client:load initial={pros} />
-
-  <!-- ══ 3. TILE SHOPS NEAR YOU ══ -->
-  <NearYou client:load variant="shops" initial={shops} />
-
-  <div style="height:24px;"></div>
-  </div>
-
-  <!-- Provider view — replaces everything above once signed in as a provider -->
-  <HomeHero client:load />
+  {isProvider ? (
+    <HomeProvider client:load user={user} provider={provider} initialJobs={openJobs} newThisWeek={newThisWeek} />
+  ) : (
+    <>
+      <HomeClient client:load initialUser={user} providerCount={providerCount} initialJobs={clientJobs} />
+      <NearYou client:load initial={pros} />
+      <NearYou client:load variant="shops" initial={shops} />
+      <div style="height:20px;"></div>
+    </>
+  )}
 </Layout>

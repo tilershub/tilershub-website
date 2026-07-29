@@ -109,12 +109,12 @@ function genToken() {
 function Field({ label, id, req, error, hint, children }) {
   return (
     <div style={{ marginBottom: 18 }}>
-      <label htmlFor={id} style={{ display: 'block', fontSize: 12, fontWeight: 700, color: '#334155', textTransform: 'uppercase', letterSpacing: '0.5px', marginBottom: 6 }}>
-        {label} {req && <span style={{ color: '#2563EB' }}>*</span>}
+      <label htmlFor={id} style={{ display: 'block', fontSize: 12, fontWeight: 700, color: '#3A4046', textTransform: 'uppercase', letterSpacing: '0.5px', marginBottom: 6 }}>
+        {label} {req && <span style={{ color: '#C2542B' }}>*</span>}
       </label>
       {children}
-      {hint && !error && <p style={{ fontSize: 11, color: '#94A3B8', marginTop: 4 }}>{hint}</p>}
-      {error && <p style={{ fontSize: 11, color: '#dc2626', marginTop: 4 }}>⚠ {error}</p>}
+      {hint && !error && <p style={{ fontSize: 11, color: '#8A8F95', marginTop: 4 }}>{hint}</p>}
+      {error && <p style={{ fontSize: 11, color: '#C0392B', marginTop: 4 }}>⚠ {error}</p>}
     </div>
   )
 }
@@ -122,9 +122,9 @@ function Field({ label, id, req, error, hint, children }) {
 function inp(hasError) {
   return {
     width: '100%', padding: '11px 14px',
-    border: `1.5px solid ${hasError ? '#fca5a5' : '#E2E8F0'}`,
+    border: `1.5px solid ${hasError ? '#E3A199' : '#E4E0D9'}`,
     borderRadius: 10, fontSize: 13, outline: 'none', fontFamily: 'inherit',
-    background: hasError ? '#fef2f2' : '#fff', transition: 'border-color 0.2s',
+    background: hasError ? '#FBEDEB' : '#fff', transition: 'border-color 0.2s',
     boxSizing: 'border-box',
   }
 }
@@ -149,8 +149,8 @@ function MagicLinkForm({ label, hint, t }) {
     return (
       <div style={{ textAlign: 'center', padding: '16px 0' }}>
         <div style={{ fontSize: 32, marginBottom: 8 }}>📬</div>
-        <div style={{ fontSize: 14, fontWeight: 700, color: '#0F172A', marginBottom: 6 }}>{t.checkEmail}</div>
-        <p style={{ fontSize: 12, color: '#64748B', lineHeight: 1.7 }}>
+        <div style={{ fontSize: 14, fontWeight: 700, color: '#14171A', marginBottom: 6 }}>{t.checkEmail}</div>
+        <p style={{ fontSize: 12, color: '#6B7076', lineHeight: 1.7 }}>
           <strong>{email}</strong> {t.sentBody}
         </p>
       </div>
@@ -159,8 +159,8 @@ function MagicLinkForm({ label, hint, t }) {
 
   return (
     <form onSubmit={send} style={{ marginTop: 4 }}>
-      <div style={{ fontSize: 13, fontWeight: 600, color: '#334155', marginBottom: 10 }}>{label}</div>
-      {hint && <p style={{ fontSize: 12, color: '#64748B', marginBottom: 12, lineHeight: 1.6 }}>{hint}</p>}
+      <div style={{ fontSize: 13, fontWeight: 600, color: '#3A4046', marginBottom: 10 }}>{label}</div>
+      {hint && <p style={{ fontSize: 12, color: '#6B7076', marginBottom: 12, lineHeight: 1.6 }}>{hint}</p>}
       <div style={{ display: 'flex', gap: 8 }}>
         <input
           type="email"
@@ -168,14 +168,14 @@ function MagicLinkForm({ label, hint, t }) {
           onChange={e => setEmail(e.target.value)}
           placeholder="your@email.com"
           autoFocus
-          style={{ flex: 1, padding: '10px 14px', border: `1.5px solid ${err ? '#fca5a5' : '#E2E8F0'}`, borderRadius: 10, fontSize: 13, outline: 'none', fontFamily: 'inherit', background: err ? '#fef2f2' : '#fff', boxSizing: 'border-box' }}
+          style={{ flex: 1, padding: '10px 14px', border: `1.5px solid ${err ? '#E3A199' : '#E4E0D9'}`, borderRadius: 10, fontSize: 13, outline: 'none', fontFamily: 'inherit', background: err ? '#FBEDEB' : '#fff', boxSizing: 'border-box' }}
         />
-        <button type="submit" disabled={loading} style={{ padding: '10px 18px', background: loading ? '#94A3B8' : '#2563EB', color: '#fff', border: 'none', borderRadius: 10, fontSize: 13, fontWeight: 700, cursor: loading ? 'not-allowed' : 'pointer', whiteSpace: 'nowrap' }}>
+        <button type="submit" disabled={loading} style={{ padding: '10px 18px', background: loading ? '#8A8F95' : '#C2542B', color: '#fff', border: 'none', borderRadius: 10, fontSize: 13, fontWeight: 700, cursor: loading ? 'not-allowed' : 'pointer', whiteSpace: 'nowrap' }}>
           {loading ? '⏳' : t.sendLink}
         </button>
       </div>
-      {err && <p style={{ fontSize: 11, color: '#dc2626', marginTop: 4 }}>⚠ {err}</p>}
-      <p style={{ fontSize: 11, color: '#94A3B8', marginTop: 8 }}>{t.noPassword}</p>
+      {err && <p style={{ fontSize: 11, color: '#C0392B', marginTop: 4 }}>⚠ {err}</p>}
+      <p style={{ fontSize: 11, color: '#8A8F95', marginTop: 8 }}>{t.noPassword}</p>
     </form>
   )
 }
@@ -198,6 +198,20 @@ export default function PostProjectForm() {
     if (!token) { token = genToken(); localStorage.setItem(DRAFT_KEY, token) }
     setDraftToken(token)
     supabase.auth.getUser().then(({ data: { user } }) => setUserId(user?.id ?? null))
+
+    // Arriving from a trade shortcut or the district picker: prefill rather
+    // than making the visitor re-enter what they already told us. Applied
+    // after mount so the first render still matches the server HTML.
+    const q = new URLSearchParams(window.location.search)
+    const type = q.get('type')
+    const district = q.get('district')
+    if (type || district) {
+      setForm(f => ({
+        ...f,
+        project_type: type || f.project_type,
+        district: DISTRICTS_EN.includes(district) ? district : f.district,
+      }))
+    }
   }, [])
 
   const set = (k, v) => setForm(f => ({ ...f, [k]: v }))
@@ -256,20 +270,20 @@ export default function PostProjectForm() {
     return (
       <div style={{ maxWidth: 520, margin: '0 auto' }}>
         {/* Success header */}
-        <div style={{ textAlign: 'center', padding: '32px 20px 24px', background: '#fff', borderRadius: '20px 20px 0 0', border: '1px solid #E2E8F0', borderBottom: 'none' }}>
+        <div style={{ textAlign: 'center', padding: '32px 20px 24px', background: '#fff', borderRadius: '20px 20px 0 0', border: '1px solid #E4E0D9', borderBottom: 'none' }}>
           <div style={{ fontSize: 52, marginBottom: 12 }}>🎉</div>
-          <h2 style={{ fontFamily: "'Inter', sans-serif", fontSize: 24, fontWeight: 700, color: '#0F172A', marginBottom: 8 }}>{t.successTitle}</h2>
-          <p style={{ fontSize: 13, color: '#64748B', lineHeight: 1.8, maxWidth: 340, margin: '0 auto 16px' }}>
+          <h2 style={{ fontFamily: "var(--th-display)", fontSize: 24, fontWeight: 700, color: '#14171A', marginBottom: 8 }}>{t.successTitle}</h2>
+          <p style={{ fontSize: 13, color: '#6B7076', lineHeight: 1.8, maxWidth: 340, margin: '0 auto 16px' }}>
             {t.successBody}
           </p>
-          <div style={{ display: 'inline-flex', alignItems: 'center', gap: 6, background: '#f0fdf4', border: '1px solid #bbf7d0', borderRadius: 10, padding: '8px 14px', marginBottom: 14 }}>
-            <span style={{ fontSize: 13, color: '#15803d' }}>✓ {t.whatsappNote} <strong>{form.whatsapp}</strong></span>
+          <div style={{ display: 'inline-flex', alignItems: 'center', gap: 6, background: '#E9F1EC', border: '1px solid #C6DDCF', borderRadius: 10, padding: '8px 14px', marginBottom: 14 }}>
+            <span style={{ fontSize: 13, color: '#285C43' }}>✓ {t.whatsappNote} <strong>{form.whatsapp}</strong></span>
           </div>
           {/* What happens next */}
-          <div style={{ textAlign: 'left', background: '#EFF6FF', border: '1px solid #BFDBFE', borderRadius: 12, padding: '14px 16px', margin: '0 auto', maxWidth: 360 }}>
-            <div style={{ fontSize: 12, fontWeight: 800, color: '#2563EB', marginBottom: 8 }}>{t.nextTitle}</div>
+          <div style={{ textAlign: 'left', background: '#F7EFE9', border: '1px solid #E7D9CE', borderRadius: 12, padding: '14px 16px', margin: '0 auto', maxWidth: 360 }}>
+            <div style={{ fontSize: 12, fontWeight: 800, color: '#C2542B', marginBottom: 8 }}>{t.nextTitle}</div>
             {t.nextSteps.map(s => (
-              <div key={s} style={{ fontSize: 12, color: '#1E293B', lineHeight: 1.9 }}>{s}</div>
+              <div key={s} style={{ fontSize: 12, color: '#2A2F35', lineHeight: 1.9 }}>{s}</div>
             ))}
           </div>
           <a href={`https://wa.me/?text=${encodeURIComponent(t.shareText)}`} target="_blank" rel="noopener noreferrer"
@@ -280,20 +294,20 @@ export default function PostProjectForm() {
 
         {userId ? (
           /* Signed-in user: simple success with manage link */
-          <div style={{ background: '#fff', border: '1px solid #E2E8F0', borderTop: '1px solid #F1F5F9', borderRadius: '0 0 20px 20px', padding: '20px 24px' }}>
+          <div style={{ background: '#fff', border: '1px solid #E4E0D9', borderTop: '1px solid #EFEBE4', borderRadius: '0 0 20px 20px', padding: '20px 24px' }}>
             <div style={{ display: 'flex', gap: 10, justifyContent: 'center', flexWrap: 'wrap' }}>
-              <a href="/dashboard" style={{ padding: '11px 22px', background: '#2563EB', color: '#fff', borderRadius: 12, fontSize: 14, fontWeight: 600, textDecoration: 'none' }}>{t.viewDashboard}</a>
+              <a href="/dashboard" style={{ padding: '11px 22px', background: '#C2542B', color: '#fff', borderRadius: 12, fontSize: 14, fontWeight: 600, textDecoration: 'none' }}>{t.viewDashboard}</a>
               <button onClick={resetForm}
-                style={{ padding: '11px 22px', background: '#F1F5F9', color: '#334155', borderRadius: 12, fontSize: 14, fontWeight: 600, border: 'none', cursor: 'pointer' }}>
+                style={{ padding: '11px 22px', background: '#EFEBE4', color: '#3A4046', borderRadius: 12, fontSize: 14, fontWeight: 600, border: 'none', cursor: 'pointer' }}>
                 {t.postAnother}
               </button>
             </div>
           </div>
         ) : (
           /* Anonymous user: auth prompt to finalize */
-          <div style={{ background: '#fff', border: '1px solid #E2E8F0', borderTop: 'none', borderRadius: '0 0 20px 20px', overflow: 'hidden' }}>
-            <div style={{ background: 'linear-gradient(135deg, #2563EB, #0F172A)', padding: '20px 24px' }}>
-              <div style={{ fontSize: 11, fontWeight: 700, color: 'rgba(37,99,235,0.8)', letterSpacing: 2, textTransform: 'uppercase', marginBottom: 8 }}>
+          <div style={{ background: '#fff', border: '1px solid #E4E0D9', borderTop: 'none', borderRadius: '0 0 20px 20px', overflow: 'hidden' }}>
+            <div style={{ background: 'linear-gradient(135deg, #C2542B, #14171A)', padding: '20px 24px' }}>
+              <div style={{ fontSize: 11, fontWeight: 700, color: 'rgba(194,84,43,0.8)', letterSpacing: 2, textTransform: 'uppercase', marginBottom: 8 }}>
                 {t.oneMoreStep}
               </div>
               <div style={{ fontSize: 16, fontWeight: 700, color: '#fff', marginBottom: 6 }}>{t.createAccount}</div>
@@ -305,11 +319,11 @@ export default function PostProjectForm() {
             </div>
             <div style={{ padding: '20px 24px' }}>
               <MagicLinkForm label={t.emailLabel} hint={null} t={t} />
-              <div style={{ marginTop: 20, paddingTop: 16, borderTop: '1px solid #F1F5F9', display: 'flex', gap: 10, justifyContent: 'center', flexWrap: 'wrap' }}>
-                <a href="/providers" style={{ fontSize: 13, color: '#64748B', textDecoration: 'none', fontWeight: 600 }}>{t.viewProviders}</a>
-                <span style={{ color: '#E2E8F0' }}>·</span>
+              <div style={{ marginTop: 20, paddingTop: 16, borderTop: '1px solid #EFEBE4', display: 'flex', gap: 10, justifyContent: 'center', flexWrap: 'wrap' }}>
+                <a href="/providers" style={{ fontSize: 13, color: '#6B7076', textDecoration: 'none', fontWeight: 600 }}>{t.viewProviders}</a>
+                <span style={{ color: '#E4E0D9' }}>·</span>
                 <button onClick={resetForm}
-                  style={{ fontSize: 13, color: '#64748B', background: 'none', border: 'none', cursor: 'pointer', fontWeight: 600, padding: 0 }}>
+                  style={{ fontSize: 13, color: '#6B7076', background: 'none', border: 'none', cursor: 'pointer', fontWeight: 600, padding: 0 }}>
                   {t.postAnother}
                 </button>
               </div>
@@ -323,7 +337,7 @@ export default function PostProjectForm() {
   return (
     <form onSubmit={handleSubmit} noValidate style={{ maxWidth: 560, margin: '0 auto' }}>
       {errors.submit && (
-        <div style={{ padding: '12px 16px', background: '#fef2f2', border: '1px solid #fecaca', borderRadius: 10, fontSize: 13, color: '#dc2626', marginBottom: 20 }}>
+        <div style={{ padding: '12px 16px', background: '#FBEDEB', border: '1px solid #F2C9C3', borderRadius: 10, fontSize: 13, color: '#C0392B', marginBottom: 20 }}>
           ⚠ {errors.submit}
         </div>
       )}
@@ -367,8 +381,8 @@ export default function PostProjectForm() {
         />
       </Field>
 
-      <div style={{ height: 1, background: '#F1F5F9', margin: '8px 0 20px' }} />
-      <p style={{ fontSize: 12, color: '#64748B', marginBottom: 18, display: 'flex', alignItems: 'center', gap: 6 }}>
+      <div style={{ height: 1, background: '#EFEBE4', margin: '8px 0 20px' }} />
+      <p style={{ fontSize: 12, color: '#6B7076', marginBottom: 18, display: 'flex', alignItems: 'center', gap: 6 }}>
         {t.privacy}
       </p>
 
@@ -382,11 +396,11 @@ export default function PostProjectForm() {
       </div>
 
       <button type="submit" disabled={submitting}
-        style={{ width: '100%', padding: '13px', background: submitting ? '#94A3B8' : '#2563EB', color: '#fff', border: 'none', borderRadius: 12, fontSize: 15, fontWeight: 700, cursor: submitting ? 'not-allowed' : 'pointer', display: 'flex', alignItems: 'center', justifyContent: 'center', gap: 8, transition: 'background 0.2s' }}>
+        style={{ width: '100%', padding: '13px', background: submitting ? '#8A8F95' : '#C2542B', color: '#fff', border: 'none', borderRadius: 12, fontSize: 15, fontWeight: 700, cursor: submitting ? 'not-allowed' : 'pointer', display: 'flex', alignItems: 'center', justifyContent: 'center', gap: 8, transition: 'background 0.2s' }}>
         {submitting ? t.submitting : t.submit}
       </button>
 
-      <p style={{ fontSize: 11, color: '#94A3B8', textAlign: 'center', marginTop: 12 }}>
+      <p style={{ fontSize: 11, color: '#8A8F95', textAlign: 'center', marginTop: 12 }}>
         {t.footer}
       </p>
     </form>
