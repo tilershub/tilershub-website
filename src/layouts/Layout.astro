@@ -1,14 +1,25 @@
 ---
 import '../index.css'
 import '../styles/theme-2026.css'
-import AuthButton from '../components/AuthButton.jsx'
+import AppShell from '../components/AppShell.jsx'
 import DraftLinker from '../components/DraftLinker.jsx'
-import DistrictPicker from '../components/DistrictPicker.jsx'
 
 const user = Astro.locals.user
 
-// Active-project badge count is fetched client-side (see script near the
-// bottom nav) so no page blocks on a DB round trip just to render the shell.
+// The tab bar is role-dependent, so the role is resolved here rather than in
+// the browser: deciding it client-side would mean the first paint shows the
+// wrong nav and then swaps. Same rule Dashboard.jsx uses.
+let role = 'client'
+if (user) {
+  const db = Astro.locals.supabase
+  const [{ data: provider }, { data: submission }] = await Promise.all([
+    db.from('providers').select('id').eq('user_id', user.id).maybeSingle(),
+    db.from('provider_submissions').select('status').eq('user_id', user.id).maybeSingle(),
+  ])
+  if (provider || ['pending_review', 'approved', 'listed'].includes(submission?.status)) {
+    role = 'provider'
+  }
+}
 
 const {
   title = "TilersHub · Sri Lanka's Tile & Bathroom Marketplace",
@@ -152,24 +163,8 @@ const orgSchema = JSON.stringify({
     })()
   </script>
 
-  <!-- ═══ WHITE MARKETPLACE HEADER ═══ -->
-  <header class="site-header">
-    <a href="/" class="site-logo">
-      <div class="site-logo-grid">
-        {[0,1,2,3,4,5,6,7,8].map(() => <div class="site-logo-tile"></div>)}
-      </div>
-      <span class="site-logo-mark">TILERS<span>HUB</span></span>
-    </a>
-
-    <!-- One bar, five things. Posting is already the hero CTA and the
-         bottom-nav + button, so it isn't repeated here. -->
-    <div class="header-actions">
-      <DistrictPicker client:load />
-      <a href="/notifications" class="header-icon-btn header-bell" title="Notifications" aria-label="Notifications">🔔</a>
-      <AuthButton initialUser={user} client:load />
-      <button class="header-icon-btn" id="hamburger" aria-label="Menu">☰</button>
-    </div>
-  </header>
+  <!-- ═══ THE ONE APP BAR + TAB BAR ═══ -->
+  <AppShell client:load role={role} path={path} initialUser={user} />
 
   <!-- Mobile drawer overlay -->
   <div class="mobile-drawer-overlay" id="drawer-overlay"></div>
@@ -186,8 +181,13 @@ const orgSchema = JSON.stringify({
     <a href="/bathrooms" class={`drawer-link${path==='/bathrooms'?' active':''}`} style="color:rgba(255,255,255,0.6);">🚿 Bathroom Products</a>
     <a href="/tools" class={`drawer-link${path==='/tools'?' active':''}`} style="color:rgba(255,255,255,0.6);">🛠️ Tools & Equipment</a>
     <div class="drawer-divider"></div>
-    <a href="/post-project" class="drawer-link highlight">📋 Post a Project — Get Quotes</a>
-    <a href="/join-tilershub" class="drawer-link" style="color:rgba(255,255,255,0.6);">✅ Join as a Provider</a>
+    {/* One highlighted action, and it is the one for this role. */}
+    {role === 'provider'
+      ? <a href="/account?tab=quotes" class="drawer-link highlight">📋 My Quotes</a>
+      : <a href="/post-project" class="drawer-link highlight">📋 Post a Project — Get Quotes</a>}
+    {role !== 'provider' && (
+      <a href="/join-tilershub" class="drawer-link" style="color:rgba(255,255,255,0.6);">✅ Join as a Provider</a>
+    )}
     <div class="drawer-divider"></div>
     <a href="/estimator" class={`drawer-link${path==='/estimator'?' active':''}`}>📐 Cost Calculator</a>
     <a href="/guides" class={`drawer-link${path.startsWith('/guides')?' active':''}`} style="color:rgba(255,255,255,0.6);">📖 Guides</a>
@@ -273,37 +273,9 @@ const orgSchema = JSON.stringify({
     </div>
   </footer>
 
-  <!-- ═══ BOTTOM NAVIGATION (mobile only) ═══ -->
-  <nav class="bottom-nav" aria-label="Main navigation">
-    <div class="bottom-nav-inner">
-      <a href="/" class={`bottom-nav-item${path==='/'?' active':''}`}>
-        <span class="bottom-nav-icon">🏠</span>
-        Home
-      </a>
-      <a href="/providers" class={`bottom-nav-item${path.startsWith('/providers')?' active':''}`}>
-        <span class="bottom-nav-icon">👥</span>
-        Tilers
-      </a>
-      <a href="/post-project" class="bottom-nav-post" aria-label="Post a project">
-        +
-      </a>
-      <a href="/jobs" class={`bottom-nav-item${path==='/jobs'?' active':''}`}>
-        <span class="bottom-nav-icon" style="position:relative;display:inline-block;">
-          📋
-          <span id="jobs-badge" style="display:none;position:absolute;top:-5px;right:-8px;background:#C2542B;color:#fff;font-size:8px;font-weight:800;border-radius:20px;padding:1px 4px;min-width:14px;text-align:center;line-height:14px;border:1.5px solid #fff;"></span>
-        </span>
-        Projects
-      </a>
-      <a href="/account" class={`bottom-nav-item${path==='/account'||path==='/provider'?' active':''}`}>
-        <span class="bottom-nav-icon">👤</span>
-        Account
-      </a>
-    </div>
-  </nav>
-
   <script>
-    const hamburger = document.getElementById('hamburger')
-    const bottomMenu = document.getElementById('bottom-menu-btn')
+    // The menu button lives in the AppShell island, so it asks for the drawer
+    // by event rather than reaching across into another React tree.
     const overlay = document.getElementById('drawer-overlay')
     const drawer = document.getElementById('mobile-drawer')
     const closeBtn = document.getElementById('close-drawer')
@@ -319,8 +291,7 @@ const orgSchema = JSON.stringify({
       document.body.style.overflow = ''
     }
 
-    hamburger?.addEventListener('click', openDrawer)
-    bottomMenu?.addEventListener('click', openDrawer)
+    window.addEventListener('th-drawer-open', openDrawer)
     overlay?.addEventListener('click', closeDrawer)
     closeBtn?.addEventListener('click', closeDrawer)
   </script>
@@ -393,20 +364,6 @@ const orgSchema = JSON.stringify({
       window.addEventListener('load', () => {
         navigator.serviceWorker.register('/sw.js').catch(() => {})
       })
-    }
-  </script>
-  <script>
-    // Active-projects badge — fetched client-side so SSR never blocks on it
-    import { supabase } from '../lib/supabase.js'
-    const badge = document.getElementById('jobs-badge')
-    if (badge) {
-      supabase.from('projects').select('id', { count: 'exact', head: true }).eq('status', 'active')
-        .then(({ count }) => {
-          if (count && count > 0) {
-            badge.textContent = count > 99 ? '99+' : String(count)
-            badge.style.display = 'block'
-          }
-        })
     }
   </script>
 </body>

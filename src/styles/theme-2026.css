@@ -23,106 +23,106 @@ h1, h2, h3, h4 {
 h1 { letter-spacing: -0.045em; }
 
 
-.th-app {
-  min-height: 100dvh;
-  display: flex;
-  flex-direction: column;
-  background: var(--surface-3);
-}
-
+/* The one app bar. Fixed rather than sticky because page content is in
+   normal document flow (the footer and long marketing pages need to be),
+   so body carries the matching padding-top in index.css. */
 .th-appbar {
-  position: sticky;
-  top: 0;
-  z-index: 40;
+  position: fixed;
+  top: 0; left: 0; right: 0;
+  z-index: 200;
   display: flex;
   align-items: center;
-  gap: 11px;
-  padding: 12px var(--th-gutter);
-  background: rgba(239, 235, 228, 0.92);
+  gap: 6px;
+  padding: 10px 14px;
+  padding-top: calc(10px + env(safe-area-inset-top, 0px));
+  background: rgba(255, 255, 255, 0.92);
   backdrop-filter: blur(12px);
   border-bottom: 1px solid var(--border);
 }
-.th-appbar__title {
-  font-family: var(--th-display);
-  font-weight: 700;
-  font-size: 16px;
-  letter-spacing: -0.025em;
-  white-space: nowrap;
-}
-.th-appbar__spacer { flex: 1; }
+.th-appbar__spacer { flex: 1; min-width: 0; }
 
-/* logo mark — four tiles rotated 45°, no image needed */
-.th-mark {
-  width: 22px; height: 22px; flex: none;
-  display: grid;
-  grid-template: 1fr 1fr / 1fr 1fr;
-  gap: 1.5px;
-  transform: rotate(45deg);
+.th-brand {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  flex: none;
+  color: inherit;
 }
-.th-mark i { border-radius: 1px; background: var(--navy); }
-.th-mark i:nth-child(1), .th-mark i:nth-child(4) { background: var(--terra); }
-
 .th-wordmark {
   font-family: var(--th-display);
   font-weight: 800;
   font-size: 15.5px;
   letter-spacing: -0.02em;
+  color: var(--navy);
+  white-space: nowrap;
+}
+.th-wordmark span { color: var(--terra); }
+
+/* Everything after the brand is fixed-width chrome; only the spacer gives. */
+.th-appbar > :not(.th-appbar__spacer):not(.th-brand) { flex: none; }
+
+/* The bar must never overflow: below 480px the bell moves into the drawer,
+   the district name truncates and Sign In goes icon-only, so the menu
+   button always stays on screen — verified down to 320px. */
+@media (max-width: 480px) {
+  .th-appbar { padding-left: 11px; padding-right: 11px; gap: 3px; }
+  .th-appbar .header-bell { display: none; }
+  .th-wordmark { font-size: 14px; }
+}
+@media (max-width: 359px) {
+  .th-wordmark { display: none; }
 }
 
-/* role switch (Client / Provider) */
-.th-seg {
-  display: flex;
-  flex: none;
-  padding: 2px;
-  border-radius: 999px;
-  background: rgba(20, 23, 26, 0.07);
-}
-.th-seg button {
-  height: 26px;
-  padding: 0 11px;
-  border: none;
-  border-radius: 999px;
-  background: transparent;
-  color: var(--text-3);
-  font: 600 11px var(--th-body);
-  cursor: pointer;
-}
-.th-seg button[aria-pressed='true'] { background: var(--navy); color: #fff; }
-
-.th-scroll {
-  flex: 1;
-  overflow-y: auto;
-  overscroll-behavior-y: contain;
-  -webkit-overflow-scrolling: touch;
-  padding: 18px var(--th-gutter) 26px;
-}
-
-/* bottom tab bar — hidden once there's room for real navigation */
+/* Bottom tab bar — replaced by inline space at desktop widths. */
 .th-tabbar {
-  position: sticky;
-  bottom: 0;
-  z-index: 40;
+  position: fixed;
+  bottom: 0; left: 0; right: 0;
+  z-index: 200;
   display: flex;
-  background: rgba(255, 255, 255, 0.94);
+  background: rgba(255, 255, 255, 0.96);
   backdrop-filter: blur(14px);
   border-top: 1px solid var(--border);
-  padding: 9px 8px calc(9px + env(safe-area-inset-bottom));
+  padding: 7px 6px calc(7px + env(safe-area-inset-bottom, 0px));
 }
-.th-tabbar button {
+.th-tabbar a {
   flex: 1;
   min-height: 48px;                 /* touch target */
   display: flex;
   flex-direction: column;
   align-items: center;
-  gap: 4px;
-  border: none;
-  background: none;
+  justify-content: center;
+  gap: 3px;
   color: var(--text-4);
-  cursor: pointer;
+  text-decoration: none;
 }
-.th-tabbar button[aria-current='page'] { color: var(--terra); }
-.th-tabbar__icon  { font-size: 17px; line-height: 1; }
+.th-tabbar a[aria-current='page'] { color: var(--terra); }
+.th-tabbar__icon  { font-size: 18px; line-height: 1; position: relative; display: inline-block; }
 .th-tabbar__label { font: 600 10.5px var(--th-body); }
+.th-tabbar__badge {
+  position: absolute;
+  top: -5px; right: -9px;
+  min-width: 15px;
+  padding: 0 4px;
+  border: 1.5px solid #fff;
+  border-radius: 99px;
+  background: var(--terra);
+  color: #fff;
+  font: 800 8.5px/15px var(--th-body);
+  text-align: center;
+}
+/* Raised centre action — posting is the client's whole reason to be here. */
+.th-tabbar__raised {
+  flex: none;
+  width: 50px;
+  min-height: 50px;
+  margin: -14px 6px 0;
+  border-radius: 16px;
+  background: var(--terra);
+  color: #fff;
+  font: 300 27px/1 var(--th-body);
+  box-shadow: 0 4px 14px rgba(194, 84, 43, 0.4);
+}
+.th-tabbar__raised[aria-current='page'] { color: #fff; background: var(--terra-light); }
 
 /* sticky primary action above the tab bar */
 .th-actionbar {
@@ -314,37 +314,24 @@ textarea.th-field { padding: 12px 13px; line-height: 1.5; resize: vertical; }
    ========================================================================== */
 
 @media (min-width: 700px) {
-  .th-scroll { padding: 28px 28px 64px; }
   .th-grid-2 { display: grid; grid-template-columns: 1fr 1fr; gap: 16px; }
 }
 
 @media (min-width: 1000px) {
   :root { --th-gutter: 28px; }
 
-  /* real nav takes over from the tab bar */
+  /* Desktop has the width for the drawer's links to live inline, so the tab
+     bar goes away and the body reclaims its bottom padding. */
   .th-tabbar { display: none; }
-  .th-appbar__nav { display: flex; gap: 4px; }
-  .th-appbar__nav button {
-    min-height: 40px;
-    padding: 0 14px;
-    border: none;
-    border-radius: 8px;
-    background: transparent;
-    color: var(--text-2);
-    font: 600 13.5px var(--th-body);
-    cursor: pointer;
-  }
-  .th-appbar__nav button:hover { background: rgba(20, 23, 26, 0.06); }
-  .th-appbar__nav button[aria-current='page'] { background: var(--navy); color: #fff; }
+  body { padding-bottom: 0; }
 
-  .th-scroll  { max-width: 1200px; width: 100%; margin: 0 auto; overflow: visible; }
-  .th-app     { background-image: linear-gradient(rgba(20,23,26,0.045) 1px, transparent 1px),
-                                  linear-gradient(90deg, rgba(20,23,26,0.045) 1px, transparent 1px);
-                background-size: 56px 56px; }
+  .th-appbar { padding-left: 28px; padding-right: 28px; gap: 8px; }
+  .th-wordmark { font-size: 17px; }
+
   .th-grid-2  { grid-template-columns: 1fr 1fr; }
   .th-grid-3  { display: grid; grid-template-columns: repeat(3, 1fr); gap: 16px; }
 
-  /* the action bar becomes a sticky sidebar rail on detail pages */
+  /* the action bar becomes a card rather than a sticky footer */
   .th-actionbar {
     position: static;
     border: 1px solid var(--border);
@@ -355,8 +342,4 @@ textarea.th-field { padding: 12px 13px; line-height: 1.5; resize: vertical; }
   .th-sheet-scrim { align-items: center; justify-content: center; padding: 24px; }
   .th-sheet { max-width: 420px; border-radius: 18px; animation: th-pop 0.25s ease both; }
   .th-toast { left: 50%; right: auto; transform: translateX(-50%); bottom: 28px; }
-}
-
-@media (max-width: 999px) {
-  .th-appbar__nav { display: none; }
 }
