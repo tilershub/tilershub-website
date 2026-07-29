@@ -3,17 +3,17 @@ import { generatePosts, ANGLES } from '../lib/claudeApi.js'
 import { saveToLocalQueue, copyRowToClipboard, copyAllToClipboard } from '../lib/contentQueue.js'
 import { useSupabaseStats } from '../hooks/useSupabaseStats.js'
 
-const NAVY  = '#2563EB'
+const NAVY  = '#C2542B'
 const GOLD  = '#E8B341'
-const ORANGE = '#E8580A'
+const ORANGE = '#D96234'
 
 // ─── Shared helpers ───────────────────────────────────────────────────────────
 
 function lbl(extra = {}) {
-  return { display: 'block', fontSize: 11, fontWeight: 700, color: '#334155', textTransform: 'uppercase', letterSpacing: '0.6px', marginBottom: 7, ...extra }
+  return { display: 'block', fontSize: 11, fontWeight: 700, color: '#3A4046', textTransform: 'uppercase', letterSpacing: '0.6px', marginBottom: 7, ...extra }
 }
 function card(extra = {}) {
-  return { background: '#fff', border: '1px solid #E5E9F0', borderRadius: 14, padding: 20, ...extra }
+  return { background: '#fff', border: '1px solid #E7E2D9', borderRadius: 14, padding: 20, ...extra }
 }
 
 function ToggleGroup({ options, value, onChange }) {
@@ -24,7 +24,7 @@ function ToggleGroup({ options, value, onChange }) {
         return (
           <button key={o.value} onClick={() => onChange(o.value)} style={{
             padding: '7px 16px', borderRadius: 20, fontSize: 12, fontWeight: 600, cursor: 'pointer', border: 'none',
-            background: active ? NAVY : '#F1F5F9', color: active ? '#fff' : '#334155', transition: 'all 0.12s',
+            background: active ? NAVY : '#EFEBE4', color: active ? '#fff' : '#3A4046', transition: 'all 0.12s',
           }}>{o.label}</button>
         )
       })}
@@ -34,9 +34,9 @@ function ToggleGroup({ options, value, onChange }) {
 
 function StatPill({ label, value, loading }) {
   return (
-    <div style={{ textAlign: 'center', padding: '10px 18px', background: '#F8FAFC', borderRadius: 12, border: '1px solid #E2E8F0' }}>
+    <div style={{ textAlign: 'center', padding: '10px 18px', background: '#FBFAF8', borderRadius: 12, border: '1px solid #E4E0D9' }}>
       <div style={{ fontSize: 18, fontWeight: 800, color: NAVY, lineHeight: 1 }}>{loading ? '…' : value}</div>
-      <div style={{ fontSize: 10, color: '#94A3B8', fontWeight: 600, marginTop: 3, textTransform: 'uppercase', letterSpacing: '0.5px' }}>{label}</div>
+      <div style={{ fontSize: 10, color: '#8A8F95', fontWeight: 600, marginTop: 3, textTransform: 'uppercase', letterSpacing: '0.5px' }}>{label}</div>
     </div>
   )
 }
@@ -64,13 +64,13 @@ function PostCard({ post, index, campaign, onSave, onDiscard, onRegenerate, save
       {/* Header badges */}
       <div style={{ display: 'flex', alignItems: 'center', gap: 8, marginBottom: 14 }}>
         <span style={{ fontSize: 11, fontWeight: 700, padding: '3px 10px', borderRadius: 20, background: campColor + '18', color: campColor }}>{campLabel}</span>
-        <span style={{ fontSize: 11, fontWeight: 600, padding: '3px 10px', borderRadius: 20, background: '#F1F5F9', color: '#64748B' }}>{fmtLabel}</span>
-        <span style={{ fontSize: 11, color: '#94A3B8', marginLeft: 'auto' }}>#{index + 1}</span>
+        <span style={{ fontSize: 11, fontWeight: 600, padding: '3px 10px', borderRadius: 20, background: '#EFEBE4', color: '#6B7076' }}>{fmtLabel}</span>
+        <span style={{ fontSize: 11, color: '#8A8F95', marginLeft: 'auto' }}>#{index + 1}</span>
       </div>
 
       {/* Hook */}
       {post.hook && (
-        <div style={{ fontSize: 12, fontWeight: 600, color: '#0F172A', background: '#eff6ff', borderRadius: 8, padding: '8px 12px', marginBottom: 10, borderLeft: `3px solid ${NAVY}` }}>
+        <div style={{ fontSize: 12, fontWeight: 600, color: '#14171A', background: '#F7EFE9', borderRadius: 8, padding: '8px 12px', marginBottom: 10, borderLeft: `3px solid ${NAVY}` }}>
           🪝 {post.hook}
         </div>
       )}
@@ -78,18 +78,18 @@ function PostCard({ post, index, campaign, onSave, onDiscard, onRegenerate, save
       {/* Caption — editable */}
       <div style={lbl({ marginBottom: 6 })}>Caption</div>
       <textarea value={caption} onChange={e => setCaption(e.target.value)} rows={5}
-        style={{ width: '100%', padding: '10px 12px', border: '1.5px solid #E2E8F0', borderRadius: 10, fontSize: 13, resize: 'vertical', fontFamily: 'inherit', boxSizing: 'border-box', lineHeight: 1.6, marginBottom: 10 }} />
+        style={{ width: '100%', padding: '10px 12px', border: '1.5px solid #E4E0D9', borderRadius: 10, fontSize: 13, resize: 'vertical', fontFamily: 'inherit', boxSizing: 'border-box', lineHeight: 1.6, marginBottom: 10 }} />
 
       {/* CTA */}
       {post.cta && (
-        <div style={{ fontSize: 12, color: '#334155', marginBottom: 8 }}>
+        <div style={{ fontSize: 12, color: '#3A4046', marginBottom: 8 }}>
           <strong>CTA:</strong> {post.cta}
         </div>
       )}
 
       {/* Image brief */}
       {post.image_description && (
-        <div style={{ fontSize: 12, color: '#64748B', background: '#F8FAFC', borderRadius: 8, padding: '8px 12px', marginBottom: 10, lineHeight: 1.6 }}>
+        <div style={{ fontSize: 12, color: '#6B7076', background: '#FBFAF8', borderRadius: 8, padding: '8px 12px', marginBottom: 10, lineHeight: 1.6 }}>
           🖼 <strong>Visual brief:</strong> {post.image_description}
         </div>
       )}
@@ -100,11 +100,11 @@ function PostCard({ post, index, campaign, onSave, onDiscard, onRegenerate, save
           <div style={lbl({ marginBottom: 8 })}>Slides</div>
           <div style={{ display: 'flex', gap: 8, overflowX: 'auto', paddingBottom: 4 }}>
             {post.slides.map((s, i) => (
-              <div key={i} style={{ flex: '0 0 150px', border: '1px solid #E2E8F0', borderRadius: 10, padding: '10px 11px', fontSize: 11 }}>
-                <div style={{ fontSize: 10, fontWeight: 700, color: '#94A3B8', textTransform: 'uppercase', marginBottom: 4 }}>Slide {i + 1}</div>
+              <div key={i} style={{ flex: '0 0 150px', border: '1px solid #E4E0D9', borderRadius: 10, padding: '10px 11px', fontSize: 11 }}>
+                <div style={{ fontSize: 10, fontWeight: 700, color: '#8A8F95', textTransform: 'uppercase', marginBottom: 4 }}>Slide {i + 1}</div>
                 <div style={{ fontWeight: 700, color: NAVY, marginBottom: 3, lineHeight: 1.3 }}>{s.headline}</div>
-                <div style={{ color: '#64748B', lineHeight: 1.4, marginBottom: 4 }}>{s.body}</div>
-                {s.design_note && <div style={{ fontSize: 10, color: '#94A3B8', fontStyle: 'italic' }}>{s.design_note}</div>}
+                <div style={{ color: '#6B7076', lineHeight: 1.4, marginBottom: 4 }}>{s.body}</div>
+                {s.design_note && <div style={{ fontSize: 10, color: '#8A8F95', fontStyle: 'italic' }}>{s.design_note}</div>}
               </div>
             ))}
           </div>
@@ -113,7 +113,7 @@ function PostCard({ post, index, campaign, onSave, onDiscard, onRegenerate, save
 
       {/* Reel script */}
       {post.script && (
-        <div style={{ fontSize: 12, color: '#334155', background: '#F8FAFC', borderRadius: 8, padding: '10px 12px', marginBottom: 10, whiteSpace: 'pre-wrap', lineHeight: 1.7 }}>
+        <div style={{ fontSize: 12, color: '#3A4046', background: '#FBFAF8', borderRadius: 8, padding: '10px 12px', marginBottom: 10, whiteSpace: 'pre-wrap', lineHeight: 1.7 }}>
           🎬 <strong>Script:</strong><br />{post.script}
         </div>
       )}
@@ -123,31 +123,31 @@ function PostCard({ post, index, campaign, onSave, onDiscard, onRegenerate, save
         <div style={{ flex: 1 }}>
           <div style={lbl({ marginBottom: 5 })}>Date</div>
           <input type="date" value={date} onChange={e => setDate(e.target.value)}
-            style={{ width: '100%', padding: '8px 10px', border: '1.5px solid #E2E8F0', borderRadius: 8, fontSize: 12, fontFamily: 'inherit', boxSizing: 'border-box' }} />
+            style={{ width: '100%', padding: '8px 10px', border: '1.5px solid #E4E0D9', borderRadius: 8, fontSize: 12, fontFamily: 'inherit', boxSizing: 'border-box' }} />
         </div>
         <div style={{ flex: 1 }}>
           <div style={lbl({ marginBottom: 5 })}>Time</div>
           <input type="time" value={time} onChange={e => setTime(e.target.value)}
-            style={{ width: '100%', padding: '8px 10px', border: '1.5px solid #E2E8F0', borderRadius: 8, fontSize: 12, fontFamily: 'inherit', boxSizing: 'border-box' }} />
+            style={{ width: '100%', padding: '8px 10px', border: '1.5px solid #E4E0D9', borderRadius: 8, fontSize: 12, fontFamily: 'inherit', boxSizing: 'border-box' }} />
         </div>
       </div>
 
       {/* Actions */}
       <div style={{ display: 'flex', gap: 8, flexWrap: 'wrap' }}>
         <button onClick={() => onSave({ ...post, caption, date, suggested_time: time })} disabled={saved}
-          style={{ padding: '7px 14px', background: saved ? '#D1FAE5' : NAVY, color: saved ? '#065F46' : '#fff', border: 'none', borderRadius: 8, fontSize: 12, fontWeight: 700, cursor: saved ? 'default' : 'pointer' }}>
+          style={{ padding: '7px 14px', background: saved ? '#E9F1EC' : NAVY, color: saved ? '#22513B' : '#fff', border: 'none', borderRadius: 8, fontSize: 12, fontWeight: 700, cursor: saved ? 'default' : 'pointer' }}>
           {saved ? '✓ Saved' : '💾 Save to Queue'}
         </button>
         <button onClick={handleCopy}
-          style={{ padding: '7px 14px', background: '#F1F5F9', color: '#334155', border: 'none', borderRadius: 8, fontSize: 12, fontWeight: 700, cursor: 'pointer' }}>
+          style={{ padding: '7px 14px', background: '#EFEBE4', color: '#3A4046', border: 'none', borderRadius: 8, fontSize: 12, fontWeight: 700, cursor: 'pointer' }}>
           {copied ? '✓ Copied!' : '📋 Copy Row'}
         </button>
         <button onClick={() => onRegenerate(index)} disabled={regenerating}
-          style={{ padding: '7px 14px', background: '#F1F5F9', color: '#334155', border: 'none', borderRadius: 8, fontSize: 12, fontWeight: 700, cursor: 'pointer', opacity: regenerating ? 0.6 : 1 }}>
+          style={{ padding: '7px 14px', background: '#EFEBE4', color: '#3A4046', border: 'none', borderRadius: 8, fontSize: 12, fontWeight: 700, cursor: 'pointer', opacity: regenerating ? 0.6 : 1 }}>
           {regenerating ? '⏳' : '🔄'} Regenerate
         </button>
         <button onClick={() => onDiscard(index)}
-          style={{ padding: '7px 14px', background: '#FEE2E2', color: '#991B1B', border: 'none', borderRadius: 8, fontSize: 12, fontWeight: 700, cursor: 'pointer' }}>
+          style={{ padding: '7px 14px', background: '#FBEDEB', color: '#8E2A1F', border: 'none', borderRadius: 8, fontSize: 12, fontWeight: 700, cursor: 'pointer' }}>
           🗑 Discard
         </button>
       </div>
@@ -232,7 +232,7 @@ export default function ContentStudio() {
         <StatPill label="Active Tilers"   value={stats.tilers}   loading={statsLoading} />
         <StatPill label="Bids Placed"     value={stats.bids}     loading={statsLoading} />
         <button onClick={refreshStats} title="Refresh stats"
-          style={{ padding: '6px 12px', background: '#F1F5F9', border: 'none', borderRadius: 10, fontSize: 12, color: '#64748B', cursor: 'pointer', alignSelf: 'center' }}>
+          style={{ padding: '6px 12px', background: '#EFEBE4', border: 'none', borderRadius: 10, fontSize: 12, color: '#6B7076', cursor: 'pointer', alignSelf: 'center' }}>
           ↻ Refresh
         </button>
         {statsError && <span style={{ fontSize: 11, color: '#ef4444', alignSelf: 'center' }}>Stats unavailable</span>}
@@ -240,9 +240,9 @@ export default function ContentStudio() {
 
       {/* API Key Warning */}
       {missingKey && (
-        <div style={{ background: '#DBEAFE', border: '1px solid #93C5FD', borderRadius: 12, padding: '14px 18px', marginBottom: 20 }}>
-          <div style={{ fontWeight: 700, color: '#1E293B', marginBottom: 6 }}>⚠️ Anthropic API Key Not Configured</div>
-          <div style={{ fontSize: 12, color: '#0F172A', lineHeight: 1.6 }}>
+        <div style={{ background: '#F3E7DF', border: '1px solid #E3B9A5', borderRadius: 12, padding: '14px 18px', marginBottom: 20 }}>
+          <div style={{ fontWeight: 700, color: '#2A2F35', marginBottom: 6 }}>⚠️ Anthropic API Key Not Configured</div>
+          <div style={{ fontSize: 12, color: '#14171A', lineHeight: 1.6 }}>
             Add to your <code style={{ background: '#fff', padding: '1px 6px', borderRadius: 4 }}>.env</code> file:<br />
             <code style={{ background: '#fff', padding: '4px 8px', borderRadius: 6, display: 'inline-block', marginTop: 4 }}>VITE_ANTHROPIC_API_KEY=sk-ant-api03-...</code><br />
             Then restart the dev server and redeploy.
@@ -252,7 +252,7 @@ export default function ContentStudio() {
 
       {/* Config Form */}
       <div style={card({ marginBottom: 20 })}>
-        <div style={{ fontSize: 15, fontWeight: 700, color: '#0F172A', marginBottom: 18 }}>⚙️ Content Configuration</div>
+        <div style={{ fontSize: 15, fontWeight: 700, color: '#14171A', marginBottom: 18 }}>⚙️ Content Configuration</div>
 
         {/* Campaign */}
         <div style={{ marginBottom: 18 }}>
@@ -262,7 +262,7 @@ export default function ContentStudio() {
             value={campaign}
             onChange={v => { setCampaign(v); setAngle(ANGLES[v][0].value) }}
           />
-          <div style={{ fontSize: 11, color: '#94A3B8', marginTop: 6 }}>
+          <div style={{ fontSize: 11, color: '#8A8F95', marginTop: 6 }}>
             {campaign === 'user'
               ? 'Posts aimed at homeowners to post renovation projects at tilershub.lk/post-project'
               : 'Posts aimed at tilers/contractors to join and bid for jobs at tilershub.lk/join-as-tiler'}
@@ -299,22 +299,22 @@ export default function ContentStudio() {
           <div>
             <div style={lbl()}>Content Angle</div>
             <select value={angle} onChange={e => setAngle(e.target.value)}
-              style={{ width: '100%', padding: '10px 13px', border: '1.5px solid #E2E8F0', borderRadius: 10, fontSize: 13, fontFamily: 'inherit', background: '#fff', cursor: 'pointer' }}>
+              style={{ width: '100%', padding: '10px 13px', border: '1.5px solid #E4E0D9', borderRadius: 10, fontSize: 13, fontFamily: 'inherit', background: '#fff', cursor: 'pointer' }}>
               {currentAngles.map(a => <option key={a.value} value={a.value}>{a.label}</option>)}
             </select>
           </div>
           <div>
             <div style={lbl()}>Schedule Start Date</div>
             <input type="date" value={scheduleDate} onChange={e => setScheduleDate(e.target.value)}
-              style={{ width: '100%', padding: '10px 13px', border: '1.5px solid #E2E8F0', borderRadius: 10, fontSize: 13, fontFamily: 'inherit', boxSizing: 'border-box' }} />
-            <div style={{ fontSize: 10, color: '#94A3B8', marginTop: 4 }}>Posts spaced 2 days apart</div>
+              style={{ width: '100%', padding: '10px 13px', border: '1.5px solid #E4E0D9', borderRadius: 10, fontSize: 13, fontFamily: 'inherit', boxSizing: 'border-box' }} />
+            <div style={{ fontSize: 10, color: '#8A8F95', marginTop: 4 }}>Posts spaced 2 days apart</div>
           </div>
         </div>
 
         {/* Generate button */}
         <button onClick={handleGenerate} disabled={generating || missingKey}
           style={{
-            padding: '12px 28px', background: generating ? '#94A3B8' : ORANGE, color: '#fff', border: 'none',
+            padding: '12px 28px', background: generating ? '#8A8F95' : ORANGE, color: '#fff', border: 'none',
             borderRadius: 10, fontSize: 14, fontWeight: 700, cursor: generating || missingKey ? 'not-allowed' : 'pointer',
             boxShadow: generating ? 'none' : '0 4px 14px rgba(232,88,10,0.3)', transition: 'all 0.15s',
           }}>
@@ -324,7 +324,7 @@ export default function ContentStudio() {
 
       {/* Error */}
       {error && (
-        <div style={{ background: '#FEE2E2', border: '1px solid #FECACA', borderRadius: 10, padding: '12px 16px', marginBottom: 16, fontSize: 13, color: '#991B1B' }}>
+        <div style={{ background: '#FBEDEB', border: '1px solid #F2C9C3', borderRadius: 10, padding: '12px 16px', marginBottom: 16, fontSize: 13, color: '#8E2A1F' }}>
           ⚠️ {error}
         </div>
       )}
@@ -333,14 +333,14 @@ export default function ContentStudio() {
       {posts.length > 0 && (
         <>
           <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', marginBottom: 16 }}>
-            <div style={{ fontSize: 15, fontWeight: 700, color: '#0F172A' }}>Generated Posts ({posts.length})</div>
+            <div style={{ fontSize: 15, fontWeight: 700, color: '#14171A' }}>Generated Posts ({posts.length})</div>
             <div style={{ display: 'flex', gap: 10, alignItems: 'center' }}>
               <button onClick={handleCopyAll}
-                style={{ padding: '8px 16px', background: GOLD, color: '#0F172A', border: 'none', borderRadius: 8, fontSize: 12, fontWeight: 700, cursor: 'pointer' }}>
+                style={{ padding: '8px 16px', background: GOLD, color: '#14171A', border: 'none', borderRadius: 8, fontSize: 12, fontWeight: 700, cursor: 'pointer' }}>
                 {copyAllMsg || '📋 Copy All Rows'}
               </button>
               <a href={SHEET_URL} target="_blank" rel="noreferrer"
-                style={{ padding: '8px 16px', background: '#F1F5F9', color: '#334155', borderRadius: 8, fontSize: 12, fontWeight: 700, textDecoration: 'none', display: 'inline-block' }}>
+                style={{ padding: '8px 16px', background: '#EFEBE4', color: '#3A4046', borderRadius: 8, fontSize: 12, fontWeight: 700, textDecoration: 'none', display: 'inline-block' }}>
                 📊 Open Sheet ↗
               </a>
             </div>
@@ -362,7 +362,7 @@ export default function ContentStudio() {
 
           <div style={{ display: 'flex', gap: 10, justifyContent: 'flex-end', marginTop: 8 }}>
             <button onClick={handleCopyAll}
-              style={{ padding: '10px 20px', background: GOLD, color: '#0F172A', border: 'none', borderRadius: 10, fontSize: 13, fontWeight: 700, cursor: 'pointer' }}>
+              style={{ padding: '10px 20px', background: GOLD, color: '#14171A', border: 'none', borderRadius: 10, fontSize: 13, fontWeight: 700, cursor: 'pointer' }}>
               {copyAllMsg || '📋 Copy All Rows for Sheet'}
             </button>
             <a href={SHEET_URL} target="_blank" rel="noreferrer"
@@ -377,7 +377,7 @@ export default function ContentStudio() {
       {generating && (
         <div style={{ display: 'flex', flexDirection: 'column', gap: 12 }}>
           {Array.from({ length: numPosts }).map((_, i) => (
-            <div key={i} style={{ ...card(), height: 200, background: 'linear-gradient(90deg,#F1F5F9 25%,#E2E8F0 50%,#F1F5F9 75%)', animation: 'pulse 1.5s ease infinite', backgroundSize: '200% 100%' }} />
+            <div key={i} style={{ ...card(), height: 200, background: 'linear-gradient(90deg,#EFEBE4 25%,#E4E0D9 50%,#EFEBE4 75%)', animation: 'pulse 1.5s ease infinite', backgroundSize: '200% 100%' }} />
           ))}
         </div>
       )}

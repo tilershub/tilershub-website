@@ -72,7 +72,7 @@ function BlogTipCard({ tip }) {
         border: `1.5px solid ${tip.color}45`,
         color: tip.color, borderRadius: 8,
         padding: '7px 14px', fontSize: 12, fontWeight: 600,
-        cursor: 'pointer', fontFamily: "'Inter', 'Noto Sans Sinhala', sans-serif",
+        cursor: 'pointer', fontFamily: "var(--th-body)",
         whiteSpace: 'nowrap',
       }}>
         කියවන්න →
@@ -151,7 +151,7 @@ export default function ExploreApp() {
   const sel = {
     background: 'var(--white)', border: '1.5px solid var(--cream-dark)',
     borderRadius: 10, padding: '9px 12px',
-    fontFamily: "'Inter', 'Noto Sans Sinhala', sans-serif", fontSize: 13,
+    fontFamily: "var(--th-body)", fontSize: 13,
     color: 'var(--text-dark)', outline: 'none', cursor: 'pointer',
   }
 
@@ -242,7 +242,7 @@ export default function ExploreApp() {
                         background: 'rgba(193,96,58,0.08)', border: '1px solid rgba(193,96,58,0.25)',
                         color: 'var(--terracotta)', borderRadius: 20,
                         padding: '4px 10px', fontSize: 11, fontWeight: 600,
-                        cursor: 'pointer', fontFamily: "'Inter', 'Noto Sans Sinhala', sans-serif",
+                        cursor: 'pointer', fontFamily: "var(--th-body)",
                       }}
                     >
                       {chip.label} <span style={{ opacity: 0.5, fontSize: 10 }}>✕</span>
@@ -263,7 +263,7 @@ export default function ExploreApp() {
         ) : filtered.length === 0 ? (
           <div style={{ textAlign: 'center', padding: '80px 24px' }}>
             <div style={{ width: 72, height: 72, background: 'var(--cream)', borderRadius: '50%', display: 'flex', alignItems: 'center', justifyContent: 'center', margin: '0 auto 20px', fontSize: 32 }}>🔍</div>
-            <h3 style={{ fontFamily: "'Inter', sans-serif", fontSize: 18, color: 'var(--charcoal)', marginBottom: 8 }}>ගැළපෙන ටයිලර්වරුන් නැත</h3>
+            <h3 style={{ fontFamily: "var(--th-display)", fontSize: 18, color: 'var(--charcoal)', marginBottom: 8 }}>ගැළපෙන ටයිලර්වරුන් නැත</h3>
             <p style={{ fontSize: 13, color: 'var(--text-light)', maxWidth: 280, margin: '0 auto 20px' }}>වෙනත් සෙවුමක් හෝ ෆිල්ටර් එකක් උත්සාහ කරන්න</p>
             {hasFilters && (
               <button className="btn btn-ghost" onClick={clearAll} style={{ fontSize: 13 }}>

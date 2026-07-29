@@ -5,8 +5,8 @@ export const GUIDES = [
     title: 'How to Choose the Right Tile Size for Your Room',
     excerpt: 'Larger tiles make rooms look bigger, but installation requires more precision. Learn the pros and cons of each size before you buy.',
     icon: '📐',
-    bg: 'linear-gradient(135deg,#0F172A,#1E293B)',
-    accentColor: '#0F172A',
+    bg: 'linear-gradient(135deg,#14171A,#2A2F35)',
+    accentColor: '#14171A',
     readTime: '5 min read',
     sections: [
       {
@@ -91,8 +91,8 @@ export const GUIDES = [
     title: 'Understanding Tile Grades: What the Numbers Mean',
     excerpt: 'PEI ratings, water absorption, slip resistance — here\'s what every homeowner in Sri Lanka should know before buying tiles.',
     icon: '🏷️',
-    bg: 'linear-gradient(135deg,#C1603A,#8b4513)',
-    accentColor: '#C1603A',
+    bg: 'linear-gradient(135deg,#C2542B,#8b4513)',
+    accentColor: '#C2542B',
     readTime: '6 min read',
     sections: [
       {
@@ -181,8 +181,8 @@ export const GUIDES = [
     title: 'Tiling Cost Guide for Sri Lanka — 2025 Prices',
     excerpt: 'Average labour and material costs by room type and tile size across Colombo, Kandy, Galle and beyond.',
     icon: '💰',
-    bg: 'linear-gradient(135deg,#16a34a,#166534)',
-    accentColor: '#166534',
+    bg: 'linear-gradient(135deg,#2F6B4F,#22513B)',
+    accentColor: '#22513B',
     readTime: '7 min read',
     sections: [
       {
@@ -267,8 +267,8 @@ export const GUIDES = [
     title: 'Tile Prices in Sri Lanka (2026): Ceramic, Porcelain & Large Format',
     excerpt: 'Current tile price ranges by size and type — ceramic, porcelain, vitrified and large format — plus what drives the price up or down.',
     icon: '🏷️',
-    bg: 'linear-gradient(135deg,#2563EB,#2563EB)',
-    accentColor: '#2563EB',
+    bg: 'linear-gradient(135deg,#C2542B,#C2542B)',
+    accentColor: '#C2542B',
     readTime: '6 min read',
     sections: [
       {
@@ -325,8 +325,8 @@ export const GUIDES = [
     title: 'Tiling Labour Charges in Sri Lanka (2026): Rates Per Square Foot',
     excerpt: 'What tilers actually charge in 2026 — floor vs wall rates, large-format premiums, Colombo vs regional prices, and how to avoid overpaying.',
     icon: '👷',
-    bg: 'linear-gradient(135deg,#2563EB,#134e4a)',
-    accentColor: '#2563EB',
+    bg: 'linear-gradient(135deg,#C2542B,#22513B)',
+    accentColor: '#C2542B',
     readTime: '5 min read',
     sections: [
       {
@@ -377,8 +377,8 @@ export const GUIDES = [
     title: 'Gypsum & iPanel Ceiling Prices in Sri Lanka (2026)',
     excerpt: 'Ceiling cost per square foot in 2026 — gypsum board, iPanel/PVC and 2×2 suspended ceilings — with material and labour breakdowns.',
     icon: '🏛️',
-    bg: 'linear-gradient(135deg,#166534,#14532d)',
-    accentColor: '#166534',
+    bg: 'linear-gradient(135deg,#22513B,#22513B)',
+    accentColor: '#22513B',
     readTime: '5 min read',
     sections: [
       {

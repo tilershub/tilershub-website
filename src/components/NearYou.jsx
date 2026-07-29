@@ -4,7 +4,7 @@ import { useDistrict } from '../lib/district.js'
 
 const SHOP_TYPES = ['tile_shop', 'bathroom_shop', 'supplier', 'brand_dealer', 'tool_supplier', 'workshop']
 
-const AVATAR_COLORS = ['#2563EB', '#0891b2', '#7c3aed', '#15803d', '#be185d', '#0369a1']
+const AVATAR_COLORS = ['#C2542B', '#2F6B4F', '#8E3C1E', '#285C43', '#C2542B', '#2F6B4F']
 function avatarColor(name) {
   let h = 0
   for (const c of name || '') h = (h * 31 + c.charCodeAt(0)) >>> 0

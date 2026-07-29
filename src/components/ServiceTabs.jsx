@@ -63,9 +63,9 @@ const CATEGORIES = [
     id: 'flooring',
     label: 'Tiling Services',
     icon: '⬜',
-    color: '#2563EB',
-    bg: '#EFF6FF',
-    border: '#BFDBFE',
+    color: '#C2542B',
+    bg: '#F7EFE9',
+    border: '#E7D9CE',
     terms: ['floor', 'tiling', 'tile', 'mosaic', 'epoxy', 'parquet', 'laminate', 'vinyl', 'granite', 'staircase'],
     blogSlugs: ['large-format-tiles-guide', 'best-tiles-for-bathroom-floor'],
   },
@@ -73,7 +73,7 @@ const CATEGORIES = [
     id: 'bathroom',
     label: 'Bathroom Services',
     icon: '🚿',
-    color: '#0369a1',
+    color: '#2F6B4F',
     bg: '#e0f2fe',
     border: '#7dd3fc',
     terms: ['bathroom', 'bath', 'shower', 'vanity', 'plumbing', 'waterproof', 'mirror'],
@@ -83,9 +83,9 @@ const CATEGORIES = [
     id: 'kitchen',
     label: 'Kitchen Services',
     icon: '🍳',
-    color: '#2563EB',
-    bg: '#EFF6FF',
-    border: '#fed7aa',
+    color: '#C2542B',
+    bg: '#F7EFE9',
+    border: '#F0E7DF',
     terms: ['kitchen', 'cabinet', 'splashback'],
     blogSlugs: ['how-to-choose-a-tiler', 'post-tiling-project-tilershub'],
   },
@@ -93,9 +93,9 @@ const CATEGORIES = [
     id: 'glass',
     label: 'Glass & Aluminium',
     icon: '🪟',
-    color: '#7c3aed',
-    bg: '#f5f3ff',
-    border: '#ddd6fe',
+    color: '#8E3C1E',
+    bg: '#F7EFE9',
+    border: '#E7D9CE',
     terms: ['glass', 'aluminium', 'aluminum', 'railing', 'ceiling', 'ipanel', 'gypsum', 'gate', 'fencing', 'door', 'window'],
     blogSlugs: ['how-to-choose-a-tiler', 'best-tiles-for-bathroom-floor'],
   },
@@ -103,9 +103,9 @@ const CATEGORIES = [
     id: 'construction',
     label: 'Construction Services',
     icon: '🏗️',
-    color: '#334155',
-    bg: '#F8FAFC',
-    border: '#E2E8F0',
+    color: '#3A4046',
+    bg: '#FBFAF8',
+    border: '#E4E0D9',
     terms: ['roof', 'plaster', 'partition', 'water tank', 'concrete', 'masonry', 'carpentry', 'debris', 'demolition', 'cleaning', 'construction'],
     blogSlugs: ['how-to-choose-a-tiler', 'post-tiling-project-tilershub'],
   },
@@ -113,9 +113,9 @@ const CATEGORIES = [
     id: 'outdoor',
     label: 'Outdoor Services',
     icon: '🌿',
-    color: '#15803d',
-    bg: '#f0fdf4',
-    border: '#bbf7d0',
+    color: '#285C43',
+    bg: '#E9F1EC',
+    border: '#C6DDCF',
     terms: ['outdoor', 'landscape', 'garden', 'pool', 'paving', 'driveway', 'pergola', 'shade'],
     blogSlugs: ['large-format-tiles-guide', 'post-tiling-project-tilershub'],
   },
@@ -123,15 +123,15 @@ const CATEGORIES = [
     id: 'trades',
     label: 'Trades & More',
     icon: '🎨',
-    color: '#c2410c',
-    bg: '#EFF6FF',
-    border: '#fed7aa',
+    color: '#C2542B',
+    bg: '#F7EFE9',
+    border: '#F0E7DF',
     terms: ['paint', 'lighting', 'wiring', 'electrical', 'air condition', 'solar', 'cctv', 'security', 'smart home', 'automation'],
     blogSlugs: ['how-to-choose-a-tiler', 'post-tiling-project-tilershub'],
   },
 ]
 
-const AVATAR_COLORS = ['#2563EB','#2563EB','#7c3aed','#2563EB','#0369a1','#2563EB','#15803d','#be185d']
+const AVATAR_COLORS = ['#C2542B','#C2542B','#8E3C1E','#C2542B','#2F6B4F','#C2542B','#285C43','#C2542B']
 function avatarColor(name) {
   let h = 0
   for (const c of (name || '')) h = (h * 31 + c.charCodeAt(0)) >>> 0
@@ -180,7 +180,7 @@ function ProviderCard({ p }) {
   return (
     <div
       onClick={() => href && (window.location.href = href)}
-      style={{ flexShrink: 0, width: 280, background: '#fff', borderRadius: 20, border: '1px solid #E2E8F0', overflow: 'hidden', boxShadow: '0 2px 12px rgba(0,0,0,0.06)', display: 'flex', cursor: href ? 'pointer' : 'default' }}
+      style={{ flexShrink: 0, width: 280, background: '#fff', borderRadius: 20, border: '1px solid #E4E0D9', overflow: 'hidden', boxShadow: '0 2px 12px rgba(0,0,0,0.06)', display: 'flex', cursor: href ? 'pointer' : 'default' }}
     >
       {/* Coloured avatar panel */}
       <div style={{ width: 90, flexShrink: 0, background: color, display: 'flex', alignItems: 'center', justifyContent: 'center', minHeight: 130, overflow: 'hidden' }}>
@@ -192,14 +192,14 @@ function ProviderCard({ p }) {
       {/* Info panel */}
       <div style={{ flex: 1, padding: '12px 14px', display: 'flex', flexDirection: 'column', minWidth: 0 }}>
         <div style={{ display: 'flex', alignItems: 'flex-start', gap: 6, marginBottom: 3, flexWrap: 'wrap' }}>
-          <span style={{ fontSize: 14, fontWeight: 700, color: '#0F172A', lineHeight: 1.25 }}>{name}</span>
-          {verified && <span style={{ fontSize: 8, fontWeight: 700, color: '#16a34a', background: '#f0fdf4', border: '1px solid #bbf7d0', borderRadius: 20, padding: '2px 7px', flexShrink: 0, marginTop: 2 }}>✓ Pro</span>}
+          <span style={{ fontSize: 14, fontWeight: 700, color: '#14171A', lineHeight: 1.25 }}>{name}</span>
+          {verified && <span style={{ fontSize: 8, fontWeight: 700, color: '#2F6B4F', background: '#E9F1EC', border: '1px solid #C6DDCF', borderRadius: 20, padding: '2px 7px', flexShrink: 0, marginTop: 2 }}>✓ Pro</span>}
         </div>
-        {(p.city || p.district) && <div style={{ fontSize: 11, color: '#64748B', marginBottom: 5 }}>📍 {p.city || p.district}</div>}
-        {(p.description || p.bio) && <div style={{ fontSize: 11, color: '#64748B', marginBottom: 6, display: '-webkit-box', WebkitLineClamp: 2, WebkitBoxOrient: 'vertical', overflow: 'hidden', lineHeight: 1.5 }}>{p.description || p.bio}</div>}
+        {(p.city || p.district) && <div style={{ fontSize: 11, color: '#6B7076', marginBottom: 5 }}>📍 {p.city || p.district}</div>}
+        {(p.description || p.bio) && <div style={{ fontSize: 11, color: '#6B7076', marginBottom: 6, display: '-webkit-box', WebkitLineClamp: 2, WebkitBoxOrient: 'vertical', overflow: 'hidden', lineHeight: 1.5 }}>{p.description || p.bio}</div>}
         {chips.length > 0 && (
           <div style={{ display: 'flex', flexWrap: 'wrap', gap: 4, marginBottom: 8 }}>
-            {chips.map(s => <span key={s} style={{ fontSize: 9, fontWeight: 600, padding: '2px 7px', borderRadius: 20, background: '#eef3fb', color: '#2563EB', border: '1px solid #d5e2f5' }}>{s}</span>)}
+            {chips.map(s => <span key={s} style={{ fontSize: 9, fontWeight: 600, padding: '2px 7px', borderRadius: 20, background: '#F7EFE9', color: '#C2542B', border: '1px solid #EDDFD5' }}>{s}</span>)}
           </div>
         )}
         {p.avg_rating > 0 && <div style={{ fontSize: 11, color: '#f59e0b', marginBottom: 8 }}>⭐ {Number(p.avg_rating).toFixed(1)}</div>}
@@ -210,7 +210,7 @@ function ProviderCard({ p }) {
                 💬 WhatsApp
               </a>
             : href
-              ? <a href={href} onClick={e => e.stopPropagation()} style={{ display: 'inline-flex', alignItems: 'center', gap: 5, background: '#2563EB', color: '#fff', borderRadius: 10, padding: '7px 14px', fontSize: 11, fontWeight: 700, textDecoration: 'none' }}>
+              ? <a href={href} onClick={e => e.stopPropagation()} style={{ display: 'inline-flex', alignItems: 'center', gap: 5, background: '#C2542B', color: '#fff', borderRadius: 10, padding: '7px 14px', fontSize: 11, fontWeight: 700, textDecoration: 'none' }}>
                   View Profile ›
                 </a>
               : null
@@ -224,14 +224,14 @@ function ProviderCard({ p }) {
 function BlogCard({ post }) {
   return (
     <a href={`/blog/${post.slug}`}
-      style={{ flexShrink: 0, width: 195, background: '#fff', borderRadius: 16, border: '1px solid #E2E8F0', overflow: 'hidden', textDecoration: 'none', display: 'flex', flexDirection: 'column', boxShadow: '0 2px 8px rgba(0,0,0,0.04)' }}>
+      style={{ flexShrink: 0, width: 195, background: '#fff', borderRadius: 16, border: '1px solid #E4E0D9', overflow: 'hidden', textDecoration: 'none', display: 'flex', flexDirection: 'column', boxShadow: '0 2px 8px rgba(0,0,0,0.04)' }}>
       <div style={{ height: 56, background: `${post.color}18`, display: 'flex', alignItems: 'center', justifyContent: 'center', fontSize: 26 }}>
         {post.icon}
       </div>
       <div style={{ padding: '9px 11px 11px', flex: 1 }}>
-        <div style={{ fontSize: 9, fontWeight: 700, color: '#2563EB', textTransform: 'uppercase', letterSpacing: 0.5, marginBottom: 4 }}>{post.category}</div>
-        <div style={{ fontSize: 11, fontWeight: 700, color: '#0F172A', lineHeight: 1.4, display: '-webkit-box', WebkitLineClamp: 2, WebkitBoxOrient: 'vertical', overflow: 'hidden', marginBottom: 6 }}>{post.title}</div>
-        <div style={{ fontSize: 10, color: '#94A3B8' }}>{post.readTime} →</div>
+        <div style={{ fontSize: 9, fontWeight: 700, color: '#C2542B', textTransform: 'uppercase', letterSpacing: 0.5, marginBottom: 4 }}>{post.category}</div>
+        <div style={{ fontSize: 11, fontWeight: 700, color: '#14171A', lineHeight: 1.4, display: '-webkit-box', WebkitLineClamp: 2, WebkitBoxOrient: 'vertical', overflow: 'hidden', marginBottom: 6 }}>{post.title}</div>
+        <div style={{ fontSize: 10, color: '#8A8F95' }}>{post.readTime} →</div>
       </div>
     </a>
   )
@@ -243,20 +243,20 @@ function ProjectCard({ proj }) {
 
   return (
     <a href={jobPath(proj)}
-      style={{ flexShrink: 0, width: 172, background: '#fff', borderRadius: 16, border: '1px solid #E2E8F0', padding: '11px 12px', textDecoration: 'none', display: 'flex', flexDirection: 'column', gap: 5, boxShadow: '0 2px 8px rgba(0,0,0,0.04)' }}>
+      style={{ flexShrink: 0, width: 172, background: '#fff', borderRadius: 16, border: '1px solid #E4E0D9', padding: '11px 12px', textDecoration: 'none', display: 'flex', flexDirection: 'column', gap: 5, boxShadow: '0 2px 8px rgba(0,0,0,0.04)' }}>
       <div style={{ display: 'flex', alignItems: 'flex-start', gap: 7 }}>
         <span style={{ fontSize: 20, lineHeight: 1.2, flexShrink: 0 }}>{icon}</span>
-        <span style={{ fontSize: 11, fontWeight: 700, color: '#0F172A', lineHeight: 1.35, display: '-webkit-box', WebkitLineClamp: 2, WebkitBoxOrient: 'vertical', overflow: 'hidden' }}>{proj.project_type}</span>
+        <span style={{ fontSize: 11, fontWeight: 700, color: '#14171A', lineHeight: 1.35, display: '-webkit-box', WebkitLineClamp: 2, WebkitBoxOrient: 'vertical', overflow: 'hidden' }}>{proj.project_type}</span>
       </div>
-      {(proj.city || proj.district) && <div style={{ fontSize: 10, color: '#64748B' }}>📍 {proj.city || proj.district}</div>}
+      {(proj.city || proj.district) && <div style={{ fontSize: 10, color: '#6B7076' }}>📍 {proj.city || proj.district}</div>}
       {proj.budget && (
-        <div style={{ fontSize: 10, fontWeight: 600, color: '#2563EB', background: '#EFF6FF', borderRadius: 6, padding: '2px 7px', alignSelf: 'flex-start' }}>
+        <div style={{ fontSize: 10, fontWeight: 600, color: '#C2542B', background: '#F7EFE9', borderRadius: 6, padding: '2px 7px', alignSelf: 'flex-start' }}>
           Rs. {Number(proj.budget).toLocaleString()}
         </div>
       )}
       <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', marginTop: 'auto', paddingTop: 2 }}>
-        <span style={{ fontSize: 9, color: '#94A3B8' }}>{timeAgo(proj.created_at)}</span>
-        <span style={{ fontSize: 9, fontWeight: 700, color: '#2563EB', background: '#fff5f0', borderRadius: 6, padding: '2px 6px' }}>Bid Now →</span>
+        <span style={{ fontSize: 9, color: '#8A8F95' }}>{timeAgo(proj.created_at)}</span>
+        <span style={{ fontSize: 9, fontWeight: 700, color: '#C2542B', background: '#fff5f0', borderRadius: 6, padding: '2px 6px' }}>Bid Now →</span>
       </div>
     </a>
   )
@@ -264,7 +264,7 @@ function ProjectCard({ proj }) {
 
 function SkeletonCards({ count, width, height = 130 }) {
   return Array.from({ length: count }).map((_, i) => (
-    <div key={i} style={{ flexShrink: 0, width, height, borderRadius: 16, background: '#F1F5F9' }} />
+    <div key={i} style={{ flexShrink: 0, width, height, borderRadius: 16, background: '#EFEBE4' }} />
   ))
 }
 
@@ -279,8 +279,8 @@ function HRow({ children }) {
 function SubLabel({ label, href, color }) {
   return (
     <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', padding: '10px 16px 7px' }}>
-      <span style={{ fontSize: 11, fontWeight: 700, color: color || '#334155', textTransform: 'uppercase', letterSpacing: 0.6 }}>{label}</span>
-      {href && <a href={href} style={{ fontSize: 11, color: '#2563EB', fontWeight: 600, textDecoration: 'none' }}>See all ›</a>}
+      <span style={{ fontSize: 11, fontWeight: 700, color: color || '#3A4046', textTransform: 'uppercase', letterSpacing: 0.6 }}>{label}</span>
+      {href && <a href={href} style={{ fontSize: 11, color: '#C2542B', fontWeight: 600, textDecoration: 'none' }}>See all ›</a>}
     </div>
   )
 }
@@ -302,11 +302,11 @@ export default function ServiceTabs() {
   }, [])
 
   return (
-    <section style={{ background: '#F1F5F9' }}>
+    <section style={{ background: '#EFEBE4' }}>
 
-      <div style={{ padding: '13px 16px 10px', background: '#fff', borderBottom: '1px solid #E2E8F0', display: 'flex', alignItems: 'center', justifyContent: 'space-between' }}>
-        <span style={{ fontSize: 15, fontWeight: 700, color: '#0F172A' }}>Browse Services</span>
-        <a href="/providers" style={{ fontSize: 12, fontWeight: 600, color: '#2563EB', textDecoration: 'none' }}>All Providers ›</a>
+      <div style={{ padding: '13px 16px 10px', background: '#fff', borderBottom: '1px solid #E4E0D9', display: 'flex', alignItems: 'center', justifyContent: 'space-between' }}>
+        <span style={{ fontSize: 15, fontWeight: 700, color: '#14171A' }}>Browse Services</span>
+        <a href="/providers" style={{ fontSize: 12, fontWeight: 600, color: '#C2542B', textDecoration: 'none' }}>All Providers ›</a>
       </div>
 
       {CATEGORIES.map(cat => {
@@ -329,7 +329,7 @@ export default function ServiceTabs() {
                 <span style={{ fontSize: 14, fontWeight: 700, color: cat.color }}>{cat.label}</span>
               </div>
               <a href={`/providers?q=${encodeURIComponent(cat.label.replace(' Services', ''))}`}
-                style={{ fontSize: 11, fontWeight: 600, color: '#94A3B8', textDecoration: 'none' }}>
+                style={{ fontSize: 11, fontWeight: 600, color: '#8A8F95', textDecoration: 'none' }}>
                 View All ›
               </a>
             </div>
@@ -340,8 +340,8 @@ export default function ServiceTabs() {
                 ? <SkeletonCards count={4} width={280} height={130} />
                 : providers.length > 0
                   ? providers.map(p => <ProviderCard key={p.id} p={p} />)
-                  : <div style={{ fontSize: 12, color: '#94A3B8', padding: '8px 0' }}>
-                      No providers yet — <a href="/join-tilershub" style={{ color: '#2563EB', textDecoration: 'none', fontWeight: 600 }}>Join TilersHub</a>
+                  : <div style={{ fontSize: 12, color: '#8A8F95', padding: '8px 0' }}>
+                      No providers yet — <a href="/join-tilershub" style={{ color: '#C2542B', textDecoration: 'none', fontWeight: 600 }}>Join TilersHub</a>
                     </div>
               }
             </HRow>

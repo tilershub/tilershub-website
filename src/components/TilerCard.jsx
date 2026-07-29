@@ -25,7 +25,7 @@ export function TilerCard({ tiler, onClick }) {
   return (
     <div className="card" style={{ cursor: 'pointer', borderTop: '3px solid var(--terracotta)' }} onClick={() => onClick(tiler)}>
       {/* Card header */}
-      <div style={{ background: 'linear-gradient(135deg, #2a2118 0%, #1e1e1e 100%)', padding: '22px 22px 18px', position: 'relative' }}>
+      <div style={{ background: 'linear-gradient(135deg, #2a2118 0%, #14171A 100%)', padding: '22px 22px 18px', position: 'relative' }}>
         <span style={{
           position: 'absolute', top: 14, right: 14,
           background: availColor.bg, border: `1px solid ${availColor.border}`,
@@ -111,14 +111,14 @@ export function TilerModal({ tiler, onClose }) {
     <div className="modal-overlay" onClick={onClose}>
       <div className="modal" onClick={e => e.stopPropagation()}>
         {/* Modal header */}
-        <div style={{ background: 'linear-gradient(135deg, #1e1e1e 0%, #2c2c2c 100%)', padding: '28px 28px 24px', borderRadius: '20px 20px 0 0' }}>
+        <div style={{ background: 'linear-gradient(135deg, #14171A 0%, #2A2F35 100%)', padding: '28px 28px 24px', borderRadius: '20px 20px 0 0' }}>
           <div style={{ display: 'flex', justifyContent: 'flex-end', marginBottom: 16 }}>
             <button className="modal-close" onClick={onClose} style={{ color: 'white' }}>✕</button>
           </div>
           <div style={{ display: 'flex', gap: 18, alignItems: 'flex-end' }}>
             <AvatarDisplay avatarUrl={tiler.avatar_url} name={tiler.full_name} size={76} />
             <div>
-              <div style={{ fontFamily: "'Inter', sans-serif", fontSize: 24, color: 'var(--white)', fontWeight: 700, marginBottom: 4 }}>{tiler.full_name}</div>
+              <div style={{ fontFamily: "var(--th-display)", fontSize: 24, color: 'var(--white)', fontWeight: 700, marginBottom: 4 }}>{tiler.full_name}</div>
               <div style={{ fontSize: 13, color: 'rgba(245,240,232,0.45)', marginBottom: 10 }}>📍 {tiler.city || tiler.district} · {tiler.district} දිස්ත්‍රික්කය</div>
               <div style={{ display: 'flex', gap: 8, flexWrap: 'wrap' }}>
                 <span style={{ fontSize: 11, background: 'rgba(122,154,126,0.15)', border: '1px solid rgba(122,154,126,0.3)', color: 'var(--sage-light)', padding: '3px 12px', borderRadius: 20 }}>

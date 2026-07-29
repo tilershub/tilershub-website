@@ -7,7 +7,7 @@ export const BLOG_POSTS = [
     category: 'Hiring Tips',
     readTime: '4 min read',
     icon: '👷',
-    color: '#2563EB',
+    color: '#C2542B',
     relatedSlugs: ['bathroom-renovation-cost-sri-lanka', 'waterproofing-bathroom-guide'],
     sections: [
       {
@@ -55,7 +55,7 @@ export const BLOG_POSTS = [
     category: 'Cost Guide',
     readTime: '6 min read',
     icon: '💰',
-    color: '#2563EB',
+    color: '#C2542B',
     relatedSlugs: ['how-to-choose-a-tiler', 'waterproofing-bathroom-guide'],
     sections: [
       {
@@ -103,7 +103,7 @@ export const BLOG_POSTS = [
     category: 'Tile Guide',
     readTime: '5 min read',
     icon: '🪨',
-    color: '#7c3aed',
+    color: '#8E3C1E',
     relatedSlugs: ['waterproofing-bathroom-guide', 'large-format-tiles-guide'],
     sections: [
       {
@@ -147,7 +147,7 @@ export const BLOG_POSTS = [
     category: 'How-To',
     readTime: '5 min read',
     icon: '💧',
-    color: '#0369a1',
+    color: '#2F6B4F',
     relatedSlugs: ['how-to-choose-a-tiler', 'bathroom-renovation-cost-sri-lanka'],
     sections: [
       {
@@ -191,7 +191,7 @@ export const BLOG_POSTS = [
     category: 'Tile Guide',
     readTime: '4 min read',
     icon: '📏',
-    color: '#2563EB',
+    color: '#C2542B',
     relatedSlugs: ['best-tiles-for-bathroom-floor', 'how-to-choose-a-tiler'],
     sections: [
       {
@@ -235,7 +235,7 @@ export const BLOG_POSTS = [
     category: 'ටයිල් මාර්ගෝපදේශය',
     readTime: 'මිනිත්තු 8',
     icon: '🧱',
-    color: '#2563EB',
+    color: '#C2542B',
     relatedSlugs: ['best-tiles-for-bathroom-floor', 'large-format-tiles-guide', 'waterproofing-bathroom-guide'],
     content: `<p>ආයුබෝවන්! ලංකාවේ ඉදිකිරීම් ක්ෂේත්‍රයේ, විශේෂයෙන්ම Floor Tiling සහ බාත්රූම් රෙනොවේෂන් පැත්තෙන් අවුරුදු 10කට වඩා ප්‍රායෝගික අත්දැකීම් තියෙන කෙනෙක් විදිහට, මගේ අත්දැකීම් ටික අපේ <strong>tilershub.lk</strong> ප්‍රජාව එක්ක බෙදාගන්න ලැබීම ගැන සතුටු වෙනවා.</p>
 <p>ගෙයක් හදද්දී ගොඩක් අය කරන ලොකුම වැරැද්දක් තමයි ටයිල් එකක් තෝරද්දී ඒකේ ලස්සන, නැත්නම් "ඩිසයින් එක" විතරක්ම බලන එක. හැබැයි ඇත්තම කතාව නම්, ටයිල් එකක් තෝරන්න ඕනේ ඒකේ පෙනුමට විතරක් නෙමෙයි; ඒ ටයිල් එක හදලා තියෙන ද්‍රව්‍ය (Material), කල්පැවැත්ම, ආරක්ෂාව සහ තාක්ෂණික ප්‍රමිතීන් ගැන හිතලයි.</p>
@@ -316,7 +316,7 @@ export const BLOG_POSTS = [
     category: 'TilersHub Guide',
     readTime: '3 min read',
     icon: '📋',
-    color: '#2563EB',
+    color: '#C2542B',
     relatedSlugs: ['how-to-choose-a-tiler', 'bathroom-renovation-cost-sri-lanka'],
     sections: [
       {

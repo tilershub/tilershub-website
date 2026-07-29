@@ -97,9 +97,9 @@ export default function Dashboard({ initialUser, initialProjects, initialProvide
     <div style={{ minHeight: '60vh', display: 'flex', alignItems: 'center', justifyContent: 'center', padding: 24 }}>
       <div style={{ textAlign: 'center', maxWidth: 400 }}>
         <div style={{ fontSize: 40, marginBottom: 12 }}>⚠️</div>
-        <h3 style={{ fontSize: 16, fontWeight: 700, color: '#dc2626', marginBottom: 8 }}>Could not load your dashboard</h3>
-        <p style={{ fontSize: 13, color: '#64748B', marginBottom: 20 }}>{loadError}</p>
-        <button onClick={() => window.location.reload()} style={{ padding: '10px 24px', background: '#2563EB', color: '#fff', border: 'none', borderRadius: 10, fontSize: 14, fontWeight: 600, cursor: 'pointer' }}>
+        <h3 style={{ fontSize: 16, fontWeight: 700, color: '#C0392B', marginBottom: 8 }}>Could not load your dashboard</h3>
+        <p style={{ fontSize: 13, color: '#6B7076', marginBottom: 20 }}>{loadError}</p>
+        <button onClick={() => window.location.reload()} style={{ padding: '10px 24px', background: '#C2542B', color: '#fff', border: 'none', borderRadius: 10, fontSize: 14, fontWeight: 600, cursor: 'pointer' }}>
           Try Again
         </button>
       </div>
@@ -243,11 +243,11 @@ function ProviderDashboard({ user, claimedProfile, submission, showClaimedBanner
   const profileHref = claimedProfile?.slug ? `/providers/${claimedProfile.slug}` : null
 
   return (
-    <div style={{ minHeight:'100dvh', background:'#F8FAFC', paddingBottom:80 }}>
+    <div style={{ minHeight:'100dvh', background:'#FBFAF8', paddingBottom:80 }}>
       <style>{MOBILE_STYLES}</style>
 
       {/* ── Provider header ── */}
-      <div style={{ background:'linear-gradient(135deg,#0F172A 0%,#0F172A 100%)', paddingBottom:0 }}>
+      <div style={{ background:'linear-gradient(135deg,#14171A 0%,#14171A 100%)', paddingBottom:0 }}>
         <div className="db-header-pad" style={{ maxWidth:860, margin:'0 auto', padding:'20px 16px 0' }}>
 
           {showClaimedBanner && (
@@ -266,7 +266,7 @@ function ProviderDashboard({ user, claimedProfile, submission, showClaimedBanner
           {/* Identity row */}
           <div style={{ display:'flex', alignItems:'center', justifyContent:'space-between', marginBottom:16, flexWrap:'wrap', gap:10 }}>
             <div style={{ display:'flex', alignItems:'center', gap:12 }}>
-              <div className="db-avatar" style={{ width:52, height:52, borderRadius:14, background:'rgba(96,165,250,0.14)', border:'2px solid rgba(96,165,250,0.3)', color:'#60A5FA', display:'flex', alignItems:'center', justifyContent:'center', fontSize:18, fontWeight:700, flexShrink:0 }}>
+              <div className="db-avatar" style={{ width:52, height:52, borderRadius:14, background:'rgba(96,165,250,0.14)', border:'2px solid rgba(96,165,250,0.3)', color:'#E08A5F', display:'flex', alignItems:'center', justifyContent:'center', fontSize:18, fontWeight:700, flexShrink:0 }}>
                 {initials}
               </div>
               <div>
@@ -275,7 +275,7 @@ function ProviderDashboard({ user, claimedProfile, submission, showClaimedBanner
                 {claimedProfile && (
                   <div style={{ fontSize:11, color:'rgba(255,255,255,0.38)', marginTop:1 }}>
                     {claimedProfile.city || claimedProfile.district || ''}
-                    {claimedProfile.verification_status === 'th_master' && <span style={{ marginLeft:6, color:'#60A5FA' }}>· 🛡️ TH Master</span>}
+                    {claimedProfile.verification_status === 'th_master' && <span style={{ marginLeft:6, color:'#E08A5F' }}>· 🛡️ TH Master</span>}
                     {claimedProfile.is_verified && claimedProfile.verification_status !== 'th_master' && <span style={{ marginLeft:6, color:'#4ade80' }}>· ✓ Verified</span>}
                   </div>
                 )}
@@ -302,7 +302,7 @@ function ProviderDashboard({ user, claimedProfile, submission, showClaimedBanner
                 padding:'10px 14px', fontSize:13, fontWeight:600, border:'none', cursor:'pointer',
                 background:'transparent', flexShrink:0,
                 color: tab === t.key ? '#fff' : 'rgba(255,255,255,0.4)',
-                borderBottom: tab === t.key ? '2.5px solid #60A5FA' : '2.5px solid transparent',
+                borderBottom: tab === t.key ? '2.5px solid #E08A5F' : '2.5px solid transparent',
                 transition:'all 0.15s', whiteSpace:'nowrap',
               }}>{t.label}</button>
             ))}
@@ -402,7 +402,7 @@ function ExploreTab({ projects, user, lang }) {
                   <span style={{ fontSize:11, color:'var(--text-4)', whiteSpace:'nowrap', flexShrink:0 }}>{timeAgo(p.created_at)}</span>
                 </div>
                 {excerpt && <p style={{ fontSize:13, color:'var(--text-2)', lineHeight:1.6, margin:'0 0 10px' }}>{excerpt}</p>}
-                {p.budget_range && <div style={{ fontSize:11, color:'#166534', fontWeight:600, marginBottom:10 }}>💰 {p.budget_range}</div>}
+                {p.budget_range && <div style={{ fontSize:11, color:'#22513B', fontWeight:600, marginBottom:10 }}>💰 {p.budget_range}</div>}
                 <div style={{ display:'flex', gap:8, flexWrap:'wrap' }}>
                   {phone && (
                     <a href={buildWhatsAppLink(phone, p.customer_name || '')} target="_blank" rel="noopener noreferrer"
@@ -413,7 +413,7 @@ function ExploreTab({ projects, user, lang }) {
                   <button
                     onClick={e => toggleSave(e, p.id)}
                     disabled={saving === p.id}
-                    style={{ display:'inline-flex', alignItems:'center', gap:5, background: isSaved ? '#eef3fb' : '#F8FAFC', color: isSaved ? '#2563EB' : 'var(--text-3)', border:`1px solid ${isSaved ? '#d5e2f5' : 'var(--border)'}`, borderRadius:8, padding:'7px 12px', fontSize:12, fontWeight:600, cursor:'pointer' }}>
+                    style={{ display:'inline-flex', alignItems:'center', gap:5, background: isSaved ? '#F7EFE9' : '#FBFAF8', color: isSaved ? '#C2542B' : 'var(--text-3)', border:`1px solid ${isSaved ? '#EDDFD5' : 'var(--border)'}`, borderRadius:8, padding:'7px 12px', fontSize:12, fontWeight:600, cursor:'pointer' }}>
                     {isSaved ? T.saved : T.save}
                   </button>
                 </div>
@@ -445,19 +445,19 @@ function MyQuotesTab({ submittedBids, lang }) {
         const isNew = bid.status === 'new'
         const statusLabel = bid.status === 'accepted' ? '✓ Accepted' : bid.status === 'rejected' ? '✗ Rejected' : 'New'
         return (
-          <div key={bid.id} style={{ padding:'16px 18px', background:'#fff', borderRadius:14, border:`1.5px solid ${isNew ? '#BFDBFE' : 'var(--border)'}`, borderLeft:`4px solid ${isNew ? '#f59e0b' : '#E2E8F0'}`, boxShadow:'var(--shadow-sm)' }}>
+          <div key={bid.id} style={{ padding:'16px 18px', background:'#fff', borderRadius:14, border:`1.5px solid ${isNew ? '#E7D9CE' : 'var(--border)'}`, borderLeft:`4px solid ${isNew ? '#f59e0b' : '#E4E0D9'}`, boxShadow:'var(--shadow-sm)' }}>
             <div style={{ fontSize:10, fontWeight:700, color:'var(--text-4)', textTransform:'uppercase', letterSpacing:1, marginBottom:6 }}>
               {TYPE_ICON[bid.project?.project_type] || '🏠'} {bid.project?.project_type || '—'} · 📍 {bid.project?.city || bid.project?.district || '—'}
             </div>
             <div style={{ display:'flex', alignItems:'flex-start', justifyContent:'space-between', gap:10, marginBottom:6 }}>
               <div>
-                {bid.quote_amount && <span style={{ fontSize:14, fontWeight:700, color:'#166534' }}>Rs. {Number(bid.quote_amount).toLocaleString()}</span>}
+                {bid.quote_amount && <span style={{ fontSize:14, fontWeight:700, color:'#22513B' }}>Rs. {Number(bid.quote_amount).toLocaleString()}</span>}
                 {bid.timeline && <span style={{ fontSize:12, color:'var(--text-3)', marginLeft:10 }}>· {bid.timeline}</span>}
                 <span style={{ fontSize:11, color:'var(--text-4)', marginLeft:8 }}>· {timeAgo(bid.created_at)}</span>
               </div>
-              <span style={{ fontSize:10, fontWeight:700, padding:'2px 8px', borderRadius:20, background: isNew ? '#DBEAFE' : '#F1F5F9', color: isNew ? '#1E293B' : '#64748B', whiteSpace:'nowrap', flexShrink:0 }}>{statusLabel}</span>
+              <span style={{ fontSize:10, fontWeight:700, padding:'2px 8px', borderRadius:20, background: isNew ? '#F3E7DF' : '#EFEBE4', color: isNew ? '#2A2F35' : '#6B7076', whiteSpace:'nowrap', flexShrink:0 }}>{statusLabel}</span>
             </div>
-            {bid.message && <p style={{ fontSize:13, color:'#334155', lineHeight:1.6, margin:0 }}>{bid.message.length > 200 ? bid.message.slice(0,200)+'…' : bid.message}</p>}
+            {bid.message && <p style={{ fontSize:13, color:'#3A4046', lineHeight:1.6, margin:0 }}>{bid.message.length > 200 ? bid.message.slice(0,200)+'…' : bid.message}</p>}
             {bid.project && (
               <div style={{ marginTop:12, paddingTop:10, borderTop:'1px solid var(--border)' }}>
                 <a href={jobPath({ ...bid.project, id: bid.job_id })}
@@ -507,10 +507,10 @@ function SavedTab({ savedProjects, user, setSavedProjects, lang }) {
                   {(p.city || p.district) && <div style={{ fontSize:11, color:'var(--text-3)' }}>📍 {p.city}{p.district && p.district !== p.city ? `, ${p.district}` : ''}</div>}
                 </div>
               </div>
-              <button onClick={() => removeSaved(sp.project_id)} style={{ fontSize:11, color:'#dc2626', background:'#fef2f2', border:'1px solid #fecaca', borderRadius:7, padding:'4px 10px', cursor:'pointer', whiteSpace:'nowrap', fontWeight:600 }}>{T.remove}</button>
+              <button onClick={() => removeSaved(sp.project_id)} style={{ fontSize:11, color:'#C0392B', background:'#FBEDEB', border:'1px solid #F2C9C3', borderRadius:7, padding:'4px 10px', cursor:'pointer', whiteSpace:'nowrap', fontWeight:600 }}>{T.remove}</button>
             </div>
             {excerpt && <p style={{ fontSize:13, color:'var(--text-2)', lineHeight:1.6, margin:'0 0 10px' }}>{excerpt}</p>}
-            {p.budget_range && <div style={{ fontSize:11, color:'#166534', fontWeight:600, marginBottom:10 }}>💰 {p.budget_range}</div>}
+            {p.budget_range && <div style={{ fontSize:11, color:'#22513B', fontWeight:600, marginBottom:10 }}>💰 {p.budget_range}</div>}
             {phone && (
               <a href={buildWhatsAppLink(phone, p.customer_name || '')} target="_blank" rel="noopener noreferrer"
                 style={{ display:'inline-flex', alignItems:'center', gap:5, background:'#25D366', color:'#fff', borderRadius:8, padding:'8px 14px', fontSize:12, fontWeight:700, textDecoration:'none' }}>
@@ -643,7 +643,7 @@ function SavedProvidersTab({ userId }) {
         const rating = p.avg_rating
         return (
           <div key={item.id} style={{ background:'#fff', borderRadius:14, border:'1px solid var(--border)', padding:'14px 16px', display:'flex', alignItems:'center', gap:14 }}>
-            <div style={{ width:48, height:48, borderRadius:12, background:'#2563EB', flexShrink:0, overflow:'hidden', display:'flex', alignItems:'center', justifyContent:'center', fontSize:18, fontWeight:700, color:'#fff' }}>
+            <div style={{ width:48, height:48, borderRadius:12, background:'#C2542B', flexShrink:0, overflow:'hidden', display:'flex', alignItems:'center', justifyContent:'center', fontSize:18, fontWeight:700, color:'#fff' }}>
               {p.profile_image
                 ? <img src={p.profile_image} alt={p.name} style={{ width:'100%', height:'100%', objectFit:'cover' }} />
                 : (p.name || '?')[0].toUpperCase()
@@ -653,22 +653,22 @@ function SavedProvidersTab({ userId }) {
               <div style={{ fontSize:14, fontWeight:700, color:'var(--text)', overflow:'hidden', textOverflow:'ellipsis', whiteSpace:'nowrap' }}>{p.name}</div>
               <div style={{ fontSize:11, color:'var(--text-3)', marginTop:2, display:'flex', flexWrap:'wrap', gap:'0 8px' }}>
                 {rating > 0
-                  ? <span style={{ color:'#2563EB' }}>⭐ {Number(rating).toFixed(1)} ({p.review_count || 0})</span>
-                  : <span style={{ color:'#94A3B8' }}>⭐ New · No reviews yet</span>
+                  ? <span style={{ color:'#C2542B' }}>⭐ {Number(rating).toFixed(1)} ({p.review_count || 0})</span>
+                  : <span style={{ color:'#8A8F95' }}>⭐ New · No reviews yet</span>
                 }
                 {p.city && <span>📍 {p.city}</span>}
               </div>
             </div>
             <div style={{ display:'flex', gap:8, flexShrink:0 }}>
               {p.slug && (
-                <a href={`/providers/${p.slug}`} style={{ fontSize:12, fontWeight:700, color:'var(--navy)', background:'#eef3fb', borderRadius:8, padding:'6px 12px', textDecoration:'none', whiteSpace:'nowrap' }}>
+                <a href={`/providers/${p.slug}`} style={{ fontSize:12, fontWeight:700, color:'var(--navy)', background:'#F7EFE9', borderRadius:8, padding:'6px 12px', textDecoration:'none', whiteSpace:'nowrap' }}>
                   View →
                 </a>
               )}
               <button
                 onClick={() => remove(item.id)}
                 disabled={removing === item.id}
-                style={{ fontSize:12, fontWeight:700, color:'#dc2626', background:'#fef2f2', border:'1px solid #fecaca', borderRadius:8, padding:'6px 10px', cursor:'pointer' }}
+                style={{ fontSize:12, fontWeight:700, color:'#C0392B', background:'#FBEDEB', border:'1px solid #F2C9C3', borderRadius:8, padding:'6px 10px', cursor:'pointer' }}
               >
                 {removing === item.id ? '…' : '✕'}
               </button>
@@ -690,7 +690,7 @@ function ConsumerDashboard({ user, projects, bids, submission, dataLoading, show
   ]
 
   return (
-    <div style={{ minHeight:'100dvh', background:'#F8FAFC', paddingBottom:80 }}>
+    <div style={{ minHeight:'100dvh', background:'#FBFAF8', paddingBottom:80 }}>
       <style>{MOBILE_STYLES}</style>
 
       {/* ── Consumer header ── */}
@@ -698,15 +698,15 @@ function ConsumerDashboard({ user, projects, bids, submission, dataLoading, show
         <div className="db-header-pad" style={{ maxWidth:800, margin:'0 auto', padding:'20px 16px 0' }}>
 
           {showClaimedBanner && (
-            <div style={{ padding:'10px 14px', background:'#f0fdf4', border:'1px solid #bbf7d0', borderRadius:10, marginBottom:14 }}>
-              <span style={{ fontSize:13, color:'#15803d', fontWeight:600 }}>✓ Profile claimed successfully!</span>
+            <div style={{ padding:'10px 14px', background:'#E9F1EC', border:'1px solid #C6DDCF', borderRadius:10, marginBottom:14 }}>
+              <span style={{ fontSize:13, color:'#285C43', fontWeight:600 }}>✓ Profile claimed successfully!</span>
             </div>
           )}
 
           {/* Identity row */}
           <div style={{ display:'flex', alignItems:'center', justifyContent:'space-between', marginBottom:16, flexWrap:'wrap', gap:10 }}>
             <div style={{ display:'flex', alignItems:'center', gap:12 }}>
-              <div className="db-avatar" style={{ width:52, height:52, borderRadius:14, background:'var(--terra-50)', border:'2px solid rgba(37,99,235,0.2)', color:'var(--terra)', display:'flex', alignItems:'center', justifyContent:'center', fontSize:18, fontWeight:700, flexShrink:0 }}>
+              <div className="db-avatar" style={{ width:52, height:52, borderRadius:14, background:'var(--terra-50)', border:'2px solid rgba(194,84,43,0.2)', color:'var(--terra)', display:'flex', alignItems:'center', justifyContent:'center', fontSize:18, fontWeight:700, flexShrink:0 }}>
                 {initials}
               </div>
               <div>
@@ -771,7 +771,7 @@ function Spinner({ full }) {
   return (
     <div style={{ ...(full ? { minHeight:'60vh' } : { padding:40 }), display:'flex', alignItems:'center', justifyContent:'center' }}>
       <div style={{ textAlign:'center' }}>
-        <div className="spinner" style={{ margin:'0 auto 10px', borderColor:'rgba(15,23,42,0.15)', borderTopColor:'var(--navy)' }} />
+        <div className="spinner" style={{ margin:'0 auto 10px', borderColor:'rgba(20,23,26,0.15)', borderTopColor:'var(--navy)' }} />
         <p style={{ fontSize:13, color:'var(--text-3)' }}>Loading…</p>
       </div>
     </div>
@@ -783,7 +783,7 @@ function SignInPrompt() {
     <div style={{ minHeight:'60vh', display:'flex', alignItems:'center', justifyContent:'center', padding:20 }}>
       <div style={{ textAlign:'center', maxWidth:380 }}>
         <div style={{ fontSize:56, marginBottom:14 }}>🔒</div>
-        <h2 style={{ fontFamily:"'Inter', sans-serif", fontSize:22, fontWeight:700, color:'var(--text)', marginBottom:10 }}>Sign in to your account</h2>
+        <h2 style={{ fontFamily:"var(--th-display)", fontSize:22, fontWeight:700, color:'var(--text)', marginBottom:10 }}>Sign in to your account</h2>
         <p style={{ fontSize:14, color:'var(--text-3)', lineHeight:1.7, marginBottom:24 }}>
           Providers: find projects and manage your profile.<br/>Homeowners: track your projects and quotes.
         </p>
@@ -816,7 +816,7 @@ function BidsPanel({ projectBids }) {
   }, [open])
 
   if (!projectBids?.length) return (
-    <div style={{ marginTop:12, padding:'12px 14px', background:'#F8FAFC', borderRadius:10, fontSize:12, color:'#94A3B8' }}>
+    <div style={{ marginTop:12, padding:'12px 14px', background:'#FBFAF8', borderRadius:10, fontSize:12, color:'#8A8F95' }}>
       💬 No bids yet — your project is live and visible to all providers.
     </div>
   )
@@ -825,13 +825,13 @@ function BidsPanel({ projectBids }) {
 
   return (
     <div style={{ marginTop:12 }}>
-      <button onClick={() => setOpen(o => !o)} style={{ display:'flex', alignItems:'center', gap:8, background:'none', border:'none', cursor:'pointer', padding:0, fontSize:13, fontWeight:700, color:'#2563EB' }}>
-        <span style={{ display:'inline-flex', alignItems:'center', justifyContent:'center', background: newCount > 0 ? '#f59e0b' : '#E2E8F0', color: newCount > 0 ? '#fff' : '#64748B', borderRadius:20, padding:'2px 8px', fontSize:11, fontWeight:700 }}>
+      <button onClick={() => setOpen(o => !o)} style={{ display:'flex', alignItems:'center', gap:8, background:'none', border:'none', cursor:'pointer', padding:0, fontSize:13, fontWeight:700, color:'#C2542B' }}>
+        <span style={{ display:'inline-flex', alignItems:'center', justifyContent:'center', background: newCount > 0 ? '#f59e0b' : '#E4E0D9', color: newCount > 0 ? '#fff' : '#6B7076', borderRadius:20, padding:'2px 8px', fontSize:11, fontWeight:700 }}>
           {projectBids.length}
         </span>
         {projectBids.length} bid{projectBids.length !== 1 ? 's' : ''} received
         {newCount > 0 && <span style={{ fontSize:11, color:'#f59e0b', fontWeight:700 }}>· {newCount} new</span>}
-        <span style={{ fontSize:14, color:'#94A3B8' }}>{open ? '▲' : '▼'}</span>
+        <span style={{ fontSize:14, color:'#8A8F95' }}>{open ? '▲' : '▼'}</span>
       </button>
 
       {open && (
@@ -843,7 +843,7 @@ function BidsPanel({ projectBids }) {
             const prov = bid.provider_slug ? providerMap[bid.provider_slug] : null
             const profileUrl = bid.provider_slug ? `/providers/${bid.provider_slug}` : null
             const CardTag = profileUrl ? 'a' : 'div'
-            const cardStyle = { padding:'14px 16px', background:'#fff', borderRadius:12, border:`1.5px solid ${bid.status==='new'?'#BFDBFE':'#E2E8F0'}`, borderLeft:`4px solid ${bid.status==='new'?'#f59e0b':'#E2E8F0'}`, ...(profileUrl ? { cursor:'pointer', textDecoration:'none', color:'inherit', display:'block' } : {}) }
+            const cardStyle = { padding:'14px 16px', background:'#fff', borderRadius:12, border:`1.5px solid ${bid.status==='new'?'#E7D9CE':'#E4E0D9'}`, borderLeft:`4px solid ${bid.status==='new'?'#f59e0b':'#E4E0D9'}`, ...(profileUrl ? { cursor:'pointer', textDecoration:'none', color:'inherit', display:'block' } : {}) }
             return (
               <CardTag
                 key={bid.id}
@@ -856,34 +856,34 @@ function BidsPanel({ projectBids }) {
                   <div style={{ display:'flex', alignItems:'center', gap:10, flex:1, minWidth:0 }}>
                     <div style={{ flexShrink:0 }}>
                       {prov?.profile_image
-                        ? <img src={prov.profile_image} alt={bid.bidder_name} style={{ width:44, height:44, borderRadius:'50%', objectFit:'cover', border:'2px solid #E2E8F0' }} />
-                        : <div style={{ width:44, height:44, borderRadius:'50%', background: profileUrl ? '#2563EB' : '#E2E8F0', display:'flex', alignItems:'center', justifyContent:'center', fontSize:16, color: profileUrl ? '#fff' : '#64748B', fontWeight:700 }}>{(bid.bidder_name||'?')[0].toUpperCase()}</div>
+                        ? <img src={prov.profile_image} alt={bid.bidder_name} style={{ width:44, height:44, borderRadius:'50%', objectFit:'cover', border:'2px solid #E4E0D9' }} />
+                        : <div style={{ width:44, height:44, borderRadius:'50%', background: profileUrl ? '#C2542B' : '#E4E0D9', display:'flex', alignItems:'center', justifyContent:'center', fontSize:16, color: profileUrl ? '#fff' : '#6B7076', fontWeight:700 }}>{(bid.bidder_name||'?')[0].toUpperCase()}</div>
                       }
                     </div>
                     <div style={{ minWidth:0 }}>
-                      <div style={{ fontSize:13, fontWeight:700, color: profileUrl ? '#2563EB' : '#0F172A' }}>{bid.bidder_name}{profileUrl ? ' ↗' : ''}</div>
-                      <div style={{ fontSize:11, color:'#64748B', marginTop:2, display:'flex', flexWrap:'wrap', gap:'0 8px' }}>
+                      <div style={{ fontSize:13, fontWeight:700, color: profileUrl ? '#C2542B' : '#14171A' }}>{bid.bidder_name}{profileUrl ? ' ↗' : ''}</div>
+                      <div style={{ fontSize:11, color:'#6B7076', marginTop:2, display:'flex', flexWrap:'wrap', gap:'0 8px' }}>
                         {prov && (prov.avg_rating > 0
-                          ? <span style={{ color:'#2563EB' }}>⭐ {Number(prov.avg_rating).toFixed(1)} ({prov.review_count || 0})</span>
-                          : <span style={{ color:'#94A3B8' }}>⭐ New · No reviews yet</span>
+                          ? <span style={{ color:'#C2542B' }}>⭐ {Number(prov.avg_rating).toFixed(1)} ({prov.review_count || 0})</span>
+                          : <span style={{ color:'#8A8F95' }}>⭐ New · No reviews yet</span>
                         )}
                         {prov?.city && <span>📍 {prov.city}</span>}
                         {!prov && <span style={{ textTransform:'capitalize' }}>{bid.bidder_type}</span>}
-                        {bid.quote_amount && <span style={{ color:'#166534', fontWeight:600 }}>Rs. {bid.quote_amount.toLocaleString()}</span>}
+                        {bid.quote_amount && <span style={{ color:'#22513B', fontWeight:600 }}>Rs. {bid.quote_amount.toLocaleString()}</span>}
                         {bid.timeline     && <span>· {bid.timeline}</span>}
                       </div>
                     </div>
                   </div>
-                  {bid.status === 'new' && <span style={{ fontSize:10, fontWeight:700, padding:'2px 8px', borderRadius:20, background:'#DBEAFE', color:'#1E293B', whiteSpace:'nowrap' }}>New</span>}
+                  {bid.status === 'new' && <span style={{ fontSize:10, fontWeight:700, padding:'2px 8px', borderRadius:20, background:'#F3E7DF', color:'#2A2F35', whiteSpace:'nowrap' }}>New</span>}
                 </div>
-                {bid.message && <p style={{ fontSize:12, color:'#334155', lineHeight:1.6, margin:'0 0 10px' }}>
+                {bid.message && <p style={{ fontSize:12, color:'#3A4046', lineHeight:1.6, margin:'0 0 10px' }}>
                   {bid.message.length > 200 ? bid.message.slice(0,200)+'…' : bid.message}
                 </p>}
                 <div style={{ display:'flex', alignItems:'center', gap:10, flexWrap:'wrap' }}>
                   <a href={waLink} target="_blank" rel="noopener noreferrer" onClick={e => e.stopPropagation()} style={{ display:'inline-flex', alignItems:'center', gap:6, fontSize:12, fontWeight:700, background:'#25D366', color:'#fff', borderRadius:8, padding:'7px 14px', textDecoration:'none' }}>
                     💬 Contact via WhatsApp
                   </a>
-                  {profileUrl && <span style={{ fontSize:11, color:'#94A3B8' }}>Tap card to view profile ↗</span>}
+                  {profileUrl && <span style={{ fontSize:11, color:'#8A8F95' }}>Tap card to view profile ↗</span>}
                 </div>
               </CardTag>
             )
@@ -896,10 +896,10 @@ function BidsPanel({ projectBids }) {
 
 function ProjectsTab({ projects, bids, isProvider }) {
   const STATUS_COLOR = {
-    pending_review: { bg:'#DBEAFE', color:'#1E293B', label:'Under Review' },
-    active:         { bg:'#F0FDF4', color:'#166534', label:'Active'        },
-    matched:        { bg:'#EFF6FF', color:'#1E40AF', label:'Matched'       },
-    completed:      { bg:'#F3F4F6', color:'#334155', label:'Completed'     },
+    pending_review: { bg:'#F3E7DF', color:'#2A2F35', label:'Under Review' },
+    active:         { bg:'#E9F1EC', color:'#22513B', label:'Active'        },
+    matched:        { bg:'#F7EFE9', color:'#7A3218', label:'Matched'       },
+    completed:      { bg:'#F4F1EC', color:'#3A4046', label:'Completed'     },
   }
 
   if (projects.length === 0) return (
@@ -946,10 +946,10 @@ function ProjectsTab({ projects, bids, isProvider }) {
 
 function ListingTab({ submission }) {
   const STATUS = {
-    pending_review: { bg:'#DBEAFE', color:'#1E293B', label:'Under Review', desc:"Your application is being reviewed. We'll contact you via WhatsApp within 1-2 business days." },
-    approved:       { bg:'#F0FDF4', color:'#166534', label:'Approved',      desc:'Your application has been approved. Your listing is being set up.'                            },
-    listed:         { bg:'#EFF6FF', color:'#1E40AF', label:'Listed',        desc:"You're live on TilersHub! Customers can find and contact you."                               },
-    rejected:       { bg:'#FEF2F2', color:'#991B1B', label:'Not Approved',  desc:'Your application was not approved. Contact us for details.'                                  },
+    pending_review: { bg:'#F3E7DF', color:'#2A2F35', label:'Under Review', desc:"Your application is being reviewed. We'll contact you via WhatsApp within 1-2 business days." },
+    approved:       { bg:'#E9F1EC', color:'#22513B', label:'Approved',      desc:'Your application has been approved. Your listing is being set up.'                            },
+    listed:         { bg:'#F7EFE9', color:'#7A3218', label:'Listed',        desc:"You're live on TilersHub! Customers can find and contact you."                               },
+    rejected:       { bg:'#FBEDEB', color:'#8E2A1F', label:'Not Approved',  desc:'Your application was not approved. Contact us for details.'                                  },
   }
 
   if (!submission) return (
@@ -989,7 +989,7 @@ function ListingTab({ submission }) {
         </div>
       )}
       <div style={{ marginTop:18, paddingTop:16, borderTop:'1px solid var(--border)' }}>
-        <a href={`https://wa.me/94774503744?text=Hi TilersHub, I applied as a provider (${submission.name}) and want to check my listing status.`} target="_blank" rel="noopener" style={{ fontSize:12, fontWeight:600, color:'#16a34a', textDecoration:'none', display:'inline-flex', alignItems:'center', gap:5 }}>
+        <a href={`https://wa.me/94774503744?text=Hi TilersHub, I applied as a provider (${submission.name}) and want to check my listing status.`} target="_blank" rel="noopener" style={{ fontSize:12, fontWeight:600, color:'#2F6B4F', textDecoration:'none', display:'inline-flex', alignItems:'center', gap:5 }}>
           💬 Contact TilersHub via WhatsApp
         </a>
       </div>

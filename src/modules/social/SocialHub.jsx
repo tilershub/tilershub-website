@@ -3,9 +3,9 @@ import ContentStudio   from './components/ContentStudio.jsx'
 import ContentCalendar from './components/ContentCalendar.jsx'
 import PostQueue       from './components/PostQueue.jsx'
 
-const NAVY   = '#2563EB'
+const NAVY   = '#C2542B'
 const GOLD   = '#E8B341'
-const ORANGE = '#E8580A'
+const ORANGE = '#D96234'
 
 const SUBTABS = [
   { key: 'studio',   label: '✨ Studio',   desc: 'Generate AI posts' },
@@ -22,10 +22,10 @@ export default function SocialHub() {
       {/* Page header */}
       <div style={{ marginBottom: 24 }}>
         <div style={{ display: 'flex', alignItems: 'center', gap: 12, marginBottom: 6 }}>
-          <h2 style={{ fontSize: 22, fontWeight: 800, color: '#0F172A', margin: 0 }}>📣 Social Hub</h2>
-          <span style={{ fontSize: 11, fontWeight: 700, background: GOLD, color: '#0F172A', padding: '3px 10px', borderRadius: 20 }}>NEW</span>
+          <h2 style={{ fontSize: 22, fontWeight: 800, color: '#14171A', margin: 0 }}>📣 Social Hub</h2>
+          <span style={{ fontSize: 11, fontWeight: 700, background: GOLD, color: '#14171A', padding: '3px 10px', borderRadius: 20 }}>NEW</span>
         </div>
-        <p style={{ fontSize: 13, color: '#64748B', margin: 0 }}>
+        <p style={{ fontSize: 13, color: '#6B7076', margin: 0 }}>
           Generate, plan, and queue social content for two campaigns —
           <span style={{ color: '#3B82F6', fontWeight: 600 }}> 🏠 attract homeowners</span> to post projects and
           <span style={{ color: ORANGE, fontWeight: 600 }}> 🔨 attract tilers</span> to join and bid.
@@ -34,17 +34,17 @@ export default function SocialHub() {
       </div>
 
       {/* Sub-tab nav */}
-      <div style={{ display: 'flex', gap: 4, marginBottom: 28, borderBottom: '2px solid #F1F5F9', paddingBottom: 0 }}>
+      <div style={{ display: 'flex', gap: 4, marginBottom: 28, borderBottom: '2px solid #EFEBE4', paddingBottom: 0 }}>
         {SUBTABS.map(t => (
           <button key={t.key} onClick={() => setSubtab(t.key)}
             style={{
               padding: '10px 20px', background: 'transparent', border: 'none',
               borderBottom: subtab === t.key ? `2.5px solid ${NAVY}` : '2.5px solid transparent',
               marginBottom: -2, fontSize: 13, fontWeight: 700, cursor: 'pointer',
-              color: subtab === t.key ? NAVY : '#94A3B8', transition: 'all 0.12s',
+              color: subtab === t.key ? NAVY : '#8A8F95', transition: 'all 0.12s',
             }}>
             {t.label}
-            <span style={{ fontSize: 10, fontWeight: 400, color: '#94A3B8', display: 'block', marginTop: 1 }}>{t.desc}</span>
+            <span style={{ fontSize: 10, fontWeight: 400, color: '#8A8F95', display: 'block', marginTop: 1 }}>{t.desc}</span>
           </button>
         ))}
       </div>
