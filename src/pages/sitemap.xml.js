@@ -23,6 +23,8 @@ const STATIC = [
   { loc: '/tools',          priority: '0.5', changefreq: 'monthly' },
   { loc: '/about',          priority: '0.5', changefreq: 'monthly' },
   { loc: '/contact',        priority: '0.5', changefreq: 'monthly' },
+  { loc: '/privacy',        priority: '0.3', changefreq: 'yearly'  },
+  { loc: '/terms',          priority: '0.3', changefreq: 'yearly'  },
 ]
 
 function url(loc, lastmod, changefreq, priority) {
@@ -35,10 +37,28 @@ export async function GET({ locals }) {
   // No `tilers` block: that legacy table's slugs are people, but /tilers/<slug>
   // only serves districts and 301s anything else to /providers/<slug> — a
   // sitemap should list canonical 200s, and district URLs are added below.
-  const [{ data: providerRows }, { data: projectRows }] = await Promise.all([
+  const [{ data: providerRows }, { data: projectRows }, { data: coverageRows }] = await Promise.all([
     locals.supabase.from('providers').select('slug,updated_at').eq('status', 'active').not('slug', 'is', null),
     locals.supabase.from('projects').select('id,project_type,city,district,created_at').eq('status', 'active').order('created_at', { ascending: false }).limit(500),
+    locals.supabase.from('providers').select('city,district,service_areas').eq('status', 'active'),
   ])
+
+  // A district page is only worth submitting once something is actually on it.
+  // The page itself applies the same rule via `noindex`, so an empty district
+  // is reachable but neither indexed nor advertised — and rejoins the sitemap
+  // by itself as soon as a provider covers it or a project is posted there.
+  const covered = new Set()
+  for (const p of coverageRows || []) {
+    if (p.district) covered.add(p.district)
+    if (p.city) covered.add(p.city)
+    for (const area of p.service_areas || []) covered.add(area)
+  }
+  for (const p of projectRows || []) {
+    if (p.district) covered.add(p.district)
+  }
+  const liveDistricts = DISTRICT_INFO.filter(d =>
+    [...covered].some(name => name && name.toLowerCase().includes(d.name.toLowerCase()))
+  )
 
   const urls = [
     ...STATIC.map(u => url(u.loc, today, u.changefreq, u.priority)),
@@ -51,8 +71,8 @@ export async function GET({ locals }) {
       url(jobPath(p), p.created_at ? p.created_at.split('T')[0] : today, 'daily', '0.7')
     ),
     ...GUIDES.map(g => url(`/guides/${g.slug}`, today, 'monthly', '0.7')),
-    ...DISTRICT_INFO.map(d => url(districtPath(d), today, 'weekly', '0.8')),
-    ...DISTRICT_INFO.flatMap(d =>
+    ...liveDistricts.map(d => url(districtPath(d), today, 'weekly', '0.8')),
+    ...liveDistricts.flatMap(d =>
       LOCATION_SERVICE_SLUGS.map(s => url(serviceDistrictPath(s, d), today, 'weekly', '0.7'))
     ),
   ]

@@ -48,6 +48,11 @@ const providers = (providersRaw || []).filter(p => inDistrict(p) && matchesServi
 const jobs = jobsRaw || []
 const total = providers.length
 const neighbors = neighborDistricts(district.slug)
+// These pages are generated for every district (and every district × service
+// pair), but the directory only fills them once real providers cover that
+// area. An empty template is thin content: keep it reachable, keep it out of
+// the index, and let it back in automatically once it has something to show.
+const isThin = providers.length === 0 && jobs.length === 0
 const cost = typicalCostPerSqft()
 const year = new Date().getFullYear()
 
@@ -99,7 +104,7 @@ const serviceSchema = JSON.stringify({
 Astro.response.headers.set('Cache-Control', 'public, max-age=0, s-maxage=600')
 ---
 
-<Layout title={pageTitle} description={pageDesc}>
+<Layout title={pageTitle} description={pageDesc} noindex={isThin}>
   <script slot="head" type="application/ld+json" set:html={faqSchema} />
   <script slot="head" type="application/ld+json" set:html={serviceSchema} />
 
