@@ -3,6 +3,7 @@ import '../index.css'
 import '../styles/theme-2026.css'
 import AppShell from '../components/AppShell.jsx'
 import DraftLinker from '../components/DraftLinker.jsx'
+import { ADSENSE_CLIENT } from '../lib/adsense.js'
 
 const user = Astro.locals.user
 
@@ -32,6 +33,27 @@ const path = Astro.url.pathname
 const SITE = 'https://www.tilershub.lk'
 const FONT_HREF = 'https://fonts.googleapis.com/css2?family=Archivo:wght@500;600;700;800&family=Instrument+Sans:wght@400;500;600&family=Noto+Sans+Sinhala:wght@400;500;600;700&display=swap'
 const canonicalUrl = `${SITE}${path}`
+
+// Routes that must never carry ads: authentication, account areas, and the
+// forms people use to post work or ask for a quote. Auto Ads would otherwise
+// inject into all of them, which is both a conversion risk and the kind of
+// thin/utility page AdSense policy is unhappy about. The verification meta tag
+// still ships everywhere so Google can confirm ownership from any URL.
+const AD_FREE_PREFIXES = [
+  '/login',
+  '/auth',
+  '/account',
+  '/dashboard',
+  '/notifications',
+  '/admin',
+  '/post-project',
+  '/join-tilershub',
+  '/contact',
+  '/verify-claim',
+  '/offline',
+]
+const adsAllowed = Boolean(ADSENSE_CLIENT)
+  && !AD_FREE_PREFIXES.some((p) => path === p || path.startsWith(`${p}/`))
 
 const orgSchema = JSON.stringify({
   '@context': 'https://schema.org',
@@ -116,6 +138,15 @@ const orgSchema = JSON.stringify({
   <script is:inline>
     ;(function(){try{var l=localStorage.getItem('th_lang');if(l)document.documentElement.setAttribute('data-lang',l)}catch(e){}})()
   </script>
+  <!-- Google AdSense -->
+  {ADSENSE_CLIENT && <meta name="google-adsense-account" content={ADSENSE_CLIENT} />}
+  {adsAllowed && (
+    <script
+      async
+      src={`https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=${ADSENSE_CLIENT}`}
+      crossorigin="anonymous"
+    />
+  )}
   <!-- Google Tag Manager -->
   <script is:inline>(function(w,d,s,l,i){w[l]=w[l]||[];w[l].push({'gtm.start':new Date().getTime(),event:'gtm.js'});var f=d.getElementsByTagName(s)[0],j=d.createElement(s),dl=l!='dataLayer'?'&l='+l:'';j.async=true;j.src='https://www.googletagmanager.com/gtm.js?id='+i+dl;f.parentNode.insertBefore(j,f);})(window,document,'script','dataLayer','GTM-MX727MR5');</script>
 </head>
@@ -264,6 +295,7 @@ const orgSchema = JSON.stringify({
           <a href="/blog">Blog &amp; Tips</a>
           <a href="/about">About TilersHub</a>
           <a href="/contact">Contact Us</a>
+          <a href="/privacy-policy">Privacy Policy</a>
         </nav>
       </div>
     </div>

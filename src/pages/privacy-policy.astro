@@ -1,0 +1,167 @@
+---
+import Layout from '../layouts/Layout.astro'
+
+const UPDATED = '11 September 2026'
+
+const sections = [
+  {
+    id: 'what-we-collect',
+    title: 'What we collect',
+    body: [
+      'When you browse TilersHub you can search providers, read guides and view projects without an account. We collect nothing that identifies you personally for that.',
+      'When you create an account, post a project, join as a provider or send an enquiry, we collect what you type into those forms — typically your name, contact number, email address, district and the details of the work you are describing. Providers additionally supply business details and portfolio images.',
+      'We also record ordinary technical information that every website receives: your IP address, browser and device type, the pages you open and the site that referred you.',
+    ],
+  },
+  {
+    id: 'how-we-use-it',
+    title: 'How we use it',
+    body: [
+      'To run the marketplace: showing your project to relevant providers, showing provider listings to homeowners, and letting the two sides contact each other directly.',
+      'To keep the platform trustworthy — verifying provider claims, reviewing listings, and removing fraud or abuse.',
+      'To understand which parts of the site are useful, so we can improve them.',
+      'We do not sell your personal information.',
+    ],
+  },
+  {
+    id: 'sharing',
+    title: 'Who we share it with',
+    body: [
+      'Project details you post are shown to providers on the platform so they can bid or respond. Do not include anything in a project description you would not want a provider to read.',
+      'We use service providers who process data on our behalf — hosting (Cloudflare), our database and authentication (Supabase), and analytics and advertising (Google). They may only use it to provide those services to us.',
+      'We may disclose information where the law requires it, or to protect the rights and safety of our users.',
+    ],
+  },
+  {
+    id: 'cookies',
+    title: 'Cookies and similar technologies',
+    body: [
+      'We use cookies and browser storage to keep you signed in, remember your language choice (English or Sinhala), and measure site usage through Google Tag Manager and Google Analytics.',
+      'Advertising partners, described below, also set cookies. You can block or delete cookies in your browser settings; if you do, signing in and some other features may stop working correctly.',
+    ],
+  },
+]
+---
+
+<Layout
+  title="Privacy Policy · TilersHub"
+  description="How TilersHub collects, uses and protects your information — including cookies, Google AdSense advertising and your choices about personalised ads."
+>
+
+  <!-- Hero -->
+  <div style="background:var(--navy);padding:52px 20px 44px;text-align:center;position:relative;overflow:hidden;">
+    <div style="position:absolute;inset:0;opacity:0.04;background-image:repeating-linear-gradient(45deg,transparent,transparent 20px,rgba(255,255,255,0.8) 20px,rgba(255,255,255,0.8) 21px);pointer-events:none;"></div>
+    <div style="position:relative;max-width:620px;margin:0 auto;">
+      <span class="section-label" style="border-color:rgba(255,255,255,0.15);color:rgba(255,255,255,0.5);background:rgba(255,255,255,0.06);">🔒 Privacy</span>
+      <h1 style="font-family: var(--th-display);font-size:clamp(26px,4vw,40px);font-weight:700;color:#fff;margin:12px 0 10px;line-height:1.2;">
+        Privacy <span style="color:var(--gold);">Policy</span>
+      </h1>
+      <p style="font-size:14px;color:rgba(255,255,255,0.5);line-height:1.8;">
+        What we collect, why we collect it, and the choices you have. Last updated {UPDATED}.
+      </p>
+    </div>
+  </div>
+
+  <section style="background:var(--surface);padding:52px 20px 64px;">
+    <div style="max-width:720px;margin:0 auto;">
+
+      {sections.map((s) => (
+        <div id={s.id} style="margin-bottom:36px;">
+          <h2 style="font-family: var(--th-display);font-size:21px;font-weight:700;color:var(--text);margin-bottom:12px;">{s.title}</h2>
+          {s.body.map((p) => (
+            <p style="font-size:14.5px;color:var(--text-3);line-height:1.9;margin-bottom:12px;">{p}</p>
+          ))}
+        </div>
+      ))}
+
+      <!-- Advertising: the section AdSense review looks for -->
+      <div id="advertising" style="margin-bottom:36px;padding:24px;background:var(--surface-2);border:1px solid var(--border);border-radius:16px;">
+        <h2 style="font-family: var(--th-display);font-size:21px;font-weight:700;color:var(--text);margin-bottom:12px;">Advertising and Google AdSense</h2>
+        <p style="font-size:14.5px;color:var(--text-3);line-height:1.9;margin-bottom:12px;">
+          TilersHub is free to use. We cover the cost of running it partly through advertising, and we use
+          <strong style="color:var(--text);">Google AdSense</strong> to serve those ads.
+        </p>
+        <ul style="margin:0 0 12px;padding-left:20px;display:flex;flex-direction:column;gap:10px;">
+          <li style="font-size:14.5px;color:var(--text-3);line-height:1.9;">
+            Google, as a third-party vendor, uses cookies to serve ads on this site. Its use of advertising cookies
+            enables it and its partners to serve ads to you based on your visit to TilersHub and other sites on the internet.
+          </li>
+          <li style="font-size:14.5px;color:var(--text-3);line-height:1.9;">
+            Third-party vendors and ad networks may also set their own cookies, web beacons or similar technologies
+            to measure ad performance and limit how often you see the same ad. We do not control those cookies.
+          </li>
+          <li style="font-size:14.5px;color:var(--text-3);line-height:1.9;">
+            <strong style="color:var(--text);">Personalised advertising</strong> means the ads you see may reflect your
+            previous browsing. You can turn personalised advertising off at any time — it does not remove ads, only the
+            personalisation.
+          </li>
+          <li style="font-size:14.5px;color:var(--text-3);line-height:1.9;">
+            We do not place advertising on sign-in, account, project-posting, provider-signup or contact pages.
+          </li>
+        </ul>
+        <div style="display:flex;flex-wrap:wrap;gap:10px;margin-top:16px;">
+          <a href="https://www.google.com/settings/ads" target="_blank" rel="noopener noreferrer"
+             style="display:inline-flex;align-items:center;gap:6px;padding:10px 16px;border-radius:10px;background:var(--navy);color:#fff;font-size:12.5px;font-weight:700;text-decoration:none;">
+            Manage your Google ad settings ↗
+          </a>
+          <a href="https://policies.google.com/technologies/partner-sites" target="_blank" rel="noopener noreferrer"
+             style="display:inline-flex;align-items:center;gap:6px;padding:10px 16px;border-radius:10px;background:var(--surface);border:1px solid var(--border);color:var(--text);font-size:12.5px;font-weight:700;text-decoration:none;">
+            How Google uses data from this site ↗
+          </a>
+        </div>
+      </div>
+
+      <div id="your-choices" style="margin-bottom:36px;">
+        <h2 style="font-family: var(--th-display);font-size:21px;font-weight:700;color:var(--text);margin-bottom:12px;">Your choices</h2>
+        <p style="font-size:14.5px;color:var(--text-3);line-height:1.9;margin-bottom:12px;">
+          You can ask us for a copy of the information we hold about you, ask us to correct it, or ask us to delete your
+          account and listings. Write to us and we will action it.
+        </p>
+        <p style="font-size:14.5px;color:var(--text-3);line-height:1.9;margin-bottom:12px;">
+          You can control advertising cookies at <a href="https://www.google.com/settings/ads" target="_blank" rel="noopener noreferrer" style="color:var(--primary, #C2542B);font-weight:600;">google.com/settings/ads</a>,
+          and cookies generally through your browser settings.
+        </p>
+      </div>
+
+      <div id="retention" style="margin-bottom:36px;">
+        <h2 style="font-family: var(--th-display);font-size:21px;font-weight:700;color:var(--text);margin-bottom:12px;">Keeping and protecting your information</h2>
+        <p style="font-size:14.5px;color:var(--text-3);line-height:1.9;margin-bottom:12px;">
+          We keep your information for as long as your account or listing is active, and afterwards only where we need it
+          for legal or fraud-prevention reasons. Data is held on managed infrastructure with access limited to the people
+          who run the platform.
+        </p>
+        <p style="font-size:14.5px;color:var(--text-3);line-height:1.9;">
+          TilersHub is not intended for children under 16, and we do not knowingly collect their information.
+        </p>
+      </div>
+
+      <div id="changes" style="margin-bottom:36px;">
+        <h2 style="font-family: var(--th-display);font-size:21px;font-weight:700;color:var(--text);margin-bottom:12px;">Changes to this policy</h2>
+        <p style="font-size:14.5px;color:var(--text-3);line-height:1.9;">
+          We will update this page when our practices change, and the date at the top will change with it. Significant
+          changes will be announced on the site.
+        </p>
+      </div>
+
+      <!-- Contact -->
+      <div id="contact" style="padding:24px;background:var(--surface-2);border:1px solid var(--border);border-radius:16px;">
+        <h2 style="font-family: var(--th-display);font-size:21px;font-weight:700;color:var(--text);margin-bottom:10px;">Contact us</h2>
+        <p style="font-size:14.5px;color:var(--text-3);line-height:1.9;margin-bottom:14px;">
+          Questions about this policy, or about the information we hold on you?
+        </p>
+        <div style="display:flex;flex-wrap:wrap;gap:10px;">
+          <a href="mailto:Tilershub@gmail.com"
+             style="display:inline-flex;align-items:center;gap:6px;padding:10px 16px;border-radius:10px;background:var(--navy);color:#fff;font-size:12.5px;font-weight:700;text-decoration:none;">
+            ✉️ Tilershub@gmail.com
+          </a>
+          <a href="/contact"
+             style="display:inline-flex;align-items:center;gap:6px;padding:10px 16px;border-radius:10px;background:var(--surface);border:1px solid var(--border);color:var(--text);font-size:12.5px;font-weight:700;text-decoration:none;">
+            All contact options →
+          </a>
+        </div>
+      </div>
+
+    </div>
+  </section>
+
+</Layout>

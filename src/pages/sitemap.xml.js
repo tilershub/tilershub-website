@@ -23,6 +23,7 @@ const STATIC = [
   { loc: '/tools',          priority: '0.5', changefreq: 'monthly' },
   { loc: '/about',          priority: '0.5', changefreq: 'monthly' },
   { loc: '/contact',        priority: '0.5', changefreq: 'monthly' },
+  { loc: '/privacy-policy', priority: '0.3', changefreq: 'yearly'  },
 ]
 
 function url(loc, lastmod, changefreq, priority) {

@@ -77,4 +77,10 @@ const pageTitle = type ? `${TYPE_LABELS[type] || 'Providers'} in Sri Lanka` : 'F
 
   <ProviderDirectory client:only="react" initialProviders={initialProviders ?? []} initialType={type} initialSearch={q} initialDistrict={districtParam} />
 
+  <!-- Ad slot — below the directory, after the listings. Keep it below: an ad
+       above the results competes with the thing people came here to do.
+       Create the unit in AdSense, paste its slot ID, uncomment, and add
+       `import AdSlot from '../../components/AdSlot.jsx'` to the frontmatter.
+       <AdSlot slot="REPLACE_ME" client:visible /> -->
+
 </Layout>
