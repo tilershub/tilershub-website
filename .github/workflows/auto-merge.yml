@@ -1,15 +1,35 @@
 name: Auto-merge Claude branch to main
 
+# A push to a claude/** branch builds, merges into main and deploys.
+#
+# When the merge conflicts this job fails and the deploy is skipped, which is
+# correct — but a `git push` from a Claude session succeeds and reports nothing,
+# so the failure used to exist only in the Actions tab and went unnoticed for
+# hours. The extra steps here exist to make a failure announce itself: a
+# diagnosis before the merge is attempted, the conflicting files written to the
+# run summary, and an issue opened if the job fails at all.
+#
+# Note: the push to main below is made with GITHUB_TOKEN, and GitHub
+# deliberately does not let that trigger other workflows. So deploy.yml does
+# NOT also run for these pushes — the deploy step at the end of this job is the
+# only one. That is not a bug; don't "fix" it by adding a second trigger.
+
 on:
   push:
     branches:
       - 'claude/**'
+
+# Two pushes in quick succession would otherwise race each other into main.
+concurrency:
+  group: auto-merge-${{ github.ref }}
+  cancel-in-progress: false
 
 jobs:
   build-and-merge:
     runs-on: ubuntu-latest
     permissions:
       contents: write
+      issues: write
     steps:
       - uses: actions/checkout@v4
         with:
@@ -27,14 +47,67 @@ jobs:
       - name: Build
         run: npm run build
 
+      # Predict the merge before touching main. Note this deliberately does
+      # NOT gate on "is origin/main an ancestor of HEAD" — every successful run
+      # adds a merge commit to main that the branch never sees, so the branch
+      # is *always* nominally behind by one and that check would cry wolf on
+      # every push. What matters is only whether the merge will conflict.
+      - name: Predict the merge
+        run: |
+          git fetch origin main
+
+          conflicts=$(git merge-tree --write-tree origin/main HEAD 2>&1 \
+                      | grep '^CONFLICT' || true)
+
+          if [ -z "$conflicts" ]; then
+            echo "No conflicts predicted against \`main\`." >> "$GITHUB_STEP_SUMMARY"
+            exit 0
+          fi
+
+          behind=$(git rev-list --count HEAD..origin/main)
+          {
+            echo "## ⚠️ This will not merge cleanly"
+            echo
+            echo "\`main\` is $behind commit(s) ahead of this branch and they touch the same lines:"
+            echo
+            echo '```'
+            echo "$conflicts"
+            echo '```'
+            echo
+            echo "Resolve on the branch, then push again:"
+            echo
+            echo '```sh'
+            echo "git fetch origin main && git merge origin/main"
+            echo "# fix the conflicts, commit, then:"
+            echo "git push"
+            echo '```'
+          } >> "$GITHUB_STEP_SUMMARY"
+          echo "::error::Branch conflicts with main. See the run summary."
+          exit 1
+
       - name: Merge to main
         run: |
           git config user.name "github-actions[bot]"
           git config user.email "github-actions[bot]@users.noreply.github.com"
           git checkout main
           git pull origin main
-          git merge --no-ff ${{ github.ref_name }} -m "Auto-merge ${{ github.ref_name }} into main"
+
+          if ! git merge --no-ff "$GITHUB_REF_NAME" \
+                 -m "Auto-merge $GITHUB_REF_NAME into main"; then
+            {
+              echo "## ❌ Merge conflict"
+              echo
+              echo '```'
+              git diff --name-only --diff-filter=U
+              echo '```'
+            } >> "$GITHUB_STEP_SUMMARY"
+            git merge --abort || true
+            echo "::error::Merge into main conflicted. See the run summary."
+            exit 1
+          fi
+
           git push origin main
+          echo "## ✅ Merged \`$GITHUB_REF_NAME\` into main" >> "$GITHUB_STEP_SUMMARY"
 
       - name: Deploy to Cloudflare Workers
         uses: cloudflare/wrangler-action@v3
@@ -42,3 +115,60 @@ jobs:
           apiToken: ${{ secrets.CLOUDFLARE_API_TOKEN }}
           accountId: ${{ secrets.CLOUDFLARE_ACCOUNT_ID }}
           command: deploy
+
+      # The point of all this: a red tick on a tab nobody opens is not a
+      # notification. An issue is visible in the repo to a person and to the
+      # next session alike.
+      - name: Report the failure as an issue
+        if: failure()
+        uses: actions/github-script@v7
+        with:
+          script: |
+            const branch = context.ref.replace('refs/heads/', '')
+            const sha = context.sha.slice(0, 7)
+            const run = `${context.serverUrl}/${context.repo.owner}/${context.repo.repo}/actions/runs/${context.runId}`
+            const title = `Auto-merge failed: ${branch} @ ${sha}`
+
+            const body = [
+              `**\`${branch}\` did not reach \`main\`, and nothing was deployed.**`,
+              ``,
+              `Commit: ${context.sha}`,
+              `Run: ${run}`,
+              ``,
+              `The push itself succeeded, so whoever pushed has no reason to`,
+              `think anything is wrong — that is why this issue exists.`,
+              ``,
+              `If it was a conflict, fix it on the branch and push again:`,
+              ``,
+              '```sh',
+              `git fetch origin main && git merge origin/main`,
+              `# resolve, commit, then push`,
+              '```',
+            ].join('\n')
+
+            // Re-use an open issue for the same branch rather than stacking
+            // one up per push while it is being fixed.
+            const { data: open } = await github.rest.issues.listForRepo({
+              owner: context.repo.owner,
+              repo: context.repo.repo,
+              state: 'open',
+              labels: 'auto-merge-failed',
+            })
+            const existing = open.find(i => i.title.startsWith(`Auto-merge failed: ${branch}`))
+
+            if (existing) {
+              await github.rest.issues.createComment({
+                owner: context.repo.owner,
+                repo: context.repo.repo,
+                issue_number: existing.number,
+                body: `Still failing at \`${sha}\` — ${run}`,
+              })
+            } else {
+              await github.rest.issues.create({
+                owner: context.repo.owner,
+                repo: context.repo.repo,
+                title,
+                body,
+                labels: ['auto-merge-failed'],
+              })
+            }
