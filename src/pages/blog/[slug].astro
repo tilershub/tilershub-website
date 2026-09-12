@@ -26,10 +26,16 @@ const articleSchema = JSON.stringify({
   keywords: `tiling Sri Lanka, ${post.category}, home improvement Sri Lanka`,
 })
 
-const faqSchema = post.sections?.length > 0 ? JSON.stringify({
+// Only genuine question-and-answer pairs are marked up as an FAQ. These
+// articles are prose, and every section heading used to be emitted as a
+// Question — "2. Ask for photos and references" is not a question, and
+// Google's FAQ guidelines treat that kind of blanket markup as spam. Sections
+// written as questions still qualify, so the rule is applied per heading.
+const faqPairs = (post.sections ?? []).filter((s: { heading: string }) => s.heading.trim().endsWith('?'))
+const faqSchema = faqPairs.length >= 2 ? JSON.stringify({
   '@context': 'https://schema.org',
   '@type': 'FAQPage',
-  mainEntity: post.sections.map((s: { heading: string; body: string }) => ({
+  mainEntity: faqPairs.map((s: { heading: string; body: string }) => ({
     '@type': 'Question',
     name: s.heading,
     acceptedAnswer: { '@type': 'Answer', text: s.body },

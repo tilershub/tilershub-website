@@ -31,11 +31,14 @@ import Layout from '../layouts/Layout.astro'
         TilersHub ගොඩ නැඟුයේ සැබෑ ගැටලුවක් විසඳීමට — ගෙදර හිමිකරුවන්ට විශ්වාසදායී ටයිලිං වෘත්තිකයන් සොයා ගැනීම අසීරු වූ අතර, දක්ෂ ටයිලර්ලාට පහසුවෙන් ගනුදෙනුකරුවන් ලබා ගත නොහැකි විය. නොමිලේ, විවෘත වෙළෙඳපොළක් නිර්මාණය කර දෙපාර්ශ්වය සෘජුව සම්බන්ධ කළෙමු.
       </p>
       <div style="display:grid;grid-template-columns:repeat(auto-fit,minmax(200px,1fr));gap:16px;text-align:center;">
+        {/* Only claims we can stand behind. A provider headcount belongs on
+            /providers, where it is counted from the live directory rather
+            than typed in by hand. */}
         {[
-          { n: '500+', l: 'ටයිලිං වෘත්තිකයන්', icon: '👷' },
-          { n: '25', l: 'දිස්ත්‍රික්ක', icon: '🗺️' },
+          { n: '25', l: 'දිස්ත්‍රික්ක ආවරණය', icon: '🗺️' },
           { n: '100%', l: 'නොමිලේ සේවාව', icon: '✅' },
           { n: '0%', l: 'කොමිෂන්', icon: '💸' },
+          { n: 'ලොගින් නැත', l: 'ව්‍යාපෘතියක් පලකිරීමට', icon: '⚡' },
         ].map(s => (
           <div style="padding:24px;background:var(--surface-2);border:1px solid var(--border);border-radius:16px;">
             <div style="font-size:28px;margin-bottom:8px;">{s.icon}</div>

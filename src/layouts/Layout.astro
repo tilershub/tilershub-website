@@ -138,7 +138,49 @@ const orgSchema = JSON.stringify({
   <script is:inline>
     ;(function(){try{var l=localStorage.getItem('th_lang');if(l)document.documentElement.setAttribute('data-lang',l)}catch(e){}})()
   </script>
-  <!-- Google AdSense -->
+  <!-- Google Consent Mode v2 defaults, set before any tag can fire. Analytics
+       and advertising storage stay denied until the visitor chooses; the
+       banner below updates them. Required by Google's EU user consent policy
+       and a precondition for serving ads. -->
+  <script is:inline>
+    ;(function () {
+      window.dataLayer = window.dataLayer || []
+      function gtag() { dataLayer.push(arguments) }
+      window.gtag = gtag
+
+      var saved = null
+      try { saved = localStorage.getItem('th_consent') } catch (e) {}
+      var granted = saved === 'all'
+
+      gtag('consent', 'default', {
+        ad_storage: granted ? 'granted' : 'denied',
+        ad_user_data: granted ? 'granted' : 'denied',
+        ad_personalization: granted ? 'granted' : 'denied',
+        analytics_storage: granted ? 'granted' : 'denied',
+        functionality_storage: 'granted',
+        security_storage: 'granted',
+      })
+
+      // GTM itself only loads once a choice exists, so a visitor who has not
+      // answered never gets an analytics or advertising cookie at all.
+      window.__thLoadGTM = function () {
+        if (window.__thGTMLoaded) return
+        window.__thGTMLoaded = true
+        dataLayer.push({ 'gtm.start': new Date().getTime(), event: 'gtm.js' })
+        var f = document.getElementsByTagName('script')[0]
+        var j = document.createElement('script')
+        j.async = true
+        j.src = 'https://www.googletagmanager.com/gtm.js?id=GTM-MX727MR5'
+        f.parentNode.insertBefore(j, f)
+      }
+      if (saved) window.__thLoadGTM()
+    })()
+  </script>
+
+  <!-- Google AdSense. Deliberately after the consent block above: the script
+       reads the Consent Mode defaults that block registers, and loading it
+       first would let it set an advertising cookie before the visitor has
+       answered. Denied consent still serves ads, just non-personalised ones. -->
   {ADSENSE_CLIENT && <meta name="google-adsense-account" content={ADSENSE_CLIENT} />}
   {adsAllowed && (
     <script
@@ -147,12 +189,8 @@ const orgSchema = JSON.stringify({
       crossorigin="anonymous"
     />
   )}
-  <!-- Google Tag Manager -->
-  <script is:inline>(function(w,d,s,l,i){w[l]=w[l]||[];w[l].push({'gtm.start':new Date().getTime(),event:'gtm.js'});var f=d.getElementsByTagName(s)[0],j=d.createElement(s),dl=l!='dataLayer'?'&l='+l:'';j.async=true;j.src='https://www.googletagmanager.com/gtm.js?id='+i+dl;f.parentNode.insertBefore(j,f);})(window,document,'script','dataLayer','GTM-MX727MR5');</script>
 </head>
 <body>
-  <!-- Google Tag Manager (noscript) -->
-  <noscript is:raw><iframe src="https://www.googletagmanager.com/ns.html?id=GTM-MX727MR5" height="0" width="0" style="display:none;visibility:hidden"></iframe></noscript>
 
   <!-- ═══ PWA SPLASH SCREEN (installed-app launches only — hidden for web/search visitors) ═══ -->
   <style>
@@ -296,6 +334,7 @@ const orgSchema = JSON.stringify({
           <a href="/about">About TilersHub</a>
           <a href="/contact">Contact Us</a>
           <a href="/privacy-policy">Privacy Policy</a>
+          <a href="/terms">Terms of Service</a>
         </nav>
       </div>
     </div>
@@ -385,9 +424,83 @@ const orgSchema = JSON.stringify({
           var sheet=document.getElementById('lang-chooser-sheet')
           if(bg) bg.style.opacity='0'
           if(sheet) sheet.style.transform='translateY(100%)'
-          setTimeout(function(){ if(box.parentNode) box.parentNode.removeChild(box) },320)
+          setTimeout(function(){
+            if(box.parentNode) box.parentNode.removeChild(box)
+            if(window.__thShowConsent) window.__thShowConsent()
+          },320)
         })
       })
+    })()
+  </script>
+
+  <!-- ═══ COOKIE CONSENT ═══
+       Analytics and advertising cookies are denied until this is answered.
+       It queues behind the language chooser so a first-time visitor is never
+       shown two sheets at once. -->
+  <div id="cookie-banner" hidden class="cookie-banner">
+    <div class="cookie-banner__text">
+      <strong>
+        <span class="en-text">We use cookies</span>
+        <span class="si-text">අපි කුකීස් භාවිත කරමු</span>
+      </strong>
+      <span class="en-text">
+        Essential cookies keep you signed in. With your permission we also use analytics and
+        advertising cookies — including Google's — to understand what's useful and to fund the site.
+        See our <a href="/privacy-policy">Privacy Policy</a>.
+      </span>
+      <span class="si-text">
+        අත්‍යවශ්‍ය කුකීස් ඔබව පිවිසී තබා ගනී. ඔබේ අවසරය ඇතිව අපි විශ්ලේෂණ සහ දැන්වීම් කුකීස් — Google හි ඒවා ද — භාවිත කරමු.
+        වැඩි විස්තර <a href="/privacy-policy">පෞද්ගලිකත්ව ප්‍රතිපත්තියේ</a>.
+      </span>
+    </div>
+    <div class="cookie-banner__actions">
+      <button type="button" id="cookie-reject" class="btn btn-outline btn-sm">
+        <span class="en-text">Essential only</span><span class="si-text">අත්‍යවශ්‍ය පමණි</span>
+      </button>
+      <button type="button" id="cookie-accept" class="btn btn-terra btn-sm">
+        <span class="en-text">Accept all</span><span class="si-text">සියල්ල පිළිගන්න</span>
+      </button>
+    </div>
+  </div>
+
+  <script is:inline>
+    ;(function () {
+      var box = document.getElementById('cookie-banner')
+      if (!box) return
+
+      function save(choice) {
+        try { localStorage.setItem('th_consent', choice) } catch (e) {}
+        var granted = choice === 'all'
+        if (window.gtag) {
+          gtag('consent', 'update', {
+            ad_storage: granted ? 'granted' : 'denied',
+            ad_user_data: granted ? 'granted' : 'denied',
+            ad_personalization: granted ? 'granted' : 'denied',
+            analytics_storage: granted ? 'granted' : 'denied',
+          })
+        }
+        // Load GTM either way: with consent denied it sets no cookies, but
+        // having it present keeps tag configuration in one place.
+        if (window.__thLoadGTM) window.__thLoadGTM()
+        box.classList.remove('is-open')
+        setTimeout(function () { box.hidden = true }, 260)
+      }
+
+      document.getElementById('cookie-accept').addEventListener('click', function () { save('all') })
+      document.getElementById('cookie-reject').addEventListener('click', function () { save('essential') })
+
+      window.__thShowConsent = function () {
+        box.hidden = false
+        requestAnimationFrame(function () { box.classList.add('is-open') })
+      }
+
+      var consent = null, lang = null
+      try {
+        consent = localStorage.getItem('th_consent')
+        lang = localStorage.getItem('th_lang')
+      } catch (e) { return }
+      // A brand-new visitor picks a language first; that flow calls us back.
+      if (!consent && lang) window.__thShowConsent()
     })()
   </script>
 

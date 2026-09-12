@@ -5,7 +5,7 @@ export const BLOG_POSTS = [
     title: 'How to Choose the Right Tiler for Your Project',
     excerpt: 'Not all tilers are equal. Learn what to look for — experience, references, waterproofing knowledge — before hiring.',
     category: 'Hiring Tips',
-    readTime: '4 min read',
+    readTime: '5 min read',
     icon: '👷',
     color: '#C2542B',
     relatedSlugs: ['bathroom-renovation-cost-sri-lanka', 'waterproofing-bathroom-guide'],
@@ -35,8 +35,24 @@ export const BLOG_POSTS = [
         body: `Avoid any tiler who: cannot show any references or photos, skips any mention of waterproofing, asks for more than 50% payment upfront, provides a vague non-itemised quote, has no fixed address or verifiable business identity, or can start "immediately" without seeing the site first. Reputable professionals are usually booked 2–4 weeks out.`,
       },
       {
-        heading: '6. Why TilersHub Skill Verified matters',
-        body: `TilersHub Skill Verified tilers have been reviewed by our team — not self-certified. We check experience claims, request work photos, and follow up with references before awarding the badge. This doesn't guarantee perfection, but it dramatically raises the floor on quality. When in doubt, filter for Skill Verified professionals on TilersHub before requesting quotes.`,
+        heading: '6. What "verified" on TilersHub actually means',
+        body: `Be precise about what any badge on any platform is telling you, ours included. A verified listing on TilersHub means our team has confirmed that the business exists and that the contact details reach the person who claims them. It is not a trade qualification, an insurance check, or a guarantee of workmanship on your particular job — no directory can promise that, and you should be sceptical of any that does. Treat verification as a filter that removes obvious fakes, then do your own reference checks on top. The badge narrows your shortlist; it does not replace the five steps above.`,
+      },
+      {
+        heading: 'How much deposit is normal in Sri Lanka?',
+        body: `For a residential tiling job, 30–40% up front is the normal range, and it should be tied to materials rather than labour. A tiler needs to buy tiles, adhesive, grout and clips before starting, so an advance covering those is reasonable. What is not reasonable is paying most of the labour before any of it has been done. Structure it in three: an advance for materials, a stage payment when tiling is complete, and a final 10–15% released only after you have inspected grouting, silicone and levels. If a tiler insists on 70% or more before starting, they are either short of working capital or planning not to finish — either way it is your money at risk. Pay by bank transfer so there is a record; cash leaves you nothing to point at if things go wrong.`,
+      },
+      {
+        heading: 'What should a written quote actually contain?',
+        body: `A quote you can hold someone to has separate lines for materials, waterproofing, labour and grouting, and it states quantities rather than just totals. Look for: the tile size and finish being installed, the area in square feet, the adhesive class (C1, C2 or C2TE S1 — the class matters, see our large-format guide), the number of waterproofing coats and the height it goes up the walls, the grout type and colour, whether levelling clips are included, and who removes the debris. A single figure with the word "tiling" next to it hides every decision that determines whether the job lasts. If a tiler cannot produce this, it is usually because they have not measured properly — which is itself the answer.`,
+      },
+      {
+        heading: 'How long should the work take?',
+        body: `A standard 35–50 sq.ft bathroom, stripped and fully retiled, is a five to eight working day job for one tiler with a helper: a day to demolish and clear, a day for screed and levelling, two days for waterproofing including proper curing time between coats, two to three days to tile, and a day for grouting and silicone. Anyone promising to do all of that in two days is skipping the curing. Waterproofing membranes need time to cure before tiles go over them, and that wait is not padding — tiling onto an uncured membrane is one of the most common causes of failure. Floor-only work in a dry room is faster: 100 sq.ft of standard floor tiling is typically two to three days including preparation.`,
+      },
+      {
+        heading: 'Who is responsible if tiles crack later?',
+        body: `It depends on why they cracked, which is why the cause matters more than the blame. Tiles that come loose in sheets, sound hollow when tapped, or lift at the edges usually point to poor adhesive coverage or the wrong adhesive class — that is workmanship. Cracks running in a straight line across several tiles usually follow a movement in the slab beneath, which is a building issue rather than a tiling one. Grout that crumbles within months is usually a wrong or badly mixed grout. Agree up front, in writing, that the tiler will return to fix adhesion and grouting defects within at least six months. Photograph the waterproofing membrane and the adhesive coverage on a lifted tile before the job is closed out; without evidence, a later dispute becomes one person's word against another's.`,
       },
     ],
     tips: [
@@ -53,7 +69,7 @@ export const BLOG_POSTS = [
     title: 'Bathroom Renovation Costs in Sri Lanka (2025 Guide)',
     excerpt: 'A realistic breakdown of what a full bathroom renovation costs — tiles, labour, plumbing, fittings — across different budgets.',
     category: 'Cost Guide',
-    readTime: '6 min read',
+    readTime: '5 min read',
     icon: '💰',
     color: '#C2542B',
     relatedSlugs: ['how-to-choose-a-tiler', 'waterproofing-bathroom-guide'],
@@ -72,7 +88,7 @@ export const BLOG_POSTS = [
       },
       {
         heading: 'Mid-range bathroom (Rs. 600,000–1,500,000)',
-        body: `This tier introduces imported Italian or Spanish tiles (Rs. 1,200–3,000/sqft), branded sanitary ware (Grohe, Roca, local premium brands), frameless shower screens, and more complex tiling patterns such as herringbone or feature walls. Labour quality is higher, and you can expect a Skill Verified tiler with 5+ years of dedicated bathroom renovation experience.`,
+        body: `This tier introduces imported Italian or Spanish tiles (Rs. 1,200–3,000/sqft), branded sanitary ware (Grohe, Roca, local premium brands), frameless shower screens, and more complex tiling patterns such as herringbone or feature walls. Labour quality is higher at this level, and it is worth asking specifically for a tiler with several years of dedicated bathroom work behind them rather than general floor tiling — the wet-area detailing is a different skill.`,
       },
       {
         heading: 'Premium bathroom (Rs. 1,500,000+)',
@@ -85,6 +101,22 @@ export const BLOG_POSTS = [
       {
         heading: 'How to get an accurate quote',
         body: `Post your project on TilersHub. Include: floor area in sqft, current condition (full gut or just retile), desired finish level (budget/mid/premium), your location, and timeline. Verified contractors will respond with itemised WhatsApp quotes — usually within 24 hours. Get 3 quotes minimum and compare line by line. A contractor who won't itemise is one to avoid.`,
+      },
+      {
+        heading: 'What does the tiling itself cost, line by line?',
+        body: `Strip out the sanitary ware and fittings and the tiling portion is more predictable than people expect. Labour runs Rs. 100–250 per sq.ft, with Rs. 150 being the common rate for standard floor work; the top of that range is for large-format tiles, diagonal or herringbone layouts, and wall tiling at height. Adhesive is priced by class: roughly Rs. 50 per sq.ft for C1 on tiles up to 60×60 cm, Rs. 80 for C2 between 60×60 and 120×80, and Rs. 120 for deformable C2TE S1 above that. Grout adds about Rs. 10 per sq.ft and levelling clips about Rs. 20. If the floor needs a screed to correct level, budget Rs. 100–120 per sq.ft on top. For a 45 sq.ft bathroom floor in 60×60 porcelain, that is roughly Rs. 6,750 labour, Rs. 3,600 adhesive, Rs. 450 grout and Rs. 900 clips — about Rs. 12,000 before the tiles themselves.`,
+      },
+      {
+        heading: 'How many tiles should I actually buy?',
+        body: `Always order more than the bare area. The Sri Lankan trade standard is a 10–15% wastage allowance and we use 12% in our calculator — tiles get cut at walls, around the toilet flange and the floor trap, and some arrive chipped or break during installation. For 100 sq.ft in 60×60 cm tiles (3.875 sq.ft each), that is 29 tiles rather than 26. In 30×30 cm it is 116 rather than 104. Diagonal and herringbone layouts waste more, so allow 15–20% for those. Buy the full quantity in one purchase: tiles are produced in batches and the shade varies between them, so a top-up box bought three weeks later can be visibly different. Keep the spare tiles — matching a single cracked tile years later is otherwise impossible.`,
+      },
+      {
+        heading: 'Where budgets usually go wrong',
+        body: `Three things account for most overruns. First, old plumbing: in any building over about twenty years, assume the concealed pipework needs replacing and hold Rs. 100,000–300,000 against it rather than discovering it mid-job. Second, levels — bathroom floors need a fall towards the trap, and if the existing slab has none, a screed is not optional and adds real cost. Third, the tile decision made late: choosing an imported 60×120 format after the quote was priced for local 60×60 changes the adhesive class, the labour rate and the wastage allowance all at once. Decide the tile before you accept a quote, not after. Hold 10–15% of the total as contingency and treat it as spent — projects that finish under budget are the ones that planned for the surprise.`,
+      },
+      {
+        heading: 'Is it cheaper to retile over existing tiles?',
+        body: `Sometimes, and it is worth asking, but the saving is smaller than it looks. Tiling over sound existing tiles saves the demolition and debris cost — typically Rs. 20,000–60,000 — and a day or two of labour. Against that: you raise the floor by roughly 15–20 mm, which can leave the door catching and the threshold awkward, and it buries whatever waterproofing is underneath. If the existing tiles sound hollow anywhere, if the floor does not fall towards the trap, or if you have had any damp in the room below, overlaying is the wrong call — you are tiling onto a problem. In a dry room with a sound, level, well-bonded floor it is a sensible economy. In a wet area it usually is not.`,
       },
     ],
     tips: [
@@ -130,6 +162,26 @@ export const BLOG_POSTS = [
         heading: 'Recommended tile specs for Sri Lankan bathrooms',
         body: `Floor tiles: matte or satin finish porcelain, minimum 30×30cm, R10 slip rating, water absorption <0.5%, thickness 8–10mm. Wall tiles: glazed ceramic or porcelain, 30×60cm or 60×60cm, flat finish acceptable, thickness 6–8mm. Grout: use epoxy grout in shower areas and around the toilet — it's mold-resistant and won't crack like cementitious grout in humid conditions. Budget an extra Rs. 3,000–8,000/sqft for epoxy versus standard grout.`,
       },
+      {
+        heading: 'How do I read a tile box before buying?',
+        body: `Almost everything that determines whether a tile suits a bathroom floor is printed on the carton, and almost nobody looks. Four things matter. Water absorption, given as a percentage or as a group code: below 0.5% is porcelain (group BIa), 3–6% is ceramic, and anything above 6% belongs on a wall and nowhere else. The slip rating, shown as R9 to R13 — R10 is the sensible minimum for a bathroom floor and R11 for a walk-in shower or an outdoor step. The PEI rating, I to V, describing surface wear: PEI III is enough for a domestic bathroom, PEI IV or V for a hallway or a shop. And the batch or shade number, because tiles are fired in runs and two boxes from different batches can differ enough to see across a floor. Photograph the carton before the boxes are opened; if there is a dispute later, that photo is the evidence.`,
+      },
+      {
+        heading: 'What does "2nd quality" actually mean in Sri Lanka?',
+        body: `Second-quality tiles are widely sold here, often at 30–50% less, and they are not automatically a bad buy — but you should know what you are accepting. The grading refers to cosmetic and dimensional tolerance, not to the body of the tile: a second may have a minor glaze speck, a slightly off shade, or more commonly a variation of a millimetre or two in size across the batch. For a small utility floor with wide grout joints, that is a genuine saving. For large-format tiles laid with narrow joints, size variation is exactly the thing that ruins the result, because every tile pushes the error along the row. If you buy seconds, buy them all at once, lay a dry run before fixing anything, and use a slightly wider spacer — 3mm rather than 2mm — to absorb the variation.`,
+      },
+      {
+        heading: 'Rectified or non-rectified edges?',
+        body: `A rectified tile has been mechanically ground after firing so every piece is exactly the same size with a crisp square edge. A non-rectified tile has a slightly rounded, as-fired edge and more size variation. The practical difference is the grout joint: rectified tiles can be laid with a 2mm joint and read almost as a continuous surface, which is the whole point of large-format tile in a living area. Non-rectified needs 3mm or more to hide the variation. Rectified costs more and is less forgiving — the crisp edge chips if handled roughly, and it demands a genuinely flat substrate because there is no joint width to absorb error. For a bathroom floor at 60×60 cm and below, non-rectified is perfectly good and easier to lay well.`,
+      },
+      {
+        heading: 'What about the grout — and why does it always go black?',
+        body: `Grout is where most bathroom floors visibly fail first, and the cause is usually the wrong product rather than bad cleaning. Standard cementitious grout is porous: in a shower that is used daily in a humid climate, it absorbs water, soap residue and body oils, and mould colonises it. No amount of scrubbing fixes a grout that is saturated. Epoxy grout is non-porous and effectively immune to this, which is why it belongs in the shower enclosure and around the toilet even if you use cementitious grout elsewhere. It is harder to work with and must be cleaned off the tile face before it cures, so it needs a tiler who has used it before — ask. If you do use cementitious grout in a wet area, seal it on completion and re-seal annually; treat that as part of owning the bathroom, not an optional extra.`,
+      },
+      {
+        heading: 'Does tile colour matter in a Sri Lankan bathroom?',
+        body: `More than people expect, for two practical reasons rather than taste. Very dark and very glossy floors show every water spot and soap mark within hours in a humid room — a mid-tone matte finish hides the reality of daily use far better and is the reason hotels use it. And a small bathroom, which most Sri Lankan bathrooms are at 30–50 sq.ft, reads larger with a light floor and a continuous tile run than with a busy pattern or a contrasting border. If you want visual interest, put it on one wall behind the basin and keep the floor quiet. The other consideration is matching later: a mainstream local colour from a brand that keeps it in production is far easier to patch in five years than an imported line that will have been discontinued.`,
+      },
     ],
     tips: [
       'Always buy 10–15% more tiles than your floor area — for offcuts, breakages, and future repairs',
@@ -145,7 +197,7 @@ export const BLOG_POSTS = [
     title: 'Why Waterproofing Is the Most Important Step in Any Bathroom Reno',
     excerpt: "Skipping or cutting corners on waterproofing is the #1 reason bathrooms fail within 2–3 years. Here's how to do it right.",
     category: 'How-To',
-    readTime: '5 min read',
+    readTime: '6 min read',
     icon: '💧',
     color: '#2F6B4F',
     relatedSlugs: ['how-to-choose-a-tiler', 'bathroom-renovation-cost-sri-lanka'],
@@ -174,6 +226,26 @@ export const BLOG_POSTS = [
         heading: 'Cost and what to budget',
         body: `Proper waterproofing for a standard Sri Lankan bathroom (40–60 sqft wet area) costs Rs. 25,000–80,000 in materials and labour combined. This represents 5–15% of a typical bathroom renovation budget. No legitimate tiler or contractor should include waterproofing as a free service — if it sounds too cheap or is bundled invisibly, ask specifically what system is being used and how many coats. The cost of doing it right is nothing compared to the cost of a bathroom failure.`,
       },
+      {
+        heading: 'How long does waterproofing take to cure?',
+        body: `This is the step most often compressed, and compressing it is what causes failure. A liquid membrane needs the manufacturer's stated interval between coats — typically 4 to 6 hours in dry conditions, longer in the humidity most of the island has for most of the year — and then a full cure before anything is laid over it, usually 24 to 48 hours. That means a properly waterproofed bathroom cannot be tiled the same week it is demolished. If a contractor's schedule has demolition on Monday and tiling on Wednesday, the waterproofing either has not cured or has not happened. During the monsoon, allow longer still: membranes cure by evaporation, and in a closed bathroom at 85% humidity that takes noticeably more time. A fan in the room helps; a deadline does not.`,
+      },
+      {
+        heading: 'How is a flood test done, and should I insist on one?',
+        body: `Yes, insist — it is the only way to know the membrane works before it is buried under tile. Once the waterproofing has fully cured, the floor trap is plugged, the doorway is dammed, and the floor is flooded to around 25mm for 24 hours. Then you check the ceiling of the room below and the walls on the far side of the wet area for any damp patch or discolouration. A leak found at this point costs an afternoon to repair. The same leak found after tiling costs the whole floor. Be present for the start and end of the test, and photograph both. Some contractors resist because it costs a day — that day is the cheapest insurance in the entire renovation.`,
+      },
+      {
+        heading: 'What about the floor gradient?',
+        body: `Waterproofing stops water getting into the structure; the gradient is what gets it out of the room, and one without the other still gives you a wet bathroom. The floor needs a consistent fall towards the trap — roughly 10–20mm over a typical 5–7 ft run, which is a slope you can feel underfoot but not see. That fall is formed in the screed before tiling, not fixed afterwards by grout. The classic Sri Lankan failure is a flat floor with a puddle that sits by the doorway and never dries, keeping the grout permanently saturated. Test it before the tiler leaves: pour a bucket of water at the far corner and watch where it goes. If it does not reach the trap on its own, the screed is wrong and no amount of squeegeeing will fix it.`,
+      },
+      {
+        heading: 'Can waterproofing be added to an existing bathroom?',
+        body: `Not without lifting the tiles, and anyone who tells you otherwise is selling something that will not work. A membrane has to sit under the tile and behind the wall finish to do its job; painted on top of existing tile it seals nothing, because water travels through grout joints and into the bed beneath. What you can do to an existing bathroom is reduce the load: re-seal or replace failed grout, renew the silicone at every floor-to-wall and wall-to-wall junction, check that the trap is not blocked and the floor still falls to it, and fix any dripping fitting immediately. That buys time. If you already have damp on the ceiling below or efflorescence on the wall outside, the membrane has failed or was never there, and the only real fix is to strip and start again.`,
+      },
+      {
+        heading: 'Which system should be specified?',
+        body: `You do not need to choose the brand — you need to be able to tell whether one has been chosen. Acceptable systems are cementitious or acrylic liquid membranes from established manufacturers, applied in at least two coats, with reinforcing tape or fabric bedded into every internal corner, every floor-to-wall junction and every pipe penetration. Those junctions are where movement happens and where almost all leaks start; a membrane rolled over a bare corner will crack there within a year. Cement plaster with a waterproofing powder mixed in is not a membrane and should not be presented as one. The question to ask is simply: "Which product, how many coats, and is the corner tape included in your price?" A tiler who answers that specifically has done it before.`,
+      },
     ],
     tips: [
       'Never allow tiles to go down until the waterproofing water test is complete',
@@ -189,7 +261,7 @@ export const BLOG_POSTS = [
     title: 'Large Format Tiles: Pros, Cons & Installation Tips',
     excerpt: "Big tiles are trending in Sri Lanka — but they need specialist installers and thicker adhesive. What to know before you buy.",
     category: 'Tile Guide',
-    readTime: '4 min read',
+    readTime: '5 min read',
     icon: '📏',
     color: '#C2542B',
     relatedSlugs: ['best-tiles-for-bathroom-floor', 'how-to-choose-a-tiler'],
@@ -218,6 +290,26 @@ export const BLOG_POSTS = [
         heading: 'Design tips for Sri Lankan homes',
         body: `Large format tiles work best when: (1) the bathroom or floor area is at least 60 sqft — smaller spaces make the large tile look awkward; (2) tiles run in a single direction aligned with the longest wall; (3) the first tile is centred on the most visible wall for symmetry; (4) lighter colours in matte or satin finish maximise the sense of space. Avoid highly polished finishes — they show every footprint and scratch in tropical light conditions.`,
       },
+      {
+        heading: 'How flat does the floor have to be?',
+        body: `Far flatter than most Sri Lankan slabs are, and this is the single thing that decides whether a large-format job succeeds. The tolerance for tiles over 60 cm is roughly 3mm over a 2 metre straightedge. A small tile can absorb a dip because it simply tilts slightly within its own footprint; a 120 cm tile spans the dip and either rocks or sits proud of its neighbour at the edge, and that difference — lippage — is visible from across the room and catches bare feet. Check before anyone quotes: lay a 2m straightedge across the floor in several directions and look for daylight underneath. If there is more than about 3mm, the floor needs a levelling screed at Rs. 100–120 per sq.ft, and that cost belongs in the quote rather than arriving as a surprise on day two.`,
+      },
+      {
+        heading: 'What is back-buttering and why does it matter?',
+        body: `Back-buttering means spreading a thin layer of adhesive onto the back of the tile as well as combing it onto the floor, so that when the tile is set the two layers knit together and leave no voids. For large-format tiles it is not optional. The requirement is effectively full coverage — above 90%, and 100% in a wet area — because any air pocket under a big tile is an unsupported span that will crack the first time something heavy is dropped on it, or debond over time. The test is simple and worth doing while the tiler is still on site: tap across the finished floor with a coin or a knuckle. A solid, dull note means proper bedding. A hollow ring means a void. Ask for one tile to be lifted early in the job so you can see the coverage yourself.`,
+      },
+      {
+        heading: 'How much offset should the layout have?',
+        body: `Not the 50% brick bond most people picture. With large-format tiles, a half offset puts the middle of one tile against the corner of the next, and because these tiles have a slight natural bow along their length — permitted by the standards, and more pronounced the longer the tile — that is precisely where lippage shows worst. The industry guidance is a maximum 33% offset, or a third, for tiles over 60 cm, and a straight stack or a modest offset looks better anyway on a modern floor. If you want a strong brick pattern, choose a smaller format. Decide this before the tiles are ordered: the layout changes both the wastage allowance and the number of cuts.`,
+      },
+      {
+        heading: 'What does large-format cost extra?',
+        body: `Budget for four separate increases, not one. Labour moves toward the top of the Rs. 100–250 per sq.ft band — Rs. 200–250 is normal for 120×60 and above, because the tiles need two people to place and far more setting-out time. Adhesive class steps up: C2 at around Rs. 80 per sq.ft between 60×60 and 120×80, and deformable C2TE S1 at around Rs. 120 above that, and back-buttering uses more of it than a standard job. Levelling clips become essential rather than optional, at roughly Rs. 20 per sq.ft and more clips per tile than a small format needs. And if the floor needs screeding to meet the flatness tolerance, add Rs. 100–120 per sq.ft. A 200 sq.ft living room floor in 120×60 can easily be Rs. 70,000–90,000 in labour and consumables before the tiles themselves.`,
+      },
+      {
+        heading: 'Are they worth it in a small Sri Lankan home?',
+        body: `Honestly, often not, and it is worth saying so. The argument for large format is fewer grout joints and a calmer, more continuous surface — which is a real benefit in a living area of 150 sq.ft or more. In a 40 sq.ft bathroom or a narrow corridor, most of the tiles end up cut, you lose the uninterrupted run that was the point, wastage climbs above the usual 12%, and you are paying premium labour for a result a 60×60 would have delivered more cheaply and more reliably. Large format also punishes an uneven substrate, and older Sri Lankan floors rarely start flat. Use it where the room is big enough to show it off; use 60×60 everywhere else and put the saving into better waterproofing.`,
+      },
     ],
     tips: [
       "Always request the tile's 'breaking strength' rating — minimum 1,000N for floor use",
@@ -233,7 +325,7 @@ export const BLOG_POSTS = [
     title: 'නිවැරදි ටයිල් එක තෝරාගන්නේ කොහොමද? — Material, Surface සහ ලංකාවේ Market එක ගැන Expert මතය',
     excerpt: 'ලංකාවේ ඉදිකිරීම් ක්ෂේත්‍රයේ අවුරුදු 10ක් ගිය ශිල්පියෙකු ලෙස — Ceramic, Porcelain, Vitrified, Polished, Matte, Rocell, Mega Tiles, C2 Adhesive — ඔක්කොම ගැන honest breakdown.',
     category: 'ටයිල් මාර්ගෝපදේශය',
-    readTime: 'මිනිත්තු 8',
+    readTime: 'මිනිත්තු 6',
     icon: '🧱',
     color: '#C2542B',
     relatedSlugs: ['best-tiles-for-bathroom-floor', 'large-format-tiles-guide', 'waterproofing-bathroom-guide'],
@@ -314,7 +406,7 @@ export const BLOG_POSTS = [
     title: 'How to Post a Tiling Project on TilersHub and Get the Best Bids',
     excerpt: 'Step-by-step guide to writing a project description that attracts the right tilers and gets you accurate quotes.',
     category: 'TilersHub Guide',
-    readTime: '3 min read',
+    readTime: '4 min read',
     icon: '📋',
     color: '#C2542B',
     relatedSlugs: ['how-to-choose-a-tiler', 'bathroom-renovation-cost-sri-lanka'],
@@ -341,7 +433,23 @@ export const BLOG_POSTS = [
       },
       {
         heading: 'Step 5: Comparing bids effectively',
-        body: `Once bids arrive, compare on these dimensions: (1) Is it itemised? (Waterproofing, labour, materials, and finishing should be separate.) (2) Does it include waterproofing — and which system? (3) What is the payment schedule? (Never pay more than 30–40% upfront.) (4) What is the warranty period offered? (5) Is the bidder Skill Verified on TilersHub? A verified bidder at a 10% premium over an unverified one is almost always the right choice.`,
+        body: `Once bids arrive, compare on these dimensions: (1) Is it itemised? (Waterproofing, labour, materials, and finishing should be separate.) (2) Does it include waterproofing — and which system? (3) What is the payment schedule? (Never pay more than 30–40% upfront.) (4) What is the warranty period offered? (5) Has the bidder's listing been verified on TilersHub? Verification confirms the business and its contact details are real — it is a filter, not a guarantee, so still check references before you decide.`,
+      },
+      {
+        heading: 'Do I need an account to post?',
+        body: `No. Posting a project takes a minute and needs no sign-up: the description, your district and city, a budget range if you have one, and a name and WhatsApp number so providers can reach you. Signing in with Google afterwards is optional and does one useful thing — it links the project to you so you can see the quotes in one place, edit the details, and close it when the work is booked. If you post anonymously and later sign in with the same browser, the project is linked to your new account automatically. There is no charge at any point, for you or for the provider, and TilersHub takes no commission on the work.`,
+      },
+      {
+        heading: 'Who can see my phone number?',
+        body: `Registered providers, and only them — it is not shown to anonymous visitors and it is not published on a public page. This is the trade-off that makes the service work: a tiler cannot quote a job without being able to ask you what is actually involved. What it means in practice is that you should treat the description as semi-public. Put the work in it, not your address, your gate code, or when the house is empty. Arrange the site visit over WhatsApp once you have decided who is worth meeting. If you want a project taken down, sign in and close it, or email us and we will remove it.`,
+      },
+      {
+        heading: 'How many quotes should I expect, and how fast?',
+        body: `It depends heavily on where you are and what the job is. In districts where several providers are active, a clearly written project with a realistic budget usually draws its first response within a day and two or three within a few days. In a district with little coverage it may be slower, or the responses may come from providers in a neighbouring district who travel — which is fine, but factor travel into the price. If nothing arrives after a few days, the usual causes are a description too vague to price, no budget indication at all, or a district we simply do not have depth in yet. Editing the project to add the area in square feet and a budget range is usually enough to restart it.`,
+      },
+      {
+        heading: 'What happens after I accept a quote?',
+        body: `TilersHub steps out of it at that point — the agreement is between you and the provider, we take no fee and we do not hold your money. What we would suggest you do before work starts: get the quote confirmed in writing rather than a voice note, agree the payment stages (materials advance, a stage payment, and 10–15% held until you have inspected the finished work), and agree how long the provider will come back to fix adhesion or grouting defects. Photograph the waterproofing and the substrate before tiles go down. When the job is done, come back and leave a review — honest reviews from real customers are the only thing that makes a directory like this worth using for the next person.`,
       },
     ],
     tips: [

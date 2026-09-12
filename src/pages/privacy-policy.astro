@@ -1,167 +1,194 @@
 ---
+// Privacy Policy. Required before AdSense review: Google's programme policies
+// oblige every publisher to disclose the use of advertising cookies, name the
+// third-party vendors involved, and tell visitors how to opt out.
+//
+// The body is in English and says so: legal terms translate badly, and a
+// mistranslated liability or consent clause is worse than an honest note that
+// the English text governs. Headings carry Sinhala alongside.
 import Layout from '../layouts/Layout.astro'
 
-const UPDATED = '11 September 2026'
-
-const sections = [
-  {
-    id: 'what-we-collect',
-    title: 'What we collect',
-    body: [
-      'When you browse TilersHub you can search providers, read guides and view projects without an account. We collect nothing that identifies you personally for that.',
-      'When you create an account, post a project, join as a provider or send an enquiry, we collect what you type into those forms — typically your name, contact number, email address, district and the details of the work you are describing. Providers additionally supply business details and portfolio images.',
-      'We also record ordinary technical information that every website receives: your IP address, browser and device type, the pages you open and the site that referred you.',
-    ],
-  },
-  {
-    id: 'how-we-use-it',
-    title: 'How we use it',
-    body: [
-      'To run the marketplace: showing your project to relevant providers, showing provider listings to homeowners, and letting the two sides contact each other directly.',
-      'To keep the platform trustworthy — verifying provider claims, reviewing listings, and removing fraud or abuse.',
-      'To understand which parts of the site are useful, so we can improve them.',
-      'We do not sell your personal information.',
-    ],
-  },
-  {
-    id: 'sharing',
-    title: 'Who we share it with',
-    body: [
-      'Project details you post are shown to providers on the platform so they can bid or respond. Do not include anything in a project description you would not want a provider to read.',
-      'We use service providers who process data on our behalf — hosting (Cloudflare), our database and authentication (Supabase), and analytics and advertising (Google). They may only use it to provide those services to us.',
-      'We may disclose information where the law requires it, or to protect the rights and safety of our users.',
-    ],
-  },
-  {
-    id: 'cookies',
-    title: 'Cookies and similar technologies',
-    body: [
-      'We use cookies and browser storage to keep you signed in, remember your language choice (English or Sinhala), and measure site usage through Google Tag Manager and Google Analytics.',
-      'Advertising partners, described below, also set cookies. You can block or delete cookies in your browser settings; if you do, signing in and some other features may stop working correctly.',
-    ],
-  },
-]
+const UPDATED = '12 September 2026'
+const CONTACT = 'tilershub@gmail.com'
 ---
 
 <Layout
   title="Privacy Policy · TilersHub"
-  description="How TilersHub collects, uses and protects your information — including cookies, Google AdSense advertising and your choices about personalised ads."
+  description="How TilersHub collects, uses and protects your data — including cookies, analytics and advertising partners."
 >
-
-  <!-- Hero -->
-  <div style="background:var(--navy);padding:52px 20px 44px;text-align:center;position:relative;overflow:hidden;">
-    <div style="position:absolute;inset:0;opacity:0.04;background-image:repeating-linear-gradient(45deg,transparent,transparent 20px,rgba(255,255,255,0.8) 20px,rgba(255,255,255,0.8) 21px);pointer-events:none;"></div>
-    <div style="position:relative;max-width:620px;margin:0 auto;">
-      <span class="section-label" style="border-color:rgba(255,255,255,0.15);color:rgba(255,255,255,0.5);background:rgba(255,255,255,0.06);">🔒 Privacy</span>
-      <h1 style="font-family: var(--th-display);font-size:clamp(26px,4vw,40px);font-weight:700;color:#fff;margin:12px 0 10px;line-height:1.2;">
-        Privacy <span style="color:var(--gold);">Policy</span>
+  <div style="background:var(--navy);padding:48px 20px 40px;">
+    <div style="max-width:760px;margin:0 auto;">
+      <h1 style="font-family:var(--th-display);font-size:clamp(26px,5vw,40px);font-weight:800;color:#fff;margin:0 0 10px;line-height:1.15;">
+        Privacy Policy
       </h1>
-      <p style="font-size:14px;color:rgba(255,255,255,0.5);line-height:1.8;">
-        What we collect, why we collect it, and the choices you have. Last updated {UPDATED}.
+      <p style="font-size:14px;color:rgba(255,255,255,0.6);margin:0;">
+        <span class="si-text">පෞද්ගලිකත්ව ප්‍රතිපත්තිය · </span>Last updated {UPDATED}
       </p>
     </div>
   </div>
 
-  <section style="background:var(--surface);padding:52px 20px 64px;">
-    <div style="max-width:720px;margin:0 auto;">
+  <article class="legal">
+    <p class="lede">
+      TilersHub (“we”, “us”) operates <strong>tilershub.lk</strong>, a free marketplace that connects
+      homeowners in Sri Lanka with tilers, contractors, tile shops, brands and suppliers. This policy
+      explains what we collect, why, who we share it with, and the choices you have.
+    </p>
+    <p class="note">
+      <span class="si-text">මෙම ප්‍රතිපත්තිය ඉංග්‍රීසි බසින් ලියා ඇත. නීතිමය අර්ථය සඳහා ඉංග්‍රීසි පිටපත බලපායි. ප්‍රශ්න ඇත්නම් අප හා සම්බන්ධ වන්න.</span>
+      <span class="en-text">Questions about anything below? Email us at {CONTACT} — we answer in English or Sinhala.</span>
+    </p>
 
-      {sections.map((s) => (
-        <div id={s.id} style="margin-bottom:36px;">
-          <h2 style="font-family: var(--th-display);font-size:21px;font-weight:700;color:var(--text);margin-bottom:12px;">{s.title}</h2>
-          {s.body.map((p) => (
-            <p style="font-size:14.5px;color:var(--text-3);line-height:1.9;margin-bottom:12px;">{p}</p>
-          ))}
-        </div>
-      ))}
+    <h2>1. Information you give us</h2>
+    <p>We only ask for what a job actually needs:</p>
+    <ul>
+      <li><strong>Posting a project</strong> — your name, WhatsApp number, district and city, and the description, budget and photos of the work. No account is required.</li>
+      <li><strong>Sending a quote</strong> — your name, WhatsApp number, quoted price, timeline and message.</li>
+      <li><strong>Registering as a provider</strong> — your business name, service type, districts covered, services offered, contact numbers, description and photographs of past work.</li>
+      <li><strong>Signing in</strong> — if you choose to sign in with Google, we receive your email address and account identifier from Google. We never see or store your Google password.</li>
+      <li><strong>Reviews</strong> — the rating, review text and the name you choose to publish it under.</li>
+    </ul>
 
-      <!-- Advertising: the section AdSense review looks for -->
-      <div id="advertising" style="margin-bottom:36px;padding:24px;background:var(--surface-2);border:1px solid var(--border);border-radius:16px;">
-        <h2 style="font-family: var(--th-display);font-size:21px;font-weight:700;color:var(--text);margin-bottom:12px;">Advertising and Google AdSense</h2>
-        <p style="font-size:14.5px;color:var(--text-3);line-height:1.9;margin-bottom:12px;">
-          TilersHub is free to use. We cover the cost of running it partly through advertising, and we use
-          <strong style="color:var(--text);">Google AdSense</strong> to serve those ads.
-        </p>
-        <ul style="margin:0 0 12px;padding-left:20px;display:flex;flex-direction:column;gap:10px;">
-          <li style="font-size:14.5px;color:var(--text-3);line-height:1.9;">
-            Google, as a third-party vendor, uses cookies to serve ads on this site. Its use of advertising cookies
-            enables it and its partners to serve ads to you based on your visit to TilersHub and other sites on the internet.
-          </li>
-          <li style="font-size:14.5px;color:var(--text-3);line-height:1.9;">
-            Third-party vendors and ad networks may also set their own cookies, web beacons or similar technologies
-            to measure ad performance and limit how often you see the same ad. We do not control those cookies.
-          </li>
-          <li style="font-size:14.5px;color:var(--text-3);line-height:1.9;">
-            <strong style="color:var(--text);">Personalised advertising</strong> means the ads you see may reflect your
-            previous browsing. You can turn personalised advertising off at any time — it does not remove ads, only the
-            personalisation.
-          </li>
-          <li style="font-size:14.5px;color:var(--text-3);line-height:1.9;">
-            We do not place advertising on sign-in, account, project-posting, provider-signup or contact pages.
-          </li>
-        </ul>
-        <div style="display:flex;flex-wrap:wrap;gap:10px;margin-top:16px;">
-          <a href="https://www.google.com/settings/ads" target="_blank" rel="noopener noreferrer"
-             style="display:inline-flex;align-items:center;gap:6px;padding:10px 16px;border-radius:10px;background:var(--navy);color:#fff;font-size:12.5px;font-weight:700;text-decoration:none;">
-            Manage your Google ad settings ↗
-          </a>
-          <a href="https://policies.google.com/technologies/partner-sites" target="_blank" rel="noopener noreferrer"
-             style="display:inline-flex;align-items:center;gap:6px;padding:10px 16px;border-radius:10px;background:var(--surface);border:1px solid var(--border);color:var(--text);font-size:12.5px;font-weight:700;text-decoration:none;">
-            How Google uses data from this site ↗
-          </a>
-        </div>
-      </div>
+    <h2>2. Information collected automatically</h2>
+    <ul>
+      <li><strong>Usage data</strong> — pages visited, referring site, approximate location derived from your IP address, device type and browser, collected through Google Analytics via Google Tag Manager.</li>
+      <li><strong>Local storage</strong> — your chosen language and district are stored in your own browser so the site remembers them. This never leaves your device and we cannot read it.</li>
+      <li><strong>Cookies</strong> — see section 5.</li>
+    </ul>
 
-      <div id="your-choices" style="margin-bottom:36px;">
-        <h2 style="font-family: var(--th-display);font-size:21px;font-weight:700;color:var(--text);margin-bottom:12px;">Your choices</h2>
-        <p style="font-size:14.5px;color:var(--text-3);line-height:1.9;margin-bottom:12px;">
-          You can ask us for a copy of the information we hold about you, ask us to correct it, or ask us to delete your
-          account and listings. Write to us and we will action it.
-        </p>
-        <p style="font-size:14.5px;color:var(--text-3);line-height:1.9;margin-bottom:12px;">
-          You can control advertising cookies at <a href="https://www.google.com/settings/ads" target="_blank" rel="noopener noreferrer" style="color:var(--primary, #C2542B);font-weight:600;">google.com/settings/ads</a>,
-          and cookies generally through your browser settings.
-        </p>
-      </div>
+    <h2>3. How we use it</h2>
+    <ul>
+      <li>To show your project to providers who work in your area, so they can quote.</li>
+      <li>To show provider listings, ratings and reviews to homeowners searching for work.</li>
+      <li>To let you sign in and manage your own projects, quotes and listing.</li>
+      <li>To review provider applications before they are published.</li>
+      <li>To understand which pages and services are useful, and to fix what is not.</li>
+      <li>To detect and prevent fraud, spam and abuse of the platform.</li>
+    </ul>
+    <p>We do not sell your personal information to anyone.</p>
 
-      <div id="retention" style="margin-bottom:36px;">
-        <h2 style="font-family: var(--th-display);font-size:21px;font-weight:700;color:var(--text);margin-bottom:12px;">Keeping and protecting your information</h2>
-        <p style="font-size:14.5px;color:var(--text-3);line-height:1.9;margin-bottom:12px;">
-          We keep your information for as long as your account or listing is active, and afterwards only where we need it
-          for legal or fraud-prevention reasons. Data is held on managed infrastructure with access limited to the people
-          who run the platform.
-        </p>
-        <p style="font-size:14.5px;color:var(--text-3);line-height:1.9;">
-          TilersHub is not intended for children under 16, and we do not knowingly collect their information.
-        </p>
-      </div>
+    <h2>4. Who your information is shared with</h2>
+    <p class="callout">
+      <strong>Posting a project shares your contact details.</strong> When you post a project, the
+      name and WhatsApp number you provide are shown to registered providers so they can contact you
+      about it. This is the whole point of the service — but it means you should not include anything
+      in a project description you would not want a tradesperson to read.
+    </p>
+    <p>Beyond that, we share data only with the service providers that make the site work:</p>
+    <ul>
+      <li><strong>Supabase</strong> — database, file storage and authentication.</li>
+      <li><strong>Cloudflare</strong> — website hosting and delivery.</li>
+      <li><strong>Google</strong> — Analytics, Tag Manager, Sign-in, and advertising (see section 5).</li>
+    </ul>
+    <p>
+      We may also disclose information where the law requires it, or where it is necessary to protect
+      the rights and safety of our users.
+    </p>
 
-      <div id="changes" style="margin-bottom:36px;">
-        <h2 style="font-family: var(--th-display);font-size:21px;font-weight:700;color:var(--text);margin-bottom:12px;">Changes to this policy</h2>
-        <p style="font-size:14.5px;color:var(--text-3);line-height:1.9;">
-          We will update this page when our practices change, and the date at the top will change with it. Significant
-          changes will be announced on the site.
-        </p>
-      </div>
+    <h2>5. Cookies and advertising</h2>
+    <p>
+      TilersHub is free to use, for homeowners and providers alike. We cover part of the cost of
+      running it through advertising, served by Google AdSense. We do not place advertising on
+      sign-in, account, project-posting, provider-signup or contact pages.
+    </p>
+    <p>A cookie is a small file a website stores in your browser. We use:</p>
+    <ul>
+      <li><strong>Essential cookies</strong> — to keep you signed in. The site cannot work without these.</li>
+      <li><strong>Analytics cookies</strong> — Google Analytics, to count visits and see which pages are used. Only set if you accept.</li>
+      <li><strong>Advertising cookies</strong> — set by Google and its partners if advertising is shown on the site. Only set if you accept.</li>
+    </ul>
+    <p>
+      Third-party vendors, including Google, use cookies to serve ads based on your prior visits to
+      this website or other websites. Google's use of advertising cookies enables it and its partners
+      to serve ads to you based on your visit to this site and/or other sites on the internet.
+    </p>
+    <p>
+      Personalised advertising means the ads you see may reflect your previous browsing. Turning it
+      off does not remove advertising from the site — it removes the personalisation.
+    </p>
+    <p>You can turn this off at any time:</p>
+    <ul>
+      <li>
+        Opt out of personalised advertising by Google at
+        <a href="https://www.google.com/settings/ads" target="_blank" rel="noopener nofollow">google.com/settings/ads</a>.
+      </li>
+      <li>
+        Opt out of other third-party vendors at
+        <a href="https://www.aboutads.info/choices/" target="_blank" rel="noopener nofollow">aboutads.info/choices</a>.
+      </li>
+      <li>
+        Read how Google uses data from sites that use its services at
+        <a href="https://policies.google.com/technologies/partner-sites" target="_blank" rel="noopener nofollow">policies.google.com/technologies/partner-sites</a>.
+      </li>
+      <li>
+        Change your choice on this site at any time using the button at the bottom of this page.
+      </li>
+    </ul>
+    <p>
+      You can also block or delete cookies in your browser settings. Blocking essential cookies will
+      sign you out and stop parts of the site working.
+    </p>
 
-      <!-- Contact -->
-      <div id="contact" style="padding:24px;background:var(--surface-2);border:1px solid var(--border);border-radius:16px;">
-        <h2 style="font-family: var(--th-display);font-size:21px;font-weight:700;color:var(--text);margin-bottom:10px;">Contact us</h2>
-        <p style="font-size:14.5px;color:var(--text-3);line-height:1.9;margin-bottom:14px;">
-          Questions about this policy, or about the information we hold on you?
-        </p>
-        <div style="display:flex;flex-wrap:wrap;gap:10px;">
-          <a href="mailto:Tilershub@gmail.com"
-             style="display:inline-flex;align-items:center;gap:6px;padding:10px 16px;border-radius:10px;background:var(--navy);color:#fff;font-size:12.5px;font-weight:700;text-decoration:none;">
-            ✉️ Tilershub@gmail.com
-          </a>
-          <a href="/contact"
-             style="display:inline-flex;align-items:center;gap:6px;padding:10px 16px;border-radius:10px;background:var(--surface);border:1px solid var(--border);color:var(--text);font-size:12.5px;font-weight:700;text-decoration:none;">
-            All contact options →
-          </a>
-        </div>
-      </div>
+    <h2>6. Keeping your information</h2>
+    <p>
+      Projects, quotes, reviews and provider listings stay on the site while they are useful to other
+      users. You can ask us to delete your account and the content attached to it at any time by
+      emailing {CONTACT} from the address you signed up with; we action requests within 30 days.
+      Some records may be kept longer where the law requires it.
+    </p>
 
+    <h2>7. Your choices</h2>
+    <ul>
+      <li>Ask for a copy of the personal data we hold about you.</li>
+      <li>Ask us to correct anything that is wrong — provider listings can also be edited yourself from your account.</li>
+      <li>Ask us to delete your account and content.</li>
+      <li>Withdraw consent for analytics and advertising cookies.</li>
+    </ul>
+    <p>Email {CONTACT} for any of these.</p>
+
+    <h2>8. Security</h2>
+    <p>
+      The site is served over HTTPS, and access to the database is restricted by row-level security
+      rules so users can only reach their own records. No system is perfectly secure, so please do not
+      send bank details, ID numbers or passwords through project descriptions or quote messages.
+    </p>
+
+    <h2>9. Children</h2>
+    <p>
+      TilersHub is not intended for anyone under 18, and we do not knowingly collect information from
+      children. If you believe a child has given us information, email {CONTACT} and we will remove it.
+    </p>
+
+    <h2>10. Links to other sites</h2>
+    <p>
+      Provider listings, brand pages and guides may link to other websites and to WhatsApp. We are not
+      responsible for the privacy practices of those sites — read their policies before sharing
+      anything.
+    </p>
+
+    <h2>11. Changes</h2>
+    <p>
+      If this policy changes we will update the date at the top of this page. Significant changes will
+      be announced on the site.
+    </p>
+
+    <h2>12. Contact</h2>
+    <p>
+      TilersHub · Sri Lanka<br />
+      Email: <a href={`mailto:${CONTACT}`}>{CONTACT}</a><br />
+      WhatsApp: <a href="https://wa.me/94774503744" target="_blank" rel="noopener">+94 77 450 3744</a>
+    </p>
+
+    <div class="consent-reset">
+      <button id="reset-consent" type="button" class="btn btn-outline">Change my cookie choice</button>
+      <span id="reset-done" hidden style="font-size:13px;color:var(--green);font-weight:600;">Saved — reloading…</span>
     </div>
-  </section>
+  </article>
 
+  <script is:inline>
+    document.getElementById('reset-consent')?.addEventListener('click', function () {
+      try { localStorage.removeItem('th_consent') } catch (e) {}
+      document.getElementById('reset-done').hidden = false
+      setTimeout(function () { location.reload() }, 600)
+    })
+  </script>
 </Layout>
