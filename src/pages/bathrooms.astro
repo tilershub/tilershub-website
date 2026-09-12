@@ -61,6 +61,7 @@ const PRODUCT_CATEGORIES = [
   { icon: '💡', name: 'Bathroom Lighting',    desc: 'IP-rated ceiling lights, mirror lights and downlights.' },
   { icon: '🪣', name: 'Waterproofing & Drainage', desc: 'Floor traps, linear drains, waterproof membranes and seals.' },
 ]
+import { brandHref, sponsorPage } from '../lib/sponsors.js'
 ---
 
 <Layout
@@ -132,8 +133,8 @@ const PRODUCT_CATEGORIES = [
             <div style="display:flex;gap:16px;width:max-content;">
               {bathroomBrands.map(brand => {
                 const m = meta(brand)
-                const href = brand.dedicated_page_url || `/brands/${brand.slug}`
-                const isFeaturedPage = !!brand.dedicated_page_url
+                const href = brandHref(brand)
+                const isFeaturedPage = !!sponsorPage(brand)
                 return (
                   <a href={href}
                     style={`display:block;width:240px;flex-shrink:0;background:#fff;border-radius:16px;border:${isFeaturedPage ? '2px solid var(--gold)' : '1px solid #E4E0D9'};padding:20px;text-decoration:none;color:inherit;scroll-snap-align:start;position:relative;overflow:hidden;`}>

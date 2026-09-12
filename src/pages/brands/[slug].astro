@@ -1,12 +1,16 @@
 ---
 export const prerender = false
 import Layout from '../../layouts/Layout.astro'
+import { sponsorPage } from '../../lib/sponsors.js'
 
 const { slug } = Astro.params
 const { data: brand } = await Astro.locals.supabase.from('brands').select('*').eq('slug', slug).single()
 
 if (!brand) return Astro.redirect('/brands')
-if (brand.dedicated_page_url) return Astro.redirect(brand.dedicated_page_url, 301)
+// Only redirect to a sponsor page that exists. The column is free text, and a
+// 301 into a 404 is worse for a crawler than never redirecting at all.
+const dedicated = sponsorPage(brand)
+if (dedicated) return Astro.redirect(dedicated, 301)
 ---
 
 <Layout

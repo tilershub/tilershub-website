@@ -2,6 +2,7 @@
 import Layout from '../layouts/Layout.astro'
 import Notifications from '../components/Notifications.jsx'
 ---
-<Layout title="Notifications · TilersHub">
+<!-- Personal, per-account content: nothing here is useful in a search result. -->
+<Layout title="Notifications · TilersHub" noindex={true}>
   <Notifications client:load />
 </Layout>

@@ -2,8 +2,10 @@ export const prerender = false
 
 import type { APIRoute } from 'astro'
 import Anthropic from '@anthropic-ai/sdk'
+import { serverSecret } from '../../lib/secrets'
 
 const MODEL = 'claude-3-5-sonnet-20241022'
+const ADMIN_EMAIL = 'tilershub@gmail.com'
 
 const SYSTEM_PROMPT = `You are an expert SEO content strategist and HTML content formatter for TilersHub.lk — Sri Lanka's leading tile and bathroom renovation marketplace.
 
@@ -27,9 +29,18 @@ RULES for formattedHtmlBody:
 6. Output ONLY inner body content. No <html>, <head>, <body>, doctype, page-level wrappers, or <style> blocks.
 7. Preserve factual accuracy — do not invent specifications, prices, or brand claims not present in the source.`
 
-export const POST: APIRoute = async ({ request }) => {
+export const POST: APIRoute = async ({ request, locals }) => {
+  // ── Who ────────────────────────────────────────────────────────────────────
+  // This route spends money on every call. Its only caller is BlogEditor,
+  // which lives behind /admin, so it is gated to the same account — without
+  // this anyone could POST here and run up the API bill.
+  const user = locals.user
+  if (!user || user.email !== ADMIN_EMAIL) {
+    return json({ error: 'Forbidden' }, 403)
+  }
+
   // ── Key guard ──────────────────────────────────────────────────────────────
-  const apiKey = import.meta.env.ANTHROPIC_API_KEY as string | undefined
+  const apiKey = serverSecret(locals, 'ANTHROPIC_API_KEY')
   if (!apiKey?.startsWith('sk-')) {
     return json({ error: 'ANTHROPIC_API_KEY is not configured on the server.' }, 500)
   }

@@ -36,6 +36,7 @@ function meta(brand) {
 function logoText(name) {
   return name.split(' ').map(w => w[0]).join('').slice(0, 2).toUpperCase()
 }
+import { brandHref, sponsorPage } from '../../lib/sponsors.js'
 ---
 
 <Layout
@@ -70,8 +71,8 @@ function logoText(name) {
           <div style="display:grid;grid-template-columns:repeat(auto-fill,minmax(280px,1fr));gap:16px;">
             {tileBrands.map(brand => {
               const m = meta(brand)
-              const href = brand.dedicated_page_url || `/brands/${brand.slug}`
-              const isFeaturedPage = !!brand.dedicated_page_url
+              const href = brandHref(brand)
+              const isFeaturedPage = !!sponsorPage(brand)
               return (
                 <a href={href} style={`background:#fff;border-radius:16px;border:${isFeaturedPage ? '2px solid var(--gold)' : '1px solid #E4E0D9'};padding:22px;display:block;text-decoration:none;color:inherit;position:relative;overflow:hidden;transition:box-shadow 0.2s,transform 0.2s;`}
                   onmouseover="this.style.boxShadow='0 8px 28px rgba(194,84,43,0.12)';this.style.transform='translateY(-3px)'"
@@ -114,7 +115,7 @@ function logoText(name) {
           <div style="display:grid;grid-template-columns:repeat(auto-fill,minmax(280px,1fr));gap:16px;">
             {renoBrands.map(brand => {
               const m = meta(brand)
-              const href = brand.dedicated_page_url || `/brands/${brand.slug}`
+              const href = brandHref(brand)
               return (
                 <a href={href} style={`background:#fff;border-radius:16px;border:2px solid var(--gold);padding:22px;display:block;text-decoration:none;color:inherit;position:relative;overflow:hidden;transition:box-shadow 0.2s,transform 0.2s;`}
                   onmouseover="this.style.boxShadow='0 8px 28px rgba(96,165,250,0.2)';this.style.transform='translateY(-3px)'"
@@ -154,8 +155,8 @@ function logoText(name) {
           <div style="display:grid;grid-template-columns:repeat(auto-fill,minmax(280px,1fr));gap:16px;">
             {bathroomBrands.map(brand => {
               const m = meta(brand)
-              const href = brand.dedicated_page_url || `/brands/${brand.slug}`
-              const isFeaturedPage = !!brand.dedicated_page_url
+              const href = brandHref(brand)
+              const isFeaturedPage = !!sponsorPage(brand)
               return (
                 <a href={href} style={`background:#fff;border-radius:16px;border:${isFeaturedPage ? '2px solid var(--gold)' : '1px solid #E4E0D9'};padding:22px;display:block;text-decoration:none;color:inherit;position:relative;overflow:hidden;transition:box-shadow 0.2s,transform 0.2s;`}
                   onmouseover="this.style.boxShadow='0 8px 28px rgba(194,84,43,0.12)';this.style.transform='translateY(-3px)'"
