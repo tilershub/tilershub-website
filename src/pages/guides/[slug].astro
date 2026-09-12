@@ -10,7 +10,7 @@ export function getStaticPaths() {
 const { guide } = Astro.props
 const otherGuides = GUIDES.filter(g => g.slug !== guide.slug)
 
-const SITE = 'https://www.tilershub.lk'
+const SITE = 'https://tilershub.lk'
 const articleSchema = JSON.stringify({
   '@context': 'https://schema.org',
   '@type': 'Article',

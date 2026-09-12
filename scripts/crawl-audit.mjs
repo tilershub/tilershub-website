@@ -5,7 +5,7 @@ import { chromium } from 'playwright-core'
 
 const BASE = 'http://localhost:4321'
 const SEEDS = ['/', '/blog', '/guides', '/providers', '/jobs', '/tile', '/bathrooms', '/tools',
-  '/categories', '/estimator', '/about', '/contact', '/privacy', '/terms', '/post-project',
+  '/categories', '/estimator', '/about', '/contact', '/privacy-policy', '/terms', '/post-project',
   '/join-tilershub']
 
 const b = await chromium.launch({ executablePath: '/opt/pw-browsers/chromium-1194/chrome-linux/chrome' })
@@ -63,7 +63,7 @@ console.log('── Non-200 responses ──')
 console.log(problems.length ? problems.join('\n') : '  none')
 
 const noCanon = meta.filter(m => !m.canonical)
-const badCanon = meta.filter(m => m.canonical && !m.canonical.startsWith('https://www.tilershub.lk'))
+const badCanon = meta.filter(m => m.canonical && !m.canonical.startsWith('https://tilershub.lk'))
 const noDesc = meta.filter(m => !m.desc)
 const noH1 = meta.filter(m => m.h1.length === 0 && !/noindex/.test(m.robots))
 const multiH1 = meta.filter(m => m.h1.length > 1)

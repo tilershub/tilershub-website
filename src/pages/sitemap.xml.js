@@ -6,7 +6,7 @@ import { DISTRICT_INFO, LOCATION_SERVICE_SLUGS, districtPath, serviceDistrictPat
 
 export const prerender = false
 
-const BASE = 'https://www.tilershub.lk'
+const BASE = 'https://tilershub.lk'
 
 const STATIC = [
   { loc: '/',               priority: '1.0', changefreq: 'daily'   },

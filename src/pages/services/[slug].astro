@@ -78,9 +78,9 @@ const serviceSchema = JSON.stringify({
   '@type': 'Service',
   name: service.label,
   description: pageDesc,
-  provider: { '@type': 'Organization', name: 'TilersHub', url: 'https://www.tilershub.lk' },
+  provider: { '@type': 'Organization', name: 'TilersHub', url: 'https://tilershub.lk' },
   areaServed: { '@type': 'Country', name: 'Sri Lanka' },
-  url: `https://www.tilershub.lk/services/${service.slug}`,
+  url: `https://tilershub.lk/services/${service.slug}`,
 })
 
 const hasDistrictPages = LOCATION_SERVICE_SLUGS.includes(service.slug)

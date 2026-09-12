@@ -33,7 +33,7 @@ const color = JOB_TYPE_COLORS[job.project_type] || '#C2542B'
 const isActive = job.status === 'active' || !job.status
 const locationLabel = job.city || job.district || 'Sri Lanka'
 
-const SITE = 'https://www.tilershub.lk'
+const SITE = 'https://tilershub.lk'
 const pageUrl = `${SITE}${canonicalPath}`
 const descText = (job.description || '').trim()
 const metaDescription = (descText

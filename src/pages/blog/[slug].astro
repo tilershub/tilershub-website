@@ -18,11 +18,11 @@ const articleSchema = JSON.stringify({
   '@type': 'Article',
   headline: post.title,
   description: post.excerpt,
-  author: { '@type': 'Organization', name: 'TilersHub', url: 'https://www.tilershub.lk' },
-  publisher: { '@type': 'Organization', name: 'TilersHub', logo: { '@type': 'ImageObject', url: 'https://www.tilershub.lk/favicon.svg' } },
+  author: { '@type': 'Organization', name: 'TilersHub', url: 'https://tilershub.lk' },
+  publisher: { '@type': 'Organization', name: 'TilersHub', logo: { '@type': 'ImageObject', url: 'https://tilershub.lk/favicon.svg' } },
   datePublished: post.datePublished || '2025-01-01',
   dateModified: new Date().toISOString().split('T')[0],
-  mainEntityOfPage: { '@type': 'WebPage', '@id': `https://www.tilershub.lk/blog/${post.slug}` },
+  mainEntityOfPage: { '@type': 'WebPage', '@id': `https://tilershub.lk/blog/${post.slug}` },
   keywords: `tiling Sri Lanka, ${post.category}, home improvement Sri Lanka`,
 })
 

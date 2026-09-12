@@ -6,5 +6,5 @@ export default defineConfig({
   integrations: [react()],
   output: 'server',
   adapter: cloudflare(),
-  site: 'https://www.tilershub.lk',
+  site: 'https://tilershub.lk',
 })

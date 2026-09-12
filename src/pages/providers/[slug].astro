@@ -30,8 +30,8 @@ function waLink(p: string, n: string, intent?: string) {
   const normalized = digits.startsWith('94') ? digits : '94' + digits.replace(/^0/, '')
   const who = n ? `*${n}*` : 'ඔබව'
   const msg = intent === 'visit'
-    ? encodeURIComponent(`ආයුබෝවන්! 🙏\n\nමම *TilersHub* (www.tilershub.lk) හරහා ${who} සොයාගතිමි.\n\nSite visit / consultation එකක් book කිරීමට කැමැත්තෙමි.\n\n📌 *TilersHub.lk* Lead\nස්තූතියි! 🏠`)
-    : encodeURIComponent(`ආයුබෝවන්! 🙏\n\nමම *TilersHub* (www.tilershub.lk) හරහා ${who} සොයාගතිමි.\n\nඔබගේ සේවාව ගැන දැනගැනීමට කැමැත්තෙමි.\n\n📌 *TilersHub.lk* Lead\nස්තූතියි! 🏠`)
+    ? encodeURIComponent(`ආයුබෝවන්! 🙏\n\nමම *TilersHub* (tilershub.lk) හරහා ${who} සොයාගතිමි.\n\nSite visit / consultation එකක් book කිරීමට කැමැත්තෙමි.\n\n📌 *TilersHub.lk* Lead\nස්තූතියි! 🏠`)
+    : encodeURIComponent(`ආයුබෝවන්! 🙏\n\nමම *TilersHub* (tilershub.lk) හරහා ${who} සොයාගතිමි.\n\nඔබගේ සේවාව ගැන දැනගැනීමට කැමැත්තෙමි.\n\n📌 *TilersHub.lk* Lead\nස්තූතියි! 🏠`)
   return `https://wa.me/${normalized}?text=${msg}`
 }
 
@@ -222,14 +222,14 @@ const schemaType = item.provider_type === 'tile_shop' || item.provider_type === 
   ? 'HomeGoodsStore'
   : 'LocalBusiness'
 
-const ogImageUrl = heroCoverSrc || avatarSrc || 'https://www.tilershub.lk/og.png'
+const ogImageUrl = heroCoverSrc || avatarSrc || 'https://tilershub.lk/og.png'
 
 const bizSchema: Record<string, unknown> = {
   '@context': 'https://schema.org',
   '@type': schemaType,
   name,
   description: metaDesc,
-  url: `https://www.tilershub.lk/providers/${slug}`,
+  url: `https://tilershub.lk/providers/${slug}`,
   address: {
     '@type': 'PostalAddress',
     addressLocality: city,
@@ -255,9 +255,9 @@ const breadcrumbSchema = JSON.stringify({
   '@context': 'https://schema.org',
   '@type': 'BreadcrumbList',
   itemListElement: [
-    { '@type': 'ListItem', position: 1, name: 'Home', item: 'https://www.tilershub.lk/' },
-    { '@type': 'ListItem', position: 2, name: 'Providers', item: 'https://www.tilershub.lk/providers' },
-    { '@type': 'ListItem', position: 3, name, item: `https://www.tilershub.lk/providers/${slug}` },
+    { '@type': 'ListItem', position: 1, name: 'Home', item: 'https://tilershub.lk/' },
+    { '@type': 'ListItem', position: 2, name: 'Providers', item: 'https://tilershub.lk/providers' },
+    { '@type': 'ListItem', position: 3, name, item: `https://tilershub.lk/providers/${slug}` },
   ],
 })
 ---
