@@ -3,7 +3,7 @@
 // Usage: <Breadcrumbs items={[{ name: 'Services', href: '/categories' }, { name: 'Floor Tiling' }]} />
 // "Home" is prepended automatically; the last item renders unlinked.
 const { items = [], light = false } = Astro.props
-const SITE = 'https://www.tilershub.lk'
+const SITE = 'https://tilershub.lk'
 const trail = [{ name: 'Home', href: '/' }, ...items]
 
 const schema = JSON.stringify({

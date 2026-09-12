@@ -4,4 +4,4 @@ Disallow: /admin
 Disallow: /dashboard
 Disallow: /api/
 
-Sitemap: https://www.tilershub.lk/sitemap.xml
+Sitemap: https://tilershub.lk/sitemap.xml
