@@ -174,6 +174,12 @@ const faqSchema = guide.sections?.length > 1 ? JSON.stringify({
 
   </div>
 
+  <!-- Ad slot — end of guide, before the estimator CTA. Long-form page, so the
+       reader has scrolled past real content by the time this renders.
+       Create the unit in AdSense, paste its slot ID, uncomment, and add
+       `import AdSlot from '../../components/AdSlot.jsx'` to the frontmatter.
+       <AdSlot slot="REPLACE_ME" client:visible /> -->
+
   <!-- Estimator CTA banner -->
   <section style="background:linear-gradient(135deg,var(--navy),#2A2F35);padding:40px 20px;text-align:center;">
     <div style="max-width:560px;margin:0 auto;">

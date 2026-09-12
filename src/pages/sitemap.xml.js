@@ -23,7 +23,7 @@ const STATIC = [
   { loc: '/tools',          priority: '0.5', changefreq: 'monthly' },
   { loc: '/about',          priority: '0.5', changefreq: 'monthly' },
   { loc: '/contact',        priority: '0.5', changefreq: 'monthly' },
-  { loc: '/privacy',        priority: '0.3', changefreq: 'yearly'  },
+  { loc: '/privacy-policy', priority: '0.3', changefreq: 'yearly'  },
   { loc: '/terms',          priority: '0.3', changefreq: 'yearly'  },
 ]
 

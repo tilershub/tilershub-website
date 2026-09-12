@@ -3,6 +3,7 @@ import '../index.css'
 import '../styles/theme-2026.css'
 import AppShell from '../components/AppShell.jsx'
 import DraftLinker from '../components/DraftLinker.jsx'
+import { ADSENSE_CLIENT } from '../lib/adsense.js'
 
 const user = Astro.locals.user
 
@@ -32,6 +33,27 @@ const path = Astro.url.pathname
 const SITE = 'https://www.tilershub.lk'
 const FONT_HREF = 'https://fonts.googleapis.com/css2?family=Archivo:wght@500;600;700;800&family=Instrument+Sans:wght@400;500;600&family=Noto+Sans+Sinhala:wght@400;500;600;700&display=swap'
 const canonicalUrl = `${SITE}${path}`
+
+// Routes that must never carry ads: authentication, account areas, and the
+// forms people use to post work or ask for a quote. Auto Ads would otherwise
+// inject into all of them, which is both a conversion risk and the kind of
+// thin/utility page AdSense policy is unhappy about. The verification meta tag
+// still ships everywhere so Google can confirm ownership from any URL.
+const AD_FREE_PREFIXES = [
+  '/login',
+  '/auth',
+  '/account',
+  '/dashboard',
+  '/notifications',
+  '/admin',
+  '/post-project',
+  '/join-tilershub',
+  '/contact',
+  '/verify-claim',
+  '/offline',
+]
+const adsAllowed = Boolean(ADSENSE_CLIENT)
+  && !AD_FREE_PREFIXES.some((p) => path === p || path.startsWith(`${p}/`))
 
 const orgSchema = JSON.stringify({
   '@context': 'https://schema.org',
@@ -154,6 +176,19 @@ const orgSchema = JSON.stringify({
       if (saved) window.__thLoadGTM()
     })()
   </script>
+
+  <!-- Google AdSense. Deliberately after the consent block above: the script
+       reads the Consent Mode defaults that block registers, and loading it
+       first would let it set an advertising cookie before the visitor has
+       answered. Denied consent still serves ads, just non-personalised ones. -->
+  {ADSENSE_CLIENT && <meta name="google-adsense-account" content={ADSENSE_CLIENT} />}
+  {adsAllowed && (
+    <script
+      async
+      src={`https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=${ADSENSE_CLIENT}`}
+      crossorigin="anonymous"
+    />
+  )}
 </head>
 <body>
 
@@ -298,7 +333,7 @@ const orgSchema = JSON.stringify({
           <a href="/blog">Blog &amp; Tips</a>
           <a href="/about">About TilersHub</a>
           <a href="/contact">Contact Us</a>
-          <a href="/privacy">Privacy Policy</a>
+          <a href="/privacy-policy">Privacy Policy</a>
           <a href="/terms">Terms of Service</a>
         </nav>
       </div>
@@ -411,11 +446,11 @@ const orgSchema = JSON.stringify({
       <span class="en-text">
         Essential cookies keep you signed in. With your permission we also use analytics and
         advertising cookies — including Google's — to understand what's useful and to fund the site.
-        See our <a href="/privacy">Privacy Policy</a>.
+        See our <a href="/privacy-policy">Privacy Policy</a>.
       </span>
       <span class="si-text">
         අත්‍යවශ්‍ය කුකීස් ඔබව පිවිසී තබා ගනී. ඔබේ අවසරය ඇතිව අපි විශ්ලේෂණ සහ දැන්වීම් කුකීස් — Google හි ඒවා ද — භාවිත කරමු.
-        වැඩි විස්තර <a href="/privacy">පෞද්ගලිකත්ව ප්‍රතිපත්තියේ</a>.
+        වැඩි විස්තර <a href="/privacy-policy">පෞද්ගලිකත්ව ප්‍රතිපත්තියේ</a>.
       </span>
     </div>
     <div class="cookie-banner__actions">

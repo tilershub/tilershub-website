@@ -168,6 +168,12 @@ const faqSchema = faqPairs.length >= 2 ? JSON.stringify({
         </a>
       </div>
 
+      <!-- Ad slot — end of article, above Related Reading. The strongest unit on
+           the site: the reader has finished the piece, so nothing is interrupted.
+           Create the unit in AdSense, paste its slot ID, uncomment, and add
+           `import AdSlot from '../../components/AdSlot.jsx'` to the frontmatter.
+           <AdSlot slot="REPLACE_ME" client:visible /> -->
+
       <!-- Related posts -->
       {related.length > 0 && (
         <div>

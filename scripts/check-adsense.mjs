@@ -60,7 +60,7 @@ const ok = (c, m) => { if (!c) fail++; console.log(`${c ? '·' : '✗'} ${m}`) }
   })
   const p = await ctx.newPage()
   for (const [path, needles] of [
-    ['/privacy', ['google.com/settings/ads', 'aboutads.info/choices', 'Third-party vendors, including Google']],
+    ['/privacy-policy', ['google.com/settings/ads', 'aboutads.info/choices', 'Third-party vendors, including Google']],
     ['/terms', ['introduction service', 'Governing law']],
   ]) {
     const errs = []
@@ -78,7 +78,7 @@ const ok = (c, m) => { if (!c) fail++; console.log(`${c ? '·' : '✗'} ${m}`) }
   await p.goto(BASE + '/', { waitUntil: 'domcontentloaded' })
   await p.waitForTimeout(800)
   const footer = await p.content()
-  ok(footer.includes('href="/privacy"'), 'Privacy linked from footer')
+  ok(footer.includes('href="/privacy-policy"'), 'Privacy linked from footer')
   ok(footer.includes('href="/terms"'), 'Terms linked from footer')
   await ctx.close()
 }
@@ -109,9 +109,31 @@ const ok = (c, m) => { if (!c) fail++; console.log(`${c ? '·' : '✗'} ${m}`) }
   const districts = [...xml.matchAll(/\/tilers\/([a-z-]+)</g)].map(m => m[1])
   ok(districts.includes('gampaha'), `sitemap lists covered district gampaha`)
   ok(!districts.includes('mullaitivu'), 'sitemap omits empty district mullaitivu')
-  ok(xml.includes('/privacy'), 'sitemap lists /privacy')
+  ok(xml.includes('/privacy-policy'), 'sitemap lists /privacy-policy')
+  ok(!/<loc>[^<]*\/privacy<\/loc>/.test(xml), 'sitemap does not also list the old /privacy')
   ok(xml.includes('/terms'), 'sitemap lists /terms')
   console.log(`  sitemap district pages: ${districts.length} (was 25)`)
+}
+
+// 6. AdSense tags, checked against the production build rather than the dev
+//    server: PUBLIC_ADSENSE_CLIENT lives in .env.production, so `astro dev`
+//    is deliberately ad-free and would always "pass" here.
+{
+  const { readFileSync, existsSync } = await import('node:fs')
+  const blog = 'dist/blog/how-to-choose-a-tiler/index.html'
+  if (!existsSync(blog)) {
+    console.log('· ad tag ordering skipped — run `npm run build` first')
+  } else {
+    const html = readFileSync(blog, 'utf8')
+    const ads = html.indexOf('adsbygoogle.js')
+    const consent = html.indexOf("gtag('consent', 'default'")
+    ok(ads !== -1, 'built blog page carries the ad script')
+    ok(consent !== -1 && consent < ads, 'consent defaults are registered before the ad script')
+    for (const page of ['dist/post-project/index.html', 'dist/login/index.html']) {
+      if (!existsSync(page)) continue
+      ok(!readFileSync(page, 'utf8').includes('adsbygoogle.js'), `${page} carries no ad script`)
+    }
+  }
 }
 
 await b.close()

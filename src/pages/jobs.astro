@@ -45,4 +45,11 @@ if (initialProjects.length > 0) {
 
   <JobsBoard initialProjects={initialProjects} initialBidCounts={initialBidCounts} client:load />
 
+  <!-- Ad slot — below the project board. Browsing surface, not a form, so an
+       ad here is safe; keep it under the listings so bidding is never pushed
+       below the fold.
+       Create the unit in AdSense, paste its slot ID, uncomment, and add
+       `import AdSlot from '../components/AdSlot.jsx'` to the frontmatter.
+       <AdSlot slot="REPLACE_ME" client:visible /> -->
+
 </Layout>
