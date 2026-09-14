@@ -1,4 +1,4 @@
-name = "tilershub-content"
+name = "wedahub"
 compatibility_date = "2024-09-23"
 compatibility_flags = ["nodejs_compat"]
 
@@ -7,3 +7,17 @@ main = "./dist/_worker.js/index.js"
 [assets]
 directory = "./dist"
 not_found_handling = "none"
+
+[vars]
+SUPABASE_URL = "https://ginrgwaciblcvxvkbeyd.supabase.co"
+SUPABASE_ANON_KEY = "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6ImdpbnJnd2FjaWJsY3Z4dmtiZXlkIiwicm9sZSI6ImFub24iLCJpYXQiOjE3NzkzNjUyODMsImV4cCI6MjA5NDk0MTI4M30.vcfg0gTKSdyKgqggK3OAFwUYwLSfr-QkN2mRFFr_R1M"
+
+# Set these in the Cloudflare dashboard:
+#   Workers & Pages → wedahub → Settings → Variables and Secrets
+#
+#   ANTHROPIC_API_KEY     = sk-ant-...
+#   SUPABASE_URL          = https://ginrgwaciblcvxvkbeyd.supabase.co
+#   SUPABASE_ANON_KEY     = eyJhbGci...
+#   SUPABASE_SERVICE_ROLE_KEY = eyJhbGci...  (keep secret — never expose to browser)
+#
+#   For local dev: add all the above to .env

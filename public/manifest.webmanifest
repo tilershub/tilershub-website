@@ -1,7 +1,7 @@
 {
-  "name": "TilersHub",
-  "short_name": "TilersHub",
-  "description": "ටයිල් මඟපෙන්වීම් සහ වියදම් ගණකය",
+  "name": "වැඩHUB",
+  "short_name": "වැඩHUB",
+  "description": "ශ්‍රී ලංකාවේ සේවා සපයන්නන්, කාර්මිකයන් සහ ව්‍යාපෘති සොයන්න.",
   "start_url": "/",
   "scope": "/",
   "display": "standalone",
@@ -29,16 +29,37 @@
   ],
   "shortcuts": [
     {
-      "name": "වියදම් ගණකය",
-      "url": "/estimator"
+      "name": "සේවා සපයන්නන් සොයන්න",
+      "short_name": "සපයන්නන්",
+      "url": "/providers",
+      "icons": [
+        {
+          "src": "/icon-192.png",
+          "sizes": "192x192"
+        }
+      ]
     },
     {
-      "name": "ලිපි",
-      "url": "/blog"
+      "name": "ව්‍යාපෘතියක් පළ කරන්න",
+      "short_name": "පළ කරන්න",
+      "url": "/post-project",
+      "icons": [
+        {
+          "src": "/icon-192.png",
+          "sizes": "192x192"
+        }
+      ]
     },
     {
-      "name": "මඟපෙන්වීම්",
-      "url": "/guides"
+      "name": "මගේ ගිණුම",
+      "short_name": "ගිණුම",
+      "url": "/account",
+      "icons": [
+        {
+          "src": "/icon-192.png",
+          "sizes": "192x192"
+        }
+      ]
     }
   ]
 }

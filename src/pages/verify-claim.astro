@@ -1,0 +1,6 @@
+---
+// The profile-claim flow has been retired — providers now register
+// directly via /join-wedahub (Google sign-in → admin approval).
+export const prerender = false
+return Astro.redirect('/join-wedahub', 301)
+---

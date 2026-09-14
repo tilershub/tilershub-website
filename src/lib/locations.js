@@ -45,11 +45,11 @@ export function districtBySlug(slug) {
 }
 
 export function districtPath(d) {
-  return `https://wedahub.lk/tilers/${d.slug}`
+  return `/tilers/${d.slug}`
 }
 
 export function serviceDistrictPath(serviceSlug, d) {
-  return `https://wedahub.lk/services/${serviceSlug}/${d.slug}`
+  return `/services/${serviceSlug}/${d.slug}`
 }
 
 // 4 nearest/related districts for cross-linking (simple curated adjacency)

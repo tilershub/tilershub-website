@@ -1,7 +1,9 @@
-const moved = new Set(['/providers', '/tilers', '/categories', '/services', '/jobs', '/job', '/post-project', '/join-tilershub', '/join-wedahub', '/account', '/dashboard', '/provider', '/login', '/notifications', '/brands', '/bathrooms', '/tile', '/tools', '/sponsor', '/explore', '/verify-claim', '/admin'])
+// Fixed origins prevent user-controlled redirect destinations. Keep query strings.
 export function migrationRedirect(url) {
-  const root = '/' + url.pathname.split('/')[1]
-  if (!moved.has(root)) return null
-  const path = url.pathname.replace(/^\/join-tilershub(?=\/|$)/, '/join-wedahub')
-  return 'https://wedahub.lk' + path + url.search
+  const path = url.pathname.replace(/\/+$/, '') || '/'
+  if (['/blog', '/guides', '/estimator'].some(p => path === p || path.startsWith(p + '/'))) {
+    return 'https://tilershub.lk' + url.pathname + url.search
+  }
+  if (path === '/join-tilershub') return 'https://wedahub.lk/join-wedahub' + url.search
+  return null
 }
