@@ -1,10 +1,11 @@
 ---
+import { si as sinhalaText } from '../lib/sinhala.js'
 import Layout from '../layouts/Layout.astro'
 ---
 
 <Layout
-  title="Contact TilersHub · Get in Touch"
-  description="Contact the TilersHub team for listing enquiries, partnerships, or general questions about Sri Lanka's tiling marketplace."
+  title="TilersHub අමතන්න · අප සමඟ සම්බන්ධ වන්න"
+  description="ලැයිස්තුගත කිරීම්, හවුල්කාරිත්වයන් හෝ ශ්‍රී ලංකාවේ ටයිල් වෙළෙඳපොළ ගැන ප්‍රශ්න සඳහා TilersHub කණ්ඩායම අමතන්න."
 >
 
   <!-- Hero -->
@@ -51,7 +52,7 @@ import Layout from '../layouts/Layout.astro'
             <div>
               <div style="font-size:14px;font-weight:700;color:var(--text);margin-bottom:3px;">Facebook</div>
               <div style="font-size:12px;color:var(--text-3);">අපේ page like කරන්න සහ community හා එකතු වන්න</div>
-              <div style="font-size:12px;font-weight:600;color:#1877F2;margin-top:4px;">TilersHub Sri Lanka</div>
+              <div style="font-size:12px;font-weight:600;color:#1877F2;margin-top:4px;">TilersHub ශ්‍රී ලංකාව</div>
             </div>
           </a>
 
@@ -79,8 +80,8 @@ import Layout from '../layouts/Layout.astro'
           { icon: '🐛', q: 'ගැටලුවක් වාර්තා කිරීම', a: 'screenshot සහ ගැටලු විස්තරය සමඟ WhatsApp හරහා සම්බන්ධ වන්න. සියලු වාර්තා අපි විමර්ශනය කරමු.' },
         ].map(item => (
           <div style="padding:16px;background:#fff;border:1px solid var(--border);border-radius:14px;margin-bottom:12px;">
-            <div style="font-size:14px;font-weight:700;color:var(--text);margin-bottom:6px;display:flex;align-items:center;gap:8px;">{item.icon} {item.q}</div>
-            <p style="font-size:13px;color:var(--text-3);line-height:1.7;margin:0;">{item.a}</p>
+            <div style="font-size:14px;font-weight:700;color:var(--text);margin-bottom:6px;display:flex;align-items:center;gap:8px;">{sinhalaText(item.icon)} {sinhalaText(item.q)}</div>
+            <p style="font-size:13px;color:var(--text-3);line-height:1.7;margin:0;">{sinhalaText(item.a)}</p>
           </div>
         ))}
       </div>

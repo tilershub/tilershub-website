@@ -1,4 +1,5 @@
 ---
+import { si as sinhalaText } from '../lib/sinhala.js'
 import Layout from '../layouts/Layout.astro'
 
 const CATS = [
@@ -21,8 +22,8 @@ const CATS = [
 ---
 
 <Layout
-  title="Categories · TilersHub"
-  description="Browse all categories on TilersHub — tilers, contractors, tile shops, brands, home improvement services and more."
+  title="කාණ්ඩ · TilersHub"
+  description="TilersHub හි ටයිල් කාර්මිකයන්, කොන්ත්‍රාත්කරුවන්, වෙළෙඳසැල්, සන්නාම සහ නිවාස වැඩිදියුණු කිරීමේ සේවා ඇතුළු සියලු කාණ්ඩ බලන්න."
 >
 
   <!-- Hero -->
@@ -48,11 +49,11 @@ const CATS = [
           onmouseover="this.style.borderColor='#14171A';this.style.transform='translateY(-4px)';this.style.boxShadow='0 12px 32px rgba(0,0,0,0.1)'"
           onmouseout="this.style.borderColor='';this.style.transform='';this.style.boxShadow='0 2px 8px rgba(0,0,0,0.04)'">
           <div style={`width:60px;height:60px;border-radius:16px;background:${c.bg};display:flex;align-items:center;justify-content:center;font-size:26px;box-shadow:0 4px 12px rgba(0,0,0,0.2);`}>
-            {c.icon}
+            {sinhalaText(c.icon)}
           </div>
           <div>
-            <div style="font-size:13px;font-weight:700;color:var(--text);line-height:1.3;margin-bottom:4px;">{c.label}</div>
-            <div style="font-size:10px;color:var(--text-4);line-height:1.4;">{c.desc}</div>
+            <div style="font-size:13px;font-weight:700;color:var(--text);line-height:1.3;margin-bottom:4px;">{sinhalaText(c.label)}</div>
+            <div style="font-size:10px;color:var(--text-4);line-height:1.4;">{sinhalaText(c.desc)}</div>
           </div>
         </a>
       ))}

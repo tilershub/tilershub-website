@@ -1,3 +1,4 @@
+import { si as sinhalaText } from '../lib/sinhala.js'
 import { useState, useEffect } from 'react'
 import { useLang } from '../lib/useLang.js'
 import { JOB_TYPE_ICONS, jobPath, timeAgo, shortDate } from '../lib/jobs.js'
@@ -46,52 +47,52 @@ export default function JobCard({ job, variant = 'feed', bidCount = 0, href }) {
   return (
     <a href={href || jobPath(job)} className="th-card th-card--tap" style={{ display: 'block', color: 'inherit' }}>
       <div style={{ display: 'flex', alignItems: 'center', gap: 7, marginBottom: 9 }}>
-        {variant === 'mine'
-          ? <span className={`th-pill th-pill--${status.tone}`}>{t(status.key)}</span>
-          : <span className="th-pill th-pill--open">{JOB_TYPE_ICONS[job.project_type] || '🏠'} {job.project_type}</span>}
+        {sinhalaText(variant === 'mine'
+          ? <span className={`th-pill th-pill--${status.tone}`}>{sinhalaText(t(status.key))}</span>
+          : <span className="th-pill th-pill--open">{sinhalaText(JOB_TYPE_ICONS[job.project_type] || '🏠')} {sinhalaText(job.project_type)}</span>)}
         <span style={{ flex: 1 }} />
         <span style={{ font: '500 11.5px var(--th-body)', color: 'var(--text-3)', whiteSpace: 'nowrap' }}>
-          {posted}
+          {sinhalaText(posted)}
         </span>
       </div>
 
-      {variant === 'mine' && (
-        <h3 style={{ fontSize: 16, lineHeight: 1.22, margin: '0 0 6px' }}>{job.project_type}</h3>
-      )}
+      {sinhalaText(variant === 'mine' && (
+        <h3 style={{ fontSize: 16, lineHeight: 1.22, margin: '0 0 6px' }}>{sinhalaText(job.project_type)}</h3>
+      ))}
 
-      {job.description && variant !== 'mine' && (
+      {sinhalaText(job.description && variant !== 'mine' && (
         <p style={{
           margin: '0 0 12px', fontSize: 12.5, lineHeight: 1.5, color: 'var(--text-2)',
           display: '-webkit-box', WebkitLineClamp: 2, WebkitBoxOrient: 'vertical', overflow: 'hidden',
-        }}>{job.description}</p>
-      )}
+        }}>{sinhalaText(job.description)}</p>
+      ))}
 
       <div style={{ display: 'flex', alignItems: 'flex-end', gap: 14, paddingTop: 11, borderTop: '1px solid var(--border)' }}>
-        {job.budget_range && (
+        {sinhalaText(job.budget_range && (
           <div style={{ minWidth: 0 }}>
-            <div style={{ font: '500 9.5px var(--th-body)', textTransform: 'uppercase', letterSpacing: '0.06em', color: 'var(--text-3)' }}>{t('budget')}</div>
-            <div style={{ font: '700 13.5px var(--th-display)', whiteSpace: 'nowrap', overflow: 'hidden', textOverflow: 'ellipsis' }}>{job.budget_range}</div>
+            <div style={{ font: '500 9.5px var(--th-body)', textTransform: 'uppercase', letterSpacing: '0.06em', color: 'var(--text-3)' }}>{sinhalaText(t('budget'))}</div>
+            <div style={{ font: '700 13.5px var(--th-display)', whiteSpace: 'nowrap', overflow: 'hidden', textOverflow: 'ellipsis' }}>{sinhalaText(job.budget_range)}</div>
           </div>
-        )}
-        {place && variant !== 'mine' && (
+        ))}
+        {sinhalaText(place && variant !== 'mine' && (
           <div style={{ minWidth: 0 }}>
-            <div style={{ font: '500 9.5px var(--th-body)', textTransform: 'uppercase', letterSpacing: '0.06em', color: 'var(--text-3)' }}>{t('where')}</div>
-            <div style={{ font: '600 12.5px var(--th-body)', overflow: 'hidden', textOverflow: 'ellipsis', whiteSpace: 'nowrap' }}>{place}</div>
+            <div style={{ font: '500 9.5px var(--th-body)', textTransform: 'uppercase', letterSpacing: '0.06em', color: 'var(--text-3)' }}>{sinhalaText(t('where'))}</div>
+            <div style={{ font: '600 12.5px var(--th-body)', overflow: 'hidden', textOverflow: 'ellipsis', whiteSpace: 'nowrap' }}>{sinhalaText(place)}</div>
           </div>
-        )}
+        ))}
 
         <span style={{ flex: 1 }} />
 
-        {variant === 'match' ? (
-          <span className="th-btn th-btn--primary" style={{ minHeight: 36, padding: '0 15px', fontSize: 12.5 }}>{t('quote')}</span>
+        {sinhalaText(variant === 'match' ? (
+          <span className="th-btn th-btn--primary" style={{ minHeight: 36, padding: '0 15px', fontSize: 12.5 }}>{sinhalaText(t('quote'))}</span>
         ) : (
           <div style={{ display: 'flex', alignItems: 'baseline', gap: 4, whiteSpace: 'nowrap' }}>
-            <span style={{ font: '700 14px var(--th-display)', color: bidCount > 0 ? 'var(--th-forest)' : 'var(--text-4)' }}>{bidCount}</span>
+            <span style={{ font: '700 14px var(--th-display)', color: bidCount > 0 ? 'var(--th-forest)' : 'var(--text-4)' }}>{sinhalaText(bidCount)}</span>
             <span style={{ font: '500 11.5px var(--th-body)', color: 'var(--text-3)' }}>
-              {variant === 'mine' ? t('review') : t('quotes')}
+              {sinhalaText(variant === 'mine' ? t('review') : t('quotes'))}
             </span>
           </div>
-        )}
+        ))}
       </div>
     </a>
   )

@@ -1,3 +1,4 @@
+import { si as sinhalaText } from '../lib/sinhala.js'
 import { useState, useEffect } from 'react'
 import { supabase, PROJECT_TYPES, DISTRICTS_EN } from '../lib/supabase.js'
 import { useLang } from '../lib/useLang.js'
@@ -85,9 +86,9 @@ function ProviderGate({ previewProjects, bidCounts }) {
       {/* Blurred preview */}
       <div style={{ position: 'relative', marginBottom: 4 }}>
         <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fill, minmax(300px, 1fr))', gap: 18 }}>
-          {previewProjects.slice(0, 3).map(p => (
+          {sinhalaText(previewProjects.slice(0, 3).map(p => (
             <div key={p.id} style={{ filter: 'blur(5px)', userSelect: 'none', pointerEvents: 'none' }}><JobCard job={p} bidCount={bidCounts[p.id] || 0} /></div>
-          ))}
+          )))}
         </div>
         <div style={{ position: 'absolute', bottom: 0, left: 0, right: 0, height: 140, background: 'linear-gradient(transparent, #FBFAF8)', pointerEvents: 'none' }} />
       </div>
@@ -97,56 +98,56 @@ function ProviderGate({ previewProjects, bidCounts }) {
         <div style={{ background: 'linear-gradient(135deg, #C2542B, #14171A)', padding: '24px 28px' }}>
           <div style={{ fontSize: 28, marginBottom: 10 }}>🔒</div>
           <div style={{ fontFamily: "var(--th-display)", fontSize: 18, fontWeight: 700, color: '#fff', marginBottom: 6 }}>
-            {t(`gateTitle`)}
+            {sinhalaText(t(`gateTitle`))}
           </div>
           <p style={{ fontSize: 13, color: 'rgba(255,255,255,0.65)', lineHeight: 1.7, margin: 0 }}>
-            {t(`gateBody`)}
+            {sinhalaText(t(`gateBody`))}
           </p>
         </div>
         <div style={{ padding: '24px 28px' }}>
-          {!showAuth ? (
+          {sinhalaText(!showAuth ? (
             <div>
               <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: 8, marginBottom: 20 }}>
-                {t('benefits').map(b => (
-                  <div key={b} style={{ fontSize: 12, color: '#3A4046' }}>{b}</div>
-                ))}
+                {sinhalaText(t('benefits').map(b => (
+                  <div key={b} style={{ fontSize: 12, color: '#3A4046' }}>{sinhalaText(b)}</div>
+                )))}
               </div>
               <div style={{ display: 'flex', gap: 10, flexWrap: 'wrap' }}>
                 <button onClick={() => setShowAuth(true)} style={{ flex: 1, padding: '12px', background: '#C2542B', color: '#fff', border: 'none', borderRadius: 12, fontSize: 14, fontWeight: 700, cursor: 'pointer', minWidth: 140 }}>
-                  {t(`gateSignIn`)} →
+                  {sinhalaText(t(`gateSignIn`))} →
                 </button>
                 <a href="/join-tilershub" style={{ flex: 1, display: 'flex', alignItems: 'center', justifyContent: 'center', padding: '12px', background: '#EFEBE4', color: '#C2542B', border: '1.5px solid #EDDFD5', borderRadius: 12, fontSize: 13, fontWeight: 700, textDecoration: 'none', minWidth: 140 }}>
-                  {t(`gateJoin`)}
+                  {sinhalaText(t(`gateJoin`))}
                 </a>
               </div>
             </div>
           ) : sent ? (
             <div style={{ textAlign: 'center', padding: '8px 0' }}>
               <div style={{ fontSize: 36, marginBottom: 10 }}>📬</div>
-              <div style={{ fontSize: 15, fontWeight: 700, color: '#14171A', marginBottom: 6 }}>{t(`gateCheck`)}</div>
+              <div style={{ fontSize: 15, fontWeight: 700, color: '#14171A', marginBottom: 6 }}>{sinhalaText(t(`gateCheck`))}</div>
               <p style={{ fontSize: 13, color: '#6B7076', lineHeight: 1.7 }}>
-                {t(`gateSent`, email)}
+                {sinhalaText(t(`gateSent`, email))}
               </p>
             </div>
           ) : (
             <form onSubmit={send}>
-              <div style={{ fontSize: 13, fontWeight: 600, color: '#3A4046', marginBottom: 10 }}>{t(`gateEmail`)}</div>
+              <div style={{ fontSize: 13, fontWeight: 600, color: '#3A4046', marginBottom: 10 }}>{sinhalaText(t(`gateEmail`))}</div>
               <input type="email" value={email} onChange={e => { setEmail(e.target.value); setErr('') }} placeholder="your@email.com" autoFocus
                 style={{ width: '100%', padding: '11px 14px', border: `1.5px solid ${err ? '#E3A199' : '#E4E0D9'}`, borderRadius: 10, fontSize: 13, outline: 'none', fontFamily: 'inherit', background: err ? '#FBEDEB' : '#fff', boxSizing: 'border-box', marginBottom: 10 }} />
-              {err && <p style={{ fontSize: 11, color: '#C0392B', marginBottom: 8 }}>⚠ {err}</p>}
+              {sinhalaText(err && <p style={{ fontSize: 11, color: '#C0392B', marginBottom: 8 }}>⚠ {sinhalaText(err)}</p>)}
               <div style={{ display: 'flex', gap: 8 }}>
                 <button type="submit" disabled={loading}
                   style={{ flex: 1, padding: '11px', background: loading ? '#8A8F95' : '#C2542B', color: '#fff', border: 'none', borderRadius: 10, fontSize: 13, fontWeight: 700, cursor: loading ? 'not-allowed' : 'pointer' }}>
-                  {loading ? '⏳ ' + t('gateSending') : '✉️ ' + t('gateSend')}
+                  {sinhalaText(loading ? '⏳ ' + t('gateSending') : '✉️ ' + t('gateSend'))}
                 </button>
                 <button type="button" onClick={() => setShowAuth(false)}
                   style={{ padding: '11px 14px', background: '#EFEBE4', color: '#6B7076', border: 'none', borderRadius: 10, fontSize: 12, cursor: 'pointer' }}>
-                  {t(`gateBack`)}
+                  {sinhalaText(t(`gateBack`))}
                 </button>
               </div>
-              <p style={{ fontSize: 11, color: '#8A8F95', textAlign: 'center', marginTop: 8 }}>{t(`gateNoPass`)}</p>
+              <p style={{ fontSize: 11, color: '#8A8F95', textAlign: 'center', marginTop: 8 }}>{sinhalaText(t(`gateNoPass`))}</p>
             </form>
-          )}
+          ))}
         </div>
       </div>
     </div>
@@ -201,56 +202,56 @@ export default function JobsBoard({ initialProjects = null, initialBidCounts = n
       <div style={{ background: '#fff', borderBottom: '1px solid #E4E0D9', padding: '14px 20px', position: 'sticky', top: 0, zIndex: 10 }}>
         <div style={{ maxWidth: 1100, margin: '0 auto', display: 'flex', alignItems: 'center', gap: 10, flexWrap: 'wrap' }}>
           <select value={filters.type} onChange={e => setFilters(f => ({ ...f, type: e.target.value }))} style={selectStyle()}>
-            <option value="">{t(`allTypes`)}</option>
-            {PROJECT_TYPES.map(t => <option key={t} value={t}>{TYPE_ICONS[t]} {t}</option>)}
+            <option value="">{sinhalaText(t(`allTypes`))}</option>
+            {sinhalaText(PROJECT_TYPES.map(t => <option key={t} value={t}>{sinhalaText(TYPE_ICONS[t])} {sinhalaText(t)}</option>))}
           </select>
           <select value={filters.district} onChange={e => setFilters(f => ({ ...f, district: e.target.value }))} style={selectStyle()}>
-            <option value="">{t(`allDistricts`)}</option>
-            {DISTRICTS_EN.map(d => <option key={d} value={d}>{d}</option>)}
+            <option value="">{sinhalaText(t(`allDistricts`))}</option>
+            {sinhalaText(DISTRICTS_EN.map(d => <option key={d} value={d}>{sinhalaText(d)}</option>))}
           </select>
-          {(filters.type || filters.district) && (
+          {sinhalaText((filters.type || filters.district) && (
             <button onClick={() => setFilters({ type: '', district: '' })} style={{ fontSize: 12, color: '#6B7076', background: '#EFEBE4', border: 'none', borderRadius: 8, padding: '8px 12px', cursor: 'pointer', fontWeight: 600 }}>
-              ✕ {t(`clear`)}
+              ✕ {sinhalaText(t(`clear`))}
             </button>
-          )}
+          ))}
           <span style={{ fontSize: 12, color: '#8A8F95', marginLeft: 'auto' }}>
-            {loading ? t('loading') : t('count', filtered.length)}
+            {sinhalaText(loading ? t('loading') : t('count', filtered.length))}
           </span>
         </div>
       </div>
 
       {/* Content */}
       <div style={{ maxWidth: 1100, margin: '0 auto', padding: '32px 20px 64px' }}>
-        {loading ? (
-          <div style={{ textAlign: 'center', padding: '64px 20px', color: '#8A8F95', fontSize: 14 }}>{t(`loadingJobs`)}</div>
+        {sinhalaText(loading ? (
+          <div style={{ textAlign: 'center', padding: '64px 20px', color: '#8A8F95', fontSize: 14 }}>{sinhalaText(t(`loadingJobs`))}</div>
         ) : filtered.length === 0 ? (
           <div style={{ textAlign: 'center', padding: '64px 20px', background: '#fff', borderRadius: 16, border: '1px solid #E4E0D9' }}>
             <div style={{ fontSize: 48, marginBottom: 16 }}>🏗️</div>
-            <h3 style={{ fontSize: 18, fontWeight: 700, color: '#14171A', marginBottom: 8 }}>{t(`emptyTitle`)}</h3>
-            <p style={{ fontSize: 14, color: '#6B7076', marginBottom: 24 }}>{t(`emptyBody`)}</p>
+            <h3 style={{ fontSize: 18, fontWeight: 700, color: '#14171A', marginBottom: 8 }}>{sinhalaText(t(`emptyTitle`))}</h3>
+            <p style={{ fontSize: 14, color: '#6B7076', marginBottom: 24 }}>{sinhalaText(t(`emptyBody`))}</p>
             <a href="/post-project" style={{ display: 'inline-flex', alignItems: 'center', gap: 8, background: '#C2542B', color: '#fff', borderRadius: 12, padding: '11px 24px', fontSize: 14, fontWeight: 700, textDecoration: 'none' }}>
-              📋 {t(`postCta`)}
+              📋 {sinhalaText(t(`postCta`))}
             </a>
           </div>
         ) : (
           <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fill, minmax(300px, 1fr))', gap: 18 }}>
-            {filtered.map(p => (
+            {sinhalaText(filtered.map(p => (
               <JobCard key={p.id} job={p} bidCount={bidCounts[p.id] || 0} />
-            ))}
+            )))}
           </div>
-        )}
+        ))}
 
-        {!loading && user && filtered.length > 0 && (
+        {sinhalaText(!loading && user && filtered.length > 0 && (
           <div style={{ marginTop: 48, padding: '28px 32px', background: 'linear-gradient(135deg, #C2542B, #14171A)', borderRadius: 16, display: 'flex', alignItems: 'center', justifyContent: 'space-between', flexWrap: 'wrap', gap: 16 }}>
             <div>
-              <div style={{ fontSize: 16, fontWeight: 700, color: '#fff', marginBottom: 4 }}>{t(`ownTitle`)}</div>
-              <div style={{ fontSize: 13, color: 'rgba(255,255,255,0.6)' }}>{t(`ownBody`)}</div>
+              <div style={{ fontSize: 16, fontWeight: 700, color: '#fff', marginBottom: 4 }}>{sinhalaText(t(`ownTitle`))}</div>
+              <div style={{ fontSize: 13, color: 'rgba(255,255,255,0.6)' }}>{sinhalaText(t(`ownBody`))}</div>
             </div>
             <a href="/post-project" style={{ display: 'inline-flex', alignItems: 'center', gap: 8, background: '#C2542B', color: '#fff', borderRadius: 12, padding: '11px 22px', fontSize: 13, fontWeight: 700, textDecoration: 'none', whiteSpace: 'nowrap' }}>
-              📋 {t(`ownCta`)}
+              📋 {sinhalaText(t(`ownCta`))}
             </a>
           </div>
-        )}
+        ))}
       </div>
     </div>
   )

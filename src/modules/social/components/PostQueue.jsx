@@ -1,3 +1,4 @@
+import { si as sinhalaText } from '../../../lib/sinhala.js'
 import { useState, useEffect } from 'react'
 import { getQueue, updateStatus, removeFromQueue, copyRowToClipboard, copyAllToClipboard } from '../lib/contentQueue.js'
 
@@ -17,7 +18,7 @@ function StatusBadge({ status }) {
   const { bg, color } = STATUS_COLORS[status] || STATUS_COLORS.DRAFT
   return (
     <span style={{ display: 'inline-block', padding: '2px 10px', borderRadius: 20, fontSize: 11, fontWeight: 700, background: bg, color }}>
-      {status || 'DRAFT'}
+      {sinhalaText(status || 'DRAFT')}
     </span>
   )
 }
@@ -29,7 +30,7 @@ function CampaignBadge({ campaign }) {
       display: 'inline-block', padding: '2px 8px', borderRadius: 20, fontSize: 11, fontWeight: 700,
       background: isUser ? '#F7EFE9' : '#F7EFE9', color: isUser ? '#7A3218' : '#C2542B',
     }}>
-      {isUser ? '🏠 User' : '🔨 Provider'}
+      {sinhalaText(isUser ? '🏠 User' : '🔨 Provider')}
     </span>
   )
 }
@@ -44,7 +45,7 @@ export default function PostQueue() {
   useEffect(() => { refresh() }, [])
 
   function handleStatus(id, status) { updateStatus(id, status); refresh() }
-  function handleDelete(id) { if (confirm('Remove this post from the queue?')) { removeFromQueue(id); refresh() } }
+  function handleDelete(id) { if (confirm(sinhalaText('Remove this post from the queue?'))) { removeFromQueue(id); refresh() } }
 
   async function handleCopyRow(post) {
     await copyRowToClipboard(post)
@@ -74,48 +75,48 @@ export default function PostQueue() {
       {/* Header */}
       <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', marginBottom: 20, flexWrap: 'wrap', gap: 12 }}>
         <div>
-          <div style={{ fontSize: 15, fontWeight: 700, color: '#14171A' }}>Post Queue</div>
-          <div style={{ fontSize: 12, color: '#6B7076', marginTop: 3 }}>{queue.length} post{queue.length !== 1 ? 's' : ''} in queue</div>
+          <div style={{ fontSize: 15, fontWeight: 700, color: '#14171A' }}>පළ කිරීම් පෝලිම</div>
+          <div style={{ fontSize: 12, color: '#6B7076', marginTop: 3 }}>{sinhalaText(queue.length)} පළ කිරීම{sinhalaText(queue.length !== 1 ? 's' : '')} පෝලිමේ</div>
         </div>
         <div style={{ display: 'flex', gap: 10, alignItems: 'center', flexWrap: 'wrap' }}>
           <button onClick={handleCopyAll} disabled={filtered.length === 0}
             style={{ padding: '8px 16px', background: GOLD, color: '#14171A', border: 'none', borderRadius: 8, fontSize: 12, fontWeight: 700, cursor: 'pointer', opacity: filtered.length === 0 ? 0.5 : 1 }}>
-            {copyAllMsg || '📋 Copy All to Sheet'}
+            {sinhalaText(copyAllMsg || '📋 Copy All to Sheet')}
           </button>
           <a href={SHEET_URL} target="_blank" rel="noreferrer"
             style={{ padding: '8px 16px', background: NAVY, color: '#fff', borderRadius: 8, fontSize: 12, fontWeight: 700, textDecoration: 'none', display: 'inline-block' }}>
-            📊 Open Google Sheet ↗
+            📊 Google පැතුරුම්පත විවෘත කරන්න ↗
           </a>
         </div>
       </div>
 
       {/* Sheet info banner */}
       <div style={{ background: '#F7EFE9', border: '1px solid #E7D9CE', borderRadius: 10, padding: '12px 16px', marginBottom: 20, fontSize: 12, color: '#7A3218', lineHeight: 1.7 }}>
-        📌 <strong>Workflow:</strong> Copy rows → Paste into{' '}
-        <a href={SHEET_URL} target="_blank" rel="noreferrer" style={{ color: '#7A3218', fontWeight: 700 }}>Google Sheet ↗</a>
-        {' '}→ Set status to <strong>READY</strong> → Make.com posts to Facebook &amp; Instagram automatically every hour.
-        <br />Sheet columns: <code style={{ background: '#fff', padding: '1px 5px', borderRadius: 4 }}>date · time · platform · campaign · caption · image_url · status · post_id</code>
+        📌 <strong>වැඩ පිළිවෙළ:</strong> පේළි පිටපත් කර මෙයට අලවන්න →{sinhalaText(' ')}
+        <a href={SHEET_URL} target="_blank" rel="noreferrer" style={{ color: '#7A3218', fontWeight: 700 }}>Google පැතුරුම්පත ↗</a>
+        {sinhalaText(' ')}→ තත්ත්වය මෙසේ සකසන්න: <strong>සූදානම්</strong> → Make.com සෑම පැයකම Facebook සහ Instagram වෙත ස්වයංක්‍රීයව පළ කරයි.
+        <br />පැතුරුම්පත් තීරු: <code style={{ background: '#fff', padding: '1px 5px', borderRadius: 4 }}>date · time · platform · campaign · caption · image_url · status · post_id</code>
       </div>
 
       {/* Status filter tabs */}
       <div style={{ display: 'flex', gap: 6, marginBottom: 16, flexWrap: 'wrap' }}>
-        {[['ALL', 'All'], ['DRAFT', 'Draft / Plan'], ['READY', 'Ready'], ['POSTED', 'Posted']].map(([key, label]) => (
+        {sinhalaText([['ALL', 'All'], ['DRAFT', 'Draft / Plan'], ['READY', 'Ready'], ['POSTED', 'Posted']].map(([key, label]) => (
           <button key={key} onClick={() => setFilter(key)}
             style={{
               padding: '7px 14px', borderRadius: 20, fontSize: 12, fontWeight: 600, cursor: 'pointer', border: 'none',
               background: filter === key ? NAVY : '#EFEBE4', color: filter === key ? '#fff' : '#3A4046',
             }}>
-            {label} {counts[key] != null && <span style={{ opacity: 0.7 }}>({counts[key]})</span>}
+            {sinhalaText(label)} {sinhalaText(counts[key] != null && <span style={{ opacity: 0.7 }}>({sinhalaText(counts[key])})</span>)}
           </button>
-        ))}
+        )))}
       </div>
 
       {/* Table */}
-      {filtered.length === 0 ? (
+      {sinhalaText(filtered.length === 0 ? (
         <div style={{ textAlign: 'center', padding: '60px 0', color: '#8A8F95' }}>
           <div style={{ fontSize: 32, marginBottom: 10 }}>📭</div>
-          <div style={{ fontSize: 14, fontWeight: 600 }}>No posts in queue</div>
-          <div style={{ fontSize: 12, marginTop: 6 }}>Generate content in Studio and save posts here.</div>
+          <div style={{ fontSize: 14, fontWeight: 600 }}>පෝලිමේ පළ කිරීම් නැත</div>
+          <div style={{ fontSize: 12, marginTop: 6 }}>නිර්මාණාගාරයේ අන්තර්ගතය සාදා මෙහි සුරකින්න.</div>
         </div>
       ) : (
         <div style={{ background: '#fff', border: '1px solid #E7E2D9', borderRadius: 14, overflow: 'hidden' }}>
@@ -123,73 +124,73 @@ export default function PostQueue() {
             <table style={{ width: '100%', borderCollapse: 'collapse', fontSize: 13 }}>
               <thead>
                 <tr>
-                  {['Date', 'Time', 'Campaign', 'Platform', 'Format', 'Caption', 'Status', 'Actions'].map(h => (
-                    <th key={h} style={th}>{h}</th>
-                  ))}
+                  {sinhalaText(['Date', 'Time', 'Campaign', 'Platform', 'Format', 'Caption', 'Status', 'Actions'].map(h => (
+                    <th key={h} style={th}>{sinhalaText(h)}</th>
+                  )))}
                 </tr>
               </thead>
               <tbody>
-                {filtered.map(post => (
+                {sinhalaText(filtered.map(post => (
                   <tr key={post.id}>
-                    <td style={td}>{post.date || '—'}</td>
-                    <td style={{ ...td, whiteSpace: 'nowrap' }}>{post.suggested_time || post.time || '—'}</td>
+                    <td style={td}>{sinhalaText(post.date || '—')}</td>
+                    <td style={{ ...td, whiteSpace: 'nowrap' }}>{sinhalaText(post.suggested_time || post.time || '—')}</td>
                     <td style={td}><CampaignBadge campaign={post.campaign} /></td>
-                    <td style={{ ...td, whiteSpace: 'nowrap' }}>{post.platform || '—'}</td>
+                    <td style={{ ...td, whiteSpace: 'nowrap' }}>{sinhalaText(post.platform || '—')}</td>
                     <td style={{ ...td, whiteSpace: 'nowrap' }}>
-                      {post.format === 'carousel' ? '🎴 Carousel' : post.format === 'reel' ? '🎬 Reel' : '🖼 Single'}
+                      {sinhalaText(post.format === 'carousel' ? '🎴 Carousel' : post.format === 'reel' ? '🎬 Reel' : '🖼 Single')}
                     </td>
                     <td style={{ ...td, maxWidth: 280 }}>
                       <div style={{ overflow: 'hidden', display: '-webkit-box', WebkitLineClamp: 2, WebkitBoxOrient: 'vertical', color: '#3A4046' }}>
-                        {post.caption || post.note || '—'}
+                        {sinhalaText(post.caption || post.note || '—')}
                       </div>
                     </td>
                     <td style={td}>
                       <select value={post.status || 'DRAFT'} onChange={e => handleStatus(post.id, e.target.value)}
                         style={{ padding: '4px 8px', border: '1.5px solid #E4E0D9', borderRadius: 7, fontSize: 12, fontFamily: 'inherit', background: '#fff', cursor: 'pointer' }}>
-                        <option value="DRAFT">DRAFT</option>
-                        <option value="PLAN">PLAN</option>
-                        <option value="READY">READY</option>
-                        <option value="POSTED">POSTED</option>
+                        <option value="DRAFT">කෙටුම්පත</option>
+                        <option value="PLAN">සැලසුම</option>
+                        <option value="READY">සූදානම්</option>
+                        <option value="POSTED">පළ කර ඇත</option>
                       </select>
                     </td>
                     <td style={{ ...td, whiteSpace: 'nowrap' }}>
                       <div style={{ display: 'flex', gap: 6 }}>
-                        <button onClick={() => handleCopyRow(post)} title="Copy row as TSV"
+                        <button onClick={() => handleCopyRow(post)} title="පේළිය TSV ලෙස පිටපත් කරන්න"
                           style={{ padding: '5px 10px', background: '#EFEBE4', color: '#3A4046', border: 'none', borderRadius: 7, fontSize: 11, fontWeight: 700, cursor: 'pointer' }}>
-                          {copiedId === post.id ? '✓' : '📋'}
+                          {sinhalaText(copiedId === post.id ? '✓' : '📋')}
                         </button>
-                        {post.status !== 'POSTED' && (
-                          <button onClick={() => handleStatus(post.id, 'POSTED')} title="Mark as Posted"
+                        {sinhalaText(post.status !== 'POSTED' && (
+                          <button onClick={() => handleStatus(post.id, 'POSTED')} title="පළ කළ බව සලකුණු කරන්න"
                             style={{ padding: '5px 10px', background: '#E9F1EC', color: '#22513B', border: 'none', borderRadius: 7, fontSize: 11, fontWeight: 700, cursor: 'pointer' }}>
-                            ✓ Posted
+                            ✓ පළ කළා
                           </button>
-                        )}
-                        <button onClick={() => handleDelete(post.id)} title="Remove"
+                        ))}
+                        <button onClick={() => handleDelete(post.id)} title="ඉවත් කරන්න"
                           style={{ padding: '5px 10px', background: '#FBEDEB', color: '#8E2A1F', border: 'none', borderRadius: 7, fontSize: 11, fontWeight: 700, cursor: 'pointer' }}>
                           🗑
                         </button>
                       </div>
                     </td>
                   </tr>
-                ))}
+                )))}
               </tbody>
             </table>
           </div>
         </div>
-      )}
+      ))}
 
-      {filtered.length > 0 && (
+      {sinhalaText(filtered.length > 0 && (
         <div style={{ marginTop: 16, display: 'flex', justifyContent: 'flex-end', gap: 10 }}>
           <button onClick={handleCopyAll}
             style={{ padding: '10px 20px', background: GOLD, color: '#14171A', border: 'none', borderRadius: 10, fontSize: 13, fontWeight: 700, cursor: 'pointer' }}>
-            {copyAllMsg || `📋 Copy ${filtered.length} Row${filtered.length !== 1 ? 's' : ''} to Sheet`}
+            {sinhalaText(copyAllMsg || `📋 පේළි ${filtered.length} ක් පත්‍රයට පිටපත් කරන්න`)}
           </button>
           <a href={SHEET_URL} target="_blank" rel="noreferrer"
             style={{ padding: '10px 20px', background: NAVY, color: '#fff', borderRadius: 10, fontSize: 13, fontWeight: 700, textDecoration: 'none', display: 'inline-block' }}>
-            📊 Open Google Sheet ↗
+            📊 Google පැතුරුම්පත විවෘත කරන්න ↗
           </a>
         </div>
-      )}
+      ))}
     </div>
   )
 }

@@ -1,3 +1,4 @@
+import { si as sinhalaText } from '../lib/sinhala.js'
 import { useLang } from '../lib/useLang.js'
 
 /**
@@ -39,51 +40,51 @@ export default function BidCard({ bid, provider = null }) {
   return (
     <div className="th-card" style={{ padding: 15, borderLeftWidth: 4, borderLeftColor: bid.status === 'new' ? 'var(--terra)' : 'var(--border)' }}>
       <div style={{ display: 'flex', gap: 11, alignItems: 'flex-start', marginBottom: 11 }}>
-        {provider?.profile_image
+        {sinhalaText(provider?.profile_image
           ? <img src={provider.profile_image} alt="" width="40" height="40" style={{ width: 40, height: 40, flex: 'none', borderRadius: 10, objectFit: 'cover' }} />
-          : <div style={{ width: 40, height: 40, flex: 'none', borderRadius: 10, background: 'var(--navy)', color: '#fff', display: 'grid', placeItems: 'center', font: '700 14px var(--th-display)' }}>{initial}</div>}
+          : <div style={{ width: 40, height: 40, flex: 'none', borderRadius: 10, background: 'var(--navy)', color: '#fff', display: 'grid', placeItems: 'center', font: '700 14px var(--th-display)' }}>{sinhalaText(initial)}</div>)}
 
         <div style={{ flex: 1, minWidth: 0 }}>
           <div style={{ display: 'flex', alignItems: 'center', gap: 6, flexWrap: 'wrap', marginBottom: 2 }}>
-            <span style={{ font: '700 14.5px var(--th-display)', letterSpacing: '-0.02em' }}>{bid.bidder_name}</span>
-            {bid.status === 'new' && <span className="th-pill th-pill--open">{t('isNew')}</span>}
+            <span style={{ font: '700 14.5px var(--th-display)', letterSpacing: '-0.02em' }}>{sinhalaText(bid.bidder_name)}</span>
+            {sinhalaText(bid.status === 'new' && <span className="th-pill th-pill--open">{sinhalaText(t('isNew'))}</span>)}
           </div>
           <div style={{ font: '500 11.5px var(--th-body)', color: 'var(--text-3)', display: 'flex', flexWrap: 'wrap', gap: '0 8px' }}>
-            {provider && (provider.avg_rating > 0
-              ? <span>★ {Number(provider.avg_rating).toFixed(1)} ({provider.review_count || 0})</span>
-              : <span>{t('noReview')}</span>)}
-            {provider?.city && <span>📍 {provider.city}</span>}
-            {!provider && bid.bidder_type && <span style={{ textTransform: 'capitalize' }}>{bid.bidder_type}</span>}
-            {bid.timeline && <span>· {bid.timeline}</span>}
+            {sinhalaText(provider && (provider.avg_rating > 0
+              ? <span>★ {sinhalaText(Number(provider.avg_rating).toFixed(1))} ({sinhalaText(provider.review_count || 0)})</span>
+              : <span>{sinhalaText(t('noReview'))}</span>))}
+            {sinhalaText(provider?.city && <span>📍 {sinhalaText(provider.city)}</span>)}
+            {sinhalaText(!provider && bid.bidder_type && <span style={{ textTransform: 'capitalize' }}>{sinhalaText(bid.bidder_type)}</span>)}
+            {sinhalaText(bid.timeline && <span>· {sinhalaText(bid.timeline)}</span>)}
           </div>
         </div>
 
-        {bid.quote_amount != null && (
+        {sinhalaText(bid.quote_amount != null && (
           <div style={{ textAlign: 'right', flex: 'none' }}>
             <div style={{ font: '800 17px var(--th-display)', letterSpacing: '-0.03em' }}>
-              Rs. {Number(bid.quote_amount).toLocaleString('en-US')}
+              රු. {sinhalaText(Number(bid.quote_amount).toLocaleString('en-US'))}
             </div>
           </div>
-        )}
+        ))}
       </div>
 
-      {bid.message && (
+      {sinhalaText(bid.message && (
         <p style={{ margin: '0 0 12px', fontSize: 12.5, lineHeight: 1.5, color: 'var(--text-2)' }}>
-          {bid.message.length > 200 ? bid.message.slice(0, 200) + '…' : bid.message}
+          {sinhalaText(bid.message.length > 200 ? bid.message.slice(0, 200) + '…' : bid.message)}
         </p>
-      )}
+      ))}
 
       <div style={{ display: 'flex', gap: 8 }}>
-        {href && (
+        {sinhalaText(href && (
           <a className="th-btn th-btn--ghost" style={{ flex: 1, minHeight: 42, fontSize: 12.5 }} href={href} target="_blank" rel="noopener">
-            {t('profile')}
+            {sinhalaText(t('profile'))}
           </a>
-        )}
-        {wa && (
+        ))}
+        {sinhalaText(wa && (
           <a className="th-btn th-btn--whatsapp" style={{ flex: 1, minHeight: 42, fontSize: 12.5 }} href={wa} target="_blank" rel="noopener noreferrer">
-            💬 {t('whatsapp')}
+            💬 {sinhalaText(t('whatsapp'))}
           </a>
-        )}
+        ))}
       </div>
     </div>
   )

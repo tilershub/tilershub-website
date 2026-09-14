@@ -1,3 +1,4 @@
+import { si as sinhalaText } from '../lib/sinhala.js'
 import { buildWhatsAppLink } from '../lib/supabase'
 import { supabase } from '../lib/supabase'
 
@@ -5,7 +6,7 @@ function AvatarDisplay({ avatarUrl, name, size = 56 }) {
   const initials = name?.split(' ').map(w => w[0]).join('').slice(0, 2).toUpperCase() || '?'
   return (
     <div className="avatar" style={{ width: size, height: size, fontSize: size * 0.4 }}>
-      {avatarUrl ? <img src={avatarUrl} alt={name} /> : initials}
+      {sinhalaText(avatarUrl ? <img src={avatarUrl} alt={sinhalaText(name)} /> : initials)}
     </div>
   )
 }
@@ -31,21 +32,21 @@ export function TilerCard({ tiler, onClick }) {
           background: availColor.bg, border: `1px solid ${availColor.border}`,
           color: availColor.text, fontSize: 10, fontWeight: 600,
           padding: '3px 10px', borderRadius: 20
-        }}>{availLabel}</span>
+        }}>{sinhalaText(availLabel)}</span>
 
         <div style={{ display: 'flex', gap: 14, alignItems: 'flex-start' }}>
           <AvatarDisplay avatarUrl={tiler.avatar_url} name={tiler.full_name} size={54} />
           <div>
-            <div style={{ fontSize: 16, fontWeight: 700, color: 'var(--white)', marginBottom: 3 }}>{tiler.full_name}</div>
+            <div style={{ fontSize: 16, fontWeight: 700, color: 'var(--white)', marginBottom: 3 }}>{sinhalaText(tiler.full_name)}</div>
             <div style={{ fontSize: 12, color: 'rgba(245,240,232,0.45)', display: 'flex', gap: 8, flexWrap: 'wrap', marginBottom: 6 }}>
-              <span>📍 {tiler.city || tiler.district}</span>
-              {tiler.experience_years > 1 && <><span>·</span><span>⏱ {tiler.experience_years} වසර</span></>}
+              <span>📍 {sinhalaText(tiler.city || tiler.district)}</span>
+              {sinhalaText(tiler.experience_years > 1 && <><span>·</span><span>⏱ {sinhalaText(tiler.experience_years)} වසර</span></>)}
             </div>
-            {tiler.is_verified && (
+            {sinhalaText(tiler.is_verified && (
               <span style={{ fontSize: 10, background: 'rgba(193,96,58,0.2)', color: 'var(--terracotta-muted)', padding: '2px 8px', borderRadius: 10, fontWeight: 600 }}>
-                ✓ Skilled
+                ✓ දක්ෂ
               </span>
-            )}
+            ))}
           </div>
         </div>
       </div>
@@ -53,22 +54,22 @@ export function TilerCard({ tiler, onClick }) {
       {/* Card body */}
       <div style={{ padding: '18px 22px' }}>
         <p style={{ fontSize: 12, color: 'var(--text-mid)', lineHeight: 1.8, marginBottom: 14, display: '-webkit-box', WebkitLineClamp: 2, WebkitBoxOrient: 'vertical', overflow: 'hidden' }}>
-          {tiler.bio || 'ව්‍යාපෘතිය ගැන සාකච්ඡා කිරීමට සූදානම්.'}
+          {sinhalaText(tiler.bio || 'ව්‍යාපෘතිය ගැන සාකච්ඡා කිරීමට සූදානම්.')}
         </p>
-        {(tiler.services || []).length > 0 && (
+        {sinhalaText((tiler.services || []).length > 0 && (
           <div style={{ display: 'flex', flexWrap: 'wrap', gap: 6, marginBottom: 16 }}>
-            {(tiler.services || []).slice(0, 3).map((s, i) => (
-              <span key={s} className={`chip ${i === 0 ? 'chip-terra' : 'chip-cream'}`}>{s}</span>
+            {sinhalaText((tiler.services || []).slice(0, 3).map((s, i) => (
+              <span key={s} className={`chip ${i === 0 ? 'chip-terra' : 'chip-cream'}`}>{sinhalaText(s)}</span>
+            )))}
+            {sinhalaText((tiler.services || []).length > 3 && (
+              <span className="chip chip-cream">+{sinhalaText(tiler.services.length - 3)}</span>
             ))}
-            {(tiler.services || []).length > 3 && (
-              <span className="chip chip-cream">+{tiler.services.length - 3}</span>
-            )}
           </div>
-        )}
+        ))}
         <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', borderTop: '1px solid var(--cream-dark)', paddingTop: 14 }}>
           <div>
             <div style={{ fontSize: 10, color: 'var(--text-light)', textTransform: 'uppercase', letterSpacing: 0.5, marginBottom: 2 }}>ගාස්තු / sqft</div>
-            <div style={{ fontSize: 13, fontWeight: 700, color: 'var(--charcoal)' }}>{rateLabel}</div>
+            <div style={{ fontSize: 13, fontWeight: 700, color: 'var(--charcoal)' }}>{sinhalaText(rateLabel)}</div>
           </div>
           <a
             href={buildWhatsAppLink(tiler.phone, tiler.full_name)}
@@ -96,7 +97,7 @@ export function TilerModal({ tiler, onClose }) {
     const initials = name?.split(' ').map(w => w[0]).join('').slice(0, 2).toUpperCase() || '?'
     return (
       <div className="avatar" style={{ width: size, height: size, fontSize: size * 0.38 }}>
-        {avatarUrl ? <img src={avatarUrl} alt={name} /> : initials}
+        {sinhalaText(avatarUrl ? <img src={avatarUrl} alt={sinhalaText(name)} /> : initials)}
       </div>
     )
   }
@@ -118,17 +119,17 @@ export function TilerModal({ tiler, onClose }) {
           <div style={{ display: 'flex', gap: 18, alignItems: 'flex-end' }}>
             <AvatarDisplay avatarUrl={tiler.avatar_url} name={tiler.full_name} size={76} />
             <div>
-              <div style={{ fontFamily: "var(--th-display)", fontSize: 24, color: 'var(--white)', fontWeight: 700, marginBottom: 4 }}>{tiler.full_name}</div>
-              <div style={{ fontSize: 13, color: 'rgba(245,240,232,0.45)', marginBottom: 10 }}>📍 {tiler.city || tiler.district} · {tiler.district} දිස්ත්‍රික්කය</div>
+              <div style={{ fontFamily: "var(--th-display)", fontSize: 24, color: 'var(--white)', fontWeight: 700, marginBottom: 4 }}>{sinhalaText(tiler.full_name)}</div>
+              <div style={{ fontSize: 13, color: 'rgba(245,240,232,0.45)', marginBottom: 10 }}>📍 {sinhalaText(tiler.city || tiler.district)} · {sinhalaText(tiler.district)} දිස්ත්‍රික්කය</div>
               <div style={{ display: 'flex', gap: 8, flexWrap: 'wrap' }}>
                 <span style={{ fontSize: 11, background: 'rgba(122,154,126,0.15)', border: '1px solid rgba(122,154,126,0.3)', color: 'var(--sage-light)', padding: '3px 12px', borderRadius: 20 }}>
-                  {availLabel}
+                  {sinhalaText(availLabel)}
                 </span>
-                {tiler.is_verified && (
+                {sinhalaText(tiler.is_verified && (
                   <span style={{ fontSize: 11, background: 'rgba(193,96,58,0.2)', color: 'var(--terracotta-muted)', padding: '3px 12px', borderRadius: 20 }}>
-                    ✓ Skilled
+                    ✓ දක්ෂ
                   </span>
-                )}
+                ))}
               </div>
             </div>
           </div>
@@ -136,36 +137,36 @@ export function TilerModal({ tiler, onClose }) {
 
         {/* Modal body */}
         <div style={{ padding: '24px 28px 28px' }}>
-          {tiler.bio && (
+          {sinhalaText(tiler.bio && (
             <div style={{ marginBottom: 22 }}>
               <div style={{ fontSize: 10, fontWeight: 700, color: 'var(--terracotta)', textTransform: 'uppercase', letterSpacing: 1.5, marginBottom: 8 }}>ගැන</div>
-              <p style={{ fontSize: 13, color: 'var(--text-mid)', lineHeight: 1.9 }}>{tiler.bio}</p>
+              <p style={{ fontSize: 13, color: 'var(--text-mid)', lineHeight: 1.9 }}>{sinhalaText(tiler.bio)}</p>
             </div>
-          )}
+          ))}
 
-          {(tiler.services || []).length > 0 && (
+          {sinhalaText((tiler.services || []).length > 0 && (
             <div style={{ marginBottom: 22 }}>
               <div style={{ fontSize: 10, fontWeight: 700, color: 'var(--terracotta)', textTransform: 'uppercase', letterSpacing: 1.5, marginBottom: 10 }}>සේවා</div>
               <div style={{ display: 'flex', flexWrap: 'wrap', gap: 8 }}>
-                {(tiler.services || []).map(s => (
-                  <span key={s} className="chip chip-terra" style={{ fontSize: 12, padding: '5px 14px' }}>{s}</span>
-                ))}
+                {sinhalaText((tiler.services || []).map(s => (
+                  <span key={s} className="chip chip-terra" style={{ fontSize: 12, padding: '5px 14px' }}>{sinhalaText(s)}</span>
+                )))}
               </div>
             </div>
-          )}
+          ))}
 
-          {infoItems.length > 0 && (
+          {sinhalaText(infoItems.length > 0 && (
             <div style={{ marginBottom: 24 }}>
               <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fill, minmax(140px,1fr))', gap: 10 }}>
-                {infoItems.map(item => (
+                {sinhalaText(infoItems.map(item => (
                   <div key={item.label} style={{ background: 'var(--cream)', borderRadius: 10, padding: '14px 16px' }}>
-                    <div style={{ fontSize: 10, color: 'var(--text-light)', textTransform: 'uppercase', letterSpacing: 0.5, marginBottom: 4 }}>{item.label}</div>
-                    <div style={{ fontSize: 13, fontWeight: 600, color: 'var(--charcoal)' }}>{item.val}</div>
+                    <div style={{ fontSize: 10, color: 'var(--text-light)', textTransform: 'uppercase', letterSpacing: 0.5, marginBottom: 4 }}>{sinhalaText(item.label)}</div>
+                    <div style={{ fontSize: 13, fontWeight: 600, color: 'var(--charcoal)' }}>{sinhalaText(item.val)}</div>
                   </div>
-                ))}
+                )))}
               </div>
             </div>
-          )}
+          ))}
 
           <a
             href={buildWhatsAppLink(tiler.phone, tiler.full_name)}

@@ -23,7 +23,7 @@ export default function EditProfileButton({ ownerId, profileType, profileSlug })
         boxShadow: '0 2px 10px rgba(194,84,43,0.25)',
       }}
     >
-      ✏️ Edit My Profile
+      ✏️ මගේ පැතිකඩ සංස්කරණය කරන්න
     </a>
   )
 }

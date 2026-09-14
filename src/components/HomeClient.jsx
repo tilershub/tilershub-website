@@ -1,3 +1,4 @@
+import { si as sinhalaText } from '../lib/sinhala.js'
 import { useState, useEffect } from 'react'
 import { supabase } from '../lib/supabase.js'
 import { useLang } from '../lib/useLang.js'
@@ -43,7 +44,7 @@ export default function HomeClient({ initialUser = null, providerCount = 0, init
   const district = useDistrict()
   const t = (k, ...a) => {
     const v = T[k]?.[lang] ?? T[k]?.en
-    return typeof v === 'function' ? v(...a) : v
+    return typeof v === 'function' ? v(...a.map(sinhalaText)) : v
   }
 
   const [jobs, setJobs] = useState(initialJobs)
@@ -84,7 +85,7 @@ export default function HomeClient({ initialUser = null, providerCount = 0, init
   return (
     <div style={{ maxWidth: 780, margin: '0 auto', padding: '20px 16px 8px' }}>
       <h1 style={{ fontSize: 'clamp(23px,6.2vw,30px)', lineHeight: 1.12, margin: '0 0 18px' }}>
-        {initialUser ? t('greetingIn') : t('greetingOut')}
+        {sinhalaText(initialUser ? t('greetingIn') : t('greetingOut'))}
       </h1>
 
       {/* The one action. */}
@@ -97,52 +98,52 @@ export default function HomeClient({ initialUser = null, providerCount = 0, init
         }} />
         <span style={{ position: 'relative', display: 'block' }}>
           <span style={{ display: 'block', font: '700 10.5px var(--th-body)', textTransform: 'uppercase', letterSpacing: '0.1em', color: 'var(--th-saffron)', marginBottom: 8 }}>
-            {t('free')}
+            {sinhalaText(t('free'))}
           </span>
           <span style={{ display: 'block', font: '800 21px var(--th-display)', letterSpacing: '-0.035em', lineHeight: 1.18, marginBottom: 15 }}>
-            {t('pitch')}
+            {sinhalaText(t('pitch'))}
           </span>
           <span style={{ display: 'flex', alignItems: 'center', gap: 11, flexWrap: 'wrap' }}>
-            <span className="th-btn th-btn--primary" style={{ minHeight: 42, fontSize: 14 }}>{t('postCta')}</span>
-            {providerCount > 0 && (
+            <span className="th-btn th-btn--primary" style={{ minHeight: 42, fontSize: 14 }}>{sinhalaText(t('postCta'))}</span>
+            {sinhalaText(providerCount > 0 && (
               <span style={{ font: '500 12px var(--th-body)', color: 'rgba(255,255,255,0.6)' }}>
-                {t('nearby', providerCount)}
+                {sinhalaText(t('nearby', providerCount))}
               </span>
-            )}
+            ))}
           </span>
         </span>
       </a>
 
       {/* Trade shortcuts — each one prefills the post form. */}
-      <div style={{ font: '700 13px var(--th-display)', marginBottom: 10 }}>{t('popular')}</div>
+      <div style={{ font: '700 13px var(--th-display)', marginBottom: 10 }}>{sinhalaText(t('popular'))}</div>
       {/* minmax(0,1fr): grid items default to min-width:auto, and a long
           trade name would otherwise push the track past the viewport. */}
       <div className="th-grid-3" style={{ display: 'grid', gridTemplateColumns: 'repeat(3,minmax(0,1fr))', gap: 9, marginBottom: 8 }}>
-        {categories.map(c => (
+        {sinhalaText(categories.map(c => (
           <a key={c.slug} href={`/post-project?type=${encodeURIComponent(c.label)}&district=${encodeURIComponent(district)}`}
              className="th-card th-card--tap"
              style={{ display: 'flex', flexDirection: 'column', gap: 7, padding: 12, color: 'inherit', minHeight: 78, minWidth: 0 }}>
-            <span aria-hidden="true" style={{ fontSize: 19, lineHeight: 1 }}>{c.icon}</span>
-            <span style={{ font: '600 11.5px var(--th-body)', lineHeight: 1.25 }}>{lang === 'si' ? c.si : c.label}</span>
+            <span aria-hidden="true" style={{ fontSize: 19, lineHeight: 1 }}>{sinhalaText(c.icon)}</span>
+            <span style={{ font: '600 11.5px var(--th-body)', lineHeight: 1.25 }}>{sinhalaText(lang === 'si' ? c.si : c.label)}</span>
           </a>
-        ))}
+        )))}
       </div>
       <div style={{ marginBottom: 24 }}>
-        <a href="/providers" style={{ font: '600 12.5px var(--th-body)' }}>{t('browse')}</a>
+        <a href="/providers" style={{ font: '600 12.5px var(--th-body)' }}>{sinhalaText(t('browse'))}</a>
       </div>
 
-      {jobs.length > 0 && (
+      {sinhalaText(jobs.length > 0 && (
         <>
           <div style={{ display: 'flex', alignItems: 'baseline', marginBottom: 10 }}>
-            <div style={{ font: '700 13px var(--th-display)' }}>{t('active')}</div>
+            <div style={{ font: '700 13px var(--th-display)' }}>{sinhalaText(t('active'))}</div>
             <span style={{ flex: 1 }} />
-            <a href="/account" style={{ font: '600 12px var(--th-body)' }}>{t('seeAll')}</a>
+            <a href="/account" style={{ font: '600 12px var(--th-body)' }}>{sinhalaText(t('seeAll'))}</a>
           </div>
           <div style={{ display: 'flex', flexDirection: 'column', gap: 9, marginBottom: 8 }}>
-            {jobs.map(j => <JobCard key={j.id} job={j} variant="mine" bidCount={bidCounts[j.id] || 0} />)}
+            {sinhalaText(jobs.map(j => <JobCard key={j.id} job={j} variant="mine" bidCount={bidCounts[j.id] || 0} />))}
           </div>
         </>
-      )}
+      ))}
     </div>
   )
 }

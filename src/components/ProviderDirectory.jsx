@@ -1,3 +1,4 @@
+import { si as sinhalaText } from '../lib/sinhala.js'
 import { useState, useEffect, useRef } from 'react'
 import { supabase, buildWhatsAppLink, DISTRICTS, DISTRICTS_EN, PROVIDER_TYPES, VERIFICATION_BADGES } from '../lib/supabase.js'
 import CoverImage from './CoverImage.jsx'
@@ -56,7 +57,7 @@ const TRANS = {
     suppliersOpt: '🏪 සැපයුම්කරුවන්',
     clear: label => label ? `✕ ඉවත් (${label})` : '✕ ඉවත් කරන්න',
     found: n => `${n} ක් හමු විය`,
-    loading: 'Loading...',
+    loading: 'පූරණය කරමින්…',
     noResults: 'ප්‍රතිඵල නොමැත',
     noResultsHint: 'ෆිල්ටර හෝ සෙවුම් යෙදුම වෙනස් කරන්න',
     clearSearch: 'සෙවුම ඉවත් කරන්න',
@@ -112,7 +113,7 @@ function VerificationBadge({ status }) {
   const b = VERIFICATION_BADGES[status] || VERIFICATION_BADGES.listed
   return (
     <span style={{ display: 'inline-flex', alignItems: 'center', gap: 3, fontSize: 10, fontWeight: 700, padding: '2px 8px', borderRadius: 20, background: b.bg, color: b.color, border: `1px solid ${b.color}30` }}>
-      {status === 'th_master' ? '★' : status === 'th_certified_pro' ? '✦' : status === 'th_verified' ? '✓' : '·'} {b.label}
+      {sinhalaText(status === 'th_master' ? '★' : status === 'th_certified_pro' ? '✦' : status === 'th_verified' ? '✓' : '·')} {sinhalaText(b.label)}
     </span>
   )
 }
@@ -168,7 +169,7 @@ function SaveHeartButton({ providerId, savedIds, savingId, onToggleSave }) {
         transition:'all 0.15s',
       }}
     >
-      {isLoading ? '…' : isSaved ? '♥ Saved' : '♡ Save'}
+      {sinhalaText(isLoading ? '…' : isSaved ? '♥ Saved' : '♡ Save')}
     </button>
   )
 }
@@ -209,61 +210,61 @@ function ShopCard({ provider, onClick, T, savedIds, savingId, onToggleSave }) {
       <div style={{ display: 'flex', minHeight: 168 }}>
         {/* Left image panel */}
         <div style={{ width: '42%', flexShrink: 0, position: 'relative', background: '#E4E0D9' }}>
-          <CoverImage src={coverImg} alt={provider.name} loading="lazy" style={{ width: '100%', height: '100%', objectFit: 'cover', display: 'block' }} fallback={(
+          <CoverImage src={coverImg} alt={sinhalaText(provider.name)} loading="lazy" style={{ width: '100%', height: '100%', objectFit: 'cover', display: 'block' }} fallback={(
             <div style={{ width: '100%', height: '100%', background: '#EFEBE4', backgroundImage: 'repeating-linear-gradient(0deg,transparent,transparent 19px,#E4E0D9 19px,#E4E0D9 20px),repeating-linear-gradient(90deg,transparent,transparent 19px,#E4E0D9 19px,#E4E0D9 20px)', display: 'flex', alignItems: 'center', justifyContent: 'center' }}>
               <span style={{ fontSize: 34, opacity: 0.15 }}>🏪</span>
             </div>
           )} />
           {/* Badge top-left */}
-          {(isFeatured || isVerified) && (
+          {sinhalaText((isFeatured || isVerified) && (
             <div style={{ position: 'absolute', top: 9, left: 9, background: isFeatured ? '#E08A5F' : 'rgba(22,163,74,0.92)', color: '#fff', fontSize: 9, fontWeight: 700, padding: '4px 8px', borderRadius: 20, boxShadow: '0 2px 8px rgba(0,0,0,0.25)', whiteSpace: 'nowrap' }}>
-              {isFeatured ? '⭐ Top Rated' : '✓ Verified'}
+              {sinhalaText(isFeatured ? '⭐ Top Rated' : '✓ Verified')}
             </div>
-          )}
+          ))}
         </div>
 
         {/* Right content panel */}
         <div style={{ flex: 1, padding: '14px 14px 10px', display: 'flex', flexDirection: 'column', minWidth: 0 }}>
-          <div style={{ fontSize: 9, fontWeight: 700, color: '#8A8F95', letterSpacing: 1.2, textTransform: 'uppercase', marginBottom: 3 }}>{tagline}</div>
-          <div style={{ fontFamily: "var(--th-display)", fontSize: 15, fontWeight: 700, color: '#14171A', lineHeight: 1.2, marginBottom: 4, overflow: 'hidden', textOverflow: 'ellipsis', whiteSpace: 'nowrap' }}>{provider.name}</div>
-          {rating > 0 && (
+          <div style={{ fontSize: 9, fontWeight: 700, color: '#8A8F95', letterSpacing: 1.2, textTransform: 'uppercase', marginBottom: 3 }}>{sinhalaText(tagline)}</div>
+          <div style={{ fontFamily: "var(--th-display)", fontSize: 15, fontWeight: 700, color: '#14171A', lineHeight: 1.2, marginBottom: 4, overflow: 'hidden', textOverflow: 'ellipsis', whiteSpace: 'nowrap' }}>{sinhalaText(provider.name)}</div>
+          {sinhalaText(rating > 0 && (
             <div style={{ display: 'flex', alignItems: 'center', gap: 4, marginBottom: 6 }}>
               <span style={{ fontSize: 12 }}>⭐</span>
-              <span style={{ fontSize: 12, fontWeight: 700, color: '#2A2F35' }}>{Number(rating).toFixed(1)}</span>
-              {reviewCount > 0 && <span style={{ fontSize: 10, color: '#8A8F95' }}>({T.reviewsLabel(reviewCount)})</span>}
+              <span style={{ fontSize: 12, fontWeight: 700, color: '#2A2F35' }}>{sinhalaText(Number(rating).toFixed(1))}</span>
+              {sinhalaText(reviewCount > 0 && <span style={{ fontSize: 10, color: '#8A8F95' }}>({sinhalaText(T.reviewsLabel(reviewCount))})</span>)}
             </div>
-          )}
-          {provider.description && (
-            <p style={{ fontSize: 11, color: '#6B7076', lineHeight: 1.55, margin: '0 0 8px', display: '-webkit-box', WebkitLineClamp: 2, WebkitBoxOrient: 'vertical', overflow: 'hidden' }}>{provider.description}</p>
-          )}
+          ))}
+          {sinhalaText(provider.description && (
+            <p style={{ fontSize: 11, color: '#6B7076', lineHeight: 1.55, margin: '0 0 8px', display: '-webkit-box', WebkitLineClamp: 2, WebkitBoxOrient: 'vertical', overflow: 'hidden' }}>{sinhalaText(provider.description)}</p>
+          ))}
           {/* 2×2 feature icons grid */}
           <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: 5, marginTop: 'auto' }}>
-            {features.map(f => (
+            {sinhalaText(features.map(f => (
               <div key={f.label} style={{ display: 'flex', alignItems: 'center', gap: 5, background: '#FBFAF8', border: '1px solid #EFEBE4', borderRadius: 8, padding: '5px 7px' }}>
-                <span style={{ fontSize: 13 }}>{f.icon}</span>
-                <span style={{ fontSize: 10, fontWeight: 600, color: '#3A4046' }}>{f.label}</span>
+                <span style={{ fontSize: 13 }}>{sinhalaText(f.icon)}</span>
+                <span style={{ fontSize: 10, fontWeight: 600, color: '#3A4046' }}>{sinhalaText(f.label)}</span>
               </div>
-            ))}
+            )))}
           </div>
         </div>
       </div>
 
       {/* Bottom strip: location + Save + View Shop button */}
       <div style={{ borderTop: '1px solid #EFEBE4', padding: '9px 14px', display: 'flex', alignItems: 'center', justifyContent: 'space-between', background: '#fafbfc', gap: 8 }}>
-        <span style={{ fontSize: 11, color: '#6B7076', flexShrink: 0 }}>📍 {provider.city || provider.district || 'Sri Lanka'}</span>
+        <span style={{ fontSize: 11, color: '#6B7076', flexShrink: 0 }}>📍 {sinhalaText(provider.city || provider.district || 'Sri Lanka')}</span>
         <div style={{ display: 'flex', gap: 6, alignItems: 'center' }}>
-          {onToggleSave && <SaveHeartButton providerId={provider.id} savedIds={savedIds} savingId={savingId} onToggleSave={onToggleSave} />}
-          {provider.slug ? (
+          {sinhalaText(onToggleSave && <SaveHeartButton providerId={provider.id} savedIds={savedIds} savingId={savingId} onToggleSave={onToggleSave} />)}
+          {sinhalaText(provider.slug ? (
             <a href={`/providers/${provider.slug}`} onClick={e => e.stopPropagation()}
               style={{ fontSize: 11, fontWeight: 700, background: '#14171A', color: '#fff', border: 'none', borderRadius: 8, padding: '5px 12px', cursor: 'pointer', textDecoration: 'none', whiteSpace: 'nowrap' }}>
-              {T.viewShop} ›
+              {sinhalaText(T.viewShop)} ›
             </a>
           ) : waLink ? (
             <a href={waLink} target="_blank" rel="noopener noreferrer" onClick={e => e.stopPropagation()}
               style={{ fontSize: 11, fontWeight: 700, background: '#14171A', color: '#fff', border: 'none', borderRadius: 8, padding: '5px 12px', cursor: 'pointer', textDecoration: 'none', whiteSpace: 'nowrap' }}>
-              {T.viewShop} ›
+              {sinhalaText(T.viewShop)} ›
             </a>
-          ) : null}
+          ) : null)}
         </div>
       </div>
     </div>
@@ -287,62 +288,62 @@ function TilerCard({ tiler, onClick, T, savedIds, savingId, onToggleSave }) {
     >
       {/* Full-width cover image at top */}
       <div style={{ height: 160, position: 'relative', overflow: 'hidden', background: color }}>
-        {coverSrc
-          ? <img src={coverSrc} alt={tiler.full_name} style={{ width: '100%', height: '100%', objectFit: 'cover', display: 'block' }} loading="lazy" />
+        {sinhalaText(coverSrc
+          ? <img src={coverSrc} alt={sinhalaText(tiler.full_name)} style={{ width: '100%', height: '100%', objectFit: 'cover', display: 'block' }} loading="lazy" />
           : <div style={{ width: '100%', height: '100%', display: 'flex', alignItems: 'center', justifyContent: 'center' }}>
-              <span style={{ fontSize: 52, fontWeight: 800, color: 'rgba(255,255,255,0.75)' }}>{inits}</span>
-            </div>
+              <span style={{ fontSize: 52, fontWeight: 800, color: 'rgba(255,255,255,0.75)' }}>{sinhalaText(inits)}</span>
+            </div>)
         }
         <div style={{ position: 'absolute', inset: 0, background: 'linear-gradient(to bottom, rgba(0,0,0,0.02) 60%, rgba(0,0,0,0.2) 100%)' }} />
-        {isVerified && (
+        {sinhalaText(isVerified && (
           <div style={{ position: 'absolute', top: 10, right: 10, background: '#2F6B4F', color: '#fff', fontSize: 11, fontWeight: 700, padding: '4px 11px', borderRadius: 20, boxShadow: '0 2px 8px rgba(0,0,0,0.22)' }}>
-            ✓ Verified
+            ✓ සත්‍යාපිත
           </div>
-        )}
+        ))}
       </div>
 
       {/* Content below image */}
       <div style={{ padding: '14px 16px 16px' }}>
         <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', marginBottom: 6 }}>
-          <span style={{ fontSize: 12, color: '#6B7076', fontWeight: 600 }}>Professional</span>
-          {tiler.daily_rate_min > 0 && (
-            <span style={{ fontSize: 12, color: '#6B7076' }}>{T.from} <span style={{ fontSize: 15, fontWeight: 800, color: '#14171A' }}>Rs.{tiler.daily_rate_min}</span>/{T.dayLabel}</span>
-          )}
+          <span style={{ fontSize: 12, color: '#6B7076', fontWeight: 600 }}>වෘත්තිකයා</span>
+          {sinhalaText(tiler.daily_rate_min > 0 && (
+            <span style={{ fontSize: 12, color: '#6B7076' }}>{sinhalaText(T.from)} <span style={{ fontSize: 15, fontWeight: 800, color: '#14171A' }}>රු.{sinhalaText(tiler.daily_rate_min)}</span>/{sinhalaText(T.dayLabel)}</span>
+          ))}
         </div>
-        <div style={{ fontSize: 16, fontWeight: 700, color: '#14171A', marginBottom: 5, overflow: 'hidden', whiteSpace: 'nowrap', textOverflow: 'ellipsis' }}>{tiler.full_name}</div>
-        {tiler.avg_rating > 0 && (
+        <div style={{ fontSize: 16, fontWeight: 700, color: '#14171A', marginBottom: 5, overflow: 'hidden', whiteSpace: 'nowrap', textOverflow: 'ellipsis' }}>{sinhalaText(tiler.full_name)}</div>
+        {sinhalaText(tiler.avg_rating > 0 && (
           <div style={{ display: 'flex', alignItems: 'center', gap: 5, marginBottom: 8 }}>
             <span>⭐</span>
-            <span style={{ fontSize: 13, fontWeight: 700, color: '#2A2F35' }}>{Number(tiler.avg_rating).toFixed(1)}</span>
-            {tiler.review_count > 0 && <span style={{ fontSize: 12, color: '#8A8F95' }}>({T.reviewsLabel(tiler.review_count)})</span>}
+            <span style={{ fontSize: 13, fontWeight: 700, color: '#2A2F35' }}>{sinhalaText(Number(tiler.avg_rating).toFixed(1))}</span>
+            {sinhalaText(tiler.review_count > 0 && <span style={{ fontSize: 12, color: '#8A8F95' }}>({sinhalaText(T.reviewsLabel(tiler.review_count))})</span>)}
           </div>
-        )}
-        {tiler.bio && (
+        ))}
+        {sinhalaText(tiler.bio && (
           <div style={{ fontSize: 13, color: '#6B7076', lineHeight: 1.65, marginBottom: 14, overflow: 'hidden', display: '-webkit-box', WebkitLineClamp: 2, WebkitBoxOrient: 'vertical' }}>
-            {tiler.bio}
+            {sinhalaText(tiler.bio)}
           </div>
-        )}
+        ))}
         <div style={{ display: 'flex', alignItems: 'center', gap: 8, borderTop: '1px solid #EFEBE4', paddingTop: 12, flexWrap: 'wrap' }}>
-          {tiler.experience_years > 0 && (
-            <span style={{ fontSize: 11, color: '#3A4046', flexShrink: 0 }}><span style={{ color: '#22c55e', fontWeight: 700 }}>✓</span> {tiler.experience_years}+ {T.yrsExp}</span>
-          )}
-          {(tiler.city || tiler.district) && (
-            <span style={{ fontSize: 11, color: '#3A4046', overflow: 'hidden', whiteSpace: 'nowrap', textOverflow: 'ellipsis' }}>📍 {tiler.city || tiler.district}</span>
-          )}
+          {sinhalaText(tiler.experience_years > 0 && (
+            <span style={{ fontSize: 11, color: '#3A4046', flexShrink: 0 }}><span style={{ color: '#22c55e', fontWeight: 700 }}>✓</span> {sinhalaText(tiler.experience_years)}+ {sinhalaText(T.yrsExp)}</span>
+          ))}
+          {sinhalaText((tiler.city || tiler.district) && (
+            <span style={{ fontSize: 11, color: '#3A4046', overflow: 'hidden', whiteSpace: 'nowrap', textOverflow: 'ellipsis' }}>📍 {sinhalaText(tiler.city || tiler.district)}</span>
+          ))}
           <div style={{ marginLeft: 'auto', display: 'flex', gap: 6, flexShrink: 0 }}>
-            {onToggleSave && <SaveHeartButton providerId={tiler.id} savedIds={savedIds} savingId={savingId} onToggleSave={onToggleSave} />}
-            {phone && (
+            {sinhalaText(onToggleSave && <SaveHeartButton providerId={tiler.id} savedIds={savedIds} savingId={savingId} onToggleSave={onToggleSave} />)}
+            {sinhalaText(phone && (
               <a href={buildWhatsAppLink(phone, tiler.full_name)} target="_blank" rel="noopener noreferrer" onClick={e => e.stopPropagation()}
                 style={{ display: 'inline-flex', alignItems: 'center', background: '#E9F1EC', color: '#2F6B4F', border: '1px solid #A9CBB8', borderRadius: 8, padding: '6px 10px', fontSize: 13, fontWeight: 700, textDecoration: 'none' }}>
                 💬
               </a>
-            )}
-            {tiler.slug && (
+            ))}
+            {sinhalaText(tiler.slug && (
               <a href={`/providers/${tiler.slug}`} onClick={e => e.stopPropagation()}
                 style={{ display: 'inline-flex', alignItems: 'center', gap: 4, background: '#C2542B', color: '#fff', borderRadius: 10, padding: '7px 14px', fontSize: 12, fontWeight: 700, textDecoration: 'none', whiteSpace: 'nowrap' }}>
-                {T.viewProfile} ›
+                {sinhalaText(T.viewProfile)} ›
               </a>
-            )}
+            ))}
           </div>
         </div>
       </div>
@@ -368,56 +369,56 @@ function ContractorCard({ provider, onClick, T, savedIds, savingId, onToggleSave
     >
       {/* Full-width cover image at top */}
       <div style={{ height: 160, position: 'relative', overflow: 'hidden', background: color }}>
-        <CoverImage src={coverSrc} alt={provider.name} loading="lazy" style={{ width: '100%', height: '100%', objectFit: 'cover', display: 'block' }}
+        <CoverImage src={coverSrc} alt={sinhalaText(provider.name)} loading="lazy" style={{ width: '100%', height: '100%', objectFit: 'cover', display: 'block' }}
           fallback={
             <div style={{ width: '100%', height: '100%', display: 'flex', alignItems: 'center', justifyContent: 'center' }}>
-              <span style={{ fontSize: 52, fontWeight: 800, color: 'rgba(255,255,255,0.75)' }}>{inits}</span>
+              <span style={{ fontSize: 52, fontWeight: 800, color: 'rgba(255,255,255,0.75)' }}>{sinhalaText(inits)}</span>
             </div>
           } />
         <div style={{ position: 'absolute', inset: 0, background: 'linear-gradient(to bottom, rgba(0,0,0,0.02) 60%, rgba(0,0,0,0.2) 100%)' }} />
-        {isVerified && (
+        {sinhalaText(isVerified && (
           <div style={{ position: 'absolute', top: 10, right: 10, background: '#2F6B4F', color: '#fff', fontSize: 11, fontWeight: 700, padding: '4px 11px', borderRadius: 20, boxShadow: '0 2px 8px rgba(0,0,0,0.22)' }}>
-            ✓ Verified
+            ✓ සත්‍යාපිත
           </div>
-        )}
+        ))}
       </div>
 
       {/* Content below image */}
       <div style={{ padding: '14px 16px 16px' }}>
         <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', marginBottom: 6 }}>
-          <span style={{ fontSize: 12, color: '#6B7076', fontWeight: 600 }}>{typeLabel}</span>
+          <span style={{ fontSize: 12, color: '#6B7076', fontWeight: 600 }}>{sinhalaText(typeLabel)}</span>
         </div>
-        <div style={{ fontSize: 16, fontWeight: 700, color: '#14171A', marginBottom: 5, overflow: 'hidden', whiteSpace: 'nowrap', textOverflow: 'ellipsis' }}>{provider.name}</div>
-        {provider.avg_rating > 0 && (
+        <div style={{ fontSize: 16, fontWeight: 700, color: '#14171A', marginBottom: 5, overflow: 'hidden', whiteSpace: 'nowrap', textOverflow: 'ellipsis' }}>{sinhalaText(provider.name)}</div>
+        {sinhalaText(provider.avg_rating > 0 && (
           <div style={{ display: 'flex', alignItems: 'center', gap: 5, marginBottom: 8 }}>
             <span>⭐</span>
-            <span style={{ fontSize: 13, fontWeight: 700, color: '#2A2F35' }}>{Number(provider.avg_rating).toFixed(1)}</span>
-            {provider.review_count > 0 && <span style={{ fontSize: 12, color: '#8A8F95' }}>({T.reviewsLabel(provider.review_count)})</span>}
+            <span style={{ fontSize: 13, fontWeight: 700, color: '#2A2F35' }}>{sinhalaText(Number(provider.avg_rating).toFixed(1))}</span>
+            {sinhalaText(provider.review_count > 0 && <span style={{ fontSize: 12, color: '#8A8F95' }}>({sinhalaText(T.reviewsLabel(provider.review_count))})</span>)}
           </div>
-        )}
-        {provider.description && (
+        ))}
+        {sinhalaText(provider.description && (
           <div style={{ fontSize: 13, color: '#6B7076', lineHeight: 1.65, marginBottom: 14, overflow: 'hidden', display: '-webkit-box', WebkitLineClamp: 2, WebkitBoxOrient: 'vertical' }}>
-            {provider.description}
+            {sinhalaText(provider.description)}
           </div>
-        )}
+        ))}
         <div style={{ display: 'flex', alignItems: 'center', gap: 8, borderTop: '1px solid #EFEBE4', paddingTop: 12, flexWrap: 'wrap' }}>
-          {(provider.city || provider.district) && (
-            <span style={{ fontSize: 11, color: '#3A4046', overflow: 'hidden', whiteSpace: 'nowrap', textOverflow: 'ellipsis' }}>📍 {provider.city || provider.district}</span>
-          )}
+          {sinhalaText((provider.city || provider.district) && (
+            <span style={{ fontSize: 11, color: '#3A4046', overflow: 'hidden', whiteSpace: 'nowrap', textOverflow: 'ellipsis' }}>📍 {sinhalaText(provider.city || provider.district)}</span>
+          ))}
           <div style={{ marginLeft: 'auto', display: 'flex', gap: 6, flexShrink: 0 }}>
-            {onToggleSave && <SaveHeartButton providerId={provider.id} savedIds={savedIds} savingId={savingId} onToggleSave={onToggleSave} />}
-            {phone && (
+            {sinhalaText(onToggleSave && <SaveHeartButton providerId={provider.id} savedIds={savedIds} savingId={savingId} onToggleSave={onToggleSave} />)}
+            {sinhalaText(phone && (
               <a href={buildWhatsAppLink(phone, provider.name)} target="_blank" rel="noopener noreferrer" onClick={e => e.stopPropagation()}
                 style={{ display: 'inline-flex', alignItems: 'center', background: '#E9F1EC', color: '#2F6B4F', border: '1px solid #A9CBB8', borderRadius: 8, padding: '6px 10px', fontSize: 13, fontWeight: 700, textDecoration: 'none' }}>
                 💬
               </a>
-            )}
-            {provider.slug && (
+            ))}
+            {sinhalaText(provider.slug && (
               <a href={`/providers/${provider.slug}`} onClick={e => e.stopPropagation()}
                 style={{ display: 'inline-flex', alignItems: 'center', gap: 4, background: '#C2542B', color: '#fff', borderRadius: 10, padding: '7px 14px', fontSize: 12, fontWeight: 700, textDecoration: 'none', whiteSpace: 'nowrap' }}>
-                {T.viewProfile} ›
+                {sinhalaText(T.viewProfile)} ›
               </a>
-            )}
+            ))}
           </div>
         </div>
       </div>
@@ -439,118 +440,118 @@ function ProviderModal({ item, onClose, T }) {
     <div style={{ position: 'fixed', inset: 0, background: 'rgba(0,0,0,0.55)', backdropFilter: 'blur(4px)', zIndex: 400, display: 'flex', alignItems: 'center', justifyContent: 'center', padding: 16 }} onClick={onClose}>
       <div style={{ background: '#fff', borderRadius: 20, width: '100%', maxWidth: 520, maxHeight: '90vh', overflowY: 'auto' }} onClick={e => e.stopPropagation()}>
         <div style={{ height: 160, position: 'relative', borderRadius: '20px 20px 0 0', overflow: 'hidden' }}>
-          {coverImage
-            ? <img src={coverImage} alt={name} style={{ width: '100%', height: '100%', objectFit: 'cover' }} />
+          {sinhalaText(coverImage
+            ? <img src={coverImage} alt={sinhalaText(name)} style={{ width: '100%', height: '100%', objectFit: 'cover' }} />
             : <>
                 <div style={{ position: 'absolute', inset: 0, background: 'linear-gradient(135deg, #14171A 0%, #C2542B 100%)' }} />
                 <div style={{ position: 'absolute', inset: 0, opacity: 0.04, backgroundImage: 'repeating-linear-gradient(0deg,transparent,transparent 19px,rgba(255,255,255,0.8) 19px,rgba(255,255,255,0.8) 20px),repeating-linear-gradient(90deg,transparent,transparent 19px,rgba(255,255,255,0.8) 19px,rgba(255,255,255,0.8) 20px)' }} />
-              </>
+              </>)
           }
-          {coverImage && <div style={{ position: 'absolute', inset: 0, background: 'linear-gradient(to top, rgba(0,0,0,0.5) 0%, transparent 60%)' }} />}
+          {sinhalaText(coverImage && <div style={{ position: 'absolute', inset: 0, background: 'linear-gradient(to top, rgba(0,0,0,0.5) 0%, transparent 60%)' }} />)}
           <button onClick={onClose} style={{ position: 'absolute', top: 12, right: 12, background: 'rgba(0,0,0,0.35)', border: 'none', borderRadius: '50%', width: 34, height: 34, cursor: 'pointer', fontSize: 16, color: '#fff', display: 'flex', alignItems: 'center', justifyContent: 'center', backdropFilter: 'blur(4px)' }}>✕</button>
         </div>
 
         <div style={{ position: 'relative' }}>
           <div style={{ position: 'absolute', top: -32, left: 24, width: 64, height: 64, borderRadius: '50%', border: '3px solid #fff', background: '#C2542B', display: 'flex', alignItems: 'center', justifyContent: 'center', fontSize: 22, fontWeight: 700, color: '#fff', overflow: 'hidden', boxShadow: '0 2px 12px rgba(0,0,0,0.18)' }}>
-            {avatarImage ? <img src={avatarImage} alt={name} style={{ width: '100%', height: '100%', objectFit: 'cover' }} /> : initials(name)}
+            {sinhalaText(avatarImage ? <img src={avatarImage} alt={sinhalaText(name)} style={{ width: '100%', height: '100%', objectFit: 'cover' }} /> : initials(name))}
           </div>
         </div>
 
         <div style={{ padding: '10px 24px 24px', paddingTop: 40 }}>
           <div style={{ marginBottom: 14 }}>
-            <div style={{ fontSize: 20, fontWeight: 700, color: '#14171A', marginBottom: 3 }}>{name}</div>
-            <div style={{ fontSize: 13, color: '#6B7076' }}>📍 {item.city || item.district}{item.district && item.city ? `, ${item.district}` : ''}</div>
+            <div style={{ fontSize: 20, fontWeight: 700, color: '#14171A', marginBottom: 3 }}>{sinhalaText(name)}</div>
+            <div style={{ fontSize: 13, color: '#6B7076' }}>📍 {sinhalaText(item.city || item.district)}{sinhalaText(item.district && item.city ? `, ${item.district}` : '')}</div>
           </div>
 
           <div style={{ display: 'flex', flexWrap: 'wrap', gap: 6, marginBottom: 16 }}>
-            {pts && <span style={{ fontSize: 11, fontWeight: 700, padding: '3px 10px', borderRadius: 20, background: '#F7EFE9', color: '#C2542B' }}>{pts.icon} {pts.label}</span>}
+            {sinhalaText(pts && <span style={{ fontSize: 11, fontWeight: 700, padding: '3px 10px', borderRadius: 20, background: '#F7EFE9', color: '#C2542B' }}>{sinhalaText(pts.icon)} {sinhalaText(pts.label)}</span>)}
             <VerificationBadge status={item.verification_status} />
           </div>
 
-          {item.verification_status === 'listed' && (
+          {sinhalaText(item.verification_status === 'listed' && (
             <div style={{ fontSize: 12, color: '#78716c', background: '#fef9f0', border: '1px solid #E7D9CE', borderRadius: 10, padding: '10px 14px', marginBottom: 16, lineHeight: 1.6 }}>
-              {T.unverifiedNotice}
+              {sinhalaText(T.unverifiedNotice)}
             </div>
-          )}
+          ))}
 
-          {item.description && (
+          {sinhalaText(item.description && (
             <p style={{ fontSize: 13, color: '#3A4046', lineHeight: 1.75, marginBottom: 18, padding: 14, background: '#FBFAF8', borderRadius: 10 }}>
-              {item.description}
+              {sinhalaText(item.description)}
             </p>
-          )}
+          ))}
 
-          {(item.experience_years || item.daily_rate_min || item.avg_rating > 0) && (
+          {sinhalaText((item.experience_years || item.daily_rate_min || item.avg_rating > 0) && (
             <div style={{ display: 'flex', gap: 10, marginBottom: 18, flexWrap: 'wrap' }}>
-              {item.experience_years > 0 && (
+              {sinhalaText(item.experience_years > 0 && (
                 <div style={{ padding: '10px 16px', background: '#FBFAF8', borderRadius: 10, border: '1px solid #E4E0D9', textAlign: 'center', flex: 1 }}>
-                  <div style={{ fontSize: 17, fontWeight: 700, color: '#C2542B' }}>{item.experience_years}+</div>
-                  <div style={{ fontSize: 10, color: '#8A8F95' }}>{T.yearsExpLabel}</div>
+                  <div style={{ fontSize: 17, fontWeight: 700, color: '#C2542B' }}>{sinhalaText(item.experience_years)}+</div>
+                  <div style={{ fontSize: 10, color: '#8A8F95' }}>{sinhalaText(T.yearsExpLabel)}</div>
                 </div>
-              )}
-              {item.daily_rate_min && (
+              ))}
+              {sinhalaText(item.daily_rate_min && (
                 <div style={{ padding: '10px 16px', background: '#FBFAF8', borderRadius: 10, border: '1px solid #E4E0D9', textAlign: 'center', flex: 1 }}>
-                  <div style={{ fontSize: 13, fontWeight: 700, color: '#C2542B' }}>Rs.{item.daily_rate_min}–{item.daily_rate_max || '?'}</div>
-                  <div style={{ fontSize: 10, color: '#8A8F95' }}>{T.perSqftLabel}</div>
+                  <div style={{ fontSize: 13, fontWeight: 700, color: '#C2542B' }}>රු.{sinhalaText(item.daily_rate_min)}–{sinhalaText(item.daily_rate_max || '?')}</div>
+                  <div style={{ fontSize: 10, color: '#8A8F95' }}>{sinhalaText(T.perSqftLabel)}</div>
                 </div>
-              )}
-              {item.avg_rating > 0 && (
+              ))}
+              {sinhalaText(item.avg_rating > 0 && (
                 <div style={{ padding: '10px 16px', background: '#F7EFE9', borderRadius: 10, border: '1px solid #E7D9CE', textAlign: 'center', flex: 1 }}>
-                  <div style={{ fontSize: 17, fontWeight: 700, color: '#2A2F35' }}>⭐ {Number(item.avg_rating).toFixed(1)}</div>
-                  <div style={{ fontSize: 10, color: '#8A8F95' }}>{T.reviewsLabel(item.review_count || 0)}</div>
+                  <div style={{ fontSize: 17, fontWeight: 700, color: '#2A2F35' }}>⭐ {sinhalaText(Number(item.avg_rating).toFixed(1))}</div>
+                  <div style={{ fontSize: 10, color: '#8A8F95' }}>{sinhalaText(T.reviewsLabel(item.review_count || 0))}</div>
                 </div>
-              )}
+              ))}
             </div>
-          )}
+          ))}
 
-          {(item.services || []).length > 0 && (
+          {sinhalaText((item.services || []).length > 0 && (
             <div style={{ marginBottom: 18 }}>
-              <div style={{ fontSize: 11, fontWeight: 700, color: '#8A8F95', letterSpacing: 1, textTransform: 'uppercase', marginBottom: 8 }}>{T.servicesLabel}</div>
+              <div style={{ fontSize: 11, fontWeight: 700, color: '#8A8F95', letterSpacing: 1, textTransform: 'uppercase', marginBottom: 8 }}>{sinhalaText(T.servicesLabel)}</div>
               <div style={{ display: 'flex', flexWrap: 'wrap', gap: 6 }}>
-                {(item.services || []).map(s => (
-                  <span key={s} style={{ fontSize: 12, padding: '4px 10px', borderRadius: 20, background: '#F7EFE9', color: '#C2542B', border: '1px solid #EDDFD5' }}>{s}</span>
-                ))}
+                {sinhalaText((item.services || []).map(s => (
+                  <span key={s} style={{ fontSize: 12, padding: '4px 10px', borderRadius: 20, background: '#F7EFE9', color: '#C2542B', border: '1px solid #EDDFD5' }}>{sinhalaText(s)}</span>
+                )))}
               </div>
             </div>
-          )}
+          ))}
 
-          {(() => {
+          {sinhalaText((() => {
             const imgs = item.gallery || item.photo_urls || []
             if (!imgs.length) return null
             return (
               <div style={{ marginBottom: 18 }}>
-                <div style={{ fontSize: 11, fontWeight: 700, color: '#8A8F95', letterSpacing: 1, textTransform: 'uppercase', marginBottom: 8 }}>{T.portfolioLabel}</div>
+                <div style={{ fontSize: 11, fontWeight: 700, color: '#8A8F95', letterSpacing: 1, textTransform: 'uppercase', marginBottom: 8 }}>{sinhalaText(T.portfolioLabel)}</div>
                 <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fill, minmax(90px, 1fr))', gap: 6 }}>
-                  {imgs.map((img, i) => <img key={i} src={img} alt="" style={{ width: '100%', aspectRatio: '1', borderRadius: 8, objectFit: 'cover', border: '1px solid #E4E0D9' }} />)}
+                  {sinhalaText(imgs.map((img, i) => <img key={i} src={img} alt="" style={{ width: '100%', aspectRatio: '1', borderRadius: 8, objectFit: 'cover', border: '1px solid #E4E0D9' }} />))}
                 </div>
               </div>
             )
-          })()}
+          })())}
 
-          {(item.service_areas || []).length > 0 && (
+          {sinhalaText((item.service_areas || []).length > 0 && (
             <div style={{ marginBottom: 18 }}>
-              <div style={{ fontSize: 11, fontWeight: 700, color: '#8A8F95', letterSpacing: 1, textTransform: 'uppercase', marginBottom: 8 }}>{T.serviceAreasLabel}</div>
+              <div style={{ fontSize: 11, fontWeight: 700, color: '#8A8F95', letterSpacing: 1, textTransform: 'uppercase', marginBottom: 8 }}>{sinhalaText(T.serviceAreasLabel)}</div>
               <div style={{ display: 'flex', flexWrap: 'wrap', gap: 6 }}>
-                {(item.service_areas || []).map(a => (
-                  <span key={a} style={{ fontSize: 11, padding: '3px 9px', borderRadius: 20, background: '#EFEBE4', color: '#3A4046' }}>{a}</span>
-                ))}
+                {sinhalaText((item.service_areas || []).map(a => (
+                  <span key={a} style={{ fontSize: 11, padding: '3px 9px', borderRadius: 20, background: '#EFEBE4', color: '#3A4046' }}>{sinhalaText(a)}</span>
+                )))}
               </div>
             </div>
-          )}
+          ))}
 
           <div style={{ display: 'flex', gap: 10 }}>
-            {phone && (
+            {sinhalaText(phone && (
               <a href={buildWhatsAppLink(phone, name)} target="_blank" rel="noopener noreferrer"
                 style={{ flex: 1, display: 'flex', alignItems: 'center', justifyContent: 'center', gap: 8, background: '#25D366', color: '#fff', borderRadius: 12, padding: 13, fontSize: 14, fontWeight: 700, textDecoration: 'none' }}>
-                {T.whatsapp}
+                {sinhalaText(T.whatsapp)}
               </a>
-            )}
+            ))}
           </div>
-          {altWaPhone && (
+          {sinhalaText(altWaPhone && (
             <a href={buildWhatsAppLink(altWaPhone, name)} target="_blank" rel="noopener noreferrer"
               style={{ display: 'flex', alignItems: 'center', justifyContent: 'center', gap: 8, width: '100%', marginTop: 8, background: '#E9F1EC', color: '#2F6B4F', border: '1px solid #C6DDCF', borderRadius: 12, padding: 11, fontSize: 13, fontWeight: 700, textDecoration: 'none' }}>
-              {T.altNumber}
+              {sinhalaText(T.altNumber)}
             </a>
-          )}
+          ))}
         </div>
       </div>
     </div>
@@ -606,51 +607,51 @@ function SuggestedContent({ type, providers, onSelectProvider, T, savedIds, savi
       <div style={{ background: '#fff', borderRadius: 16, border: '2px dashed #E4E0D9', padding: '36px 24px', textAlign: 'center', marginBottom: 36 }}>
         <div style={{ fontSize: 44, marginBottom: 12 }}>🏗️</div>
         <h3 style={{ fontSize: 18, fontWeight: 700, color: '#14171A', marginBottom: 8 }}>
-          {T.noTypeListed(typeLabel)}
+          {sinhalaText(T.noTypeListed(typeLabel))}
         </h3>
         <p style={{ fontSize: 13, color: '#6B7076', marginBottom: 20, maxWidth: 360, margin: '0 auto 20px' }}>
-          {T.noTypeHint(typeLabel)}
+          {sinhalaText(T.noTypeHint(typeLabel))}
         </p>
         <a href="/join-tilershub" style={{ display: 'inline-flex', alignItems: 'center', gap: 7, background: '#C2542B', color: '#fff', borderRadius: 10, padding: '10px 22px', fontSize: 13, fontWeight: 700, textDecoration: 'none' }}>
-          {T.joinAs(typeLabel)}
+          {sinhalaText(T.joinAs(typeLabel))}
         </a>
       </div>
 
-      {infoCards.length > 0 && (
+      {sinhalaText(infoCards.length > 0 && (
         <div style={{ marginBottom: 36 }}>
           <div style={{ fontSize: 12, fontWeight: 700, color: '#8A8F95', textTransform: 'uppercase', letterSpacing: 1, marginBottom: 14 }}>
-            {T.whatTheyDo(typeLabel)}
+            {sinhalaText(T.whatTheyDo(typeLabel))}
           </div>
           <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fill, minmax(220px, 1fr))', gap: 12 }}>
-            {infoCards.map(c => (
+            {sinhalaText(infoCards.map(c => (
               <div key={c.title} style={{ background: '#fff', borderRadius: 14, border: '1px solid #E4E0D9', padding: '18px 18px' }}>
-                <div style={{ width: 40, height: 40, borderRadius: 11, background: '#F7EFE9', display: 'flex', alignItems: 'center', justifyContent: 'center', fontSize: 18, marginBottom: 10 }}>{c.icon}</div>
-                <div style={{ fontWeight: 700, fontSize: 13, color: '#14171A', marginBottom: 4 }}>{c.title}</div>
-                <div style={{ fontSize: 11, color: '#6B7076', lineHeight: 1.65 }}>{c.body}</div>
+                <div style={{ width: 40, height: 40, borderRadius: 11, background: '#F7EFE9', display: 'flex', alignItems: 'center', justifyContent: 'center', fontSize: 18, marginBottom: 10 }}>{sinhalaText(c.icon)}</div>
+                <div style={{ fontWeight: 700, fontSize: 13, color: '#14171A', marginBottom: 4 }}>{sinhalaText(c.title)}</div>
+                <div style={{ fontSize: 11, color: '#6B7076', lineHeight: 1.65 }}>{sinhalaText(c.body)}</div>
               </div>
-            ))}
+            )))}
           </div>
         </div>
-      )}
+      ))}
 
-      {otherProviders.length > 0 && (
+      {sinhalaText(otherProviders.length > 0 && (
         <div>
           <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', marginBottom: 14 }}>
-            <div style={{ fontSize: 12, fontWeight: 700, color: '#8A8F95', textTransform: 'uppercase', letterSpacing: 1 }}>{T.otherProviders}</div>
-            <a href="/providers" style={{ fontSize: 12, color: '#C2542B', fontWeight: 600, textDecoration: 'none' }}>{T.seeAll}</a>
+            <div style={{ fontSize: 12, fontWeight: 700, color: '#8A8F95', textTransform: 'uppercase', letterSpacing: 1 }}>{sinhalaText(T.otherProviders)}</div>
+            <a href="/providers" style={{ fontSize: 12, color: '#C2542B', fontWeight: 600, textDecoration: 'none' }}>{sinhalaText(T.seeAll)}</a>
           </div>
           <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fill, minmax(280px, 1fr))', gap: 16 }}>
-            {otherProviders.map(p => <ProviderCard key={p.id} provider={p} onClick={onSelectProvider} T={T} savedIds={savedIds} savingId={savingId} onToggleSave={onToggleSave} />)}
+            {sinhalaText(otherProviders.map(p => <ProviderCard key={p.id} provider={p} onClick={onSelectProvider} T={T} savedIds={savedIds} savingId={savingId} onToggleSave={onToggleSave} />))}
           </div>
         </div>
-      )}
+      ))}
     </div>
   )
 }
 
 // ─── Main component ────────────────────────────────────────────────────────────
 export default function ProviderDirectory({ initialType, initialSearch, initialProviders, initialDistrict }) {
-  const T = TRANS.en
+  const T = TRANS.si
 
   const [providers, setProviders] = useState(initialProviders || [])
   const [loading,   setLoading]   = useState(!initialProviders)
@@ -739,7 +740,7 @@ export default function ProviderDirectory({ initialType, initialSearch, initialP
                 clearTimeout(debounceRef.current)
                 debounceRef.current = setTimeout(() => setSearch(val), 280)
               }}
-              placeholder={T.searchPh}
+              placeholder={sinhalaText(T.searchPh)}
               style={{ width: '100%', padding: '9px 12px 9px 32px', border: '1.5px solid #E4E0D9', borderRadius: 10, fontSize: 13, outline: 'none', fontFamily: 'inherit' }}
               onFocus={e => e.target.style.borderColor = '#C2542B'}
               onBlur={e => e.target.style.borderColor = '#E4E0D9'}
@@ -748,56 +749,56 @@ export default function ProviderDirectory({ initialType, initialSearch, initialP
 
           {/* Type filter */}
           <select value={type} onChange={e => setType(e.target.value)} style={{ padding: '9px 12px', border: '1.5px solid #E4E0D9', borderRadius: 10, fontSize: 13, outline: 'none', background: '#fff', fontFamily: 'inherit', cursor: 'pointer' }}>
-            <option value="">{T.all}</option>
-            <option value="tiler">🪚 Tiler</option>
-            <option value="contractor">🏗️ Contractor</option>
-            <option value="electrician">⚡ Electrician</option>
-            <option value="plumber">🔧 Plumber</option>
-            <option value="carpenter">🪵 Carpenter</option>
-            <option value="painter">🖌️ Painter</option>
-            <option value="mason">🧱 Mason</option>
-            <option value="interior_designer">🛋️ Interior Designer</option>
-            <option value="construction_company">🏢 Construction Co.</option>
-            <option value="tile_shop">🔲 Tile Shop</option>
-            <option value="bathroom_shop">🛁 Bathroom Shop</option>
-            <option value="supplier">📦 Supplier</option>
-            <option value="workshop">✂️ Workshop</option>
-            <option value="brand_dealer">✦ Brand Dealer</option>
-            <option value="tool_supplier">🔨 Tool Supplier</option>
+            <option value="">{sinhalaText(T.all)}</option>
+            <option value="tiler">🪚 ටයිල් කාර්මිකයා</option>
+            <option value="contractor">🏗️ කොන්ත්‍රාත්කරු</option>
+            <option value="electrician">⚡ විදුලි කාර්මිකයා</option>
+            <option value="plumber">🔧 ජලනළ කාර්මිකයා</option>
+            <option value="carpenter">🪵 වඩු කාර්මිකයා</option>
+            <option value="painter">🖌️ පින්තාරුකරු</option>
+            <option value="mason">🧱 පෙදරේරුවා</option>
+            <option value="interior_designer">🛋️ අභ්‍යන්තර නිර්මාණකරු</option>
+            <option value="construction_company">🏢 ඉදිකිරීම් ආයතනය</option>
+            <option value="tile_shop">🔲 ටයිල් වෙළෙඳසැල</option>
+            <option value="bathroom_shop">🛁 නාන කාමර උපාංග වෙළෙඳසැල</option>
+            <option value="supplier">📦 සැපයුම්කරු</option>
+            <option value="workshop">✂️ වැඩපොළ</option>
+            <option value="brand_dealer">✦ සන්නාම අලෙවිකරු</option>
+            <option value="tool_supplier">🔨 මෙවලම් සැපයුම්කරු</option>
           </select>
 
           {/* District filter */}
           <select value={district} onChange={e => setDistrict(e.target.value)} style={{ padding: '9px 12px', border: '1.5px solid #E4E0D9', borderRadius: 10, fontSize: 13, outline: 'none', background: '#fff', fontFamily: 'inherit', cursor: 'pointer' }}>
-            <option value="">{T.allDistricts}</option>
-            {DISTRICTS_EN.map((d, i) => (
-              <option key={d} value={d}>{d}</option>
-            ))}
+            <option value="">{sinhalaText(T.allDistricts)}</option>
+            {sinhalaText(DISTRICTS_EN.map((d, i) => (
+              <option key={d} value={d}>{sinhalaText(d)}</option>
+            )))}
           </select>
 
-          {(inputValue || type || district) && (
+          {sinhalaText((inputValue || type || district) && (
             <button onClick={() => { setInputValue(''); setSearch(''); setType(''); setDistrict('') }} style={{ padding: '9px 14px', background: '#FBEDEB', color: '#C0392B', border: 'none', borderRadius: 10, fontSize: 12, fontWeight: 600, cursor: 'pointer' }}>
-              {T.clear(clearLabel)}
+              {sinhalaText(T.clear(clearLabel))}
             </button>
-          )}
+          ))}
 
-          <span style={{ fontSize: 12, color: '#8A8F95', marginLeft: 'auto' }}>{T.found(total)}</span>
+          <span style={{ fontSize: 12, color: '#8A8F95', marginLeft: 'auto' }}>{sinhalaText(T.found(total))}</span>
 
         </div>
       </div>
 
       <div style={{ maxWidth: 1100, margin: '0 auto', padding: '32px 20px' }}>
-        {loading ? (
+        {sinhalaText(loading ? (
           <div style={{ textAlign: 'center', padding: '80px 0', color: '#8A8F95' }}>
             <div style={{ fontSize: 36, marginBottom: 16 }}>⏳</div>
-            <p>{T.loading}</p>
+            <p>{sinhalaText(T.loading)}</p>
           </div>
         ) : loadError ? (
           <div style={{ textAlign: 'center', padding: '60px 20px', background: '#fff', borderRadius: 16, border: '1px solid #F2C9C3' }}>
             <div style={{ fontSize: 40, marginBottom: 12 }}>⚠️</div>
-            <h3 style={{ fontSize: 16, fontWeight: 700, color: '#C0392B', marginBottom: 8 }}>Could not load providers</h3>
-            <p style={{ fontSize: 13, color: '#6B7076', marginBottom: 20 }}>{loadError}</p>
+            <h3 style={{ fontSize: 16, fontWeight: 700, color: '#C0392B', marginBottom: 8 }}>සේවා සපයන්නන් පූරණය කළ නොහැකි විය</h3>
+            <p style={{ fontSize: 13, color: '#6B7076', marginBottom: 20 }}>{sinhalaText(loadError)}</p>
             <button onClick={() => window.location.reload()} style={{ padding: '10px 24px', background: '#C2542B', color: '#fff', border: 'none', borderRadius: 10, fontSize: 14, fontWeight: 600, cursor: 'pointer' }}>
-              Try Again
+              නැවත උත්සාහ කරන්න
             </button>
           </div>
         ) : total === 0 ? (
@@ -810,32 +811,32 @@ export default function ProviderDirectory({ initialType, initialSearch, initialP
           ) : (
             <div style={{ textAlign: 'center', padding: '80px 20px', background: '#fff', borderRadius: 16, border: '1px solid #E4E0D9' }}>
               <div style={{ fontSize: 48, marginBottom: 16 }}>🔍</div>
-              <h3 style={{ fontSize: 18, fontWeight: 700, color: '#14171A', marginBottom: 8 }}>{T.noResults}</h3>
-              <p style={{ color: '#6B7076', marginBottom: 24 }}>{T.noResultsHint}</p>
+              <h3 style={{ fontSize: 18, fontWeight: 700, color: '#14171A', marginBottom: 8 }}>{sinhalaText(T.noResults)}</h3>
+              <p style={{ color: '#6B7076', marginBottom: 24 }}>{sinhalaText(T.noResultsHint)}</p>
               <div style={{ display: 'flex', gap: 10, justifyContent: 'center', flexWrap: 'wrap' }}>
-                {(search || district) && (
+                {sinhalaText((search || district) && (
                   <button onClick={() => { setSearch(''); setInputValue(''); setDistrict('') }} style={{ padding: '10px 20px', background: '#C2542B', color: '#fff', border: 'none', borderRadius: 10, fontSize: 14, fontWeight: 600, cursor: 'pointer' }}>
-                    {T.clearSearch}
+                    {sinhalaText(T.clearSearch)}
                   </button>
-                )}
+                ))}
                 <a href="/providers" style={{ padding: '10px 20px', background: '#EFEBE4', color: '#3A4046', borderRadius: 10, fontSize: 14, fontWeight: 600, textDecoration: 'none', display: 'inline-block' }}>
-                  {T.browseAll}
+                  {sinhalaText(T.browseAll)}
                 </a>
               </div>
             </div>
           )
         ) : (
           <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fill, minmax(300px, 1fr))', gap: 16 }}>
-            {allCards.map(item => (
+            {sinhalaText(allCards.map(item => (
               <ProviderCard key={item.id} provider={item} T={T} onClick={p => setSelected(p)} savedIds={savedIds} savingId={savingId} onToggleSave={toggleSaveProvider} />
-            ))}
+            )))}
           </div>
-        )}
+        ))}
       </div>
 
-      {selected && (
+      {sinhalaText(selected && (
         <ProviderModal item={selected} onClose={() => setSelected(null)} T={T} />
-      )}
+      ))}
     </div>
   )
 }

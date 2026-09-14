@@ -1,3 +1,4 @@
+import { si as sinhalaText } from '../lib/sinhala.js'
 import { useState, useEffect } from 'react'
 import { supabase } from '../lib/supabase.js'
 import { useLang } from '../lib/useLang.js'
@@ -78,9 +79,9 @@ export default function AppShell({ role = 'client', path = '/', initialUser = nu
   return (
     <>
       <header className="th-appbar">
-        <a href="/" className="th-brand" aria-label="TilersHub home">
+        <a href="/" className="th-brand" aria-label="TilersHub මුල් පිටුව">
           <span className="site-logo-grid" aria-hidden="true">
-            {[0, 1, 2, 3, 4, 5, 6, 7, 8].map(i => <span key={i} className="site-logo-tile" />)}
+            {sinhalaText([0, 1, 2, 3, 4, 5, 6, 7, 8].map(i => <span key={i} className="site-logo-tile" />))}
           </span>
           <span className="th-wordmark">TILERS<span>HUB</span></span>
         </a>
@@ -88,37 +89,37 @@ export default function AppShell({ role = 'client', path = '/', initialUser = nu
         <span className="th-appbar__spacer" />
 
         <DistrictPicker />
-        <a href="/notifications" className="header-icon-btn header-bell" aria-label="Notifications">🔔</a>
+        <a href="/notifications" className="header-icon-btn header-bell" aria-label="දැනුම්දීම්">🔔</a>
         <AuthButton initialUser={initialUser} />
         <button
           className="header-icon-btn"
           onClick={() => window.dispatchEvent(new CustomEvent('th-drawer-open'))}
-          aria-label={t('menu')}
+          aria-label={sinhalaText(t('menu'))}
         >☰</button>
       </header>
 
-      <nav className="th-tabbar" aria-label="Main navigation">
-        {tabs.map(tab => (
+      <nav className="th-tabbar" aria-label="ප්‍රධාන මෙනුව">
+        {sinhalaText(tabs.map(tab => (
           <a
             key={tab.key}
             href={tab.href}
             className={tab.raised ? 'th-tabbar__raised' : undefined}
             aria-current={screen === tab.key ? 'page' : undefined}
-            aria-label={tab.raised ? t(tab.label) : undefined}
+            aria-label={sinhalaText(tab.raised ? t(tab.label) : undefined)}
           >
-            {tab.raised ? '+' : (
+            {sinhalaText(tab.raised ? '+' : (
               <>
                 <span className="th-tabbar__icon" aria-hidden="true">
-                  {tab.icon}
-                  {tab.badge && openCount !== null && (
-                    <span className="th-tabbar__badge">{openCount > 99 ? '99+' : openCount}</span>
-                  )}
+                  {sinhalaText(tab.icon)}
+                  {sinhalaText(tab.badge && openCount !== null && (
+                    <span className="th-tabbar__badge">{sinhalaText(openCount > 99 ? '99+' : openCount)}</span>
+                  ))}
                 </span>
-                <span className="th-tabbar__label">{t(tab.label)}</span>
+                <span className="th-tabbar__label">{sinhalaText(t(tab.label))}</span>
               </>
-            )}
+            ))}
           </a>
-        ))}
+        )))}
       </nav>
     </>
   )
