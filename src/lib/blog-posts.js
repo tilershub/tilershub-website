@@ -61,7 +61,7 @@ export const BLOG_POSTS = [
       "නාන කාමර මිල ගණනක ජලරෝධනය වෙනම අයිතමයක් විය යුතුයි",
       "ටයිල් ඇල්ලීමට පෙර ජලරෝධන පටලයේ ඡායාරූප ඉල්ලන්න",
     ],
-    cta: { text: "සත්‍යාපිත ටයිල් කාර්මිකයන් සොයන්න", href: '/providers?type=tiler' },
+    cta: { text: "සත්‍යාපිත ටයිල් කාර්මිකයන් සොයන්න", href: 'https://wedahub.lk/providers?type=tiler' },
   },
   {
     slug: 'bathroom-renovation-cost-sri-lanka',
@@ -125,7 +125,7 @@ export const BLOG_POSTS = [
       "ආනයනික ටයිල් පැමිණීමට සති 2–4ක් ගතවේ — කලින් සැලසුම් කරන්න",
       "ඉදිකිරීම් ඉල්ලුම නිසා 2022 සිට ශ්‍රම ගාස්තු 30–40%කින් ඉහළ ගොස් ඇත",
     ],
-    cta: { text: "නොමිලේ මිල ගණන් ලබාගන්න", href: '/post-project' },
+    cta: { text: "නොමිලේ මිල ගණන් ලබාගන්න", href: 'https://wedahub.lk/post-project' },
   },
   {
     slug: 'best-tiles-for-bathroom-floor',
@@ -189,7 +189,7 @@ export const BLOG_POSTS = [
       "දේශීය ටයිල් ඉක්මනින් ලබාගත හැකි නමුත් ප්‍රමාණ පරාසය සීමිතයි",
       "විශාල ටයිල් (සෙ.මී. 60×120) කුඩා නාන කාමර විශාලව පෙන්වයි",
     ],
-    cta: { text: "ටයිල් විශේෂඥයන් සොයන්න", href: '/providers?q=Floor+Tiling' },
+    cta: { text: "ටයිල් විශේෂඥයන් සොයන්න", href: 'https://wedahub.lk/providers?q=Floor+Tiling' },
   },
   {
     slug: 'waterproofing-bathroom-guide',
@@ -253,7 +253,7 @@ export const BLOG_POSTS = [
       "මුළුවල දැල් ටේප් අත්‍යවශ්‍යයි — එය ඉරිතැලීම් පැතිරීම වළක්වයි",
       "අවසාන පටල ආලේපයෙන් පසු ටයිල් ඇල්ලීමට පෙර අවම පැය 48ක් ලබාදෙන්න",
     ],
-    cta: { text: "ජලරෝධන විශේෂඥයන් සොයන්න", href: '/providers?q=Waterproofing' },
+    cta: { text: "ජලරෝධන විශේෂඥයන් සොයන්න", href: 'https://wedahub.lk/providers?q=Waterproofing' },
   },
   {
     slug: 'large-format-tiles-guide',
@@ -317,7 +317,7 @@ export const BLOG_POSTS = [
       "එක් එක් ටයිල් වර්ගයෙන් අවම අමතර පෙට්ටියක් ගන්න — නැවත ඇණවුම්වල වර්ණ කාණ්ඩය නොගැළපිය හැකිය",
       "ආනයනික 60×120 ටයිල් පැමිණීමට සති 3–6ක් ගතවේ — කඩා ඉවත් කිරීමට පෙර ඇණවුම් කරන්න",
     ],
-    cta: { text: "විශාල ටයිල් විශේෂඥයන් සොයන්න", href: '/providers?q=Large+Format+Tiling' },
+    cta: { text: "විශාල ටයිල් විශේෂඥයන් සොයන්න", href: 'https://wedahub.lk/providers?q=Large+Format+Tiling' },
   },
   {
     slug: 'tile-selection-guide-sri-lanka',
@@ -398,7 +398,7 @@ export const BLOG_POSTS = [
       'Large Format Tiles (60x120+) ගාල Specialist Tiler ඕනෙමේ — Back-buttering Mandatory',
       'Mega Tiles සහ Ideal Tiles (Wennappuwa) Premium Budget ගෙ Homeowners ගාල Hidden Gems',
     ],
-    cta: { text: 'Verified Tilers සොයන්න', href: '/providers?q=Floor+Tiling' },
+    cta: { text: 'Verified Tilers සොයන්න', href: 'https://wedahub.lk/providers?q=Floor+Tiling' },
   },
   {
     slug: 'post-tiling-project-tilershub',
@@ -458,6 +458,6 @@ export const BLOG_POSTS = [
       "සෑම කාර්මිකයෙකුගෙන්ම ජලරෝධනය තමන් කරනවාද නැත්නම් වෙනත් අයෙකුට භාරදෙනවාදැයි අසන්න",
       "හොඳ මිල ගණනක ආරම්භක දිනය, අවසන් දිනය සහ ගෙවීම් සැලැස්මක් ඇත",
     ],
-    cta: { text: "ඔබේ ව්‍යාපෘතිය නොමිලේ පළ කරන්න", href: '/post-project' },
+    cta: { text: "ඔබේ ව්‍යාපෘතිය නොමිලේ පළ කරන්න", href: 'https://wedahub.lk/post-project' },
   },
 ]

@@ -1,10 +1,7 @@
 import { defineMiddleware } from 'astro:middleware'
-import { createSupabaseServerClient } from './lib/supabase.server'
-
-export const onRequest = defineMiddleware(async (context, next) => {
-  const supabase = createSupabaseServerClient(context.request, context.cookies)
-  const { data: { user } } = await supabase.auth.getUser()
-  context.locals.supabase = supabase
-  context.locals.user = user
+import { migrationRedirect } from './lib/migration.js'
+export const onRequest = defineMiddleware((context, next) => {
+  const destination = migrationRedirect(context.url)
+  if (destination && ['GET', 'HEAD'].includes(context.request.method)) return context.redirect(destination, 301)
   return next()
 })
