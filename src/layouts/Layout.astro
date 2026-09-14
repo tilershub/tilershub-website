@@ -1,444 +1,101 @@
 ---
-import { si as sinhalaText } from '../lib/sinhala.js'
+import { si } from '../lib/sinhala.js'
 import '../index.css'
 import '../styles/theme-2026.css'
-import AppShell from '../components/AppShell.jsx'
-import DraftLinker from '../components/DraftLinker.jsx'
 import { ADSENSE_CLIENT } from '../lib/adsense.js'
-
-const user = Astro.locals.user
-
-// The tab bar is role-dependent, so the role is resolved here rather than in
-// the browser: deciding it client-side would mean the first paint shows the
-// wrong nav and then swaps. Same rule Dashboard.jsx uses.
-let role = 'client'
-if (user) {
-  const db = Astro.locals.supabase
-  const [{ data: provider }, { data: submission }] = await Promise.all([
-    db.from('providers').select('id').eq('user_id', user.id).maybeSingle(),
-    db.from('provider_submissions').select('status').eq('user_id', user.id).maybeSingle(),
-  ])
-  if (provider || ['pending_review', 'approved', 'listed'].includes(submission?.status)) {
-    role = 'provider'
-  }
-}
-
-const {
-  title = "TilersHub · Sri Lanka's Tile & Bathroom Marketplace",
-  description = "Find tilers, contractors, tile shops, brands and products for your tile and bathroom project across Sri Lanka. Free — no login required.",
-  ogImage = 'https://tilershub.lk/og.png',
-  ogType = 'website',
-  noindex = false,
-} = Astro.props
-const path = Astro.url.pathname
-const SITE = 'https://tilershub.lk'
-const FONT_HREF = 'https://fonts.googleapis.com/css2?family=Archivo:wght@500;600;700;800&family=Instrument+Sans:wght@400;500;600&family=Noto+Sans+Sinhala:wght@400;500;600;700&display=swap'
-const canonicalUrl = `${SITE}${path}`
-
-// Routes that must never carry ads: authentication, account areas, and the
-// forms people use to post work or ask for a quote. Auto Ads would otherwise
-// inject into all of them, which is both a conversion risk and the kind of
-// thin/utility page AdSense policy is unhappy about. The verification meta tag
-// still ships everywhere so Google can confirm ownership from any URL.
-const AD_FREE_PREFIXES = [
-  '/login',
-  '/auth',
-  '/account',
-  '/dashboard',
-  '/notifications',
-  '/admin',
-  '/post-project',
-  '/join-tilershub',
-  '/contact',
-  '/verify-claim',
-  '/offline',
-]
-const adsAllowed = Boolean(ADSENSE_CLIENT)
-  && !AD_FREE_PREFIXES.some((p) => path === p || path.startsWith(`${p}/`))
-
-const orgSchema = JSON.stringify({
-  '@context': 'https://schema.org',
-  '@graph': [
-    {
-      '@type': 'Organization',
-      '@id': `${SITE}/#organization`,
-      name: 'TilersHub',
-      url: SITE,
-      logo: { '@type': 'ImageObject', url: `${SITE}/favicon.svg` },
-      sameAs: [
-        'https://chat.whatsapp.com/IR9ZWyFj7ZN15KeOHqwG3Z',
-        'https://www.facebook.com/share/g/1Dsc63BvXS/',
-      ],
-      contactPoint: { '@type': 'ContactPoint', contactType: 'customer support', areaServed: 'LK' },
-    },
-    {
-      '@type': 'WebSite',
-      '@id': `${SITE}/#website`,
-      url: SITE,
-      name: 'TilersHub',
-      description: "Sri Lanka's tiling & home improvement marketplace",
-      publisher: { '@id': `${SITE}/#organization` },
-      potentialAction: { '@type': 'SearchAction', target: `${SITE}/providers?q={search_term_string}`, 'query-input': 'required name=search_term_string' },
-    },
-  ],
-})
+const { title = 'TilersHub · ටයිල් මඟපෙන්වීම් සහ වියදම් ගණකය', description = 'ශ්‍රී ලංකාවේ ටයිල් වැඩ සඳහා ලිපි, මඟපෙන්වීම් සහ වියදම් ගණකය.', ogImage = 'https://tilershub.lk/og.png', ogType = 'website', noindex = false } = Astro.props
+const canonical = new URL(Astro.url.pathname, 'https://tilershub.lk').href
+const adsAllowed = !['/contact', '/privacy', '/privacy-policy', '/terms', '/offline', '/404'].includes(Astro.url.pathname)
 ---
-<!DOCTYPE html>
+<!doctype html>
 <html lang="si" data-lang="si">
 <head>
   <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover" />
-  <title>{sinhalaText(title)}</title>
-  <meta name="description" content={sinhalaText(description)} />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>{si(title)}</title>
+  <meta name="description" content={si(description)} />
   <meta name="robots" content={noindex ? 'noindex, nofollow' : 'index, follow'} />
-  <meta name="theme-color" content="#C2542B" />
-  <link rel="canonical" href={canonicalUrl} />
+  <link rel="canonical" href={canonical} />
   <link rel="sitemap" href="/sitemap.xml" />
-  <!-- Open Graph -->
-  <meta property="og:title" content={sinhalaText(title)} />
-  <meta property="og:description" content={sinhalaText(description)} />
-  <meta property="og:type" content={ogType} />
-  <meta property="og:url" content={canonicalUrl} />
-  <meta property="og:image" content={ogImage} />
-  <meta property="og:site_name" content="TilersHub" />
-  <meta property="og:locale" content="si_LK" />
-  <!-- Twitter -->
-  <meta name="twitter:card" content="summary_large_image" />
-  <meta name="twitter:title" content={sinhalaText(title)} />
-  <meta name="twitter:description" content={sinhalaText(description)} />
-  <meta name="twitter:image" content={ogImage} />
-  <!-- Structured data -->
-  <script type="application/ld+json" set:html={orgSchema} />
-  <link rel="icon" type="image/png" href="/favicon.png" />
+  <link rel="icon" type="image/svg+xml" href="/favicon.svg" />
   <link rel="apple-touch-icon" href="/icon-192.png" />
   <link rel="manifest" href="/manifest.webmanifest" />
-  <!-- iOS PWA startup images (prevents white flash on launch) -->
-  <link rel="apple-touch-startup-image" href="/splash/apple-splash-1290x2796.png" media="screen and (device-width:430px) and (device-height:932px) and (-webkit-device-pixel-ratio:3) and (orientation:portrait)" />
-  <link rel="apple-touch-startup-image" href="/splash/apple-splash-1179x2556.png" media="screen and (device-width:393px) and (device-height:852px) and (-webkit-device-pixel-ratio:3) and (orientation:portrait)" />
-  <link rel="apple-touch-startup-image" href="/splash/apple-splash-1284x2778.png" media="screen and (device-width:428px) and (device-height:926px) and (-webkit-device-pixel-ratio:3) and (orientation:portrait)" />
-  <link rel="apple-touch-startup-image" href="/splash/apple-splash-1170x2532.png" media="screen and (device-width:390px) and (device-height:844px) and (-webkit-device-pixel-ratio:3) and (orientation:portrait)" />
-  <link rel="apple-touch-startup-image" href="/splash/apple-splash-1080x2340.png" media="screen and (device-width:360px) and (device-height:780px) and (-webkit-device-pixel-ratio:3) and (orientation:portrait)" />
-  <link rel="apple-touch-startup-image" href="/splash/apple-splash-750x1334.png"  media="screen and (device-width:375px) and (device-height:667px) and (-webkit-device-pixel-ratio:2) and (orientation:portrait)" />
-  <link rel="apple-touch-startup-image" href="/splash/apple-splash-640x1136.png"  media="screen and (device-width:320px) and (device-height:568px) and (-webkit-device-pixel-ratio:2) and (orientation:portrait)" />
-  <meta name="mobile-web-app-capable" content="yes" />
-  <meta name="apple-mobile-web-app-capable" content="yes" />
-  <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent" />
-  <meta name="apple-mobile-web-app-title" content="TilersHub" />
+  <meta name="theme-color" content="#C2542B" />
+  <meta property="og:title" content={si(title)} />
+  <meta property="og:description" content={si(description)} />
+  <meta property="og:url" content={canonical} />
+  <meta property="og:image" content={ogImage} />
+  <meta property="og:type" content={ogType} />
+  <meta property="og:site_name" content="TilersHub" />
+  <meta property="og:locale" content="si_LK" />
+  <meta name="twitter:card" content="summary_large_image" />
+  <meta name="twitter:title" content={si(title)} />
+  <meta name="twitter:description" content={si(description)} />
+  <meta name="twitter:image" content={ogImage} />
   <link rel="preconnect" href="https://fonts.googleapis.com" />
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
-  <!-- A CSS @import would be render-blocking and serialised behind the sheet
-       that contains it, so the pairing is loaded as a non-blocking link. -->
-  <link href={FONT_HREF} rel="stylesheet" media="print" onload="this.media='all'" />
-  <noscript><link href={FONT_HREF} rel="stylesheet" /></noscript>
-  <slot name="head" />
-  <style is:global>
-    html:not([data-lang="si"]) .si-text { display: none; }
-    html[data-lang="si"] .en-text { display: none; }
-  </style>
-
-  <!-- Google Consent Mode v2 defaults, set before any tag can fire. Analytics
-       and advertising storage stay denied until the visitor chooses; the
-       banner below updates them. Required by Google's EU user consent policy
-       and a precondition for serving ads. -->
-  <script is:inline>
-    ;(function () {
-      window.dataLayer = window.dataLayer || []
-      function gtag() { dataLayer.push(arguments) }
-      window.gtag = gtag
-
-      var saved = null
-      try { saved = localStorage.getItem('th_consent') } catch (e) {}
-      var granted = saved === 'all'
-
-      gtag('consent', 'default', {
-        ad_storage: granted ? 'granted' : 'denied',
-        ad_user_data: granted ? 'granted' : 'denied',
-        ad_personalization: granted ? 'granted' : 'denied',
-        analytics_storage: granted ? 'granted' : 'denied',
-        functionality_storage: 'granted',
-        security_storage: 'granted',
-      })
-
-      // GTM itself only loads once a choice exists, so a visitor who has not
-      // answered never gets an analytics or advertising cookie at all.
-      window.__thLoadGTM = function () {
-        if (window.__thGTMLoaded) return
-        window.__thGTMLoaded = true
-        dataLayer.push({ 'gtm.start': new Date().getTime(), event: 'gtm.js' })
-        var f = document.getElementsByTagName('script')[0]
-        var j = document.createElement('script')
-        j.async = true
-        j.src = 'https://www.googletagmanager.com/gtm.js?id=GTM-MX727MR5'
-        f.parentNode.insertBefore(j, f)
-      }
-      if (saved) window.__thLoadGTM()
-    })()
-  </script>
-
-  <!-- Google AdSense. Deliberately after the consent block above: the script
-       reads the Consent Mode defaults that block registers, and loading it
-       first would let it set an advertising cookie before the visitor has
-       answered. Denied consent still serves ads, just non-personalised ones. -->
+  <link href="https://fonts.googleapis.com/css2?family=Archivo:wght@500;600;700;800&family=Instrument+Sans:wght@400;500;600&family=Noto+Sans+Sinhala:wght@400;500;600;700&display=swap" rel="stylesheet" />
   {ADSENSE_CLIENT && <meta name="google-adsense-account" content={ADSENSE_CLIENT} />}
-  {adsAllowed && (
-    <script
-      async
-      src={`https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=${ADSENSE_CLIENT}`}
-      crossorigin="anonymous"
-    />
-  )}
+  <script type="application/ld+json" set:html={JSON.stringify({ '@context': 'https://schema.org', '@type': 'WebSite', name: 'TilersHub', url: 'https://tilershub.lk', description: si(description) })} />
+  <slot name="head" />
 </head>
 <body>
-
-  <!-- ═══ PWA SPLASH SCREEN (installed-app launches only — hidden for web/search visitors) ═══ -->
-  <style>
-    #pwa-splash { display: none; }
-    @media all and (display-mode: standalone) {
-      #pwa-splash { display: flex; }
-    }
-  </style>
-  <div id="pwa-splash" style="position:fixed;inset:0;z-index:99999;background:#14171A;flex-direction:column;align-items:center;justify-content:center;gap:20px;transition:opacity 0.45s ease;pointer-events:none;">
-    <div style="display:grid;grid-template-columns:repeat(3,1fr);gap:5px;width:78px;height:78px;">
-      {[0,1,2,3,4,5,6,7,8].map((i) => (
-        <div style={`border-radius:3px;background:${[1,3,4,5,7].includes(i)?'#8B5E3C':'#5E4130'};opacity:${[0,2,6,8].includes(i)?'0.55':'1'};`}></div>
-      ))}
-    </div>
-    <div style="font-family:var(--th-display);font-size:20px;font-weight:700;color:rgba(255,255,255,0.9);letter-spacing:1.5px;">TILERS<span style="color:#C2542B;">HUB</span></div>
-    <div style="width:32px;height:3px;border-radius:2px;background:rgba(255,255,255,0.15);overflow:hidden;margin-top:4px;">
-      <div id="pwa-splash-bar" style="height:100%;width:0;background:#C2542B;border-radius:2px;transition:width 1.2s ease;"></div>
-    </div>
-  </div>
-  <script is:inline>
-    ;(function() {
-      var splash = document.getElementById('pwa-splash')
-      var bar    = document.getElementById('pwa-splash-bar')
-      if (!splash) return
-      // Start progress bar animation immediately
-      if (bar) requestAnimationFrame(function() { bar.style.width = '90%' })
-      function dismiss() {
-        if (!splash || splash._gone) return
-        splash._gone = true
-        if (bar) bar.style.width = '100%'
-        setTimeout(function() {
-          splash.style.opacity = '0'
-          setTimeout(function() { if (splash.parentNode) splash.parentNode.removeChild(splash) }, 450)
-        }, 120)
-      }
-      window.addEventListener('load', dismiss)
-      // Hard cap: always remove after 3 s even if load never fires
-      setTimeout(dismiss, 3000)
-    })()
-  </script>
-
-  <!-- ═══ THE ONE APP BAR + TAB BAR ═══ -->
-  <AppShell client:load role={role} path={path} initialUser={user} />
-
-  <!-- Mobile drawer overlay -->
-  <div class="mobile-drawer-overlay" id="drawer-overlay"></div>
-  <div class="mobile-drawer" id="mobile-drawer">
-    <div class="drawer-header">
-      <span style="font-family: var(--th-display);font-size:16px;font-weight:700;color:#fff;">TILERS<span style="color:#C2542B;">HUB</span></span>
-      <button id="close-drawer" style="background:transparent;border:none;color:rgba(255,255,255,0.5);font-size:22px;cursor:pointer;padding:4px;">✕</button>
-    </div>
-    <a href="/" class={`drawer-link${path==='/'?' active':''}`}>🏠 මුල් පිටුව</a>
-    <a href="/notifications" class={`drawer-link${path==='/notifications'?' active':''}`}>🔔 දැනුම්දීම්</a>
-    <a href="/providers?type=tiler" class={`drawer-link${path.startsWith('/providers')?' active':''}`}>👷 ටයිල් කාර්මිකයන් සොයන්න</a>
-    <a href="/jobs" class={`drawer-link${path==='/jobs'?' active':''}`}>💼 ව්‍යාපෘති බලන්න</a>
-    <a href="/tile" class={`drawer-link${path==='/tile'?' active':''}`}>🏪 ටයිල් වෙළෙඳසැල් සහ සන්නාම</a>
-    <a href="/bathrooms" class={`drawer-link${path==='/bathrooms'?' active':''}`} style="color:rgba(255,255,255,0.6);">🚿 නාන කාමර උපාංග</a>
-    <a href="/tools" class={`drawer-link${path==='/tools'?' active':''}`} style="color:rgba(255,255,255,0.6);">🛠️ මෙවලම් සහ උපකරණ</a>
-    <div class="drawer-divider"></div>
-    {/* One highlighted action, and it is the one for this role. */}
-    {role === 'provider'
-      ? <a href="/account?tab=quotes" class="drawer-link highlight">📋 මගේ මිල ගණන්</a>
-      : <a href="/post-project" class="drawer-link highlight">📋 ව්‍යාපෘතියක් පළ කර මිල ගණන් ලබාගන්න</a>}
-    {role !== 'provider' && (
-      <a href="/join-tilershub" class="drawer-link" style="color:rgba(255,255,255,0.6);">✅ සේවා සපයන්නෙකු ලෙස එක්වන්න</a>
-    )}
-    <div class="drawer-divider"></div>
-    <a href="/estimator" class={`drawer-link${path==='/estimator'?' active':''}`}>📐 වියදම් ගණකය</a>
-    <a href="/guides" class={`drawer-link${path.startsWith('/guides')?' active':''}`} style="color:rgba(255,255,255,0.6);">📖 මඟපෙන්වීම්</a>
-    <a href="/blog" class={`drawer-link${path.startsWith('/blog')?' active':''}`} style="color:rgba(255,255,255,0.6);">📰 ලිපි සහ උපදෙස්</a>
-    <div class="drawer-divider"></div>
-    <a href="/about" class={`drawer-link${path==='/about'?' active':''}`} style="color:rgba(255,255,255,0.5);font-size:13px;">ℹ️ TilersHub ගැන</a>
-    <a href="/contact" class={`drawer-link${path==='/contact'?' active':''}`} style="color:rgba(255,255,255,0.5);font-size:13px;">📬 අප අමතන්න</a>
-    <div class="drawer-divider"></div>
-    <!-- Language is a set-once preference, so it lives here rather than
-         taking a permanent slot in the app bar. -->
-
-  </div>
-
-  <!-- Links anonymous drafts/claims to account after sign-in -->
-  <DraftLinker client:load />
-
-  <main class="page-wrap">
-    <slot />
-  </main>
-
-  <!-- ═══ FOOTER ═══ -->
-  <footer class="site-footer">
-    <div class="footer-inner">
-      <!-- Brand -->
-      <div>
-        <div style="display:flex;align-items:center;gap:8px;margin-bottom:10px;">
-          <div class="site-logo-grid">{[0,1,2,3,4,5,6,7,8].map(()=><div class="site-logo-tile"></div>)}</div>
-          <span style="font-family: var(--th-display);font-size:16px;font-weight:700;color:rgba(255,255,255,0.88);">TILERS<strong>HUB</strong></span>
-        </div>
-        <p class="footer-brand-text">ශ්‍රී ලංකාවේ ටයිල් ක්ෂේත්‍රයේ එකමුතුව — නිවාස හිමියන් නොමිලේ ව්‍යාපෘති පළ කරයි, කාර්මිකයන් වැඩ ලබාගනී, වෙළෙඳසැල් සහ සැපයුම්කරුවන් දිවයින පුරා පාරිභෝගිකයන් වෙත ළඟාවේ.</p>
-        <div style="display:flex;gap:10px;margin-top:16px;">
-          <a href="https://chat.whatsapp.com/IR9ZWyFj7ZN15KeOHqwG3Z" target="_blank" rel="noopener" style="display:inline-flex;align-items:center;gap:5px;font-size:11px;font-weight:700;color:#25D366;text-decoration:none;">💬 WhatsApp</a>
-          <a href="https://www.facebook.com/share/g/1Dsc63BvXS/" target="_blank" rel="noopener" style="display:inline-flex;align-items:center;gap:5px;font-size:11px;font-weight:700;color:#E08A5F;text-decoration:none;">👥 Facebook</a>
-        </div>
-      </div>
-      <!-- Discover -->
-      <div>
-        <div class="footer-col-head">ගවේෂණය කරන්න</div>
-        <nav class="footer-links">
-          <a href="/providers?type=tiler">ටයිල් කාර්මිකයන් සොයන්න</a>
-          <a href="/jobs">ව්‍යාපෘති බලන්න</a>
-          <a href="/estimator">වියදම් ගණකය</a>
-          <a href="/tile">ටයිල් වෙළෙඳසැල් සහ සන්නාම</a>
-          <a href="/bathrooms">නාන කාමර උපාංග</a>
-          <a href="/tools">මෙවලම් සහ උපකරණ</a>
-          <a href="/services/floor-tiling">බිම ටයිල් ඇල්ලීම</a>
-        </nav>
-      </div>
-      <!-- Get Started -->
-      <div>
-        <div class="footer-col-head">ආරම්භ කරන්න</div>
-        <nav class="footer-links">
-          <a href="/post-project">ව්‍යාපෘතියක් පළ කරන්න</a>
-          <a href="/join-tilershub">සේවා සපයන්නෙකු ලෙස එකතු වන්න</a>
-          <a href="/account">මගේ ගිණුම</a>
-        </nav>
-      </div>
-      <!-- Popular Areas -->
-      <div>
-        <div class="footer-col-head">ජනප්‍රිය ප්‍රදේශ</div>
-        <nav class="footer-links">
-          <a href="/tilers/colombo">කොළඹ ටයිල් කාර්මිකයන්</a>
-          <a href="/tilers/gampaha">ගම්පහ ටයිල් කාර්මිකයන්</a>
-          <a href="/tilers/kandy">මහනුවර ටයිල් කාර්මිකයන්</a>
-          <a href="/tilers/galle">ගාල්ලේ ටයිල් කාර්මිකයන්</a>
-          <a href="/tilers/kurunegala">කුරුණෑගල ටයිල් කාර්මිකයන්</a>
-          <a href="/tilers/kalutara">කළුතර ටයිල් කාර්මිකයන්</a>
-        </nav>
-      </div>
-      <!-- Company -->
-      <div>
-        <div class="footer-col-head">ආයතනය</div>
-        <nav class="footer-links">
-          <a href="/blog">ලිපි සහ උපදෙස්</a>
-          <a href="/about">TilersHub ගැන</a>
-          <a href="/contact">අප අමතන්න</a>
-          <a href="/privacy-policy">පෞද්ගලිකත්ව ප්‍රතිපත්තිය</a>
-          <a href="/terms">සේවා කොන්දේසි</a>
-        </nav>
-      </div>
-    </div>
-    <div class="footer-bottom">
-      <span>© 2025 <strong>TilersHub</strong> · tilershub.lk · 🇱🇰 ශ්‍රී ලංකාව</span>
-      <span style="color:rgba(194,84,43,0.5);font-weight:600;">♥ ශ්‍රී ලංකාවේ නිර්මාණයකි</span>
-    </div>
+  <header class="resource-header">
+    <a href="/" class="resource-brand" aria-label="TilersHub මුල් පිටුව">TILERS<span>HUB</span></a>
+    <nav aria-label="ප්‍රධාන මෙනුව"><a href="/blog">ලිපි</a><a href="/guides">මඟපෙන්වීම්</a><a href="/estimator">වියදම් ගණකය</a><a href="https://wedahub.lk">වැඩHUB ↗</a></nav>
+  </header>
+  <main><slot /></main>
+  <footer class="resource-footer">
+    <p><strong>TilersHub</strong> · ටයිල් වැඩ සඳහා දැනුම සහ මෙවලම්.</p>
+    <nav aria-label="අමතර සබැඳි"><a href="/about">අප ගැන</a><a href="/contact">අමතන්න</a><a href="/privacy-policy">පෞද්ගලිකත්වය</a><a href="/terms">කොන්දේසි</a><a href="https://wedahub.lk/providers">සේවා සපයන්නන් සොයන්න ↗</a></nav>
+    <small>© {new Date().getFullYear()} TilersHub · tilershub.lk</small>
   </footer>
-
-  <script>
-    // The menu button lives in the AppShell island, so it asks for the drawer
-    // by event rather than reaching across into another React tree.
-    const overlay = document.getElementById('drawer-overlay')
-    const drawer = document.getElementById('mobile-drawer')
-    const closeBtn = document.getElementById('close-drawer')
-
-    function openDrawer() {
-      drawer?.classList.add('open')
-      overlay?.classList.add('open')
-      document.body.style.overflow = 'hidden'
-    }
-    function closeDrawer() {
-      drawer?.classList.remove('open')
-      overlay?.classList.remove('open')
-      document.body.style.overflow = ''
-    }
-
-    window.addEventListener('th-drawer-open', openDrawer)
-    overlay?.addEventListener('click', closeDrawer)
-    closeBtn?.addEventListener('click', closeDrawer)
-  </script>
-  <!-- ═══ COOKIE CONSENT ═══
-       Analytics and advertising cookies are denied until this is answered.
-       It queues behind the language chooser so a first-time visitor is never
-       shown two sheets at once. -->
-  <div id="cookie-banner" hidden class="cookie-banner">
-    <div class="cookie-banner__text">
-      <strong>
-        <span class="en-text">අපි කුකීස් භාවිත කරමු</span>
-        <span class="si-text">අපි කුකීස් භාවිත කරමු</span>
-      </strong>
-      <span class="en-text">
-        අත්‍යවශ්‍ය කුකීස් ඔබේ පිවිසුම පවත්වාගනී. ඔබේ අවසරයෙන් Google ඇතුළු විශ්ලේෂණ සහ දැන්වීම් කුකීස් භාවිත කර ප්‍රයෝජනවත් දේ හඳුනාගෙන වෙබ් අඩවියේ වියදම් පියවමු. බලන්න: <a href="/privacy-policy">පෞද්ගලිකත්ව ප්‍රතිපත්තිය</a>.
-      </span>
-      <span class="si-text">
-        අත්‍යවශ්‍ය කුකීස් ඔබව පිවිසී තබා ගනී. ඔබේ අවසරය ඇතිව අපි විශ්ලේෂණ සහ දැන්වීම් කුකීස් — Google හි ඒවා ද — භාවිත කරමු.
-        වැඩි විස්තර <a href="/privacy-policy">පෞද්ගලිකත්ව ප්‍රතිපත්තියේ</a>.
-      </span>
-    </div>
-    <div class="cookie-banner__actions">
-      <button type="button" id="cookie-reject" class="btn btn-outline btn-sm">
-        <span class="en-text">අත්‍යවශ්‍ය පමණි</span><span class="si-text">අත්‍යවශ්‍ය පමණි</span>
-      </button>
-      <button type="button" id="cookie-accept" class="btn btn-terra btn-sm">
-        <span class="en-text">සියල්ල පිළිගන්න</span><span class="si-text">සියල්ල පිළිගන්න</span>
-      </button>
-    </div>
-  </div>
-
-  <script is:inline>
-    ;(function () {
-      var box = document.getElementById('cookie-banner')
-      if (!box) return
-
-      function save(choice) {
-        try { localStorage.setItem('th_consent', choice) } catch (e) {}
-        var granted = choice === 'all'
-        if (window.gtag) {
-          gtag('consent', 'update', {
-            ad_storage: granted ? 'granted' : 'denied',
-            ad_user_data: granted ? 'granted' : 'denied',
-            ad_personalization: granted ? 'granted' : 'denied',
-            analytics_storage: granted ? 'granted' : 'denied',
-          })
+  <div id="resource-consent" hidden><p>වෙළෙඳ දැන්වීම් සහ විශ්ලේෂණ සඳහා cookies භාවිත කිරීමට ඔබ එකඟද? <a href="/privacy-policy">වැඩි විස්තර</a></p><button data-consent="all">එකඟයි</button><button data-consent="essential">අත්‍යවශ්‍ය පමණයි</button></div>
+  <script is:inline define:vars={{ adsClient: ADSENSE_CLIENT, adsAllowed }}>
+    (() => {
+      const banner = document.getElementById('resource-consent')
+      window.dataLayer = window.dataLayer || []
+      function gtag(){ window.dataLayer.push(arguments) }
+      let choice = null
+      try { choice = localStorage.getItem('th_consent') } catch {}
+      gtag('consent', 'default', { ad_storage: 'denied', ad_user_data: 'denied', ad_personalization: 'denied', analytics_storage: 'denied', functionality_storage: 'granted', security_storage: 'granted' })
+      function apply(value) {
+        if (value !== 'all') return
+        gtag('consent', 'update', { ad_storage: 'granted', ad_user_data: 'granted', ad_personalization: 'granted', analytics_storage: 'granted' })
+        if (window.__resourceTagsLoaded) return
+        window.__resourceTagsLoaded = true
+        window.dataLayer.push({ 'gtm.start': Date.now(), event: 'gtm.js' })
+        const gtm = document.createElement('script'); gtm.async = true
+        gtm.src = 'https://www.googletagmanager.com/gtm.js?id=GTM-MX727MR5'; document.head.appendChild(gtm)
+        if (adsClient && adsAllowed) {
+          const ad = document.createElement('script'); ad.async = true; ad.crossOrigin = 'anonymous'
+          ad.src = 'https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=' + encodeURIComponent(adsClient)
+          document.head.appendChild(ad)
         }
-        // Load GTM either way: with consent denied it sets no cookies, but
-        // having it present keeps tag configuration in one place.
-        if (window.__thLoadGTM) window.__thLoadGTM()
-        box.classList.remove('is-open')
-        setTimeout(function () { box.hidden = true }, 260)
       }
-
-      document.getElementById('cookie-accept').addEventListener('click', function () { save('all') })
-      document.getElementById('cookie-reject').addEventListener('click', function () { save('essential') })
-
-      window.__thShowConsent = function () {
-        box.hidden = false
-        requestAnimationFrame(function () { box.classList.add('is-open') })
-      }
-
-      var consent = null, lang = null
-      try {
-        consent = localStorage.getItem('th_consent')
-        lang = localStorage.getItem('th_lang')
-      } catch (e) { return }
-      // A brand-new visitor picks a language first; that flow calls us back.
-      if (!consent) window.__thShowConsent()
+      apply(choice)
+      if (!choice) banner.hidden = false
+      banner.querySelectorAll('button').forEach(button => button.addEventListener('click', () => {
+        const value = button.dataset.consent
+        try { localStorage.setItem('th_consent', value) } catch {}
+        banner.hidden = true; apply(value)
+      }))
+      // Updating sw.js retires the previous TilersHub marketplace cache.
+      if ('serviceWorker' in navigator) navigator.serviceWorker.getRegistration('/').then(reg => reg?.update()).catch(() => {})
     })()
   </script>
-
-  <script>
-    if ('serviceWorker' in navigator) {
-      window.addEventListener('load', () => {
-        navigator.serviceWorker.register('/sw.js').catch(() => {})
-      })
-    }
-  </script>
+  <style is:global>
+    body{margin:0;padding:0!important;background:#FBFAF8;color:#14171A;font-family:'Noto Sans Sinhala','Instrument Sans',sans-serif}
+    .en-text{display:none!important}.resource-header{max-width:1120px;margin:auto;padding:22px 24px;display:flex;align-items:center;justify-content:space-between;gap:20px;flex-wrap:wrap}
+    .resource-brand{font-family:Archivo,sans-serif;font-size:25px;font-weight:800;text-decoration:none;color:#14171A}.resource-brand span{color:#C2542B}
+    .resource-header nav,.resource-footer nav{display:flex;flex-wrap:wrap;gap:20px}.resource-header nav a,.resource-footer a{color:inherit;text-decoration:none;font-size:13px;font-weight:600}
+    .resource-intro{max-width:960px;margin:auto;padding:64px 24px}.resource-intro h1{font-size:clamp(30px,5vw,54px);line-height:1.5;margin:14px 0 24px}.resource-intro p{max-width:720px;line-height:1.9;color:#61676C}.resource-intro .eyebrow{font-size:12px;letter-spacing:2px;color:#C2542B;font-weight:700}
+    .resource-actions{display:flex;align-items:center;gap:24px;flex-wrap:wrap;margin-top:30px}.resource-actions a{color:#C2542B;font-weight:700;text-decoration:none}.resource-button,.resource-actions .resource-button{display:inline-block;background:#C2542B;color:white;text-decoration:none;padding:14px 22px;border-radius:10px;font-weight:700}
+    .resource-section{max-width:1120px;margin:auto;padding:20px 24px 56px}.resource-section h2{font-size:24px;margin-bottom:24px}.resource-grid{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:18px}.resource-card{background:white;border:1px solid #E4E0D9;border-radius:16px;padding:24px;text-decoration:none;color:inherit}.resource-card>span{font-size:30px}.resource-card h3{font-size:17px;line-height:1.7}.resource-card p{font-size:13px;color:#61676C;line-height:1.9}.resource-card small{color:#C2542B;font-weight:700}
+    .marketplace-banner{max-width:1072px;margin:0 auto 48px;padding:32px;background:#14171A;color:#fff;border-radius:16px}.marketplace-banner p{line-height:1.8;color:#ddd}.marketplace-banner h2{line-height:1.6}.resource-footer{padding:32px 24px;background:#eeeae4;line-height:2}.resource-footer nav{margin-bottom:20px}
+    #resource-consent:not([hidden]){position:fixed;bottom:16px;left:16px;right:16px;max-width:700px;margin:auto;padding:18px;background:#fff;border:1px solid #ddd;box-shadow:0 8px 40px #0002;border-radius:12px;z-index:1000;font-size:12px}#resource-consent button{padding:10px 16px;margin-right:10px;border:1px solid #C2542B;border-radius:8px;background:#fff;cursor:pointer}#resource-consent button:first-of-type{background:#C2542B;color:#fff}
+    @media(max-width:800px){.resource-grid{grid-template-columns:repeat(2,minmax(0,1fr))}.marketplace-banner{margin:0 16px 32px}}
+    @media(max-width:520px){.resource-grid{grid-template-columns:1fr}.resource-intro{padding:36px 20px}.resource-header{padding:18px 20px}.resource-header nav{gap:14px}.resource-header nav a{font-size:12px}}
+  </style>
 </body>
 </html>

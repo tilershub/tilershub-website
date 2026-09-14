@@ -1,7 +1,7 @@
 {
   "name": "TilersHub",
   "short_name": "TilersHub",
-  "description": "ශ්‍රී ලංකාවේ ටයිල් සහ නානකාමර වෙළෙඳපොළ — කාර්මිකයන්, කොන්ත්‍රාත්කරුවන්, වෙළෙඳසැල් සහ සන්නාම සොයන්න.",
+  "description": "ටයිල් මඟපෙන්වීම් සහ වියදම් ගණකය",
   "start_url": "/",
   "scope": "/",
   "display": "standalone",
@@ -29,37 +29,16 @@
   ],
   "shortcuts": [
     {
-      "name": "සේවා සපයන්නන් සොයන්න",
-      "short_name": "සපයන්නන්",
-      "url": "/providers",
-      "icons": [
-        {
-          "src": "/icon-192.png",
-          "sizes": "192x192"
-        }
-      ]
+      "name": "වියදම් ගණකය",
+      "url": "/estimator"
     },
     {
-      "name": "ව්‍යාපෘතියක් පළ කරන්න",
-      "short_name": "පළ කරන්න",
-      "url": "/post-project",
-      "icons": [
-        {
-          "src": "/icon-192.png",
-          "sizes": "192x192"
-        }
-      ]
+      "name": "ලිපි",
+      "url": "/blog"
     },
     {
-      "name": "මගේ ගිණුම",
-      "short_name": "ගිණුම",
-      "url": "/account",
-      "icons": [
-        {
-          "src": "/icon-192.png",
-          "sizes": "192x192"
-        }
-      ]
+      "name": "මඟපෙන්වීම්",
+      "url": "/guides"
     }
   ]
 }

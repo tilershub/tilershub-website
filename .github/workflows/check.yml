@@ -1,8 +1,7 @@
-name: Deploy to Cloudflare
-on:
-  workflow_dispatch:
+name: Build and migration checks
+on: [pull_request, workflow_dispatch]
 jobs:
-  deploy:
+  build:
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v4
@@ -11,8 +10,5 @@ jobs:
           node-version: 22
           cache: npm
       - run: npm ci
+      - run: node --test scripts/migration.test.mjs
       - run: npm run build
-      - uses: cloudflare/wrangler-action@v3
-        with:
-          apiToken: ${{ secrets.CLOUDFLARE_API_TOKEN }}
-          command: deploy
