@@ -344,3 +344,12 @@ textarea.th-field { padding: 12px 13px; line-height: 1.5; resize: vertical; }
   .th-sheet { max-width: 420px; border-radius: 18px; animation: th-pop 0.25s ease both; }
   .th-toast { left: 50%; right: auto; transform: translateX(-50%); bottom: 28px; }
 }
+
+/* Sinhala glyphs need generous leading and no Latin display tracking. */
+html[lang="si"] { --th-body: "Noto Sans Sinhala", system-ui, sans-serif; --th-display: "Noto Sans Sinhala", system-ui, sans-serif; }
+html[lang="si"] body { font-family: var(--th-body); }
+html[lang="si"] :is(h1,h2,h3,h4,p,button,a,label,span,li,td,th,select,input,textarea) { letter-spacing: normal !important; line-height: 1.65; }
+html[lang="si"] :is(h1,h2,h3,h4) { line-height: 1.55 !important; overflow-wrap: anywhere; }
+html[lang="si"] :is(button,.btn,.th-btn) { height: auto; min-height: 44px; white-space: normal; }
+html[lang="si"] :is(input,select,textarea) { font-family: inherit; }
+html[lang="si"] .th-grid-3 > * { min-width: 0; overflow-wrap: anywhere; }

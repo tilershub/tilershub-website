@@ -1,3 +1,4 @@
+import { si as sinhalaText } from '../lib/sinhala.js'
 import { useState, useEffect, useRef, useCallback } from 'react'
 import { supabase } from '../lib/supabase.js'
 
@@ -85,16 +86,16 @@ function Field({ label, hint, error, charLimit, value = '', children }) {
   return (
     <div style={S.field}>
       <label style={S.label}>
-        {label}
-        {charLimit != null && (
+        {sinhalaText(label)}
+        {sinhalaText(charLimit != null && (
           <span style={{ fontSize: 10, fontWeight: 400, marginLeft: 8, color: value.length > charLimit ? '#C0392B' : '#8A8F95' }}>
-            {value.length}/{charLimit}
+            {sinhalaText(value.length)}/{sinhalaText(charLimit)}
           </span>
-        )}
+        ))}
       </label>
-      {children}
-      {hint && !error && <p style={{ fontSize: 11, color: '#8A8F95', margin: '5px 0 0' }}>{hint}</p>}
-      {error && <p style={{ fontSize: 11, color: '#C0392B', margin: '5px 0 0' }}>⚠ {error}</p>}
+      {sinhalaText(children)}
+      {sinhalaText(hint && !error && <p style={{ fontSize: 11, color: '#8A8F95', margin: '5px 0 0' }}>{sinhalaText(hint)}</p>)}
+      {sinhalaText(error && <p style={{ fontSize: 11, color: '#C0392B', margin: '5px 0 0' }}>⚠ {sinhalaText(error)}</p>)}
     </div>
   )
 }
@@ -107,7 +108,7 @@ function Banner({ type, children }) {
   }
   return (
     <div style={{ ...styles[type], borderRadius: 10, padding: '12px 16px', fontSize: 13, marginBottom: 18 }}>
-      {children}
+      {sinhalaText(children)}
     </div>
   )
 }
@@ -297,22 +298,22 @@ export default function BlogEditor({ mode = 'create', blogId = null }) {
 
   // ── Render gates ─────────────────────────────────────────────────────────────
   if (authState === 'loading') {
-    return <Centred>Checking permissions…</Centred>
+    return <Centred>අවසර පරීක්ෂා කරමින්…</Centred>
   }
   if (authState === 'denied') {
     return (
       <Centred>
         <div style={{ textAlign: 'center' }}>
           <div style={{ fontSize: 48, marginBottom: 12 }}>🔒</div>
-          <div style={{ fontSize: 16, fontWeight: 700, marginBottom: 8, color: '#14171A' }}>Access denied</div>
-          <div style={{ fontSize: 13, color: '#6B7076', marginBottom: 20 }}>Admin privileges required.</div>
-          <a href="/admin" style={{ color: '#C2542B', fontWeight: 600, fontSize: 13 }}>← Go to Admin</a>
+          <div style={{ fontSize: 16, fontWeight: 700, marginBottom: 8, color: '#14171A' }}>ප්‍රවේශයට අවසර නැත</div>
+          <div style={{ fontSize: 13, color: '#6B7076', marginBottom: 20 }}>පරිපාලක අවසර අවශ්‍යයි.</div>
+          <a href="/admin" style={{ color: '#C2542B', fontWeight: 600, fontSize: 13 }}>← පරිපාලනයට යන්න</a>
         </div>
       </Centred>
     )
   }
   if (loadingBlog) {
-    return <Centred>Loading blog post…</Centred>
+    return <Centred>ලිපිය පූරණය කරමින්…</Centred>
   }
 
   const isCreate = mode === 'create'
@@ -325,26 +326,26 @@ export default function BlogEditor({ mode = 'create', blogId = null }) {
         <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', marginBottom: 28 }}>
           <div>
             <h1 style={{ margin: 0, fontSize: 22, fontWeight: 800, color: '#14171A' }}>
-              {isCreate ? '✍️ New Blog Post' : '✏️ Edit Blog Post'}
+              {sinhalaText(isCreate ? '✍️ New Blog Post' : '✏️ Edit Blog Post')}
             </h1>
-            {!isCreate && (
+            {sinhalaText(!isCreate && (
               <p style={{ margin: '4px 0 0', fontSize: 12, color: '#8A8F95', fontFamily: 'monospace' }}>
-                ID: {blogId}
+                ID: {sinhalaText(blogId)}
               </p>
-            )}
+            ))}
           </div>
           <div style={{ display: 'flex', gap: 10, alignItems: 'center' }}>
-            {!isCreate && (
+            {sinhalaText(!isCreate && (
               <a
                 href={`/blog/${slug}`}
                 target="_blank"
                 rel="noopener"
                 style={{ fontSize: 12, color: '#C2542B', textDecoration: 'none', display: 'flex', alignItems: 'center', gap: 4 }}
               >
-                👁 Preview ↗
+                👁 පෙරදසුන ↗
               </a>
-            )}
-            <a href="/admin" style={{ fontSize: 13, color: '#6B7076', textDecoration: 'none' }}>← Admin</a>
+            ))}
+            <a href="/admin" style={{ fontSize: 13, color: '#6B7076', textDecoration: 'none' }}>← පරිපාලනය</a>
           </div>
         </div>
 
@@ -362,10 +363,10 @@ export default function BlogEditor({ mode = 'create', blogId = null }) {
         }}>
           <div>
             <div style={{ fontSize: 14, fontWeight: 700, color: '#fff', marginBottom: 3 }}>
-              ✨ AI SEO Optimizer
+              ✨ AI සෙවුම් ප්‍රශස්තකරණය
             </div>
             <div style={{ fontSize: 12, color: 'rgba(255,255,255,0.6)', maxWidth: 480 }}>
-              Paste raw text into the editor below, then click to auto-format HTML, generate meta data, and add image placeholders.
+              පහත සංස්කාරකයට පෙළ ඇතුළත් කර HTML හැඩගැන්වීම, සෙවුම් විස්තර සහ ඡායාරූප ස්ථාන එක් කිරීමට ඔබන්න.
             </div>
           </div>
           <button
@@ -389,11 +390,11 @@ export default function BlogEditor({ mode = 'create', blogId = null }) {
               transition: 'background 0.15s',
             }}
           >
-            {aiLoading ? '⏳ Optimizing…' : '🤖 Optimize, Format & Align'}
+            {sinhalaText(aiLoading ? '⏳ Optimizing…' : '🤖 Optimize, Format & Align')}
           </button>
         </div>
 
-        {aiError && <Banner type="error">⚠ {aiError}</Banner>}
+        {sinhalaText(aiError && <Banner type="error">⚠ {sinhalaText(aiError)}</Banner>)}
 
         {/* ── Form ────────────────────────────────────────────────── */}
         <form onSubmit={handleSubmit}>
@@ -404,7 +405,7 @@ export default function BlogEditor({ mode = 'create', blogId = null }) {
               type="text"
               value={title}
               onChange={e => setTitle(e.target.value)}
-              placeholder="e.g. How to Choose the Best Floor Tiles for Sri Lanka Homes"
+              placeholder="උදා: ශ්‍රී ලංකාවේ නිවාස සඳහා සුදුසු බිම් ටයිල් තෝරාගන්නේ කෙසේද?"
               required
               style={S.input}
             />
@@ -438,7 +439,7 @@ export default function BlogEditor({ mode = 'create', blogId = null }) {
             <textarea
               value={content}
               onChange={e => setContent(e.target.value)}
-              placeholder={`Paste raw blog content here…\n\nThe AI will:\n• Convert headings to <h2>/<h3>\n• Wrap paragraphs in <p> tags\n• Bold brand names and specs with <strong>\n• Insert <image-placeholder> divs at appropriate spots\n• Format lists as <ul>/<li>`}
+              placeholder={sinhalaText(`සකස් නොකළ ලිපි අන්තර්ගතය මෙහි අලවන්න…\n\nAI මඟින්:\n• ශීර්ෂ <h2>/<h3> ලෙස සකසයි\n• ඡේද <p> ටැග් තුළ යොදයි\n• සන්නාම සහ පිරිවිතර <strong> මඟින් තද අකුරින් දක්වයි\n• සුදුසු තැන්වල <image-placeholder> යොදයි\n• ලැයිස්තු <ul>/<li> ලෙස සකසයි`)}
               rows={20}
               style={{
                 ...S.input,
@@ -453,8 +454,8 @@ export default function BlogEditor({ mode = 'create', blogId = null }) {
           {/* ── SEO Card ─────────────────────────────────────────── */}
           <div style={{ ...S.card, marginBottom: 20 }}>
             <div style={{ fontSize: 13, fontWeight: 700, color: '#3A4046', marginBottom: 18, display: 'flex', alignItems: 'center', gap: 6 }}>
-              🎯 SEO Metadata
-              <span style={{ fontSize: 11, color: '#8A8F95', fontWeight: 400 }}>— auto-populated by AI Optimizer</span>
+              🎯 සෙවුම් විස්තර
+              <span style={{ fontSize: 11, color: '#8A8F95', fontWeight: 400 }}>— AI ප්‍රශස්තකරණයෙන් පුරවනු ලැබේ</span>
             </div>
 
             <Field label="Meta Title" charLimit={60} value={metaTitle}>
@@ -462,7 +463,7 @@ export default function BlogEditor({ mode = 'create', blogId = null }) {
                 type="text"
                 value={metaTitle}
                 onChange={e => setMetaTitle(e.target.value)}
-                placeholder="Catchy, keyword-rich title (under 60 chars)"
+                placeholder="ප්‍රධාන වචන සහිත ආකර්ෂණීය මාතෘකාවක් (අක්ෂර 60ට අඩු)"
                 style={{ ...S.input, ...(metaTitle.length > 60 ? S.inputError : {}) }}
               />
             </Field>
@@ -471,7 +472,7 @@ export default function BlogEditor({ mode = 'create', blogId = null }) {
               <textarea
                 value={metaDesc}
                 onChange={e => setMetaDesc(e.target.value)}
-                placeholder="Compelling summary with target keyword (under 160 chars)"
+                placeholder="ප්‍රධාන වචනය ඇතුළත් ආකර්ෂණීය සාරාංශයක් (අක්ෂර 160ට අඩු)"
                 rows={2}
                 style={{ ...S.input, resize: 'none', ...(metaDesc.length > 160 ? S.inputError : {}) }}
               />
@@ -485,7 +486,7 @@ export default function BlogEditor({ mode = 'create', blogId = null }) {
                 type="text"
                 value={keywords}
                 onChange={e => setKeywords(e.target.value)}
-                placeholder="floor tiles, bathroom renovation, Sri Lanka, porcelain tiles"
+                placeholder="බිම් ටයිල්, නාන කාමර අලුත්වැඩියාව, ශ්‍රී ලංකාව, පෝසිලේන් ටයිල්"
                 style={S.input}
               />
             </Field>
@@ -494,9 +495,9 @@ export default function BlogEditor({ mode = 'create', blogId = null }) {
           {/* ── Featured Image Card ───────────────────────────────── */}
           <div style={{ ...S.card, marginBottom: 20 }}>
             <div style={{ fontSize: 13, fontWeight: 700, color: '#3A4046', marginBottom: 16 }}>
-              🖼️ Featured Image
+              🖼️ ප්‍රධාන ඡායාරූපය
               <span style={{ fontSize: 11, color: '#8A8F95', fontWeight: 400, marginLeft: 8 }}>
-                — auto-compressed &amp; converted to WebP
+                — ස්වයංක්‍රීයව සම්පීඩනය කර WebP බවට පරිවර්තනය වේ
               </span>
             </div>
 
@@ -521,11 +522,11 @@ export default function BlogEditor({ mode = 'create', blogId = null }) {
                 transition: 'border-color 0.15s',
               }}
             >
-              {imagePreview ? (
+              {sinhalaText(imagePreview ? (
                 <>
                   <img
                     src={imagePreview}
-                    alt="Preview"
+                    alt="පෙරදසුන"
                     style={{ maxHeight: 200, maxWidth: '100%', objectFit: 'cover', borderRadius: 8 }}
                   />
                   <div style={{
@@ -536,20 +537,20 @@ export default function BlogEditor({ mode = 'create', blogId = null }) {
                     onMouseEnter={e => { e.currentTarget.style.background = 'rgba(0,0,0,0.35)'; e.currentTarget.style.color = '#fff' }}
                     onMouseLeave={e => { e.currentTarget.style.background = 'rgba(0,0,0,0)'; e.currentTarget.style.color = 'transparent' }}
                   >
-                    Click to replace
+                    ප්‍රතිස්ථාපනය කිරීමට ඔබන්න
                   </div>
                 </>
               ) : (
                 <div style={{ textAlign: 'center', color: '#8A8F95', padding: 24 }}>
                   <div style={{ fontSize: 36, marginBottom: 8 }}>📸</div>
                   <div style={{ fontSize: 13, fontWeight: 600, color: '#3A4046' }}>
-                    {imgUploading ? '⏳ Compressing & uploading…' : 'Click or drag image here'}
+                    {sinhalaText(imgUploading ? '⏳ Compressing & uploading…' : 'Click or drag image here')}
                   </div>
                   <div style={{ fontSize: 11, marginTop: 4 }}>
-                    JPG · PNG · WebP · Max 5 MB → converted to WebP automatically
+                    JPG · PNG · WebP · උපරිම 5 MB → ස්වයංක්‍රීයව WebP බවට පරිවර්තනය වේ
                   </div>
                 </div>
-              )}
+              ))}
             </div>
 
             <input
@@ -560,11 +561,11 @@ export default function BlogEditor({ mode = 'create', blogId = null }) {
               style={{ display: 'none' }}
             />
 
-            {imageUrl && (
+            {sinhalaText(imageUrl && (
               <div style={{ fontSize: 11, color: '#8A8F95', marginBottom: 10, wordBreak: 'break-all' }}>
-                URL: {imageUrl}
+                URL: {sinhalaText(imageUrl)}
               </div>
-            )}
+            ))}
 
             <Field
               label="Alt Text"
@@ -574,7 +575,7 @@ export default function BlogEditor({ mode = 'create', blogId = null }) {
                 type="text"
                 value={altText}
                 onChange={e => setAltText(e.target.value)}
-                placeholder="e.g. Large-format porcelain floor tiles installed in a modern Sri Lankan bathroom"
+                placeholder="උදා: නවීන ශ්‍රී ලාංකික නාන කාමරයක ඇල්ලූ විශාල පෝසිලේන් බිම් ටයිල්"
                 style={S.input}
               />
             </Field>
@@ -591,9 +592,9 @@ export default function BlogEditor({ mode = 'create', blogId = null }) {
             flexWrap: 'wrap',
           }}>
             <div>
-              <div style={{ fontSize: 13, fontWeight: 700, color: '#3A4046' }}>Publication Status</div>
+              <div style={{ fontSize: 13, fontWeight: 700, color: '#3A4046' }}>පළ කිරීමේ තත්ත්වය</div>
               <div style={{ fontSize: 11, color: '#8A8F95', marginTop: 3 }}>
-                Drafts are not visible to public visitors.
+                කෙටුම්පත් සාමාන්‍ය පාඨකයන්ට නොපෙනේ.
               </div>
             </div>
             <select
@@ -601,19 +602,19 @@ export default function BlogEditor({ mode = 'create', blogId = null }) {
               onChange={e => setStatus(e.target.value)}
               style={{ ...S.input, width: 'auto', minWidth: 150, cursor: 'pointer' }}
             >
-              <option value="draft">📝 Draft</option>
-              <option value="published">✅ Published</option>
-              <option value="archived">📦 Archived</option>
+              <option value="draft">📝 කෙටුම්පත</option>
+              <option value="published">✅ පළ කර ඇත</option>
+              <option value="archived">📦 සංරක්ෂිත</option>
             </select>
           </div>
 
           {/* ── Feedback ─────────────────────────────────────────── */}
-          {formError  && <Banner type="error">⚠ {formError}</Banner>}
-          {saveSuccess && (
+          {sinhalaText(formError  && <Banner type="error">⚠ {sinhalaText(formError)}</Banner>)}
+          {sinhalaText(saveSuccess && (
             <Banner type="success">
-              ✅ {isCreate ? 'Blog created! Redirecting to edit page…' : 'Changes saved successfully!'}
+              ✅ {sinhalaText(isCreate ? 'Blog created! Redirecting to edit page…' : 'Changes saved successfully!')}
             </Banner>
-          )}
+          ))}
 
           {/* ── Actions ──────────────────────────────────────────── */}
           <div style={{ display: 'flex', gap: 12, justifyContent: 'flex-end' }}>
@@ -631,11 +632,11 @@ export default function BlogEditor({ mode = 'create', blogId = null }) {
                 alignItems: 'center',
               }}
             >
-              Cancel
+              අවලංගු කරන්න
             </a>
 
             {/* Save Draft shortcut (edit mode) */}
-            {!isCreate && status !== 'published' && (
+            {sinhalaText(!isCreate && status !== 'published' && (
               <button
                 type="submit"
                 disabled={saving}
@@ -651,9 +652,9 @@ export default function BlogEditor({ mode = 'create', blogId = null }) {
                   cursor: saving ? 'not-allowed' : 'pointer',
                 }}
               >
-                💾 Save Draft
+                💾 කෙටුම්පත සුරකින්න
               </button>
-            )}
+            ))}
 
             <button
               type="submit"
@@ -672,11 +673,11 @@ export default function BlogEditor({ mode = 'create', blogId = null }) {
                 gap: 7,
               }}
             >
-              {saving
+              {sinhalaText(saving
                 ? '⏳ Saving…'
                 : isCreate
                   ? status === 'published' ? '🚀 Publish' : '📝 Create Draft'
-                  : '💾 Save Changes'}
+                  : '💾 Save Changes')}
             </button>
           </div>
         </form>
@@ -692,7 +693,7 @@ function Centred({ children }) {
       display: 'flex', alignItems: 'center', justifyContent: 'center',
       height: '100vh', color: '#6B7076', fontSize: 14, flexDirection: 'column', gap: 12,
     }}>
-      {children}
+      {sinhalaText(children)}
     </div>
   )
 }

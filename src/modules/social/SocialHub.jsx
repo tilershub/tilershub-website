@@ -1,3 +1,4 @@
+import { si as sinhalaText } from '../../lib/sinhala.js'
 import { useState } from 'react'
 import ContentStudio   from './components/ContentStudio.jsx'
 import ContentCalendar from './components/ContentCalendar.jsx'
@@ -22,20 +23,19 @@ export default function SocialHub() {
       {/* Page header */}
       <div style={{ marginBottom: 24 }}>
         <div style={{ display: 'flex', alignItems: 'center', gap: 12, marginBottom: 6 }}>
-          <h2 style={{ fontSize: 22, fontWeight: 800, color: '#14171A', margin: 0 }}>📣 Social Hub</h2>
-          <span style={{ fontSize: 11, fontWeight: 700, background: GOLD, color: '#14171A', padding: '3px 10px', borderRadius: 20 }}>NEW</span>
+          <h2 style={{ fontSize: 22, fontWeight: 800, color: '#14171A', margin: 0 }}>📣 සමාජ මාධ්‍ය මධ්‍යස්ථානය</h2>
+          <span style={{ fontSize: 11, fontWeight: 700, background: GOLD, color: '#14171A', padding: '3px 10px', borderRadius: 20 }}>අලුත්</span>
         </div>
         <p style={{ fontSize: 13, color: '#6B7076', margin: 0 }}>
-          Generate, plan, and queue social content for two campaigns —
-          <span style={{ color: '#C2542B', fontWeight: 600 }}> 🏠 attract homeowners</span> to post projects and
-          <span style={{ color: ORANGE, fontWeight: 600 }}> 🔨 attract tilers</span> to join and bid.
-          Make.com pushes <strong>READY</strong> posts to Facebook &amp; Instagram automatically.
+          ප්‍රචාරණ දෙකක් සඳහා සමාජ අන්තර්ගතය සාදා, සැලසුම් කර පෝලිමට එක් කරන්න —
+          <span style={{ color: '#C2542B', fontWeight: 600 }}> 🏠 නිවාස හිමියන් ආකර්ෂණය කරන්න</span> ව්‍යාපෘති පළ කිරීමට සහ
+          <span style={{ color: ORANGE, fontWeight: 600 }}> 🔨 ටයිල් කාර්මිකයන් ආකර්ෂණය කරන්න</span> එක්වී මිල ගණන් දීමට. Make.com මගින් <strong>සූදානම්</strong> පළ කිරීම් Facebook සහ Instagram වෙත ස්වයංක්‍රීයව යවයි.
         </p>
       </div>
 
       {/* Sub-tab nav */}
       <div style={{ display: 'flex', gap: 4, marginBottom: 28, borderBottom: '2px solid #EFEBE4', paddingBottom: 0 }}>
-        {SUBTABS.map(t => (
+        {sinhalaText(SUBTABS.map(t => (
           <button key={t.key} onClick={() => setSubtab(t.key)}
             style={{
               padding: '10px 20px', background: 'transparent', border: 'none',
@@ -43,17 +43,17 @@ export default function SocialHub() {
               marginBottom: -2, fontSize: 13, fontWeight: 700, cursor: 'pointer',
               color: subtab === t.key ? NAVY : '#8A8F95', transition: 'all 0.12s',
             }}>
-            {t.label}
-            <span style={{ fontSize: 10, fontWeight: 400, color: '#8A8F95', display: 'block', marginTop: 1 }}>{t.desc}</span>
+            {sinhalaText(t.label)}
+            <span style={{ fontSize: 10, fontWeight: 400, color: '#8A8F95', display: 'block', marginTop: 1 }}>{sinhalaText(t.desc)}</span>
           </button>
-        ))}
+        )))}
       </div>
 
       {/* Sub-tab content */}
       <div>
-        {subtab === 'studio'   && <ContentStudio />}
-        {subtab === 'calendar' && <ContentCalendar />}
-        {subtab === 'queue'    && <PostQueue />}
+        {sinhalaText(subtab === 'studio'   && <ContentStudio />)}
+        {sinhalaText(subtab === 'calendar' && <ContentCalendar />)}
+        {sinhalaText(subtab === 'queue'    && <PostQueue />)}
       </div>
     </div>
   )

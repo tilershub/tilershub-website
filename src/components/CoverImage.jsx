@@ -1,3 +1,4 @@
+import { si as sinhalaText } from '../lib/sinhala.js'
 import { useState } from 'react'
 
 /**
@@ -10,5 +11,5 @@ import { useState } from 'react'
 export default function CoverImage({ src, alt, fallback, ...rest }) {
   const [failed, setFailed] = useState(false)
   if (!src || failed) return fallback
-  return <img src={src} alt={alt} onError={() => setFailed(true)} {...rest} />
+  return <img src={src} alt={sinhalaText(alt)} onError={() => setFailed(true)} {...rest} />
 }

@@ -1,3 +1,4 @@
+import { si as sinhalaText } from '../lib/sinhala.js'
 import { useState, useEffect } from 'react'
 import { supabase } from '../lib/supabase.js'
 import { jobPath } from '../lib/jobs.js'
@@ -184,36 +185,36 @@ function ProviderCard({ p }) {
     >
       {/* Coloured avatar panel */}
       <div style={{ width: 90, flexShrink: 0, background: color, display: 'flex', alignItems: 'center', justifyContent: 'center', minHeight: 130, overflow: 'hidden' }}>
-        {img
-          ? <img src={img} alt={name} style={{ width: '100%', height: '100%', objectFit: 'cover' }} loading="lazy" />
-          : <span style={{ fontSize: 30, fontWeight: 800, color: 'rgba(255,255,255,0.85)' }}>{initials(name)}</span>
+        {sinhalaText(img
+          ? <img src={img} alt={sinhalaText(name)} style={{ width: '100%', height: '100%', objectFit: 'cover' }} loading="lazy" />
+          : <span style={{ fontSize: 30, fontWeight: 800, color: 'rgba(255,255,255,0.85)' }}>{sinhalaText(initials(name))}</span>)
         }
       </div>
       {/* Info panel */}
       <div style={{ flex: 1, padding: '12px 14px', display: 'flex', flexDirection: 'column', minWidth: 0 }}>
         <div style={{ display: 'flex', alignItems: 'flex-start', gap: 6, marginBottom: 3, flexWrap: 'wrap' }}>
-          <span style={{ fontSize: 14, fontWeight: 700, color: '#14171A', lineHeight: 1.25 }}>{name}</span>
-          {verified && <span style={{ fontSize: 8, fontWeight: 700, color: '#2F6B4F', background: '#E9F1EC', border: '1px solid #C6DDCF', borderRadius: 20, padding: '2px 7px', flexShrink: 0, marginTop: 2 }}>✓ Pro</span>}
+          <span style={{ fontSize: 14, fontWeight: 700, color: '#14171A', lineHeight: 1.25 }}>{sinhalaText(name)}</span>
+          {sinhalaText(verified && <span style={{ fontSize: 8, fontWeight: 700, color: '#2F6B4F', background: '#E9F1EC', border: '1px solid #C6DDCF', borderRadius: 20, padding: '2px 7px', flexShrink: 0, marginTop: 2 }}>✓ වෘත්තිකයා</span>)}
         </div>
-        {(p.city || p.district) && <div style={{ fontSize: 11, color: '#6B7076', marginBottom: 5 }}>📍 {p.city || p.district}</div>}
-        {(p.description || p.bio) && <div style={{ fontSize: 11, color: '#6B7076', marginBottom: 6, display: '-webkit-box', WebkitLineClamp: 2, WebkitBoxOrient: 'vertical', overflow: 'hidden', lineHeight: 1.5 }}>{p.description || p.bio}</div>}
-        {chips.length > 0 && (
+        {sinhalaText((p.city || p.district) && <div style={{ fontSize: 11, color: '#6B7076', marginBottom: 5 }}>📍 {sinhalaText(p.city || p.district)}</div>)}
+        {sinhalaText((p.description || p.bio) && <div style={{ fontSize: 11, color: '#6B7076', marginBottom: 6, display: '-webkit-box', WebkitLineClamp: 2, WebkitBoxOrient: 'vertical', overflow: 'hidden', lineHeight: 1.5 }}>{sinhalaText(p.description || p.bio)}</div>)}
+        {sinhalaText(chips.length > 0 && (
           <div style={{ display: 'flex', flexWrap: 'wrap', gap: 4, marginBottom: 8 }}>
-            {chips.map(s => <span key={s} style={{ fontSize: 9, fontWeight: 600, padding: '2px 7px', borderRadius: 20, background: '#F7EFE9', color: '#C2542B', border: '1px solid #EDDFD5' }}>{s}</span>)}
+            {sinhalaText(chips.map(s => <span key={s} style={{ fontSize: 9, fontWeight: 600, padding: '2px 7px', borderRadius: 20, background: '#F7EFE9', color: '#C2542B', border: '1px solid #EDDFD5' }}>{sinhalaText(s)}</span>))}
           </div>
-        )}
-        {p.avg_rating > 0 && <div style={{ fontSize: 11, color: '#f59e0b', marginBottom: 8 }}>⭐ {Number(p.avg_rating).toFixed(1)}</div>}
+        ))}
+        {sinhalaText(p.avg_rating > 0 && <div style={{ fontSize: 11, color: '#f59e0b', marginBottom: 8 }}>⭐ {sinhalaText(Number(p.avg_rating).toFixed(1))}</div>)}
         <div style={{ marginTop: 'auto' }}>
-          {phone
+          {sinhalaText(phone
             ? <a href={waLink(phone, name)} target="_blank" rel="noopener noreferrer" onClick={e => e.stopPropagation()}
                 style={{ display: 'inline-flex', alignItems: 'center', gap: 5, background: '#25D366', color: '#fff', borderRadius: 10, padding: '7px 14px', fontSize: 11, fontWeight: 700, textDecoration: 'none' }}>
                 💬 WhatsApp
               </a>
             : href
               ? <a href={href} onClick={e => e.stopPropagation()} style={{ display: 'inline-flex', alignItems: 'center', gap: 5, background: '#C2542B', color: '#fff', borderRadius: 10, padding: '7px 14px', fontSize: 11, fontWeight: 700, textDecoration: 'none' }}>
-                  View Profile ›
+                  පැතිකඩ බලන්න ›
                 </a>
-              : null
+              : null)
           }
         </div>
       </div>
@@ -226,12 +227,12 @@ function BlogCard({ post }) {
     <a href={`/blog/${post.slug}`}
       style={{ flexShrink: 0, width: 195, background: '#fff', borderRadius: 16, border: '1px solid #E4E0D9', overflow: 'hidden', textDecoration: 'none', display: 'flex', flexDirection: 'column', boxShadow: '0 2px 8px rgba(0,0,0,0.04)' }}>
       <div style={{ height: 56, background: `${post.color}18`, display: 'flex', alignItems: 'center', justifyContent: 'center', fontSize: 26 }}>
-        {post.icon}
+        {sinhalaText(post.icon)}
       </div>
       <div style={{ padding: '9px 11px 11px', flex: 1 }}>
-        <div style={{ fontSize: 9, fontWeight: 700, color: '#C2542B', textTransform: 'uppercase', letterSpacing: 0.5, marginBottom: 4 }}>{post.category}</div>
-        <div style={{ fontSize: 11, fontWeight: 700, color: '#14171A', lineHeight: 1.4, display: '-webkit-box', WebkitLineClamp: 2, WebkitBoxOrient: 'vertical', overflow: 'hidden', marginBottom: 6 }}>{post.title}</div>
-        <div style={{ fontSize: 10, color: '#8A8F95' }}>{post.readTime} →</div>
+        <div style={{ fontSize: 9, fontWeight: 700, color: '#C2542B', textTransform: 'uppercase', letterSpacing: 0.5, marginBottom: 4 }}>{sinhalaText(post.category)}</div>
+        <div style={{ fontSize: 11, fontWeight: 700, color: '#14171A', lineHeight: 1.4, display: '-webkit-box', WebkitLineClamp: 2, WebkitBoxOrient: 'vertical', overflow: 'hidden', marginBottom: 6 }}>{sinhalaText(post.title)}</div>
+        <div style={{ fontSize: 10, color: '#8A8F95' }}>{sinhalaText(post.readTime)} →</div>
       </div>
     </a>
   )
@@ -245,18 +246,18 @@ function ProjectCard({ proj }) {
     <a href={jobPath(proj)}
       style={{ flexShrink: 0, width: 172, background: '#fff', borderRadius: 16, border: '1px solid #E4E0D9', padding: '11px 12px', textDecoration: 'none', display: 'flex', flexDirection: 'column', gap: 5, boxShadow: '0 2px 8px rgba(0,0,0,0.04)' }}>
       <div style={{ display: 'flex', alignItems: 'flex-start', gap: 7 }}>
-        <span style={{ fontSize: 20, lineHeight: 1.2, flexShrink: 0 }}>{icon}</span>
-        <span style={{ fontSize: 11, fontWeight: 700, color: '#14171A', lineHeight: 1.35, display: '-webkit-box', WebkitLineClamp: 2, WebkitBoxOrient: 'vertical', overflow: 'hidden' }}>{proj.project_type}</span>
+        <span style={{ fontSize: 20, lineHeight: 1.2, flexShrink: 0 }}>{sinhalaText(icon)}</span>
+        <span style={{ fontSize: 11, fontWeight: 700, color: '#14171A', lineHeight: 1.35, display: '-webkit-box', WebkitLineClamp: 2, WebkitBoxOrient: 'vertical', overflow: 'hidden' }}>{sinhalaText(proj.project_type)}</span>
       </div>
-      {(proj.city || proj.district) && <div style={{ fontSize: 10, color: '#6B7076' }}>📍 {proj.city || proj.district}</div>}
-      {proj.budget && (
+      {sinhalaText((proj.city || proj.district) && <div style={{ fontSize: 10, color: '#6B7076' }}>📍 {sinhalaText(proj.city || proj.district)}</div>)}
+      {sinhalaText(proj.budget && (
         <div style={{ fontSize: 10, fontWeight: 600, color: '#C2542B', background: '#F7EFE9', borderRadius: 6, padding: '2px 7px', alignSelf: 'flex-start' }}>
-          Rs. {Number(proj.budget).toLocaleString()}
+          රු. {sinhalaText(Number(proj.budget).toLocaleString())}
         </div>
-      )}
+      ))}
       <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', marginTop: 'auto', paddingTop: 2 }}>
-        <span style={{ fontSize: 9, color: '#8A8F95' }}>{timeAgo(proj.created_at)}</span>
-        <span style={{ fontSize: 9, fontWeight: 700, color: '#C2542B', background: '#fff5f0', borderRadius: 6, padding: '2px 6px' }}>Bid Now →</span>
+        <span style={{ fontSize: 9, color: '#8A8F95' }}>{sinhalaText(timeAgo(proj.created_at))}</span>
+        <span style={{ fontSize: 9, fontWeight: 700, color: '#C2542B', background: '#fff5f0', borderRadius: 6, padding: '2px 6px' }}>මිල ගණනක් දෙන්න →</span>
       </div>
     </a>
   )
@@ -271,7 +272,7 @@ function SkeletonCards({ count, width, height = 130 }) {
 function HRow({ children }) {
   return (
     <div style={{ display: 'flex', gap: 9, overflowX: 'auto', padding: '0 16px 12px', WebkitOverflowScrolling: 'touch', scrollbarWidth: 'none', msOverflowStyle: 'none' }}>
-      {children}
+      {sinhalaText(children)}
     </div>
   )
 }
@@ -279,8 +280,8 @@ function HRow({ children }) {
 function SubLabel({ label, href, color }) {
   return (
     <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', padding: '10px 16px 7px' }}>
-      <span style={{ fontSize: 11, fontWeight: 700, color: color || '#3A4046', textTransform: 'uppercase', letterSpacing: 0.6 }}>{label}</span>
-      {href && <a href={href} style={{ fontSize: 11, color: '#C2542B', fontWeight: 600, textDecoration: 'none' }}>See all ›</a>}
+      <span style={{ fontSize: 11, fontWeight: 700, color: color || '#3A4046', textTransform: 'uppercase', letterSpacing: 0.6 }}>{sinhalaText(label)}</span>
+      {sinhalaText(href && <a href={href} style={{ fontSize: 11, color: '#C2542B', fontWeight: 600, textDecoration: 'none' }}>සියල්ල බලන්න ›</a>)}
     </div>
   )
 }
@@ -305,11 +306,11 @@ export default function ServiceTabs() {
     <section style={{ background: '#EFEBE4' }}>
 
       <div style={{ padding: '13px 16px 10px', background: '#fff', borderBottom: '1px solid #E4E0D9', display: 'flex', alignItems: 'center', justifyContent: 'space-between' }}>
-        <span style={{ fontSize: 15, fontWeight: 700, color: '#14171A' }}>Browse Services</span>
-        <a href="/providers" style={{ fontSize: 12, fontWeight: 600, color: '#C2542B', textDecoration: 'none' }}>All Providers ›</a>
+        <span style={{ fontSize: 15, fontWeight: 700, color: '#14171A' }}>සේවා බලන්න</span>
+        <a href="/providers" style={{ fontSize: 12, fontWeight: 600, color: '#C2542B', textDecoration: 'none' }}>සියලු සේවා සපයන්නන් ›</a>
       </div>
 
-      {CATEGORIES.map(cat => {
+      {sinhalaText(CATEGORIES.map(cat => {
         const BADGE_ORDER = { th_master: 0, th_certified_pro: 1, th_verified: 2, verified: 2, listed: 3 }
         const badgeRank = p => BADGE_ORDER[p.verification_status] ?? (p.is_verified ? 2 : 4)
         const providers = allProviders
@@ -324,31 +325,31 @@ export default function ServiceTabs() {
             <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', padding: '13px 16px 10px' }}>
               <div style={{ display: 'flex', alignItems: 'center', gap: 8 }}>
                 <div style={{ width: 32, height: 32, borderRadius: 10, background: cat.bg, border: `1px solid ${cat.border}`, display: 'flex', alignItems: 'center', justifyContent: 'center', fontSize: 17 }}>
-                  {cat.icon}
+                  {sinhalaText(cat.icon)}
                 </div>
-                <span style={{ fontSize: 14, fontWeight: 700, color: cat.color }}>{cat.label}</span>
+                <span style={{ fontSize: 14, fontWeight: 700, color: cat.color }}>{sinhalaText(cat.label)}</span>
               </div>
               <a href={`/providers?q=${encodeURIComponent(cat.label.replace(' Services', ''))}`}
                 style={{ fontSize: 11, fontWeight: 600, color: '#8A8F95', textDecoration: 'none' }}>
-                View All ›
+                සියල්ල බලන්න ›
               </a>
             </div>
 
             {/* ── Providers ── */}
             <HRow>
-              {loading
+              {sinhalaText(loading
                 ? <SkeletonCards count={4} width={280} height={130} />
                 : providers.length > 0
                   ? providers.map(p => <ProviderCard key={p.id} p={p} />)
                   : <div style={{ fontSize: 12, color: '#8A8F95', padding: '8px 0' }}>
-                      No providers yet — <a href="/join-tilershub" style={{ color: '#C2542B', textDecoration: 'none', fontWeight: 600 }}>Join TilersHub</a>
-                    </div>
+                      තවම සේවා සපයන්නන් නැත — <a href="/join-tilershub" style={{ color: '#C2542B', textDecoration: 'none', fontWeight: 600 }}>TilersHub සමඟ එක්වන්න</a>
+                    </div>)
               }
             </HRow>
 
           </div>
         )
-      })}
+      }))}
     </section>
   )
 }

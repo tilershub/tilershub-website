@@ -1,4 +1,5 @@
 ---
+import { si as sinhalaText } from '../../lib/sinhala.js'
 import Layout from '../../layouts/Layout.astro'
 
 const CUBICLES = [
@@ -54,8 +55,8 @@ const waMsg = (product) => encodeURIComponent(`Hi YL Construction, I'm intereste
 ---
 
 <Layout
-  title="YL Construction — Glass Shower Cubicles & Hand Railings · TilersHub"
-  description="YL Construction specialises in custom glass shower cubicles (L-shape and panel, swing and sliding door) and glass hand railings across Sri Lanka."
+  title="YL Construction — වීදුරු නාන කුටි සහ අත්වැට · TilersHub"
+  description="YL Construction ශ්‍රී ලංකාව පුරා අවශ්‍ය ප්‍රමාණයට වීදුරු නාන කුටි සහ වීදුරු අත්වැට සපයයි. L හැඩ, පැනල්, සරනේරු සහ ලිස්සන දොර විකල්ප ඇත."
 >
 
   <!-- ═══ HERO ═══ -->
@@ -69,19 +70,19 @@ const waMsg = (product) => encodeURIComponent(`Hi YL Construction, I'm intereste
 
     <div style="position:relative;max-width:640px;margin:0 auto;">
       <div style="display:inline-flex;align-items:center;gap:8px;background:rgba(148,210,255,0.08);border:1px solid rgba(148,210,255,0.15);border-radius:30px;padding:5px 16px;margin-bottom:20px;">
-        <span style="font-size:10px;font-weight:700;color:rgba(148,210,255,0.7);letter-spacing:2px;text-transform:uppercase;">🔷 Glass Works Specialist</span>
+        <span style="font-size:10px;font-weight:700;color:rgba(148,210,255,0.7);letter-spacing:2px;text-transform:uppercase;">🔷 වීදුරු වැඩ විශේෂඥයා</span>
       </div>
       <h1 style="font-family: var(--th-display);font-size:clamp(28px,5vw,46px);font-weight:700;color:#fff;margin:0 0 14px;line-height:1.15;">
-        YL <span style="color:#94d2ff;">Construction</span>
+        YL <span style="color:#94d2ff;">ඉදිකිරීම්</span>
       </h1>
       <p style="font-size:15px;color:rgba(255,255,255,0.55);max-width:480px;margin:0 auto 32px;line-height:1.8;">
-        Custom glass shower cubicles &amp; hand railings crafted for homes, hotels and commercial spaces across Sri Lanka.
+        ශ්‍රී ලංකාව පුරා නිවාස, හෝටල් සහ වාණිජ ස්ථාන සඳහා අවශ්‍ය පරිදි සාදන වීදුරු නාන කුටි සහ අත්වැටවල්.
       </p>
 
       <!-- Service chips -->
       <div style="display:flex;gap:8px;justify-content:center;flex-wrap:wrap;margin-bottom:32px;">
         {['🚿 Shower Cubicles','🔲 Glass Panels','🪟 Sliding Doors','🚪 Swing Doors','🔩 Hand Railings'].map(s => (
-          <span style="font-size:11px;font-weight:600;padding:5px 14px;border-radius:20px;background:rgba(148,210,255,0.08);color:rgba(148,210,255,0.8);border:1px solid rgba(148,210,255,0.15);">{s}</span>
+          <span style="font-size:11px;font-weight:600;padding:5px 14px;border-radius:20px;background:rgba(148,210,255,0.08);color:rgba(148,210,255,0.8);border:1px solid rgba(148,210,255,0.15);">{sinhalaText(s)}</span>
         ))}
       </div>
 
@@ -90,9 +91,9 @@ const waMsg = (product) => encodeURIComponent(`Hi YL Construction, I'm intereste
         target="_blank" rel="noopener noreferrer"
         style="display:inline-flex;align-items:center;gap:10px;background:#25D366;color:#fff;border-radius:14px;padding:14px 32px;font-size:15px;font-weight:800;text-decoration:none;box-shadow:0 6px 24px rgba(37,211,102,0.25);"
       >
-        💬 WhatsApp for a Quote
+        💬 මිල ගණනක් සඳහා WhatsApp අමතන්න
       </a>
-      <div style="margin-top:14px;font-size:12px;color:rgba(255,255,255,0.3);">+94 71 011 1506 · Free site visits available</div>
+      <div style="margin-top:14px;font-size:12px;color:rgba(255,255,255,0.3);">+94 71 011 1506 · නොමිලේ ස්ථාන පරීක්ෂා ලබාගත හැකිය</div>
     </div>
   </div>
 
@@ -100,9 +101,9 @@ const waMsg = (product) => encodeURIComponent(`Hi YL Construction, I'm intereste
   <section style="background:#FBFAF8;padding:56px 20px;">
     <div style="max-width:1060px;margin:0 auto;">
       <div style="text-align:center;margin-bottom:40px;">
-        <div style="font-size:10px;font-weight:700;color:#C2542B;letter-spacing:3px;text-transform:uppercase;margin-bottom:10px;">Our Products</div>
-        <h2 style="font-family: var(--th-display);font-size:clamp(22px,3vw,34px);font-weight:700;color:#14171A;margin:0 0 10px;">Shower Cubicle <span style="color:#C2542B;">Options</span></h2>
-        <p style="font-size:14px;color:#6B7076;max-width:480px;margin:0 auto;">All cubicles use toughened tempered glass. Custom dimensions available — we measure and install at your site.</p>
+        <div style="font-size:10px;font-weight:700;color:#C2542B;letter-spacing:3px;text-transform:uppercase;margin-bottom:10px;">අපගේ නිෂ්පාදන</div>
+        <h2 style="font-family: var(--th-display);font-size:clamp(22px,3vw,34px);font-weight:700;color:#14171A;margin:0 0 10px;">නාන කුටිය <span style="color:#C2542B;">විකල්ප</span></h2>
+        <p style="font-size:14px;color:#6B7076;max-width:480px;margin:0 auto;">සියලු නාන කුටි සඳහා ශක්තිමත් කළ ටෙම්පර්ඩ් වීදුරු භාවිත කරයි. ඔබට අවශ්‍ය මානවලින් ලබාගත හැකිය. අපි ස්ථානයට පැමිණ මැන සවිකරමු.</p>
       </div>
 
       <div style="display:grid;grid-template-columns:repeat(auto-fill,minmax(300px,1fr));gap:22px;">
@@ -114,21 +115,21 @@ const waMsg = (product) => encodeURIComponent(`Hi YL Construction, I'm intereste
             <div style="padding:24px 24px 20px;flex:1;display:flex;flex-direction:column;gap:14px;">
               <!-- Header -->
               <div style="display:flex;align-items:flex-start;gap:14px;">
-                <div style={`width:52px;height:52px;border-radius:14px;background:${c.color}12;border:1.5px solid ${c.color}22;display:flex;align-items:center;justify-content:center;font-size:24px;flex-shrink:0;`}>{c.icon}</div>
+                <div style={`width:52px;height:52px;border-radius:14px;background:${c.color}12;border:1.5px solid ${c.color}22;display:flex;align-items:center;justify-content:center;font-size:24px;flex-shrink:0;`}>{sinhalaText(c.icon)}</div>
                 <div>
-                  <div style="font-size:16px;font-weight:800;color:#14171A;line-height:1.2;">{c.name}</div>
-                  <div style={`font-size:11px;font-weight:700;color:${c.color};text-transform:uppercase;letter-spacing:0.5px;margin-top:3px;`}>{c.variant}</div>
+                  <div style="font-size:16px;font-weight:800;color:#14171A;line-height:1.2;">{sinhalaText(c.name)}</div>
+                  <div style={`font-size:11px;font-weight:700;color:${c.color};text-transform:uppercase;letter-spacing:0.5px;margin-top:3px;`}>{sinhalaText(c.variant)}</div>
                 </div>
               </div>
 
               <!-- Description -->
-              <p style="font-size:13px;color:#3A4046;line-height:1.7;margin:0;">{c.desc}</p>
+              <p style="font-size:13px;color:#3A4046;line-height:1.7;margin:0;">{sinhalaText(c.desc)}</p>
 
               <!-- Feature list -->
               <ul style="margin:0;padding:0;list-style:none;display:flex;flex-direction:column;gap:6px;">
                 {c.features.map(f => (
                   <li style="font-size:12px;color:#3A4046;display:flex;align-items:center;gap:8px;">
-                    <span style={`color:${c.color};font-size:14px;`}>✓</span> {f}
+                    <span style={`color:${c.color};font-size:14px;`}>✓</span> {sinhalaText(f)}
                   </li>
                 ))}
               </ul>
@@ -141,7 +142,7 @@ const waMsg = (product) => encodeURIComponent(`Hi YL Construction, I'm intereste
                 target="_blank" rel="noopener noreferrer"
                 style={`display:flex;align-items:center;justify-content:center;gap:8px;background:${c.color};color:#fff;border-radius:10px;padding:10px 16px;font-size:13px;font-weight:700;text-decoration:none;`}
               >
-                💬 Ask about this
+                💬 මේ ගැන විමසන්න
               </a>
             </div>
           </div>
@@ -154,13 +155,13 @@ const waMsg = (product) => encodeURIComponent(`Hi YL Construction, I'm intereste
   <section style="background:#fff;padding:52px 20px;border-top:1px solid #E4E0D9;">
     <div style="max-width:900px;margin:0 auto;display:flex;align-items:center;gap:40px;flex-wrap:wrap;">
       <div style="flex:1;min-width:260px;">
-        <div style="font-size:10px;font-weight:700;color:#C2542B;letter-spacing:3px;text-transform:uppercase;margin-bottom:10px;">Also Available</div>
-        <h2 style="font-family: var(--th-display);font-size:clamp(22px,3vw,32px);font-weight:700;color:#14171A;margin:0 0 14px;line-height:1.2;">Glass Hand <span style="color:#C2542B;">Railings</span></h2>
-        <p style="font-size:14px;color:#6B7076;line-height:1.8;margin:0 0 20px;">Tempered glass panel railings for staircases, balconies, mezzanines and terraces. Frameless and semi-framed designs for a clean, modern look.</p>
+        <div style="font-size:10px;font-weight:700;color:#C2542B;letter-spacing:3px;text-transform:uppercase;margin-bottom:10px;">තවත් ලබාගත හැකි දේ</div>
+        <h2 style="font-family: var(--th-display);font-size:clamp(22px,3vw,32px);font-weight:700;color:#14171A;margin:0 0 14px;line-height:1.2;">වීදුරු <span style="color:#C2542B;">අත්වැට</span></h2>
+        <p style="font-size:14px;color:#6B7076;line-height:1.8;margin:0 0 20px;">පඩිපෙළ, බැල්කනි, අතරමැදි මහල් සහ ටෙරස් සඳහා ටෙම්පර්ඩ් වීදුරු අත්වැට. පිරිසිදු නවීන පෙනුමක් සඳහා රාමු රහිත සහ අර්ධ රාමු නිර්මාණ.</p>
         <ul style="margin:0 0 28px;padding:0;list-style:none;display:flex;flex-direction:column;gap:8px;">
           {['Staircase balustrades','Balcony & terrace railings','Indoor mezzanine guards','Frameless & semi-framed','Custom height & length'].map(f => (
             <li style="font-size:13px;color:#3A4046;display:flex;align-items:center;gap:10px;">
-              <span style="color:#C2542B;font-size:15px;font-weight:700;">✓</span> {f}
+              <span style="color:#C2542B;font-size:15px;font-weight:700;">✓</span> {sinhalaText(f)}
             </li>
           ))}
         </ul>
@@ -169,7 +170,7 @@ const waMsg = (product) => encodeURIComponent(`Hi YL Construction, I'm intereste
           target="_blank" rel="noopener noreferrer"
           style="display:inline-flex;align-items:center;gap:8px;background:#C2542B;color:#fff;border-radius:12px;padding:12px 24px;font-size:14px;font-weight:700;text-decoration:none;"
         >
-          💬 Get a Railing Quote
+          💬 අත්වැටකට මිල ගණනක් ගන්න
         </a>
       </div>
 
@@ -178,7 +179,7 @@ const waMsg = (product) => encodeURIComponent(`Hi YL Construction, I'm intereste
         <div style="position:absolute;inset:0;background:repeating-linear-gradient(0deg,transparent,transparent 29px,rgba(148,210,255,0.06) 29px,rgba(148,210,255,0.06) 30px),repeating-linear-gradient(90deg,transparent,transparent 29px,rgba(148,210,255,0.06) 29px,rgba(148,210,255,0.06) 30px);"></div>
         <div style="position:relative;text-align:center;">
           <div style="font-size:72px;line-height:1;">🔩</div>
-          <div style="font-size:12px;font-weight:700;color:rgba(255,255,255,0.6);margin-top:10px;letter-spacing:1px;">GLASS RAILINGS</div>
+          <div style="font-size:12px;font-weight:700;color:rgba(255,255,255,0.6);margin-top:10px;letter-spacing:1px;">වීදුරු අත්වැට</div>
         </div>
       </div>
     </div>
@@ -188,7 +189,7 @@ const waMsg = (product) => encodeURIComponent(`Hi YL Construction, I'm intereste
   <section style="background:#FBFAF8;padding:52px 20px;border-top:1px solid #E4E0D9;">
     <div style="max-width:900px;margin:0 auto;">
       <div style="text-align:center;margin-bottom:36px;">
-        <h2 style="font-family: var(--th-display);font-size:clamp(20px,3vw,30px);font-weight:700;color:#14171A;margin:0;">Why Choose <span style="color:#C2542B;">YL Construction</span></h2>
+        <h2 style="font-family: var(--th-display);font-size:clamp(20px,3vw,30px);font-weight:700;color:#14171A;margin:0;">තෝරාගත යුත්තේ ඇයි? <span style="color:#C2542B;">YL Construction</span></h2>
       </div>
       <div style="display:grid;grid-template-columns:repeat(auto-fill,minmax(200px,1fr));gap:18px;">
         {[
@@ -198,9 +199,9 @@ const waMsg = (product) => encodeURIComponent(`Hi YL Construction, I'm intereste
           { icon: '🔧', title: 'Full Installation', desc: 'Supply and install service — no need to find a separate fitter.' },
         ].map(f => (
           <div style="background:#fff;border-radius:14px;border:1px solid #E4E0D9;padding:22px 20px;text-align:center;">
-            <div style="font-size:32px;margin-bottom:10px;">{f.icon}</div>
-            <div style="font-size:13px;font-weight:700;color:#14171A;margin-bottom:6px;">{f.title}</div>
-            <div style="font-size:12px;color:#6B7076;line-height:1.6;">{f.desc}</div>
+            <div style="font-size:32px;margin-bottom:10px;">{sinhalaText(f.icon)}</div>
+            <div style="font-size:13px;font-weight:700;color:#14171A;margin-bottom:6px;">{sinhalaText(f.title)}</div>
+            <div style="font-size:12px;color:#6B7076;line-height:1.6;">{sinhalaText(f.desc)}</div>
           </div>
         ))}
       </div>
@@ -211,14 +212,14 @@ const waMsg = (product) => encodeURIComponent(`Hi YL Construction, I'm intereste
   <section style="background:linear-gradient(135deg,#0a1628,#14171A);padding:48px 20px;text-align:center;">
     <div style="max-width:520px;margin:0 auto;">
       <div style="font-size:36px;margin-bottom:16px;">💬</div>
-      <h2 style="font-family: var(--th-display);font-size:clamp(20px,3vw,28px);font-weight:700;color:#fff;margin:0 0 12px;">Ready to Get Started?</h2>
-      <p style="font-size:14px;color:rgba(255,255,255,0.5);margin:0 0 28px;line-height:1.7;">Contact YL Construction directly on WhatsApp to discuss your project, get a quote, or book a free site visit.</p>
+      <h2 style="font-family: var(--th-display);font-size:clamp(20px,3vw,28px);font-weight:700;color:#fff;margin:0 0 12px;">ආරම්භ කිරීමට සූදානම්ද?</h2>
+      <p style="font-size:14px;color:rgba(255,255,255,0.5);margin:0 0 28px;line-height:1.7;">ව්‍යාපෘතිය සාකච්ඡා කිරීමට, මිල ගණනක් ලබාගැනීමට හෝ නොමිලේ ස්ථාන පරීක්ෂාවක් වෙන්කරගැනීමට YL Construction WhatsApp හරහා අමතන්න.</p>
       <a
         href={`https://wa.me/${WA_NUMBER}?text=${encodeURIComponent('Hi YL Construction, I found you on TilersHub and would like a quote.')}`}
         target="_blank" rel="noopener noreferrer"
         style="display:inline-flex;align-items:center;gap:10px;background:#25D366;color:#fff;border-radius:14px;padding:15px 36px;font-size:15px;font-weight:800;text-decoration:none;box-shadow:0 6px 24px rgba(37,211,102,0.3);"
       >
-        💬 WhatsApp YL Construction
+        💬 YL Construction WhatsApp හරහා අමතන්න
       </a>
       <div style="margin-top:14px;font-size:12px;color:rgba(255,255,255,0.3);">+94 71 011 1506</div>
     </div>

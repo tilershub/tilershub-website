@@ -1,10 +1,11 @@
 ---
+import { si as sinhalaText } from '../lib/sinhala.js'
 import Layout from '../layouts/Layout.astro'
 ---
 
 <Layout
-  title="About TilersHub · Sri Lanka's Tiling Marketplace"
-  description="TilersHub is Sri Lanka's trusted marketplace connecting homeowners with verified tilers, workshops, suppliers and tile brands islandwide."
+  title="TilersHub ගැන · ශ්‍රී ලංකාවේ ටයිල් වෙළෙඳපොළ"
+  description="TilersHub ශ්‍රී ලංකාව පුරා නිවාස හිමියන් සහ සත්‍යාපිත ටයිල් කාර්මිකයන්, වැඩපොළ, සැපයුම්කරුවන් සහ ටයිල් සන්නාම සම්බන්ධ කරයි."
 >
 
   <!-- Hero -->
@@ -41,9 +42,9 @@ import Layout from '../layouts/Layout.astro'
           { n: 'ලොගින් නැත', l: 'ව්‍යාපෘතියක් පලකිරීමට', icon: '⚡' },
         ].map(s => (
           <div style="padding:24px;background:var(--surface-2);border:1px solid var(--border);border-radius:16px;">
-            <div style="font-size:28px;margin-bottom:8px;">{s.icon}</div>
-            <div style="font-family: var(--th-display);font-size:28px;font-weight:700;color:var(--navy);margin-bottom:4px;">{s.n}</div>
-            <div style="font-size:12px;color:var(--text-3);">{s.l}</div>
+            <div style="font-size:28px;margin-bottom:8px;">{sinhalaText(s.icon)}</div>
+            <div style="font-family: var(--th-display);font-size:28px;font-weight:700;color:var(--navy);margin-bottom:4px;">{sinhalaText(s.n)}</div>
+            <div style="font-size:12px;color:var(--text-3);">{sinhalaText(s.l)}</div>
           </div>
         ))}
       </div>
@@ -65,10 +66,10 @@ import Layout from '../layouts/Layout.astro'
           { step: '04', icon: '🏠', title: 'කාර්ය සිදු කරන්න', desc: 'ගාස්තු එකඟ වී, කාලය නියම කර, විශ්වාසදායී වෘත්තිකයෙකු ලවා ගුණාත්මක ටයිලිං ලබා ගන්න.' },
         ].map(s => (
           <div style="padding:28px 24px;background:#fff;border-radius:16px;border:1px solid var(--border);">
-            <div style="font-size:11px;font-weight:800;color:var(--terra);letter-spacing:2px;margin-bottom:12px;">{s.step}</div>
-            <div style="font-size:32px;margin-bottom:14px;">{s.icon}</div>
-            <h3 style="font-size:15px;font-weight:700;color:var(--text);margin-bottom:8px;">{s.title}</h3>
-            <p style="font-size:13px;color:var(--text-3);line-height:1.7;">{s.desc}</p>
+            <div style="font-size:11px;font-weight:800;color:var(--terra);letter-spacing:2px;margin-bottom:12px;">{sinhalaText(s.step)}</div>
+            <div style="font-size:32px;margin-bottom:14px;">{sinhalaText(s.icon)}</div>
+            <h3 style="font-size:15px;font-weight:700;color:var(--text);margin-bottom:8px;">{sinhalaText(s.title)}</h3>
+            <p style="font-size:13px;color:var(--text-3);line-height:1.7;">{sinhalaText(s.desc)}</p>
           </div>
         ))}
       </div>
@@ -94,9 +95,9 @@ import Layout from '../layouts/Layout.astro'
           <a href={p.href} style="display:block;padding:22px;background:var(--surface-2);border:1px solid var(--border);border-radius:16px;text-decoration:none;color:inherit;transition:all 0.2s;"
             onmouseover="this.style.borderColor='var(--navy)';this.style.transform='translateY(-2px)'"
             onmouseout="this.style.borderColor='var(--border)';this.style.transform='none'">
-            <div style="font-size:32px;margin-bottom:12px;">{p.icon}</div>
-            <div style="font-size:15px;font-weight:700;color:var(--text);margin-bottom:6px;">{p.type}</div>
-            <p style="font-size:12px;color:var(--text-3);line-height:1.7;margin:0;">{p.desc}</p>
+            <div style="font-size:32px;margin-bottom:12px;">{sinhalaText(p.icon)}</div>
+            <div style="font-size:15px;font-weight:700;color:var(--text);margin-bottom:6px;">{sinhalaText(p.type)}</div>
+            <p style="font-size:12px;color:var(--text-3);line-height:1.7;margin:0;">{sinhalaText(p.desc)}</p>
           </a>
         ))}
       </div>
@@ -117,9 +118,9 @@ import Layout from '../layouts/Layout.astro'
           { icon: '🇱🇰', v: 'ලංකාව සඳහා', d: 'ශ්‍රී ලංකාවේ ටයිලිං වෙළෙඳපොළ සඳහා විශේෂයෙන් නිර්මාණය කළ, සිංහල සහාය සහිතව.' },
         ].map(item => (
           <div style="padding:24px 20px;background:rgba(255,255,255,0.04);border:1px solid rgba(255,255,255,0.07);border-radius:16px;text-align:center;">
-            <div style="font-size:32px;margin-bottom:12px;">{item.icon}</div>
-            <div style="font-size:14px;font-weight:700;color:#fff;margin-bottom:8px;">{item.v}</div>
-            <p style="font-size:12px;color:rgba(255,255,255,0.4);line-height:1.7;margin:0;">{item.d}</p>
+            <div style="font-size:32px;margin-bottom:12px;">{sinhalaText(item.icon)}</div>
+            <div style="font-size:14px;font-weight:700;color:#fff;margin-bottom:8px;">{sinhalaText(item.v)}</div>
+            <p style="font-size:12px;color:rgba(255,255,255,0.4);line-height:1.7;margin:0;">{sinhalaText(item.d)}</p>
           </div>
         ))}
       </div>

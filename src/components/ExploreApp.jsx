@@ -1,3 +1,4 @@
+import { si as sinhalaText } from '../lib/sinhala.js'
 import { useEffect, useState, useMemo } from 'react'
 import { supabase, DISTRICTS, SERVICES } from '../lib/supabase'
 import { TilerCard, TilerModal } from './TilerCard'
@@ -54,17 +55,17 @@ function BlogTipCard({ tip }) {
         display: 'flex', alignItems: 'center', justifyContent: 'center',
         fontSize: 24,
       }}>
-        {tip.icon}
+        {sinhalaText(tip.icon)}
       </div>
       <div style={{ flex: 1, minWidth: 0 }}>
         <div style={{ fontSize: 10, fontWeight: 700, color: tip.color, textTransform: 'uppercase', letterSpacing: 1.2, marginBottom: 3 }}>
-          {tip.tag}
+          {sinhalaText(tip.tag)}
         </div>
         <div style={{ fontSize: 14, fontWeight: 700, color: 'var(--charcoal)', marginBottom: 3 }}>
-          {tip.title}
+          {sinhalaText(tip.title)}
         </div>
         <p style={{ fontSize: 12, color: 'var(--text-mid)', lineHeight: 1.75, margin: 0 }}>
-          {tip.desc}
+          {sinhalaText(tip.desc)}
         </p>
       </div>
       <button style={{
@@ -189,52 +190,52 @@ export default function ExploreApp() {
             >
               <span>⚙</span>
               <span style={{ fontSize: 12 }}>ෆිල්ටර්</span>
-              {activeFilterCount > 0 && (
+              {sinhalaText(activeFilterCount > 0 && (
                 <span style={{
                   background: 'var(--terracotta)', color: 'white',
                   borderRadius: '50%', width: 18, height: 18,
                   display: 'inline-flex', alignItems: 'center', justifyContent: 'center',
                   fontSize: 10, fontWeight: 700,
                 }}>
-                  {activeFilterCount}
+                  {sinhalaText(activeFilterCount)}
                 </span>
-              )}
+              ))}
             </button>
             <select style={{ ...sel, maxWidth: 150 }} value={sort} onChange={e => setSort(e.target.value)}>
-              {SORT_OPTIONS.map(o => <option key={o.value} value={o.value}>{o.label}</option>)}
+              {sinhalaText(SORT_OPTIONS.map(o => <option key={o.value} value={o.value}>{sinhalaText(o.label)}</option>))}
             </select>
-            {!loading && (
+            {sinhalaText(!loading && (
               <span style={{ fontSize: 12, color: 'var(--text-light)', fontWeight: 600, whiteSpace: 'nowrap' }}>
-                {filtered.length} ටයිලර්
+                {sinhalaText(filtered.length)} ටයිලර්
               </span>
-            )}
+            ))}
           </div>
 
-          {showFilters && (
+          {sinhalaText(showFilters && (
             <div style={{ paddingTop: 10, marginTop: 10, borderTop: '1px solid var(--cream-dark)' }}>
               <div style={{ display: 'flex', gap: 8, flexWrap: 'wrap', alignItems: 'center' }}>
                 <select style={sel} value={district} onChange={e => setDistrict(e.target.value)}>
                   <option value="">📍 සියලු දිස්ත්‍රික්ක</option>
-                  {DISTRICTS.map(d => <option key={d} value={d}>{d}</option>)}
+                  {sinhalaText(DISTRICTS.map(d => <option key={d} value={d}>{sinhalaText(d)}</option>))}
                 </select>
                 <select style={sel} value={service} onChange={e => setService(e.target.value)}>
                   <option value="">🔧 සියලු සේවා</option>
-                  {SERVICES.map(s => <option key={s} value={s}>{s}</option>)}
+                  {sinhalaText(SERVICES.map(s => <option key={s} value={s}>{sinhalaText(s)}</option>))}
                 </select>
                 <select style={sel} value={avail} onChange={e => setAvail(e.target.value)}>
                   <option value="">⏰ ලබාගත හැකි බව</option>
                   <option value="available">✓ ලබාගත හැකිය</option>
                   <option value="busy">⏳ කාර්යබහුලයි</option>
                 </select>
-                {hasFilters && (
+                {sinhalaText(hasFilters && (
                   <button className="btn btn-ghost" style={{ fontSize: 12, padding: '9px 14px', whiteSpace: 'nowrap' }} onClick={clearAll}>
                     ✕ ඉවත් කරන්න
                   </button>
-                )}
+                ))}
               </div>
-              {activeChips.length > 0 && (
+              {sinhalaText(activeChips.length > 0 && (
                 <div style={{ display: 'flex', gap: 6, marginTop: 10, flexWrap: 'wrap' }}>
-                  {activeChips.map((chip, i) => (
+                  {sinhalaText(activeChips.map((chip, i) => (
                     <button
                       key={i} onClick={chip.clear}
                       style={{
@@ -245,18 +246,18 @@ export default function ExploreApp() {
                         cursor: 'pointer', fontFamily: "var(--th-body)",
                       }}
                     >
-                      {chip.label} <span style={{ opacity: 0.5, fontSize: 10 }}>✕</span>
+                      {sinhalaText(chip.label)} <span style={{ opacity: 0.5, fontSize: 10 }}>✕</span>
                     </button>
-                  ))}
+                  )))}
                 </div>
-              )}
+              ))}
             </div>
-          )}
+          ))}
         </div>
       </div>
 
       <div style={{ maxWidth: 1100, margin: '0 auto', padding: '28px 16px' }}>
-        {loading ? (
+        {sinhalaText(loading ? (
           <div style={{ textAlign: 'center', padding: '80px 0', color: 'var(--text-light)' }}>
             <Spinner /> <span style={{ marginLeft: 12, fontSize: 14 }}>ලබා ගනිමින්...</span>
           </div>
@@ -265,24 +266,24 @@ export default function ExploreApp() {
             <div style={{ width: 72, height: 72, background: 'var(--cream)', borderRadius: '50%', display: 'flex', alignItems: 'center', justifyContent: 'center', margin: '0 auto 20px', fontSize: 32 }}>🔍</div>
             <h3 style={{ fontFamily: "var(--th-display)", fontSize: 18, color: 'var(--charcoal)', marginBottom: 8 }}>ගැළපෙන ටයිලර්වරුන් නැත</h3>
             <p style={{ fontSize: 13, color: 'var(--text-light)', maxWidth: 280, margin: '0 auto 20px' }}>වෙනත් සෙවුමක් හෝ ෆිල්ටර් එකක් උත්සාහ කරන්න</p>
-            {hasFilters && (
+            {sinhalaText(hasFilters && (
               <button className="btn btn-ghost" onClick={clearAll} style={{ fontSize: 13 }}>
                 Filters ඉවත් කරන්න
               </button>
-            )}
+            ))}
           </div>
         ) : (
           <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fill, minmax(300px,1fr))', gap: 18 }}>
-            {gridItems.map((item, i) =>
+            {sinhalaText(gridItems.map((item, i) =>
               item.type === 'tiler'
                 ? <TilerCard key={item.tiler.id} tiler={item.tiler} onClick={setSelected} />
                 : <BlogTipCard key={`blog-${i}`} tip={item.tip} />
-            )}
+            ))}
           </div>
-        )}
+        ))}
       </div>
 
-      {selected && <TilerModal tiler={selected} onClose={() => setSelected(null)} />}
+      {sinhalaText(selected && <TilerModal tiler={selected} onClose={() => setSelected(null)} />)}
     </div>
   )
 }

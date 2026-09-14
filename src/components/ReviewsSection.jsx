@@ -1,3 +1,4 @@
+import { si as sinhalaText } from '../lib/sinhala.js'
 import { useState, useEffect } from 'react'
 import { supabase } from '../lib/supabase.js'
 
@@ -43,9 +44,9 @@ function timeAgo(ts) {
 function Stars({ rating, size = 13 }) {
   return (
     <span style={{ display: 'inline-flex', gap: 1 }}>
-      {[1,2,3,4,5].map(n => (
+      {sinhalaText([1,2,3,4,5].map(n => (
         <span key={n} style={{ fontSize: size, color: n <= rating ? '#f59e0b' : '#E4E0D9', lineHeight: 1 }}>★</span>
-      ))}
+      )))}
     </span>
   )
 }
@@ -57,7 +58,7 @@ function StarPicker({ value, onChange }) {
   return (
     <div>
       <div style={{ display: 'flex', gap: 6, alignItems: 'center', marginBottom: 6 }}>
-        {[1,2,3,4,5].map(n => (
+        {sinhalaText([1,2,3,4,5].map(n => (
           <span
             key={n}
             onMouseEnter={() => setHovered(n)}
@@ -65,12 +66,12 @@ function StarPicker({ value, onChange }) {
             onClick={() => onChange(n)}
             style={{ fontSize: 36, cursor: 'pointer', color: n <= active ? '#f59e0b' : '#E4E0D9', transition: 'color 0.1s, transform 0.1s', transform: hovered === n ? 'scale(1.2)' : 'scale(1)', userSelect: 'none', lineHeight: 1 }}
           >★</span>
-        ))}
-        {active > 0 && (
+        )))}
+        {sinhalaText(active > 0 && (
           <span style={{ fontSize: 13, fontWeight: 700, color: RATING_COLORS[active], marginLeft: 6 }}>
-            {RATING_LABELS[active]}
+            {sinhalaText(RATING_LABELS[active])}
           </span>
-        )}
+        ))}
       </div>
     </div>
   )
@@ -86,14 +87,14 @@ function ReviewForm({ tilerId, providerId, onSubmitted }) {
 
   async function submit(e) {
     e.preventDefault()
-    if (!form.rating)                           { setError('ශ්‍රේණිගත කිරීම තෝරන්න'); return }
-    if (!form.reviewer_name.trim())             { setError('ඔබේ නම ඇතුළු කරන්න'); return }
-    if (!form.job_type)                         { setError('කාර්ය වර්ගය තෝරන්න'); return }
-    if (form.comment.trim().length < 20)        { setError('සමාලෝචනය අවම වශයෙන් අකුරු 20ක් විය යුතුය'); return }
+    if (!form.rating)                           { setError(sinhalaText('ශ්‍රේණිගත කිරීම තෝරන්න')); return }
+    if (!form.reviewer_name.trim())             { setError(sinhalaText('ඔබේ නම ඇතුළු කරන්න')); return }
+    if (!form.job_type)                         { setError(sinhalaText('කාර්ය වර්ගය තෝරන්න')); return }
+    if (form.comment.trim().length < 20)        { setError(sinhalaText('සමාලෝචනය අවම වශයෙන් අකුරු 20ක් විය යුතුය')); return }
     // One review per provider per browser
     const guardKey = `th_reviewed_${providerId || tilerId}`
-    if (localStorage.getItem(guardKey)) { setError('ඔබ දැනටමත් මෙම ශිල්පියා සමාලෝචනය කර ඇත'); return }
-    setLoading(true); setError('')
+    if (localStorage.getItem(guardKey)) { setError(sinhalaText('ඔබ දැනටමත් මෙම ශිල්පියා සමාලෝචනය කර ඇත')); return }
+    setLoading(true); setError(sinhalaText(''))
     const payload = {
       reviewer_name: form.reviewer_name.trim(),
       rating:        form.rating,
@@ -104,7 +105,7 @@ function ReviewForm({ tilerId, providerId, onSubmitted }) {
     if (providerId) payload.provider_id = providerId
     const { error: err } = await supabase.from('reviews').insert(payload)
     setLoading(false)
-    if (err) { setError(err.message || 'ඉදිරිපත් කිරීම අසාර්ථකයි — නැවත උත්සාහ කරන්න.'); return }
+    if (err) { setError(sinhalaText(err.message || 'ඉදිරිපත් කිරීම අසාර්ථකයි — නැවත උත්සාහ කරන්න.')); return }
     try { localStorage.setItem(guardKey, '1') } catch {}
     onSubmitted()
   }
@@ -155,7 +156,7 @@ function ReviewForm({ tilerId, providerId, onSubmitted }) {
             onBlur={e  => e.target.style.borderColor = '#E4E0D9'}
           >
             <option value="">තෝරන්න…</option>
-            {JOB_TYPES.map(t => <option key={t} value={t}>{t}</option>)}
+            {sinhalaText(JOB_TYPES.map(t => <option key={t} value={t}>{sinhalaText(t)}</option>))}
           </select>
         </div>
       </div>
@@ -164,7 +165,7 @@ function ReviewForm({ tilerId, providerId, onSubmitted }) {
       <div>
         <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'baseline', marginBottom: 6 }}>
           <label style={labelStyle}>ඔබේ සමාලෝචනය *</label>
-          <span style={{ fontSize: 10, color: charOk ? '#2F6B4F' : '#8A8F95' }}>{charCount}/500</span>
+          <span style={{ fontSize: 10, color: charOk ? '#2F6B4F' : '#8A8F95' }}>{sinhalaText(charCount)}/500</span>
         </div>
         <textarea
           value={form.comment}
@@ -175,23 +176,23 @@ function ReviewForm({ tilerId, providerId, onSubmitted }) {
           onFocus={e => e.target.style.borderColor = '#C2542B'}
           onBlur={e  => e.target.style.borderColor = '#E4E0D9'}
         />
-        {charCount > 0 && !charOk && (
-          <div style={{ fontSize: 10, color: '#8A8F95', marginTop: 4 }}>තවත් අකුරු {20 - charCount}ක් අවශ්‍යයි</div>
-        )}
+        {sinhalaText(charCount > 0 && !charOk && (
+          <div style={{ fontSize: 10, color: '#8A8F95', marginTop: 4 }}>තවත් අකුරු {sinhalaText(20 - charCount)}ක් අවශ්‍යයි</div>
+        ))}
       </div>
 
-      {error && (
+      {sinhalaText(error && (
         <div style={{ fontSize: 12, color: '#C0392B', background: '#FBEDEB', border: '1px solid #F2C9C3', borderRadius: 8, padding: '8px 12px' }}>
-          ⚠ {error}
+          ⚠ {sinhalaText(error)}
         </div>
-      )}
+      ))}
 
       <button
         type="submit"
         disabled={loading}
         style={{ padding: '12px', background: loading ? '#8A8F95' : '#C2542B', color: '#fff', border: 'none', borderRadius: 10, fontSize: 13, fontWeight: 700, cursor: loading ? 'not-allowed' : 'pointer', transition: 'background 0.15s' }}
       >
-        {loading ? '⏳ ඉදිරිපත් කෙරෙමින්…' : '⭐ සමාලෝචනය ඉදිරිපත් කරන්න'}
+        {sinhalaText(loading ? '⏳ ඉදිරිපත් කෙරෙමින්…' : '⭐ සමාලෝචනය ඉදිරිපත් කරන්න')}
       </button>
     </form>
   )
@@ -207,32 +208,32 @@ function ReviewCard({ r }) {
       <div style={{ display: 'flex', alignItems: 'flex-start', justifyContent: 'space-between', gap: 10, marginBottom: 10 }}>
         <div style={{ display: 'flex', alignItems: 'center', gap: 10 }}>
           <div style={{ width: 36, height: 36, borderRadius: '50%', background: color, color: '#fff', display: 'flex', alignItems: 'center', justifyContent: 'center', fontSize: 13, fontWeight: 700, flexShrink: 0 }}>
-            {inits}
+            {sinhalaText(inits)}
           </div>
           <div>
-            <div style={{ fontSize: 13, fontWeight: 700, color: '#14171A', lineHeight: 1.2 }}>{r.reviewer_name}</div>
+            <div style={{ fontSize: 13, fontWeight: 700, color: '#14171A', lineHeight: 1.2 }}>{sinhalaText(r.reviewer_name)}</div>
             <div style={{ display: 'flex', alignItems: 'center', gap: 6, marginTop: 3 }}>
-              {r.job_type && (
+              {sinhalaText(r.job_type && (
                 <span style={{ fontSize: 9, fontWeight: 700, color: '#C2542B', background: '#F7EFE9', border: '1px solid #EDDFD5', borderRadius: 20, padding: '1px 7px' }}>
-                  {r.job_type}
+                  {sinhalaText(r.job_type)}
                 </span>
-              )}
+              ))}
             </div>
           </div>
         </div>
         <div style={{ display: 'flex', flexDirection: 'column', alignItems: 'flex-end', gap: 3, flexShrink: 0 }}>
           <div style={{ display: 'flex', alignItems: 'center', gap: 5 }}>
             <Stars rating={r.rating} size={13} />
-            <span style={{ fontSize: 11, fontWeight: 700, color: ratingColor }}>{RATING_LABELS[r.rating]}</span>
+            <span style={{ fontSize: 11, fontWeight: 700, color: ratingColor }}>{sinhalaText(RATING_LABELS[r.rating])}</span>
           </div>
-          <span style={{ fontSize: 10, color: '#8A8F95' }}>{timeAgo(r.created_at)}</span>
+          <span style={{ fontSize: 10, color: '#8A8F95' }}>{sinhalaText(timeAgo(r.created_at))}</span>
         </div>
       </div>
-      {r.comment && (
+      {sinhalaText(r.comment && (
         <p style={{ fontSize: 13, color: '#3A4046', lineHeight: 1.7, margin: 0, paddingTop: 8, borderTop: '1px solid #EFEBE4' }}>
-          {r.comment}
+          {sinhalaText(r.comment)}
         </p>
-      )}
+      ))}
     </div>
   )
 }
@@ -246,23 +247,23 @@ function RatingSummary({ avg, reviews }) {
   return (
     <div style={{ display: 'flex', gap: 20, alignItems: 'center', flexWrap: 'wrap', background: '#FBFAF8', borderRadius: 14, padding: '18px 20px', border: '1px solid #E4E0D9', marginBottom: 20 }}>
       <div style={{ textAlign: 'center', minWidth: 72 }}>
-        <div style={{ fontSize: 42, fontWeight: 800, color: '#14171A', lineHeight: 1 }}>{avg.toFixed(1)}</div>
+        <div style={{ fontSize: 42, fontWeight: 800, color: '#14171A', lineHeight: 1 }}>{sinhalaText(avg.toFixed(1))}</div>
         <Stars rating={Math.round(avg)} size={16} />
         <div style={{ fontSize: 11, color: '#8A8F95', marginTop: 5 }}>
-          සමාලෝචන {reviews.length}ක්
+          සමාලෝචන {sinhalaText(reviews.length)}ක්
         </div>
       </div>
       <div style={{ flex: 1, minWidth: 160 }}>
-        {breakdown.map(({ n, count, pct }) => (
+        {sinhalaText(breakdown.map(({ n, count, pct }) => (
           <div key={n} style={{ display: 'flex', alignItems: 'center', gap: 8, marginBottom: 5 }}>
-            <span style={{ fontSize: 11, color: '#6B7076', width: 10, textAlign: 'right' }}>{n}</span>
+            <span style={{ fontSize: 11, color: '#6B7076', width: 10, textAlign: 'right' }}>{sinhalaText(n)}</span>
             <span style={{ fontSize: 11, color: '#f59e0b', lineHeight: 1 }}>★</span>
             <div style={{ flex: 1, height: 7, background: '#E4E0D9', borderRadius: 4, overflow: 'hidden' }}>
               <div style={{ height: '100%', background: RATING_COLORS[n], borderRadius: 4, width: `${pct}%`, transition: 'width 0.4s' }} />
             </div>
-            <span style={{ fontSize: 10, color: pct > 0 ? '#3A4046' : '#D6D0C6', width: 28, textAlign: 'right', fontWeight: pct > 0 ? 600 : 400 }}>{pct > 0 ? `${pct}%` : '—'}</span>
+            <span style={{ fontSize: 10, color: pct > 0 ? '#3A4046' : '#D6D0C6', width: 28, textAlign: 'right', fontWeight: pct > 0 ? 600 : 400 }}>{sinhalaText(pct > 0 ? `${pct}%` : '—')}</span>
           </div>
-        ))}
+        )))}
       </div>
     </div>
   )
@@ -313,27 +314,27 @@ export default function ReviewsSection({ tilerId, providerId }) {
       {/* Section header */}
       <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', marginBottom: 18 }}>
         <h2 style={{ fontSize: 15, fontWeight: 700, color: '#14171A', margin: 0 }}>
-          ⭐ Reviews {reviews.length > 0 && <span style={{ fontSize: 12, color: '#8A8F95', fontWeight: 400 }}>({reviews.length})</span>}
+          ⭐ සමාලෝචන {sinhalaText(reviews.length > 0 && <span style={{ fontSize: 12, color: '#8A8F95', fontWeight: 400 }}>({sinhalaText(reviews.length)})</span>)}
         </h2>
-        {!submitted && !showForm && (
+        {sinhalaText(!submitted && !showForm && (
           <button
             onClick={() => setShowForm(true)}
             style={{ fontSize: 12, fontWeight: 700, color: '#C2542B', background: '#F7EFE9', border: '1.5px solid #EDDFD5', borderRadius: 8, padding: '7px 14px', cursor: 'pointer' }}
           >
             + සමාලෝචනයක් ලියන්න
           </button>
-        )}
+        ))}
       </div>
 
-      {loading ? (
+      {sinhalaText(loading ? (
         <div style={{ textAlign: 'center', padding: '32px 0', color: '#8A8F95', fontSize: 13 }}>සමාලෝචන පූරණය වෙමින්…</div>
       ) : (
         <>
           {/* Rating summary — only if reviews exist */}
-          {reviews.length > 0 && <RatingSummary avg={avg} reviews={reviews} />}
+          {sinhalaText(reviews.length > 0 && <RatingSummary avg={avg} reviews={reviews} />)}
 
           {/* Empty state */}
-          {reviews.length === 0 && !showForm && (
+          {sinhalaText(reviews.length === 0 && !showForm && (
             <div style={{ textAlign: 'center', padding: '28px 0' }}>
               <div style={{ fontSize: 36, marginBottom: 10 }}>💬</div>
               <p style={{ fontSize: 14, fontWeight: 600, color: '#3A4046', marginBottom: 4 }}>සමාලෝචන නොමැත</p>
@@ -345,40 +346,40 @@ export default function ReviewsSection({ tilerId, providerId }) {
                 ⭐ සමාලෝචනයක් ලියන්න
               </button>
             </div>
-          )}
+          ))}
 
           {/* Review cards */}
-          {reviews.length > 0 && (
+          {sinhalaText(reviews.length > 0 && (
             <div style={{ display: 'flex', flexDirection: 'column', gap: 10, marginBottom: 16 }}>
-              {reviews.slice(0, visible).map(r => <ReviewCard key={r.id} r={r} />)}
+              {sinhalaText(reviews.slice(0, visible).map(r => <ReviewCard key={r.id} r={r} />))}
             </div>
-          )}
+          ))}
 
           {/* Load more */}
-          {reviews.length > visible && (
+          {sinhalaText(reviews.length > visible && (
             <button
               onClick={() => setVisible(v => v + PAGE)}
               style={{ width: '100%', padding: '10px', background: '#FBFAF8', color: '#3A4046', border: '1.5px solid #E4E0D9', borderRadius: 10, fontSize: 12, fontWeight: 600, cursor: 'pointer', marginBottom: 14 }}
             >
-              තවත් බලන්න ({reviews.length - visible})
+              තවත් බලන්න ({sinhalaText(reviews.length - visible)})
             </button>
-          )}
+          ))}
 
           {/* Review form */}
-          {showForm && (
+          {sinhalaText(showForm && (
             <div style={{ marginTop: reviews.length > 0 ? 8 : 0 }}>
               <ReviewForm tilerId={tilerId} providerId={providerId} onSubmitted={onSubmitted} />
             </div>
-          )}
+          ))}
 
           {/* Success message */}
-          {submitted && (
+          {sinhalaText(submitted && (
             <div style={{ display: 'flex', alignItems: 'center', gap: 8, fontSize: 13, color: '#2F6B4F', fontWeight: 600, background: '#E9F1EC', border: '1px solid #C6DDCF', borderRadius: 10, padding: '10px 16px', marginTop: 8 }}>
               ✅ ස්තූතියි — ඔබේ සමාලෝචනය ප්‍රකාශිත විය!
             </div>
-          )}
+          ))}
         </>
-      )}
+      ))}
     </div>
   )
 }

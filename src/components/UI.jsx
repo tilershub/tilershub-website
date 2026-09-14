@@ -1,3 +1,4 @@
+import { si as sinhalaText } from '../lib/sinhala.js'
 export function Spinner() {
   return <span className="spinner" />
 }
@@ -5,7 +6,7 @@ export function Spinner() {
 export function ServiceCheckGrid({ services, selected, onChange }) {
   return (
     <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fill, minmax(200px,1fr))', gap: 10 }}>
-      {services.map(s => {
+      {sinhalaText(services.map(s => {
         const checked = selected.includes(s)
         return (
           <label
@@ -28,10 +29,10 @@ export function ServiceCheckGrid({ services, selected, onChange }) {
               }}
               style={{ accentColor: 'var(--terracotta)', width: 14, height: 14 }}
             />
-            {s}
+            {sinhalaText(s)}
           </label>
         )
-      })}
+      }))}
     </div>
   )
 }

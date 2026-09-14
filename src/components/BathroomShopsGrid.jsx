@@ -1,3 +1,4 @@
+import { si as sinhalaText } from '../lib/sinhala.js'
 /* All constants and helpers outside component — avoids React island remount issues */
 
 function waLead(phone, name) {
@@ -32,51 +33,51 @@ function ShopCard({ shop, index }) {
     >
       {/* Left: photo */}
       <div style={{ width: 110, flexShrink: 0, position: 'relative', minHeight: 140 }}>
-        {coverImg ? (
-          <img src={coverImg} alt={shop.name} loading="lazy"
+        {sinhalaText(coverImg ? (
+          <img src={coverImg} alt={sinhalaText(shop.name)} loading="lazy"
             style={{ width: '100%', height: '100%', objectFit: 'cover', display: 'block' }} />
         ) : (
           <div style={{ width: '100%', height: '100%', background: '#FBFAF8', backgroundImage: 'repeating-linear-gradient(0deg,transparent,transparent 19px,#E4E0D9 19px,#E4E0D9 20px),repeating-linear-gradient(90deg,transparent,transparent 19px,#E4E0D9 19px,#E4E0D9 20px)', display: 'flex', alignItems: 'center', justifyContent: 'center' }}>
             <span style={{ fontSize: 26, opacity: 0.18 }}>🚿</span>
           </div>
-        )}
-        {shop.is_featured && (
+        ))}
+        {sinhalaText(shop.is_featured && (
           <div style={{ position: 'absolute', top: 8, left: 8, background: '#E08A5F', color: '#14171A', fontSize: 8, fontWeight: 700, letterSpacing: 0.5, padding: '3px 7px', borderRadius: 20, boxShadow: '0 2px 6px rgba(0,0,0,0.25)', whiteSpace: 'nowrap' }}>
-            ⭐ Top Rated
+            ⭐ ඉහළ ශ්‍රේණිය
           </div>
-        )}
+        ))}
       </div>
 
       {/* Right: content */}
       <div style={{ flex: 1, padding: '14px 16px', display: 'flex', flexDirection: 'column', minWidth: 0 }}>
         <div style={{ fontSize: 9, fontWeight: 700, color: '#8A8F95', letterSpacing: 1.2, textTransform: 'uppercase', marginBottom: 4 }}>
-          {tagline}
+          {sinhalaText(tagline)}
         </div>
         <div style={{ fontFamily: "var(--th-display)", fontSize: 15, fontWeight: 700, color: '#14171A', lineHeight: 1.25, marginBottom: 6, overflow: 'hidden', textOverflow: 'ellipsis', whiteSpace: 'nowrap' }}>
-          {shop.name}
+          {sinhalaText(shop.name)}
         </div>
-        {shop.description && (
+        {sinhalaText(shop.description && (
           <p style={{ fontSize: 11, color: '#6B7076', lineHeight: 1.6, margin: '0 0 8px', display: '-webkit-box', WebkitLineClamp: 2, WebkitBoxOrient: 'vertical', overflow: 'hidden', flex: 1 }}>
-            {shop.description}
+            {sinhalaText(shop.description)}
           </p>
-        )}
-        {chips.length > 0 && (
+        ))}
+        {sinhalaText(chips.length > 0 && (
           <div style={{ display: 'flex', flexWrap: 'wrap', gap: 4, marginBottom: 10 }}>
-            {chips.map(s => (
-              <span key={s} style={{ fontSize: 9, fontWeight: 600, padding: '2px 7px', borderRadius: 20, background: '#F7EFE9', color: '#C2542B', border: '1px solid #EDDFD5' }}>{s}</span>
-            ))}
+            {sinhalaText(chips.map(s => (
+              <span key={s} style={{ fontSize: 9, fontWeight: 600, padding: '2px 7px', borderRadius: 20, background: '#F7EFE9', color: '#C2542B', border: '1px solid #EDDFD5' }}>{sinhalaText(s)}</span>
+            )))}
           </div>
-        )}
+        ))}
         <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', gap: 8, marginTop: 'auto' }}>
           <div style={{ fontSize: 11, color: '#8A8F95', overflow: 'hidden', whiteSpace: 'nowrap', textOverflow: 'ellipsis' }}>
-            📍 {shop.city || shop.district}
+            📍 {sinhalaText(shop.city || shop.district)}
           </div>
-          {waLink && (
+          {sinhalaText(waLink && (
             <a href={waLink} target="_blank" rel="noopener noreferrer"
               style={{ flexShrink: 0, display: 'inline-flex', alignItems: 'center', gap: 4, background: '#14171A', color: '#fff', borderRadius: 10, padding: '8px 13px', fontSize: 11, fontWeight: 700, textDecoration: 'none', whiteSpace: 'nowrap' }}>
-              View Shop <span style={{ fontSize: 12 }}>›</span>
+              වෙළෙඳසැල බලන්න <span style={{ fontSize: 12 }}>›</span>
             </a>
-          )}
+          ))}
         </div>
       </div>
     </div>
@@ -87,9 +88,9 @@ export default function BathroomShopsGrid({ shops }) {
   if (!shops || shops.length === 0) return null
   return (
     <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fill, minmax(290px, 1fr))', gap: 18 }}>
-      {shops.map((shop, i) => (
+      {sinhalaText(shops.map((shop, i) => (
         <ShopCard key={shop.id} shop={shop} index={i} />
-      ))}
+      )))}
     </div>
   )
 }

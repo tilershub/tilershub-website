@@ -1,3 +1,4 @@
+import { si as sinhalaText } from '../lib/sinhala.js'
 import { useState, useEffect } from 'react'
 import { supabase } from '../lib/supabase.js'
 import { useDistrict } from '../lib/district.js'
@@ -49,25 +50,25 @@ function Card({ p }) {
         style={{ width: '100%', height: 104, objectFit: 'cover', background: 'var(--surface-3)' }}
         fallback={
           <div style={{ height: 104, background: avatarColor(p.name), display: 'flex', alignItems: 'center', justifyContent: 'center', color: '#fff', fontSize: 30, fontWeight: 800 }}>
-            {initials(p.name)}
+            {sinhalaText(initials(p.name))}
           </div>
         } />
       <div style={{ padding: '10px 12px 12px' }}>
         <div style={{ fontSize: 13, fontWeight: 700, color: 'var(--text)', lineHeight: 1.3, overflow: 'hidden', display: '-webkit-box', WebkitLineClamp: 2, WebkitBoxOrient: 'vertical', minHeight: 34 }}>
-          {p.name}
+          {sinhalaText(p.name)}
         </div>
         <div style={{ display: 'flex', alignItems: 'center', gap: 4, marginTop: 6, fontSize: 12 }}>
-          {reviews > 0 ? (
+          {sinhalaText(reviews > 0 ? (
             <>
               <span style={{ color: '#F59E0B' }}>★</span>
-              <strong style={{ color: 'var(--text)' }}>{rating.toFixed(1)}</strong>
-              <span style={{ color: 'var(--text-4)' }}>({reviews})</span>
+              <strong style={{ color: 'var(--text)' }}>{sinhalaText(rating.toFixed(1))}</strong>
+              <span style={{ color: 'var(--text-4)' }}>({sinhalaText(reviews)})</span>
             </>
           ) : (
-            <span style={{ color: 'var(--text-4)' }}>New</span>
-          )}
+            <span style={{ color: 'var(--text-4)' }}>නව</span>
+          ))}
         </div>
-        <div style={{ fontSize: 11, color: 'var(--text-3)', marginTop: 3 }}>📍 {p.city || p.district}</div>
+        <div style={{ fontSize: 11, color: 'var(--text-3)', marginTop: 3 }}>📍 {sinhalaText(p.city || p.district)}</div>
       </div>
     </a>
   )
@@ -76,9 +77,9 @@ function Card({ p }) {
 function Skeleton() {
   return (
     <div style={{ display: 'flex', gap: 10, overflow: 'hidden', padding: '0 16px' }}>
-      {[0, 1, 2].map(i => (
+      {sinhalaText([0, 1, 2].map(i => (
         <div key={i} style={{ flex: '0 0 auto', width: 172, height: 190, background: 'var(--surface-3)', borderRadius: 14 }} />
-      ))}
+      )))}
     </div>
   )
 }
@@ -92,7 +93,7 @@ export default function NearYou({ variant = 'pros', initial = [] }) {
   const lang = useLang()
   const t = (k, ...a) => {
     const v = T[k]?.[lang] ?? T[k]?.en
-    return typeof v === 'function' ? v(...a) : v
+    return typeof v === 'function' ? v(...a.map(sinhalaText)) : v
   }
   const [rows, setRows] = useState(initial)
   const [loading, setLoading] = useState(false)
@@ -135,19 +136,19 @@ export default function NearYou({ variant = 'pros', initial = [] }) {
 
   if (loading && rows.length === 0) return (
     <section style={{ padding: '20px 0 4px' }}>
-      <h2 style={{ padding: '0 16px 12px', fontSize: 16, fontWeight: 800, color: 'var(--text)', margin: 0 }}>{title}</h2>
+      <h2 style={{ padding: '0 16px 12px', fontSize: 16, fontWeight: 800, color: 'var(--text)', margin: 0 }}>{sinhalaText(title)}</h2>
       <Skeleton />
     </section>
   )
 
   if (rows.length === 0) return (
     <section style={{ padding: '20px 16px' }}>
-      <h2 style={{ fontSize: 16, fontWeight: 800, color: 'var(--text)', margin: '0 0 10px' }}>{title}</h2>
+      <h2 style={{ fontSize: 16, fontWeight: 800, color: 'var(--text)', margin: '0 0 10px' }}>{sinhalaText(title)}</h2>
       <div style={{ background: '#fff', border: '1px solid var(--border)', borderRadius: 14, padding: '20px 16px', textAlign: 'center' }}>
         <p style={{ fontSize: 13, color: 'var(--text-3)', margin: '0 0 12px', lineHeight: 1.6 }}>
-          {variant === 'shops' ? t('noShops', district) : t('noPros', district)}
+          {sinhalaText(variant === 'shops' ? t('noShops', district) : t('noPros', district))}
         </p>
-        <a href="/post-project" className="btn btn-terra btn-sm">{t('postCta')}</a>
+        <a href="/post-project" className="btn btn-terra btn-sm">{sinhalaText(t('postCta'))}</a>
       </div>
     </section>
   )
@@ -155,11 +156,11 @@ export default function NearYou({ variant = 'pros', initial = [] }) {
   return (
     <section style={{ padding: '20px 0 4px' }}>
       <div style={{ padding: '0 16px 12px', display: 'flex', alignItems: 'center', justifyContent: 'space-between', gap: 10 }}>
-        <h2 style={{ fontSize: 16, fontWeight: 800, color: 'var(--text)', margin: 0 }}>{title}</h2>
-        <a href={href} style={{ fontSize: 13, fontWeight: 600, color: 'var(--terra)', textDecoration: 'none', whiteSpace: 'nowrap' }}>{t('seeAll')} ›</a>
+        <h2 style={{ fontSize: 16, fontWeight: 800, color: 'var(--text)', margin: 0 }}>{sinhalaText(title)}</h2>
+        <a href={href} style={{ fontSize: 13, fontWeight: 600, color: 'var(--terra)', textDecoration: 'none', whiteSpace: 'nowrap' }}>{sinhalaText(t('seeAll'))} ›</a>
       </div>
       <div style={{ display: 'flex', gap: 10, overflowX: 'auto', padding: '0 16px 8px', scrollbarWidth: 'none', WebkitOverflowScrolling: 'touch' }}>
-        {rows.map(p => <Card key={p.id} p={p} />)}
+        {sinhalaText(rows.map(p => <Card key={p.id} p={p} />))}
       </div>
     </section>
   )

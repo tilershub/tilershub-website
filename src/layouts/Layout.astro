@@ -1,4 +1,5 @@
 ---
+import { si as sinhalaText } from '../lib/sinhala.js'
 import '../index.css'
 import '../styles/theme-2026.css'
 import AppShell from '../components/AppShell.jsx'
@@ -83,28 +84,28 @@ const orgSchema = JSON.stringify({
 })
 ---
 <!DOCTYPE html>
-<html lang="en">
+<html lang="si" data-lang="si">
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover" />
-  <title>{title}</title>
-  <meta name="description" content={description} />
+  <title>{sinhalaText(title)}</title>
+  <meta name="description" content={sinhalaText(description)} />
   <meta name="robots" content={noindex ? 'noindex, nofollow' : 'index, follow'} />
   <meta name="theme-color" content="#C2542B" />
   <link rel="canonical" href={canonicalUrl} />
   <link rel="sitemap" href="/sitemap.xml" />
   <!-- Open Graph -->
-  <meta property="og:title" content={title} />
-  <meta property="og:description" content={description} />
+  <meta property="og:title" content={sinhalaText(title)} />
+  <meta property="og:description" content={sinhalaText(description)} />
   <meta property="og:type" content={ogType} />
   <meta property="og:url" content={canonicalUrl} />
   <meta property="og:image" content={ogImage} />
   <meta property="og:site_name" content="TilersHub" />
-  <meta property="og:locale" content="en_LK" />
+  <meta property="og:locale" content="si_LK" />
   <!-- Twitter -->
   <meta name="twitter:card" content="summary_large_image" />
-  <meta name="twitter:title" content={title} />
-  <meta name="twitter:description" content={description} />
+  <meta name="twitter:title" content={sinhalaText(title)} />
+  <meta name="twitter:description" content={sinhalaText(description)} />
   <meta name="twitter:image" content={ogImage} />
   <!-- Structured data -->
   <script type="application/ld+json" set:html={orgSchema} />
@@ -134,10 +135,7 @@ const orgSchema = JSON.stringify({
     html:not([data-lang="si"]) .si-text { display: none; }
     html[data-lang="si"] .en-text { display: none; }
   </style>
-  <!-- Pre-paint language init: apply stored choice before first render -->
-  <script is:inline>
-    ;(function(){try{var l=localStorage.getItem('th_lang');if(l)document.documentElement.setAttribute('data-lang',l)}catch(e){}})()
-  </script>
+
   <!-- Google Consent Mode v2 defaults, set before any tag can fire. Analytics
        and advertising storage stay denied until the visitor chooses; the
        banner below updates them. Required by Google's EU user consent policy
@@ -242,32 +240,32 @@ const orgSchema = JSON.stringify({
       <span style="font-family: var(--th-display);font-size:16px;font-weight:700;color:#fff;">TILERS<span style="color:#C2542B;">HUB</span></span>
       <button id="close-drawer" style="background:transparent;border:none;color:rgba(255,255,255,0.5);font-size:22px;cursor:pointer;padding:4px;">✕</button>
     </div>
-    <a href="/" class={`drawer-link${path==='/'?' active':''}`}>🏠 Home</a>
-    <a href="/notifications" class={`drawer-link${path==='/notifications'?' active':''}`}>🔔 Notifications</a>
-    <a href="/providers?type=tiler" class={`drawer-link${path.startsWith('/providers')?' active':''}`}>👷 Find Tilers</a>
-    <a href="/jobs" class={`drawer-link${path==='/jobs'?' active':''}`}>💼 View Projects</a>
-    <a href="/tile" class={`drawer-link${path==='/tile'?' active':''}`}>🏪 Tile Shops & Brands</a>
-    <a href="/bathrooms" class={`drawer-link${path==='/bathrooms'?' active':''}`} style="color:rgba(255,255,255,0.6);">🚿 Bathroom Products</a>
-    <a href="/tools" class={`drawer-link${path==='/tools'?' active':''}`} style="color:rgba(255,255,255,0.6);">🛠️ Tools & Equipment</a>
+    <a href="/" class={`drawer-link${path==='/'?' active':''}`}>🏠 මුල් පිටුව</a>
+    <a href="/notifications" class={`drawer-link${path==='/notifications'?' active':''}`}>🔔 දැනුම්දීම්</a>
+    <a href="/providers?type=tiler" class={`drawer-link${path.startsWith('/providers')?' active':''}`}>👷 ටයිල් කාර්මිකයන් සොයන්න</a>
+    <a href="/jobs" class={`drawer-link${path==='/jobs'?' active':''}`}>💼 ව්‍යාපෘති බලන්න</a>
+    <a href="/tile" class={`drawer-link${path==='/tile'?' active':''}`}>🏪 ටයිල් වෙළෙඳසැල් සහ සන්නාම</a>
+    <a href="/bathrooms" class={`drawer-link${path==='/bathrooms'?' active':''}`} style="color:rgba(255,255,255,0.6);">🚿 නාන කාමර උපාංග</a>
+    <a href="/tools" class={`drawer-link${path==='/tools'?' active':''}`} style="color:rgba(255,255,255,0.6);">🛠️ මෙවලම් සහ උපකරණ</a>
     <div class="drawer-divider"></div>
     {/* One highlighted action, and it is the one for this role. */}
     {role === 'provider'
-      ? <a href="/account?tab=quotes" class="drawer-link highlight">📋 My Quotes</a>
-      : <a href="/post-project" class="drawer-link highlight">📋 Post a Project — Get Quotes</a>}
+      ? <a href="/account?tab=quotes" class="drawer-link highlight">📋 මගේ මිල ගණන්</a>
+      : <a href="/post-project" class="drawer-link highlight">📋 ව්‍යාපෘතියක් පළ කර මිල ගණන් ලබාගන්න</a>}
     {role !== 'provider' && (
-      <a href="/join-tilershub" class="drawer-link" style="color:rgba(255,255,255,0.6);">✅ Join as a Provider</a>
+      <a href="/join-tilershub" class="drawer-link" style="color:rgba(255,255,255,0.6);">✅ සේවා සපයන්නෙකු ලෙස එක්වන්න</a>
     )}
     <div class="drawer-divider"></div>
-    <a href="/estimator" class={`drawer-link${path==='/estimator'?' active':''}`}>📐 Cost Calculator</a>
-    <a href="/guides" class={`drawer-link${path.startsWith('/guides')?' active':''}`} style="color:rgba(255,255,255,0.6);">📖 Guides</a>
-    <a href="/blog" class={`drawer-link${path.startsWith('/blog')?' active':''}`} style="color:rgba(255,255,255,0.6);">📰 Blog & Tips</a>
+    <a href="/estimator" class={`drawer-link${path==='/estimator'?' active':''}`}>📐 වියදම් ගණකය</a>
+    <a href="/guides" class={`drawer-link${path.startsWith('/guides')?' active':''}`} style="color:rgba(255,255,255,0.6);">📖 මඟපෙන්වීම්</a>
+    <a href="/blog" class={`drawer-link${path.startsWith('/blog')?' active':''}`} style="color:rgba(255,255,255,0.6);">📰 ලිපි සහ උපදෙස්</a>
     <div class="drawer-divider"></div>
-    <a href="/about" class={`drawer-link${path==='/about'?' active':''}`} style="color:rgba(255,255,255,0.5);font-size:13px;">ℹ️ About TilersHub</a>
-    <a href="/contact" class={`drawer-link${path==='/contact'?' active':''}`} style="color:rgba(255,255,255,0.5);font-size:13px;">📬 Contact Us</a>
+    <a href="/about" class={`drawer-link${path==='/about'?' active':''}`} style="color:rgba(255,255,255,0.5);font-size:13px;">ℹ️ TilersHub ගැන</a>
+    <a href="/contact" class={`drawer-link${path==='/contact'?' active':''}`} style="color:rgba(255,255,255,0.5);font-size:13px;">📬 අප අමතන්න</a>
     <div class="drawer-divider"></div>
     <!-- Language is a set-once preference, so it lives here rather than
          taking a permanent slot in the app bar. -->
-    <button id="lang-toggle" class="drawer-link" style="width:100%;text-align:left;background:transparent;border:none;cursor:pointer;font-family:inherit;font-size:14px;">සිං</button>
+
   </div>
 
   <!-- Links anonymous drafts/claims to account after sign-in -->
@@ -286,7 +284,7 @@ const orgSchema = JSON.stringify({
           <div class="site-logo-grid">{[0,1,2,3,4,5,6,7,8].map(()=><div class="site-logo-tile"></div>)}</div>
           <span style="font-family: var(--th-display);font-size:16px;font-weight:700;color:rgba(255,255,255,0.88);">TILERS<strong>HUB</strong></span>
         </div>
-        <p class="footer-brand-text">The home of Sri Lanka's tile trade — homeowners post projects free, tilers win work, and shops, brands &amp; suppliers reach customers islandwide.</p>
+        <p class="footer-brand-text">ශ්‍රී ලංකාවේ ටයිල් ක්ෂේත්‍රයේ එකමුතුව — නිවාස හිමියන් නොමිලේ ව්‍යාපෘති පළ කරයි, කාර්මිකයන් වැඩ ලබාගනී, වෙළෙඳසැල් සහ සැපයුම්කරුවන් දිවයින පුරා පාරිභෝගිකයන් වෙත ළඟාවේ.</p>
         <div style="display:flex;gap:10px;margin-top:16px;">
           <a href="https://chat.whatsapp.com/IR9ZWyFj7ZN15KeOHqwG3Z" target="_blank" rel="noopener" style="display:inline-flex;align-items:center;gap:5px;font-size:11px;font-weight:700;color:#25D366;text-decoration:none;">💬 WhatsApp</a>
           <a href="https://www.facebook.com/share/g/1Dsc63BvXS/" target="_blank" rel="noopener" style="display:inline-flex;align-items:center;gap:5px;font-size:11px;font-weight:700;color:#E08A5F;text-decoration:none;">👥 Facebook</a>
@@ -294,53 +292,53 @@ const orgSchema = JSON.stringify({
       </div>
       <!-- Discover -->
       <div>
-        <div class="footer-col-head">Discover</div>
+        <div class="footer-col-head">ගවේෂණය කරන්න</div>
         <nav class="footer-links">
-          <a href="/providers?type=tiler">Find Tilers</a>
-          <a href="/jobs">View Projects</a>
-          <a href="/estimator">Cost Calculator</a>
-          <a href="/tile">Tile Shops &amp; Brands</a>
-          <a href="/bathrooms">Bathroom Products</a>
-          <a href="/tools">Tools &amp; Equipment</a>
-          <a href="/services/floor-tiling">Floor Tiling</a>
+          <a href="/providers?type=tiler">ටයිල් කාර්මිකයන් සොයන්න</a>
+          <a href="/jobs">ව්‍යාපෘති බලන්න</a>
+          <a href="/estimator">වියදම් ගණකය</a>
+          <a href="/tile">ටයිල් වෙළෙඳසැල් සහ සන්නාම</a>
+          <a href="/bathrooms">නාන කාමර උපාංග</a>
+          <a href="/tools">මෙවලම් සහ උපකරණ</a>
+          <a href="/services/floor-tiling">බිම ටයිල් ඇල්ලීම</a>
         </nav>
       </div>
       <!-- Get Started -->
       <div>
-        <div class="footer-col-head">Get Started</div>
+        <div class="footer-col-head">ආරම්භ කරන්න</div>
         <nav class="footer-links">
-          <a href="/post-project">Post a Project</a>
-          <a href="/join-tilershub">Join as a Provider</a>
-          <a href="/account">My Account</a>
+          <a href="/post-project">ව්‍යාපෘතියක් පළ කරන්න</a>
+          <a href="/join-tilershub">සේවා සපයන්නෙකු ලෙස එකතු වන්න</a>
+          <a href="/account">මගේ ගිණුම</a>
         </nav>
       </div>
       <!-- Popular Areas -->
       <div>
-        <div class="footer-col-head">Popular Areas</div>
+        <div class="footer-col-head">ජනප්‍රිය ප්‍රදේශ</div>
         <nav class="footer-links">
-          <a href="/tilers/colombo">Tilers in Colombo</a>
-          <a href="/tilers/gampaha">Tilers in Gampaha</a>
-          <a href="/tilers/kandy">Tilers in Kandy</a>
-          <a href="/tilers/galle">Tilers in Galle</a>
-          <a href="/tilers/kurunegala">Tilers in Kurunegala</a>
-          <a href="/tilers/kalutara">Tilers in Kalutara</a>
+          <a href="/tilers/colombo">කොළඹ ටයිල් කාර්මිකයන්</a>
+          <a href="/tilers/gampaha">ගම්පහ ටයිල් කාර්මිකයන්</a>
+          <a href="/tilers/kandy">මහනුවර ටයිල් කාර්මිකයන්</a>
+          <a href="/tilers/galle">ගාල්ලේ ටයිල් කාර්මිකයන්</a>
+          <a href="/tilers/kurunegala">කුරුණෑගල ටයිල් කාර්මිකයන්</a>
+          <a href="/tilers/kalutara">කළුතර ටයිල් කාර්මිකයන්</a>
         </nav>
       </div>
       <!-- Company -->
       <div>
-        <div class="footer-col-head">Company</div>
+        <div class="footer-col-head">ආයතනය</div>
         <nav class="footer-links">
-          <a href="/blog">Blog &amp; Tips</a>
-          <a href="/about">About TilersHub</a>
-          <a href="/contact">Contact Us</a>
-          <a href="/privacy-policy">Privacy Policy</a>
-          <a href="/terms">Terms of Service</a>
+          <a href="/blog">ලිපි සහ උපදෙස්</a>
+          <a href="/about">TilersHub ගැන</a>
+          <a href="/contact">අප අමතන්න</a>
+          <a href="/privacy-policy">පෞද්ගලිකත්ව ප්‍රතිපත්තිය</a>
+          <a href="/terms">සේවා කොන්දේසි</a>
         </nav>
       </div>
     </div>
     <div class="footer-bottom">
-      <span>© 2025 <strong>TilersHub</strong> · tilershub.lk · 🇱🇰 Sri Lanka</span>
-      <span style="color:rgba(194,84,43,0.5);font-weight:600;">♥ Made in Sri Lanka</span>
+      <span>© 2025 <strong>TilersHub</strong> · tilershub.lk · 🇱🇰 ශ්‍රී ලංකාව</span>
+      <span style="color:rgba(194,84,43,0.5);font-weight:600;">♥ ශ්‍රී ලංකාවේ නිර්මාණයකි</span>
     </div>
   </footer>
 
@@ -366,73 +364,6 @@ const orgSchema = JSON.stringify({
     overlay?.addEventListener('click', closeDrawer)
     closeBtn?.addEventListener('click', closeDrawer)
   </script>
-  <!-- ═══ FIRST-VISIT LANGUAGE CHOOSER ═══ -->
-  <div id="lang-chooser" hidden style="position:fixed;inset:0;z-index:9999;">
-    <div id="lang-chooser-bg" style="position:absolute;inset:0;background:rgba(20,23,26,0.55);opacity:0;transition:opacity 0.3s;"></div>
-    <div id="lang-chooser-sheet" style="position:absolute;left:0;right:0;bottom:0;background:#fff;border-radius:22px 22px 0 0;padding:26px 22px calc(26px + env(safe-area-inset-bottom,0px));box-shadow:0 -8px 40px rgba(0,0,0,0.2);transform:translateY(100%);transition:transform 0.3s ease;max-width:480px;margin:0 auto;">
-      <div style="text-align:center;margin-bottom:18px;">
-        <div style="font-size:30px;margin-bottom:8px;">🇱🇰</div>
-        <div style="font-size:16px;font-weight:800;color:#14171A;margin-bottom:4px;">භාෂාව තෝරන්න · Choose your language</div>
-        <div style="font-size:12px;color:#6B7076;">ඕනෑම වේලාවක ඉහළින් වෙනස් කළ හැක · Change anytime from the top bar</div>
-      </div>
-      <div style="display:flex;gap:10px;">
-        <button data-pick="si" style="flex:1;background:#C2542B;color:#fff;border:none;border-radius:14px;padding:16px 10px;font-size:16px;font-weight:800;cursor:pointer;font-family:inherit;">සිංහල</button>
-        <button data-pick="en" style="flex:1;background:#fff;color:#C2542B;border:2px solid #E7D9CE;border-radius:14px;padding:16px 10px;font-size:16px;font-weight:800;cursor:pointer;font-family:inherit;">English</button>
-      </div>
-    </div>
-  </div>
-
-  <script is:inline>
-    ;(function(){
-      function setLang(l){
-        try{localStorage.setItem('th_lang',l)}catch(e){}
-        document.documentElement.setAttribute('data-lang',l)
-        window.dispatchEvent(new CustomEvent('th-lang',{detail:l}))
-        var t=document.getElementById('lang-toggle')
-        if(t) t.textContent = l==='si' ? '🌐 Switch to English' : '🌐 සිංහලට මාරු වන්න'
-      }
-      window.__thSetLang = setLang
-
-      // Header toggle
-      var toggle=document.getElementById('lang-toggle')
-      if(toggle){
-        var cur=document.documentElement.getAttribute('data-lang')||'en'
-        toggle.textContent = cur==='si' ? '🌐 Switch to English' : '🌐 සිංහලට මාරු වන්න'
-        toggle.addEventListener('click',function(){
-          var now=document.documentElement.getAttribute('data-lang')||'en'
-          setLang(now==='si' ? 'en' : 'si')
-        })
-      }
-
-      // First-visit chooser
-      var stored=null
-      try{stored=localStorage.getItem('th_lang')}catch(e){return}
-      if(stored) return
-      var box=document.getElementById('lang-chooser')
-      if(!box) return
-      box.hidden=false
-      requestAnimationFrame(function(){
-        var bg=document.getElementById('lang-chooser-bg')
-        var sheet=document.getElementById('lang-chooser-sheet')
-        if(bg) bg.style.opacity='1'
-        if(sheet) sheet.style.transform='translateY(0)'
-      })
-      box.querySelectorAll('[data-pick]').forEach(function(btn){
-        btn.addEventListener('click',function(){
-          setLang(btn.getAttribute('data-pick'))
-          var bg=document.getElementById('lang-chooser-bg')
-          var sheet=document.getElementById('lang-chooser-sheet')
-          if(bg) bg.style.opacity='0'
-          if(sheet) sheet.style.transform='translateY(100%)'
-          setTimeout(function(){
-            if(box.parentNode) box.parentNode.removeChild(box)
-            if(window.__thShowConsent) window.__thShowConsent()
-          },320)
-        })
-      })
-    })()
-  </script>
-
   <!-- ═══ COOKIE CONSENT ═══
        Analytics and advertising cookies are denied until this is answered.
        It queues behind the language chooser so a first-time visitor is never
@@ -440,13 +371,11 @@ const orgSchema = JSON.stringify({
   <div id="cookie-banner" hidden class="cookie-banner">
     <div class="cookie-banner__text">
       <strong>
-        <span class="en-text">We use cookies</span>
+        <span class="en-text">අපි කුකීස් භාවිත කරමු</span>
         <span class="si-text">අපි කුකීස් භාවිත කරමු</span>
       </strong>
       <span class="en-text">
-        Essential cookies keep you signed in. With your permission we also use analytics and
-        advertising cookies — including Google's — to understand what's useful and to fund the site.
-        See our <a href="/privacy-policy">Privacy Policy</a>.
+        අත්‍යවශ්‍ය කුකීස් ඔබේ පිවිසුම පවත්වාගනී. ඔබේ අවසරයෙන් Google ඇතුළු විශ්ලේෂණ සහ දැන්වීම් කුකීස් භාවිත කර ප්‍රයෝජනවත් දේ හඳුනාගෙන වෙබ් අඩවියේ වියදම් පියවමු. බලන්න: <a href="/privacy-policy">පෞද්ගලිකත්ව ප්‍රතිපත්තිය</a>.
       </span>
       <span class="si-text">
         අත්‍යවශ්‍ය කුකීස් ඔබව පිවිසී තබා ගනී. ඔබේ අවසරය ඇතිව අපි විශ්ලේෂණ සහ දැන්වීම් කුකීස් — Google හි ඒවා ද — භාවිත කරමු.
@@ -455,10 +384,10 @@ const orgSchema = JSON.stringify({
     </div>
     <div class="cookie-banner__actions">
       <button type="button" id="cookie-reject" class="btn btn-outline btn-sm">
-        <span class="en-text">Essential only</span><span class="si-text">අත්‍යවශ්‍ය පමණි</span>
+        <span class="en-text">අත්‍යවශ්‍ය පමණි</span><span class="si-text">අත්‍යවශ්‍ය පමණි</span>
       </button>
       <button type="button" id="cookie-accept" class="btn btn-terra btn-sm">
-        <span class="en-text">Accept all</span><span class="si-text">සියල්ල පිළිගන්න</span>
+        <span class="en-text">සියල්ල පිළිගන්න</span><span class="si-text">සියල්ල පිළිගන්න</span>
       </button>
     </div>
   </div>
@@ -500,7 +429,7 @@ const orgSchema = JSON.stringify({
         lang = localStorage.getItem('th_lang')
       } catch (e) { return }
       // A brand-new visitor picks a language first; that flow calls us back.
-      if (!consent && lang) window.__thShowConsent()
+      if (!consent) window.__thShowConsent()
     })()
   </script>
 

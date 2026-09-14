@@ -1,3 +1,4 @@
+import { si as sinhalaText } from '../lib/sinhala.js'
 import { useState, useRef } from 'react'
 import { supabase, DISTRICTS_EN } from '../lib/supabase.js'
 
@@ -31,10 +32,10 @@ function inp(hasError) {
 function Field({ label, error, hint, children }) {
   return (
     <div style={{ marginBottom: 18 }}>
-      <label style={lbl(label)}>{label}</label>
-      {children}
-      {hint && !error && <p style={{ fontSize: 11, color: '#8A8F95', marginTop: 4, lineHeight: 1.5 }}>{hint}</p>}
-      {error && <p style={{ fontSize: 11, color: '#C0392B', marginTop: 4 }}>⚠ {error}</p>}
+      <label style={lbl(label)}>{sinhalaText(label)}</label>
+      {sinhalaText(children)}
+      {sinhalaText(hint && !error && <p style={{ fontSize: 11, color: '#8A8F95', marginTop: 4, lineHeight: 1.5 }}>{sinhalaText(hint)}</p>)}
+      {sinhalaText(error && <p style={{ fontSize: 11, color: '#C0392B', marginTop: 4 }}>⚠ {sinhalaText(error)}</p>)}
     </div>
   )
 }
@@ -48,7 +49,7 @@ function Chip({ label, checked, onClick }) {
       color: checked ? '#C2542B' : '#6B7076',
       transition: 'all 0.15s',
     }}>
-      {checked ? '✓ ' : ''}{label}
+      {sinhalaText(checked ? '✓ ' : '')}{sinhalaText(label)}
     </button>
   )
 }
@@ -86,26 +87,26 @@ function ImageUploadBox({ label, hint, value, onChange, aspect }) {
 
   return (
     <div style={{ marginBottom: 18 }}>
-      <div style={lbl(label)}>{label}</div>
+      <div style={lbl(label)}>{sinhalaText(label)}</div>
       <div onClick={() => ref.current?.click()}
         onDragOver={e => { e.preventDefault(); setDragging(true) }}
         onDragLeave={() => setDragging(false)}
         onDrop={e => { e.preventDefault(); setDragging(false); handle(e.dataTransfer.files[0]) }}
         style={{ position: 'relative', height, borderRadius: 12, border: `2px dashed ${dragging ? '#C2542B' : '#D6D0C6'}`, background: dragging ? '#F7EFE9' : preview ? '#000' : '#FBFAF8', cursor: 'pointer', overflow: 'hidden', display: 'flex', alignItems: 'center', justifyContent: 'center', transition: 'all 0.2s' }}>
-        {preview ? (
+        {sinhalaText(preview ? (
           <>
             <img src={preview} alt="" style={{ position: 'absolute', inset: 0, width: '100%', height: '100%', objectFit: 'cover', opacity: 0.85 }} />
             <div style={{ position: 'relative', zIndex: 1, background: 'rgba(0,0,0,0.55)', color: '#fff', borderRadius: 8, padding: '4px 12px', fontSize: 11, fontWeight: 600 }}>වෙනස් කිරීමට ක්ලික් කරන්න</div>
           </>
         ) : (
           <div style={{ textAlign: 'center', color: '#8A8F95', pointerEvents: 'none' }}>
-            <div style={{ fontSize: 22, marginBottom: 4 }}>{aspect === 'cover' ? '🖼️' : '👤'}</div>
+            <div style={{ fontSize: 22, marginBottom: 4 }}>{sinhalaText(aspect === 'cover' ? '🖼️' : '👤')}</div>
             <div style={{ fontSize: 12, fontWeight: 600 }}>ක්ලික් කරන්න හෝ ඇද දමන්න</div>
             <div style={{ fontSize: 10, marginTop: 2 }}>JPG, PNG, WebP · උපරිම 5 MB</div>
           </div>
-        )}
+        ))}
       </div>
-      {hint && <p style={{ fontSize: 11, color: '#8A8F95', marginTop: 4, lineHeight: 1.5 }}>{hint}</p>}
+      {sinhalaText(hint && <p style={{ fontSize: 11, color: '#8A8F95', marginTop: 4, lineHeight: 1.5 }}>{sinhalaText(hint)}</p>)}
       <input ref={ref} type="file" accept="image/*" onChange={e => handle(e.target.files[0])} style={{ display: 'none' }} />
     </div>
   )
@@ -123,26 +124,26 @@ function GalleryEditor({ existing, newFiles, onNewFiles, onRemoveExisting }) {
 
   return (
     <div style={{ marginBottom: 18 }}>
-      <div style={lbl('ව්‍යාපෘති ගැලරිය')}> ව්‍යාපෘති ගැලරිය <span style={{ fontSize: 10, color: '#8A8F95', textTransform: 'none', fontWeight: 400 }}>(ඡායාරූප {MAX_GALLERY}ක් දක්වා)</span></div>
+      <div style={lbl('ව්‍යාපෘති ගැලරිය')}> ව්‍යාපෘති ගැලරිය <span style={{ fontSize: 10, color: '#8A8F95', textTransform: 'none', fontWeight: 400 }}>(ඡායාරූප {sinhalaText(MAX_GALLERY)}ක් දක්වා)</span></div>
       <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fill,minmax(90px,1fr))', gap: 8, marginBottom: 8 }}>
-        {existing.map((url, i) => (
+        {sinhalaText(existing.map((url, i) => (
           <div key={url} style={{ position: 'relative', aspectRatio: '1', borderRadius: 10, overflow: 'hidden', border: '1px solid #E4E0D9' }}>
             <img src={url} alt="" style={{ width: '100%', height: '100%', objectFit: 'cover' }} />
             <button type="button" onClick={() => onRemoveExisting(i)} style={{ position: 'absolute', top: 3, right: 3, background: 'rgba(0,0,0,0.65)', color: '#fff', border: 'none', borderRadius: '50%', width: 20, height: 20, cursor: 'pointer', fontSize: 11, display: 'flex', alignItems: 'center', justifyContent: 'center' }}>✕</button>
           </div>
-        ))}
-        {newFiles.map((f, i) => (
+        )))}
+        {sinhalaText(newFiles.map((f, i) => (
           <div key={i} style={{ position: 'relative', aspectRatio: '1', borderRadius: 10, overflow: 'hidden', border: '1px solid #C6DDCF' }}>
             <img src={URL.createObjectURL(f)} alt="" style={{ width: '100%', height: '100%', objectFit: 'cover' }} />
             <button type="button" onClick={() => onNewFiles(newFiles.filter((_, j) => j !== i))} style={{ position: 'absolute', top: 3, right: 3, background: 'rgba(0,0,0,0.65)', color: '#fff', border: 'none', borderRadius: '50%', width: 20, height: 20, cursor: 'pointer', fontSize: 11, display: 'flex', alignItems: 'center', justifyContent: 'center' }}>✕</button>
           </div>
-        ))}
-        {(existing.length + newFiles.length) < MAX_GALLERY && (
+        )))}
+        {sinhalaText((existing.length + newFiles.length) < MAX_GALLERY && (
           <div onClick={() => ref.current?.click()} style={{ aspectRatio: '1', borderRadius: 10, border: '2px dashed #D6D0C6', display: 'flex', flexDirection: 'column', alignItems: 'center', justifyContent: 'center', cursor: 'pointer', background: '#FBFAF8', gap: 4 }}>
             <span style={{ fontSize: 20, color: '#8A8F95' }}>+</span>
             <span style={{ fontSize: 10, color: '#8A8F95' }}>එකතු</span>
           </div>
-        )}
+        ))}
       </div>
       <input ref={ref} type="file" accept="image/*" multiple onChange={e => addFiles(e.target.files)} style={{ display: 'none' }} />
       <p style={{ fontSize: 11, color: '#8A8F95', margin: 0 }}>JPG/PNG/WebP. ඔබේ හොඳම කාර්ය ඉදිරිපත් කරන්න.</p>
@@ -255,31 +256,31 @@ export default function ProfileEditor({ profile, profileType, userId }) {
   if (!editing) {
     return (
       <div style={{ background: '#fff', border: '1px solid #E4E0D9', borderRadius: 16, padding: 24 }}>
-        {saved && (
+        {sinhalaText(saved && (
           <div style={{ padding: '10px 14px', background: '#E9F1EC', border: '1px solid #C6DDCF', borderRadius: 10, marginBottom: 20, display: 'flex', alignItems: 'center', justifyContent: 'space-between', gap: 10 }}>
             <span style={{ fontSize: 13, color: '#285C43', fontWeight: 600 }}>✓ පැතිකඩ යාවත්කාලීන විය!</span>
-            {profilePath && (
+            {sinhalaText(profilePath && (
               <a href={profilePath} target="_blank" rel="noopener" style={{ fontSize: 12, color: '#C2542B', fontWeight: 700, textDecoration: 'none' }}>පැතිකඩ →</a>
-            )}
+            ))}
           </div>
-        )}
+        ))}
         <div style={{ display: 'flex', alignItems: 'center', gap: 16, marginBottom: 20 }}>
           <div style={{ width: 64, height: 64, borderRadius: 14, background: '#C2542B', border: '2px solid #E4E0D9', overflow: 'hidden', flexShrink: 0, display: 'flex', alignItems: 'center', justifyContent: 'center', fontSize: 22, fontWeight: 700, color: '#fff' }}>
-            {displayImg
-              ? <img src={displayImg} alt={displayName} style={{ width: '100%', height: '100%', objectFit: 'cover' }} />
-              : displayName.split(' ').map(w => w[0]).join('').slice(0, 2).toUpperCase()
+            {sinhalaText(displayImg
+              ? <img src={displayImg} alt={sinhalaText(displayName)} style={{ width: '100%', height: '100%', objectFit: 'cover' }} />
+              : displayName.split(' ').map(w => w[0]).join('').slice(0, 2).toUpperCase())
             }
           </div>
           <div>
-            <div style={{ fontSize: 16, fontWeight: 700, color: '#14171A' }}>{displayName}</div>
+            <div style={{ fontSize: 16, fontWeight: 700, color: '#14171A' }}>{sinhalaText(displayName)}</div>
             <div style={{ fontSize: 12, color: '#6B7076', marginTop: 2 }}>
-              {isTiler ? 'ටයිලර්' : 'සේවා සපයන්නා'} · {profile.city || '—'}
+              {sinhalaText(isTiler ? 'ටයිලර්' : 'සේවා සපයන්නා')} · {sinhalaText(profile.city || '—')}
             </div>
-            {profilePath && (
+            {sinhalaText(profilePath && (
               <a href={profilePath} target="_blank" rel="noopener" style={{ fontSize: 11, color: '#C2542B', fontWeight: 600, textDecoration: 'none' }}>
                 පොදු පැතිකඩ →
               </a>
-            )}
+            ))}
           </div>
         </div>
 
@@ -288,12 +289,12 @@ export default function ProfileEditor({ profile, profileType, userId }) {
             style={{ padding: '10px 22px', background: '#C2542B', color: '#fff', border: 'none', borderRadius: 10, fontSize: 13, fontWeight: 700, cursor: 'pointer' }}>
             ✏️ පැතිකඩ සංස්කරණය
           </button>
-          {profilePath && (
+          {sinhalaText(profilePath && (
             <a href={profilePath} target="_blank" rel="noopener"
               style={{ padding: '10px 18px', background: '#EFEBE4', color: '#3A4046', border: '1px solid #E4E0D9', borderRadius: 10, fontSize: 13, fontWeight: 600, textDecoration: 'none', display: 'inline-flex', alignItems: 'center' }}>
               🔗 පැතිකඩ
             </a>
-          )}
+          ))}
         </div>
       </div>
     )
@@ -308,7 +309,7 @@ export default function ProfileEditor({ profile, profileType, userId }) {
       </div>
 
       {/* Images */}
-      {!isTiler ? (
+      {sinhalaText(!isTiler ? (
         <div style={{ display: 'grid', gridTemplateColumns: '1fr 2fr', gap: 14 }}>
           <ImageUploadBox label="පැතිකඩ ඡායාරූපය" hint="ඔබේ ඡායාරූපය හෝ ලාංඡනය" aspect="profile"
             value={isTiler ? profile.avatar_url : profile.profile_image}
@@ -323,11 +324,11 @@ export default function ProfileEditor({ profile, profileType, userId }) {
           <ImageUploadBox label="කවර රූපය" hint="ඔබේ කාඩ් සහ පැතිකඩ ඉහලින් පෙන්වන රූපය" aspect="cover"
             value={profile.cover_image} onChange={setCoverImageFile} />
         </div>
-      )}
+      ))}
 
       {/* Name */}
       <Field label={isTiler ? 'සම්පූර්ණ නම' : 'නම / ව්‍යාපාරය'}>
-        <input value={name} onChange={e => setName(e.target.value)} style={inp(false)} placeholder={isTiler ? 'ඔබේ සම්පූර්ණ නම' : 'ඔබේ නම හෝ ව්‍යාපාර නාමය'} />
+        <input value={name} onChange={e => setName(e.target.value)} style={inp(false)} placeholder={sinhalaText(isTiler ? 'ඔබේ සම්පූර්ණ නම' : 'ඔබේ නම හෝ ව්‍යාපාර නාමය')} />
       </Field>
 
       {/* City + District */}
@@ -338,7 +339,7 @@ export default function ProfileEditor({ profile, profileType, userId }) {
         <Field label="දිස්ත්‍රික්කය">
           <select value={district} onChange={e => setDistrict(e.target.value)} style={{ ...inp(false), WebkitAppearance: 'none', cursor: 'pointer' }}>
             <option value="">දිස්ත්‍රික්කය තෝරන්න…</option>
-            {DISTRICTS_EN.map(d => <option key={d} value={d}>{d}</option>)}
+            {sinhalaText(DISTRICTS_EN.map(d => <option key={d} value={d}>{sinhalaText(d)}</option>))}
           </select>
         </Field>
       </div>
@@ -351,12 +352,12 @@ export default function ProfileEditor({ profile, profileType, userId }) {
       {/* Bio / Description */}
       <Field label={isTiler ? 'ජීව කතාව' : 'විස්තරය'} hint="ඔබේ අත්දැකීම් සහ විශේෂත්වය විස්තර කරන්න">
         <textarea value={bio} onChange={e => setBio(e.target.value)} rows={3}
-          placeholder={isTiler ? 'ව්‍යාපෘති, විශේෂීකරණ, ප්‍රදේශ...' : 'සේවාවන්, කණ්ඩායම සහ ඔබේ විශේෂත්වය...'}
+          placeholder={sinhalaText(isTiler ? 'ව්‍යාපෘති, විශේෂීකරණ, ප්‍රදේශ...' : 'සේවාවන්, කණ්ඩායම සහ ඔබේ විශේෂත්වය...')}
           style={{ ...inp(false), resize: 'vertical' }} />
       </Field>
 
       {/* Tiler-specific */}
-      {isTiler && (
+      {sinhalaText(isTiler && (
         <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr 1fr', gap: 14 }}>
           <Field label="අත්දැකීම් (වසර)">
             <input value={expYears} onChange={e => setExpYears(e.target.value)} style={inp(false)} placeholder="නිදා: 8" type="number" min="0" />
@@ -368,21 +369,21 @@ export default function ProfileEditor({ profile, profileType, userId }) {
             <input value={rateMax} onChange={e => setRateMax(e.target.value)} style={inp(false)} placeholder="නිදා: 300" type="number" min="0" />
           </Field>
         </div>
-      )}
+      ))}
 
       {/* Website (providers only) */}
-      {!isTiler && (
+      {sinhalaText(!isTiler && (
         <Field label="වෙබ් URL" hint="අවශ්‍ය නම">
           <input value={website} onChange={e => setWebsite(e.target.value)} style={inp(false)} placeholder="https://yoursite.lk" type="url" />
         </Field>
-      )}
+      ))}
 
       {/* Services */}
       <Field label="ඔබ සපයන සේවාවන්" hint="අදාළ ඒවා සියල්ල තෝරන්න — හෝ ඔබේම සේවාව ලියන්න">
         <div style={{ display: 'flex', flexWrap: 'wrap', gap: 7, marginBottom: 10 }}>
-          {ALL_SERVICES.map(s => (
+          {sinhalaText(ALL_SERVICES.map(s => (
             <Chip key={s} label={s} checked={services.includes(s)} onClick={() => toggleArr(services, setServices, s)} />
-          ))}
+          )))}
         </div>
         <ServiceTextInput value={services} onChange={setServices} />
       </Field>
@@ -390,9 +391,9 @@ export default function ProfileEditor({ profile, profileType, userId }) {
       {/* Service Areas */}
       <Field label="සේවා ප්‍රදේශ" hint="ඔබ ආවරණය කරන දිස්ත්‍රික්ක">
         <div style={{ display: 'flex', flexWrap: 'wrap', gap: 7 }}>
-          {DISTRICTS_EN.map(d => (
+          {sinhalaText(DISTRICTS_EN.map(d => (
             <Chip key={d} label={d} checked={serviceAreas.includes(d)} onClick={() => toggleArr(serviceAreas, setServiceAreas, d)} />
-          ))}
+          )))}
         </div>
       </Field>
 
@@ -404,16 +405,16 @@ export default function ProfileEditor({ profile, profileType, userId }) {
         onRemoveExisting={i => setExistingGallery(existingGallery.filter((_, j) => j !== i))}
       />
 
-      {saveErr && (
+      {sinhalaText(saveErr && (
         <div style={{ padding: '10px 14px', background: '#FBEDEB', border: '1px solid #F2C9C3', borderRadius: 10, fontSize: 13, color: '#C0392B', marginBottom: 16 }}>
-          ⚠ {saveErr}
+          ⚠ {sinhalaText(saveErr)}
         </div>
-      )}
+      ))}
 
       <div style={{ display: 'flex', gap: 10 }}>
         <button onClick={save} disabled={saving}
           style={{ flex: 1, padding: '13px', background: saving ? '#8A8F95' : '#C2542B', color: '#fff', border: 'none', borderRadius: 12, fontSize: 14, fontWeight: 700, cursor: saving ? 'not-allowed' : 'pointer', transition: 'background 0.2s' }}>
-          {saving ? '⏳ සුරකිමින්…' : '💾 වෙනස්කම් සුරකින්න'}
+          {sinhalaText(saving ? '⏳ සුරකිමින්…' : '💾 වෙනස්කම් සුරකින්න')}
         </button>
         <button onClick={() => setEditing(false)} disabled={saving}
           style={{ padding: '13px 20px', background: '#EFEBE4', color: '#3A4046', border: '1px solid #E4E0D9', borderRadius: 12, fontSize: 14, fontWeight: 600, cursor: 'pointer' }}>

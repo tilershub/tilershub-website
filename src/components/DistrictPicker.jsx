@@ -1,3 +1,4 @@
+import { si as sinhalaText } from '../lib/sinhala.js'
 import { useState } from 'react'
 import { DISTRICT_INFO } from '../lib/locations.js'
 import { useDistrict, setDistrict } from '../lib/district.js'
@@ -14,7 +15,7 @@ export default function DistrictPicker({ tone = 'light' }) {
     <>
       <button
         onClick={() => setOpen(true)}
-        aria-label="Change your district"
+        aria-label="ඔබේ දිස්ත්‍රික්කය වෙනස් කරන්න"
         className="district-pill"
         style={{
           display: 'inline-flex', alignItems: 'center', gap: 5,
@@ -25,10 +26,10 @@ export default function DistrictPicker({ tone = 'light' }) {
           fontSize: 13, fontWeight: 600, fontFamily: 'inherit', whiteSpace: 'nowrap',
         }}
       >
-        📍 {district} <span style={{ fontSize: 10, opacity: 0.6 }}>▾</span>
+        📍 {sinhalaText(district)} <span style={{ fontSize: 10, opacity: 0.6 }}>▾</span>
       </button>
 
-      {open && (
+      {sinhalaText(open && (
         <div
           onClick={() => setOpen(false)}
           style={{ position: 'fixed', inset: 0, background: 'rgba(20,23,26,0.5)', zIndex: 400, display: 'flex', alignItems: 'flex-end' }}
@@ -38,12 +39,12 @@ export default function DistrictPicker({ tone = 'light' }) {
             style={{ background: '#fff', width: '100%', maxHeight: '72vh', overflowY: 'auto', borderRadius: '20px 20px 0 0', padding: '20px 16px calc(20px + env(safe-area-inset-bottom,0px))' }}
           >
             <div style={{ width: 36, height: 4, background: 'var(--border-dark)', borderRadius: 4, margin: '0 auto 16px' }} />
-            <h2 style={{ fontSize: 17, fontWeight: 800, color: 'var(--text)', margin: '0 0 4px' }}>Where are you?</h2>
+            <h2 style={{ fontSize: 17, fontWeight: 800, color: 'var(--text)', margin: '0 0 4px' }}>ඔබ සිටින්නේ කොහේද?</h2>
             <p style={{ fontSize: 13, color: 'var(--text-3)', margin: '0 0 16px' }}>
-              We'll show tilers and shops near you.
+              ඔබ අසල ටයිල් කාර්මිකයන් සහ වෙළෙඳසැල් පෙන්වන්නෙමු.
             </p>
             <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fill,minmax(140px,1fr))', gap: 8 }}>
-              {DISTRICT_INFO.map(d => {
+              {sinhalaText(DISTRICT_INFO.map(d => {
                 const active = d.name === district
                 return (
                   <button
@@ -58,15 +59,15 @@ export default function DistrictPicker({ tone = 'light' }) {
                       minHeight: 48,
                     }}
                   >
-                    {d.name}
-                    <div style={{ fontSize: 11, fontWeight: 400, color: 'var(--text-4)', marginTop: 2 }}>{d.nameSi}</div>
+                    {sinhalaText(d.name)}
+                    <div style={{ fontSize: 11, fontWeight: 400, color: 'var(--text-4)', marginTop: 2 }}>{sinhalaText(d.nameSi)}</div>
                   </button>
                 )
-              })}
+              }))}
             </div>
           </div>
         </div>
-      )}
+      ))}
     </>
   )
 }

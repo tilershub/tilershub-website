@@ -1,15 +1,18 @@
 {
   "name": "TilersHub",
   "short_name": "TilersHub",
-  "description": "Sri Lanka's tile & bathroom marketplace — find tilers, contractors, shops and brands.",
+  "description": "ශ්‍රී ලංකාවේ ටයිල් සහ නානකාමර වෙළෙඳපොළ — කාර්මිකයන්, කොන්ත්‍රාත්කරුවන්, වෙළෙඳසැල් සහ සන්නාම සොයන්න.",
   "start_url": "/",
   "scope": "/",
   "display": "standalone",
   "background_color": "#14171A",
   "theme_color": "#C2542B",
   "orientation": "portrait-primary",
-  "lang": "en-LK",
-  "categories": ["business", "shopping"],
+  "lang": "si-LK",
+  "categories": [
+    "business",
+    "shopping"
+  ],
   "icons": [
     {
       "src": "/icon-192.png",
@@ -26,22 +29,37 @@
   ],
   "shortcuts": [
     {
-      "name": "Browse Providers",
-      "short_name": "Providers",
+      "name": "සේවා සපයන්නන් සොයන්න",
+      "short_name": "සපයන්නන්",
       "url": "/providers",
-      "icons": [{ "src": "/icon-192.png", "sizes": "192x192" }]
+      "icons": [
+        {
+          "src": "/icon-192.png",
+          "sizes": "192x192"
+        }
+      ]
     },
     {
-      "name": "Post a Project",
-      "short_name": "Post",
+      "name": "ව්‍යාපෘතියක් පළ කරන්න",
+      "short_name": "පළ කරන්න",
       "url": "/post-project",
-      "icons": [{ "src": "/icon-192.png", "sizes": "192x192" }]
+      "icons": [
+        {
+          "src": "/icon-192.png",
+          "sizes": "192x192"
+        }
+      ]
     },
     {
-      "name": "My Account",
-      "short_name": "Account",
+      "name": "මගේ ගිණුම",
+      "short_name": "ගිණුම",
       "url": "/account",
-      "icons": [{ "src": "/icon-192.png", "sizes": "192x192" }]
+      "icons": [
+        {
+          "src": "/icon-192.png",
+          "sizes": "192x192"
+        }
+      ]
     }
   ]
 }

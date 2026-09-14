@@ -1,3 +1,4 @@
+import { si as sinhalaText } from '../lib/sinhala.js'
 import { useState, useEffect } from 'react'
 import { supabase, getUser } from '../lib/supabase.js'
 import { jobPath } from '../lib/jobs.js'
@@ -102,12 +103,12 @@ export default function Notifications() {
     return (
       <div style={{ maxWidth:480, margin:'48px auto', padding:'0 20px', textAlign:'center' }}>
         <div style={{ fontSize:48, marginBottom:16 }}>🔔</div>
-        <h2 style={{ fontFamily:"var(--th-display)", fontSize:22, fontWeight:700, color:'#14171A', marginBottom:8 }}>Notifications</h2>
+        <h2 style={{ fontFamily:"var(--th-display)", fontSize:22, fontWeight:700, color:'#14171A', marginBottom:8 }}>දැනුම්දීම්</h2>
         <p style={{ fontSize:14, color:'#6B7076', marginBottom:24, lineHeight:1.7 }}>
-          Sign in to see your notifications — bid alerts, project updates, and more.
+          මිල ගණන්, ව්‍යාපෘති යාවත්කාලීන සහ අනෙකුත් දැනුම්දීම් බැලීමට පිවිසෙන්න.
         </p>
         <a href="/login" style={{ display:'inline-flex', alignItems:'center', gap:8, background:'#C2542B', color:'#fff', borderRadius:12, padding:'12px 28px', fontSize:14, fontWeight:700, textDecoration:'none', boxShadow:'0 4px 16px rgba(194,84,43,0.35)' }}>
-          Sign In →
+          පිවිසෙන්න →
         </a>
       </div>
     )
@@ -119,7 +120,7 @@ export default function Notifications() {
     return (
       <div style={{ maxWidth:560, margin:'0 auto', padding:'24px 16px' }}>
         <div style={{ height:24, background:'#EFEBE4', borderRadius:8, width:'40%', marginBottom:20 }} />
-        {Array.from({ length: 5 }).map((_, i) => (
+        {sinhalaText(Array.from({ length: 5 }).map((_, i) => (
           <div key={i} style={{ display:'flex', gap:12, alignItems:'center', padding:'14px 0', borderBottom:'1px solid #EFEBE4' }}>
             <div style={{ width:40, height:40, borderRadius:12, background:'#EFEBE4', flexShrink:0 }} />
             <div style={{ flex:1 }}>
@@ -127,7 +128,7 @@ export default function Notifications() {
               <div style={{ height:10, background:'#EFEBE4', borderRadius:6, width:'80%' }} />
             </div>
           </div>
-        ))}
+        )))}
       </div>
     )
   }
@@ -147,31 +148,31 @@ export default function Notifications() {
       {/* Header */}
       <div style={{ display:'flex', alignItems:'center', justifyContent:'space-between', marginBottom:20 }}>
         <div>
-          <h1 style={{ fontFamily:"var(--th-display)", fontSize:22, fontWeight:700, color:'#14171A', margin:'0 0 2px' }}>Notifications</h1>
+          <h1 style={{ fontFamily:"var(--th-display)", fontSize:22, fontWeight:700, color:'#14171A', margin:'0 0 2px' }}>දැනුම්දීම්</h1>
           <p style={{ fontSize:12, color:'#8A8F95', margin:0 }}>
-            {role === 'provider' ? 'Open projects you can bid on' : 'Bids on your projects'}
+            {sinhalaText(role === 'provider' ? 'Open projects you can bid on' : 'Bids on your projects')}
           </p>
         </div>
-        {items.length > 0 && (
+        {sinhalaText(items.length > 0 && (
           <span style={{ fontSize:11, fontWeight:700, color:'#C2542B', background:'#F7EFE9', border:'1px solid #E7D9CE', borderRadius:20, padding:'3px 10px' }}>
-            {items.length} new
+            {sinhalaText(items.length)} අලුත්
           </span>
-        )}
+        ))}
       </div>
 
       {/* Empty state */}
-      {items.length === 0 && (
+      {sinhalaText(items.length === 0 && (
         <div style={{ textAlign:'center', padding:'48px 20px' }}>
           <div style={{ fontSize:40, marginBottom:12 }}>🔔</div>
-          <p style={{ fontSize:14, color:'#8A8F95', marginBottom:20 }}>{emptyMsg}</p>
+          <p style={{ fontSize:14, color:'#8A8F95', marginBottom:20 }}>{sinhalaText(emptyMsg)}</p>
           <a href={emptyCta.href} style={{ display:'inline-flex', alignItems:'center', gap:6, background:'#C2542B', color:'#fff', borderRadius:10, padding:'10px 22px', fontSize:13, fontWeight:700, textDecoration:'none' }}>
-            {emptyCta.label} →
+            {sinhalaText(emptyCta.label)} →
           </a>
         </div>
-      )}
+      ))}
 
       {/* Items */}
-      {items.map(item => (
+      {sinhalaText(items.map(item => (
         <a key={item.id} href={item.href}
           style={{ display:'flex', alignItems:'center', gap:12, padding:'14px 0', borderBottom:'1px solid #EFEBE4', textDecoration:'none', color:'inherit', transition:'opacity 0.15s' }}
           onMouseOver={e => e.currentTarget.style.opacity='0.75'}
@@ -179,22 +180,22 @@ export default function Notifications() {
         >
           {/* icon */}
           <div style={{ width:42, height:42, borderRadius:12, background:item.iconBg, display:'flex', alignItems:'center', justifyContent:'center', fontSize:20, flexShrink:0 }}>
-            {item.icon}
+            {sinhalaText(item.icon)}
           </div>
 
           {/* text */}
           <div style={{ flex:1, minWidth:0 }}>
-            <div style={{ fontSize:13, fontWeight:700, color:'#14171A', marginBottom:2, overflow:'hidden', whiteSpace:'nowrap', textOverflow:'ellipsis' }}>{item.title}</div>
-            <div style={{ fontSize:11, color:'#6B7076', overflow:'hidden', whiteSpace:'nowrap', textOverflow:'ellipsis' }}>{item.subtitle}</div>
+            <div style={{ fontSize:13, fontWeight:700, color:'#14171A', marginBottom:2, overflow:'hidden', whiteSpace:'nowrap', textOverflow:'ellipsis' }}>{sinhalaText(item.title)}</div>
+            <div style={{ fontSize:11, color:'#6B7076', overflow:'hidden', whiteSpace:'nowrap', textOverflow:'ellipsis' }}>{sinhalaText(item.subtitle)}</div>
           </div>
 
           {/* time + cta */}
           <div style={{ flexShrink:0, display:'flex', flexDirection:'column', alignItems:'flex-end', gap:5 }}>
-            <span style={{ fontSize:10, color:'#8A8F95' }}>{timeAgo(item.time)}</span>
-            <span style={{ fontSize:10, fontWeight:700, color:'#fff', background:item.ctaBg, borderRadius:6, padding:'3px 8px' }}>{item.cta}</span>
+            <span style={{ fontSize:10, color:'#8A8F95' }}>{sinhalaText(timeAgo(item.time))}</span>
+            <span style={{ fontSize:10, fontWeight:700, color:'#fff', background:item.ctaBg, borderRadius:6, padding:'3px 8px' }}>{sinhalaText(item.cta)}</span>
           </div>
         </a>
-      ))}
+      )))}
     </div>
   )
 }

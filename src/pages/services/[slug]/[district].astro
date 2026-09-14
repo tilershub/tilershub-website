@@ -1,4 +1,5 @@
 ---
+import { si as sinhalaText } from '../../../lib/sinhala.js'
 // /services/<service>/<district> — programmatic SEO landing page,
 // e.g. /services/floor-tiling/colombo. Only LOCATION_SERVICE_SLUGS ×
 // DISTRICT_INFO combinations render; anything else redirects.
@@ -17,6 +18,7 @@ const district = districtBySlug(districtSlug)
 if (!service) return Astro.redirect('/providers', 302)
 if (!district || !LOCATION_SERVICE_SLUGS.includes(service.slug)) return Astro.redirect(`/services/${service.slug}`, 302)
 
+const serviceLabel = sinhalaText(service.label)
 const supabase = Astro.locals.supabase
 
 const [{ data: providersRaw }, { data: jobsRaw }] = await Promise.all([
@@ -55,6 +57,8 @@ const neighbors = neighborDistricts(district.slug)
 const isThin = providers.length === 0 && jobs.length === 0
 const cost = typicalCostPerSqft()
 const year = new Date().getFullYear()
+const districtLabel = district.nameSi || sinhalaText(district.name)
+const townLabels = district.towns.map(sinhalaText)
 
 const AVATAR_COLORS = ['#C2542B','#C2542B','#8E3C1E','#C2542B','#2F6B4F','#C2542B','#285C43','#C2542B']
 function avatarColor(name) {
@@ -73,22 +77,19 @@ function waLink(phone) {
 
 const SITE = 'https://tilershub.lk'
 const pageUrl = `${SITE}${serviceDistrictPath(service.slug, district)}`
-const pageTitle = `${service.label} in ${district.name} — Prices & Verified Pros (${year}) | TilersHub`
-const pageDesc = `Hire verified ${service.label.toLowerCase()} professionals in ${district.name}, Sri Lanka. ${year} rates from Rs. ${LABOUR.min}/sq.ft labour. Compare free WhatsApp quotes on TilersHub.`
+const pageTitle = `${districtLabel} හි ${serviceLabel} — ගාස්තු සහ සත්‍යාපිත වෘත්තිකයන් (${year}) | TilersHub`
+const pageDesc = `${districtLabel} හි ${serviceLabel} සඳහා සත්‍යාපිත වෘත්තිකයන් සොයාගන්න. ${year} ශ්‍රම ගාස්තු වර්ග අඩියකට රු. ${LABOUR.min} සිට. TilersHub හරහා නොමිලේ WhatsApp මිල ගණන් සසඳන්න.`
 
 const FAQS = [
-  { q: `How much does ${service.label.toLowerCase()} cost in ${district.name}?`,
-    a: `Labour for ${service.label.toLowerCase()} in ${district.name} typically runs Rs. ${LABOUR.min}–${LABOUR.max} per sq.ft, with materials (adhesive Rs. ${ADHESIVE_TIERS[0].rate}–${ADHESIVE_TIERS[2].rate}/sq.ft, grout Rs. ${EXTRAS.grout}/sq.ft) adding roughly Rs. ${cost.low}–${cost.high}/sq.ft total before tiles. Use the free TilersHub calculator for a detailed estimate.` },
-  { q: `How do I hire a ${service.label.toLowerCase()} professional in ${district.name}?`,
-    a: `Post your project free on TilersHub — verified professionals serving ${district.towns.slice(0, 3).join(', ')} and the rest of ${district.name} district will send quotes directly to your WhatsApp. No commission, no obligation.` },
-  { q: `Which towns in ${district.name} are covered?`,
-    a: `TilersHub providers serve ${district.towns.join(', ')} and surrounding areas of ${district.name} district.` },
+  { q: `${districtLabel} හි ${serviceLabel} සඳහා වියදම කීයද?`, a: `${districtLabel} හි ${serviceLabel} ශ්‍රම ගාස්තුව සාමාන්‍යයෙන් වර්ග අඩියකට රු. ${LABOUR.min}–${LABOUR.max} වේ. ඇලවුම් ද්‍රව්‍ය රු. ${ADHESIVE_TIERS[0].rate}–${ADHESIVE_TIERS[2].rate} සහ ග්‍රවුට් රු. ${EXTRAS.grout} බැගින් එක් කළ විට ටයිල් මිල හැර වර්ග අඩියකට රු. ${cost.low}–${cost.high} පමණ වේ. විස්තරාත්මක ඇස්තමේන්තුවක් සඳහා නොමිලේ TilersHub ගණකය භාවිත කරන්න.` },
+  { q: `${districtLabel} හි ${serviceLabel} වෘත්තිකයෙකු සම්බන්ධ කරගන්නේ කෙසේද?`, a: `ඔබේ ව්‍යාපෘතිය TilersHub හි නොමිලේ පළ කරන්න. ${townLabels.slice(0,3).join(', ')} සහ ${districtLabel} දිස්ත්‍රික්කයේ අනෙකුත් ප්‍රදේශවල සත්‍යාපිත වෘත්තිකයන් ඔබේ WhatsApp වෙත මිල ගණන් එවනු ඇත. කොමිස් හෝ අනිවාර්ය බැඳීමක් නැත.` },
+  { q: `${districtLabel} හි කුමන නගරවල සේවය ලැබේද?`, a: `TilersHub සේවා සපයන්නන් ${townLabels.join(', ')} සහ ${districtLabel} දිස්ත්‍රික්කයේ අවට ප්‍රදේශවල සේවය සපයයි.` },
 ]
 
 const faqSchema = JSON.stringify({
   '@context': 'https://schema.org',
   '@type': 'FAQPage',
-  mainEntity: FAQS.map(f => ({ '@type': 'Question', name: f.q, acceptedAnswer: { '@type': 'Answer', text: f.a } })),
+  mainEntity: FAQS.map(f => ({ '@type': 'Question', name: sinhalaText(f.q), acceptedAnswer: { '@type': 'Answer', text: sinhalaText(f.a) } })),
 })
 
 const serviceSchema = JSON.stringify({
@@ -104,7 +105,7 @@ const serviceSchema = JSON.stringify({
 Astro.response.headers.set('Cache-Control', 'public, max-age=0, s-maxage=600')
 ---
 
-<Layout title={pageTitle} description={pageDesc} noindex={isThin}>
+<Layout title={sinhalaText(pageTitle)} description={sinhalaText(pageDesc)} noindex={isThin}>
   <script slot="head" type="application/ld+json" set:html={faqSchema} />
   <script slot="head" type="application/ld+json" set:html={serviceSchema} />
 
@@ -112,17 +113,16 @@ Astro.response.headers.set('Cache-Control', 'public, max-age=0, s-maxage=600')
   <div style="background:linear-gradient(135deg,#14171A 0%,#14171A 100%);padding:30px 20px 28px;position:relative;overflow:hidden;">
     <div style="position:relative;max-width:960px;margin:0 auto;">
       <Breadcrumbs items={[{ name: service.label, href: `/services/${service.slug}` }, { name: district.name }]} light />
-      <div style="font-size:40px;margin-bottom:8px;">{service.icon}</div>
+      <div style="font-size:40px;margin-bottom:8px;">{sinhalaText(service.icon)}</div>
       <h1 style="font-family: var(--th-display);font-size:clamp(21px,4.5vw,30px);font-weight:700;color:#fff;margin:0 0 8px;">
-        {service.label} in {district.name}
+        {sinhalaText(district.name)} හි {sinhalaText(service.label)}
       </h1>
       <p style="font-size:13px;color:rgba(255,255,255,0.6);margin:0 0 18px;line-height:1.7;max-width:620px;">
-        Verified {service.label.toLowerCase()} professionals serving {district.towns.slice(0, 4).join(', ')} and all of {district.name} district.
-        Labour from Rs. {LABOUR.min}/sq.ft · Free WhatsApp quotes.
+        සත්‍යාපිත {serviceLabel} වෘත්තිකයන් සේවය සපයන ප්‍රදේශ: {sinhalaText(townLabels.slice(0, 4).join(', '))} සහ මුළු {sinhalaText(district.name)} දිස්ත්‍රික්කය. ශ්‍රම ගාස්තුව රු. {sinhalaText(LABOUR.min)}/වර්ග අඩි සිට · WhatsApp මිල ගණන් නොමිලේ.
       </p>
       <a href={`/post-project?type=${encodeURIComponent(service.label)}&district=${encodeURIComponent(district.name)}`}
         style="display:inline-flex;align-items:center;gap:8px;background:#C2542B;color:#fff;border-radius:24px;padding:12px 26px;font-size:14px;font-weight:700;text-decoration:none;box-shadow:0 4px 20px rgba(194,84,43,0.4);">
-        📋 Post a {service.label} Project
+        📋 {sinhalaText(service.label)} ව්‍යාපෘතියක් පළ කරන්න
       </a>
     </div>
   </div>
@@ -131,17 +131,17 @@ Astro.response.headers.set('Cache-Control', 'public, max-age=0, s-maxage=600')
   <div style="background:#FBFAF8;padding:24px 16px 36px;">
     <div style="max-width:960px;margin:0 auto;">
       <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:16px;">
-        <h2 style="font-size:15px;font-weight:800;color:#14171A;margin:0;">{total > 0 ? `${total} pro${total !== 1 ? 's' : ''} for ${service.label} in ${district.name}` : `${service.label} pros near ${district.name}`}</h2>
-        <a href={`/services/${service.slug}`} style="font-size:12px;color:#C2542B;font-weight:600;text-decoration:none;">All {service.label} ›</a>
+        <h2 style="font-size:15px;font-weight:800;color:#14171A;margin:0;">{sinhalaText(total > 0 ? `${districtLabel} හි ${serviceLabel} වෘත්තිකයන් ${total}` : `${districtLabel} අසල ${serviceLabel} වෘත්තිකයන්`)}</h2>
+        <a href={`/services/${service.slug}`} style="font-size:12px;color:#C2542B;font-weight:600;text-decoration:none;">සියල්ල {sinhalaText(service.label)} ›</a>
       </div>
 
       {total === 0 ? (
         <div style="text-align:center;padding:32px 20px;background:#fff;border-radius:16px;border:1px solid #E4E0D9;">
-          <div style="font-size:36px;margin-bottom:10px;">{service.icon}</div>
+          <div style="font-size:36px;margin-bottom:10px;">{sinhalaText(service.icon)}</div>
           <p style="font-size:13px;color:#6B7076;margin:0 0 16px;line-height:1.7;">
-            No {service.label.toLowerCase()} specialists listed in {district.name} yet — post your project and nearby professionals will bid.
+            No {serviceLabel} වෘත්තිකයන් ලැයිස්තුගත වී නැති ප්‍රදේශය: {sinhalaText(district.name)} — ඔබේ ව්‍යාපෘතිය පළ කරන්න. අසල වෘත්තිකයන් ලංසු එවනු ඇත.
           </p>
-          <a href={`/post-project?type=${encodeURIComponent(service.label)}`} style="display:inline-flex;background:#C2542B;color:#fff;border-radius:12px;padding:10px 20px;font-size:13px;font-weight:700;text-decoration:none;">📋 Post a Project</a>
+          <a href={`/post-project?type=${encodeURIComponent(service.label)}`} style="display:inline-flex;background:#C2542B;color:#fff;border-radius:12px;padding:10px 20px;font-size:13px;font-weight:700;text-decoration:none;">📋 ව්‍යාපෘතියක් පළ කරන්න</a>
         </div>
       ) : (
         <div style="display:grid;grid-template-columns:repeat(auto-fill,minmax(280px,1fr));gap:16px;">
@@ -156,26 +156,26 @@ Astro.response.headers.set('Cache-Control', 'public, max-age=0, s-maxage=600')
               <div onclick={cardHref ? `location.href='${cardHref}'` : undefined} style={`display:flex;flex-direction:column;background:#fff;border-radius:20px;overflow:hidden;box-shadow:0 2px 16px rgba(0,0,0,0.08);${cardHref ? 'cursor:pointer;' : ''}`}>
                 <div style="position:relative;height:150px;flex-shrink:0;">
                   {coverSrc
-                    ? <img src={coverSrc} alt={`${p.name} — ${service.label} in ${district.name}`} style="width:100%;height:100%;object-fit:cover;display:block;" loading="lazy" />
+                    ? <img src={coverSrc} alt={sinhalaText(`${p.name} — ${sinhalaText(district.name)} හි ${sinhalaText(service.label)}`)} style="width:100%;height:100%;object-fit:cover;display:block;" loading="lazy" />
                     : <div style={`width:100%;height:100%;background:${color};display:flex;align-items:center;justify-content:center;`}>
-                        <span style="font-size:40px;font-weight:800;color:rgba(255,255,255,0.85);">{inits}</span>
+                        <span style="font-size:40px;font-weight:800;color:rgba(255,255,255,0.85);">{sinhalaText(inits)}</span>
                       </div>
                   }
                   {isVerified && (
-                    <span style="position:absolute;top:10px;right:10px;background:#2F6B4F;color:#fff;font-size:10px;font-weight:700;border-radius:20px;padding:3px 9px;">✓ Verified</span>
+                    <span style="position:absolute;top:10px;right:10px;background:#2F6B4F;color:#fff;font-size:10px;font-weight:700;border-radius:20px;padding:3px 9px;">✓ සත්‍යාපිත</span>
                   )}
                 </div>
                 <div style="padding:14px 16px;display:flex;flex-direction:column;flex:1;">
-                  <span style="font-size:15px;font-weight:700;color:#14171A;line-height:1.25;margin-bottom:5px;">{p.name}</span>
+                  <span style="font-size:15px;font-weight:700;color:#14171A;line-height:1.25;margin-bottom:5px;">{sinhalaText(p.name)}</span>
                   <div style="font-size:12px;margin-bottom:8px;">
                     {p.avg_rating > 0
-                      ? <span style="color:#f59e0b;">⭐ {Number(p.avg_rating).toFixed(1)}{p.review_count ? ` (${p.review_count})` : ''}</span>
-                      : <span style="color:#8A8F95;">New · No reviews yet</span>
+                      ? <span style="color:#f59e0b;">⭐ {sinhalaText(Number(p.avg_rating).toFixed(1))}{sinhalaText(p.review_count ? ` (${p.review_count})` : '')}</span>
+                      : <span style="color:#8A8F95;">අලුත් · තවම සමාලෝචන නැත</span>
                     }
                   </div>
                   <div style="border-top:1px solid #EFEBE4;margin-top:auto;padding-top:10px;display:flex;align-items:center;gap:8px;flex-wrap:wrap;">
-                    {p.experience_years > 0 && <span style="font-size:11px;font-weight:600;color:#2F6B4F;">🛡 {p.experience_years}+ yrs</span>}
-                    <span style="font-size:11px;color:#6B7076;">📍 {p.city || p.district}</span>
+                    {p.experience_years > 0 && <span style="font-size:11px;font-weight:600;color:#2F6B4F;">🛡 {sinhalaText(p.experience_years)}+ වසර</span>}
+                    <span style="font-size:11px;color:#6B7076;">📍 {sinhalaText(p.city || p.district)}</span>
                     <div style="margin-left:auto;display:flex;gap:6px;">
                       {phone && (
                         <a href={waLink(phone)} target="_blank" rel="noopener noreferrer" onclick="event.stopPropagation()"
@@ -183,7 +183,7 @@ Astro.response.headers.set('Cache-Control', 'public, max-age=0, s-maxage=600')
                       )}
                       {cardHref && (
                         <a href={cardHref} onclick="event.stopPropagation()"
-                          style="display:inline-flex;background:#C2542B;color:#fff;border-radius:10px;padding:7px 12px;font-size:11px;font-weight:700;text-decoration:none;">View ›</a>
+                          style="display:inline-flex;background:#C2542B;color:#fff;border-radius:10px;padding:7px 12px;font-size:11px;font-weight:700;text-decoration:none;">බලන්න ›</a>
                       )}
                     </div>
                   </div>
@@ -200,15 +200,15 @@ Astro.response.headers.set('Cache-Control', 'public, max-age=0, s-maxage=600')
   {jobs.length > 0 && (
     <div style="background:#fff;padding:24px 16px;border-top:1px solid #EFEBE4;">
       <div style="max-width:720px;margin:0 auto;">
-        <h2 style="font-size:15px;font-weight:800;color:#14171A;margin:0 0 12px;">Recent {service.label.toLowerCase()} projects in {district.name}</h2>
+        <h2 style="font-size:15px;font-weight:800;color:#14171A;margin:0 0 12px;">මෑත {serviceLabel} ව්‍යාපෘති — {sinhalaText(district.name)}</h2>
         <div style="display:flex;flex-direction:column;gap:10px;">
           {jobs.map(j => (
             <a href={jobPath(j)} style="display:block;background:#FBFAF8;border:1px solid #E4E0D9;border-radius:14px;padding:14px 16px;text-decoration:none;color:inherit;">
               <div style="display:flex;justify-content:space-between;gap:8px;margin-bottom:4px;">
-                <span style="font-size:13px;font-weight:700;color:#14171A;">{j.project_type}</span>
-                <span style="font-size:10px;color:#8A8F95;white-space:nowrap;">{timeAgo(j.created_at)}</span>
+                <span style="font-size:13px;font-weight:700;color:#14171A;">{sinhalaText(j.project_type)}</span>
+                <span style="font-size:10px;color:#8A8F95;white-space:nowrap;">{sinhalaText(timeAgo(j.created_at))}</span>
               </div>
-              {j.description && <p style="font-size:12px;color:#6B7076;margin:0;line-height:1.5;display:-webkit-box;-webkit-line-clamp:2;-webkit-box-orient:vertical;overflow:hidden;">{j.description}</p>}
+              {j.description && <p style="font-size:12px;color:#6B7076;margin:0;line-height:1.5;display:-webkit-box;-webkit-line-clamp:2;-webkit-box-orient:vertical;overflow:hidden;">{sinhalaText(j.description)}</p>}
             </a>
           ))}
         </div>
@@ -221,33 +221,33 @@ Astro.response.headers.set('Cache-Control', 'public, max-age=0, s-maxage=600')
     <div style="max-width:720px;margin:0 auto;display:flex;flex-direction:column;gap:22px;">
 
       <div>
-        <h2 style="font-size:15px;font-weight:800;color:#14171A;margin:0 0 8px;">{service.label} rates in {district.name} ({year})</h2>
+        <h2 style="font-size:15px;font-weight:800;color:#14171A;margin:0 0 8px;">{sinhalaText(service.label)} ගාස්තු — {sinhalaText(district.name)} ({sinhalaText(year)})</h2>
         <p style="font-size:13px;color:#3A4046;line-height:1.9;margin:0 0 12px;">
-          Labour runs <strong>Rs. {LABOUR.min}–{LABOUR.max}/sq.ft</strong>; with adhesive, grout and clips expect
-          <strong> Rs. {cost.low}–{cost.high}/sq.ft</strong> before materials. Get an itemised estimate with the free calculator.
+          ශ්‍රම ගාස්තුව <strong>රු. {sinhalaText(LABOUR.min)}–{sinhalaText(LABOUR.max)}/වර්ග අඩි</strong>; ඇලවුම් ද්‍රව්‍ය, ග්‍රවුට් සහ ක්ලිප් සමඟ ආසන්න වශයෙන්
+          <strong> රු. {sinhalaText(cost.low)}–{sinhalaText(cost.high)}/වර්ග අඩි</strong> ද්‍රව්‍යවලට පෙර. නොමිලේ ගණකයෙන් විස්තරාත්මක ඇස්තමේන්තුවක් ගන්න.
         </p>
-        <a href="/estimator" style="display:inline-flex;align-items:center;gap:7px;background:#C2542B;color:#fff;border-radius:12px;padding:10px 20px;font-size:13px;font-weight:700;text-decoration:none;">📐 Tiling cost calculator →</a>
+        <a href="/estimator" style="display:inline-flex;align-items:center;gap:7px;background:#C2542B;color:#fff;border-radius:12px;padding:10px 20px;font-size:13px;font-weight:700;text-decoration:none;">📐 ටයිල් වියදම් ගණකය →</a>
       </div>
 
       <div>
-        <h2 style="font-size:15px;font-weight:800;color:#14171A;margin:0 0 12px;">FAQ</h2>
+        <h2 style="font-size:15px;font-weight:800;color:#14171A;margin:0 0 12px;">නිතර අසන ප්‍රශ්න</h2>
         <div style="display:flex;flex-direction:column;gap:10px;">
           {FAQS.map(f => (
             <details style="background:#fff;border:1px solid #E4E0D9;border-radius:12px;padding:14px 16px;">
-              <summary style="font-size:13px;font-weight:700;color:#14171A;cursor:pointer;">{f.q}</summary>
-              <p style="font-size:13px;color:#3A4046;line-height:1.8;margin:10px 0 0;">{f.a}</p>
+              <summary style="font-size:13px;font-weight:700;color:#14171A;cursor:pointer;">{sinhalaText(f.q)}</summary>
+              <p style="font-size:13px;color:#3A4046;line-height:1.8;margin:10px 0 0;">{sinhalaText(f.a)}</p>
             </details>
           ))}
         </div>
       </div>
 
       <div>
-        <h2 style="font-size:14px;font-weight:800;color:#14171A;margin:0 0 10px;">{service.label} in nearby districts</h2>
+        <h2 style="font-size:14px;font-weight:800;color:#14171A;margin:0 0 10px;">{sinhalaText(service.label)} — අසල දිස්ත්‍රික්කවල</h2>
         <div style="display:flex;flex-wrap:wrap;gap:8px;">
           {neighbors.map(n => (
-            <a href={serviceDistrictPath(service.slug, n)} style="font-size:12px;font-weight:700;color:#3A4046;background:#fff;border:1px solid #E4E0D9;border-radius:20px;padding:7px 14px;text-decoration:none;">{service.label} in {n.name}</a>
+            <a href={serviceDistrictPath(service.slug, n)} style="font-size:12px;font-weight:700;color:#3A4046;background:#fff;border:1px solid #E4E0D9;border-radius:20px;padding:7px 14px;text-decoration:none;">{sinhalaText(service.label)} in {sinhalaText(n.name)}</a>
           ))}
-          <a href={districtPath(district)} style="font-size:12px;font-weight:700;color:#C2542B;background:#F7EFE9;border:1px solid #E7D9CE;border-radius:20px;padding:7px 14px;text-decoration:none;">All tilers in {district.name}</a>
+          <a href={districtPath(district)} style="font-size:12px;font-weight:700;color:#C2542B;background:#F7EFE9;border:1px solid #E7D9CE;border-radius:20px;padding:7px 14px;text-decoration:none;">{sinhalaText(district.name)} හි සියලු ටයිල් කාර්මිකයන්</a>
         </div>
       </div>
 
