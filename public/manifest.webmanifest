@@ -1,7 +1,7 @@
 {
-  "name": "TilersHub",
-  "short_name": "TilersHub",
-  "description": "ශ්‍රී ලංකාවේ ටයිල් සහ නානකාමර වෙළෙඳපොළ — කාර්මිකයන්, කොන්ත්‍රාත්කරුවන්, වෙළෙඳසැල් සහ සන්නාම සොයන්න.",
+  "name": "වැඩHUB",
+  "short_name": "වැඩHUB",
+  "description": "ශ්‍රී ලංකාවේ සේවා සපයන්නන්, කාර්මිකයන් සහ ව්‍යාපෘති සොයන්න.",
   "start_url": "/",
   "scope": "/",
   "display": "standalone",

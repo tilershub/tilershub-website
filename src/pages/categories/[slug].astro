@@ -4,7 +4,7 @@ export const prerender = false
 import Layout from '../../layouts/Layout.astro'
 import Breadcrumbs from '../../components/Breadcrumbs.astro'
 import { SERVICES } from '../../lib/services.js'
-import { BLOG_POSTS } from '../../lib/blog-posts.js'
+import { BLOG_POSTS } from '../../lib/blog-links.js'
 import { CATEGORIES } from '../../lib/categories.js'
 
 const { slug } = Astro.params
@@ -45,7 +45,7 @@ function initials(name: string) {
 function waLink(phone: string, name: string) {
   const cl = (phone||'').replace(/\D/g,'')
   const n  = cl.startsWith('0') ? '94'+cl.slice(1) : cl
-  return `https://wa.me/${n}?text=${encodeURIComponent(`Hi ${name}, I found you on TilersHub.`)}`
+  return `https://wa.me/${n}?text=${encodeURIComponent(`Hi ${name}, I found you on වැඩHUB.`)}`
 }
 
 const PROVIDER_TYPE_DISPLAY: Record<string,{label:string}> = {
@@ -70,7 +70,7 @@ function shopTaglineCat(type: string, services: string[]) {
   return hasBath ? 'Tiles & Bathware' : 'Tile Showroom'
 }
 
-const pageTitle = `ශ්‍රී ලංකාවේ ${sinhalaText(cat.label)} — සත්‍යාපිත විශේෂඥයන් | TilersHub`
+const pageTitle = `ශ්‍රී ලංකාවේ ${sinhalaText(cat.label)} — සත්‍යාපිත විශේෂඥයන් | වැඩHUB`
 const total     = providers.length
 ---
 
@@ -126,7 +126,7 @@ const total     = providers.length
       ? (
         <div style="text-align:center;padding:32px 20px;color:#8A8F95;font-size:13px;">
           මෙම කාණ්ඩයට තවම සේවා සපයන්නන් ලැයිස්තුගත කර නැත. <br />
-          <a href="/join-tilershub" style="color:#C2542B;text-decoration:none;font-weight:600;">TilersHub සමඟ එක්වන්න →</a>
+          <a href="/join-wedahub" style="color:#C2542B;text-decoration:none;font-weight:600;">වැඩHUB සමඟ එක්වන්න →</a>
         </div>
       )
       : (
@@ -216,11 +216,11 @@ const total     = providers.length
     <section style="background:#fff;padding:20px 0 24px;border-top:1px solid #EFEBE4;">
       <div style="padding:0 16px 12px;display:flex;align-items:center;justify-content:space-between;">
         <span style="font-size:15px;font-weight:700;color:#14171A;">📰 උපදෙස් සහ මඟපෙන්වීම්</span>
-        <a href="/blog" style="font-size:12px;font-weight:600;color:#C2542B;text-decoration:none;">සියල්ල බලන්න ›</a>
+        <a href="https://tilershub.lk/blog" style="font-size:12px;font-weight:600;color:#C2542B;text-decoration:none;">සියල්ල බලන්න ›</a>
       </div>
       <div style="display:flex;flex-direction:column;gap:8px;padding:0 16px;">
         {blogs.map((post:any) => (
-          <a href={`/blog/${post.slug}`}
+          <a href={`https://tilershub.lk/blog/${post.slug}`}
             style="display:flex;align-items:center;gap:0;background:#FBFAF8;border-radius:14px;overflow:hidden;border:1px solid #E4E0D9;text-decoration:none;color:inherit;">
             <div style={`width:64px;height:64px;background:${post.color};flex-shrink:0;display:flex;align-items:center;justify-content:center;font-size:24px;`}>{sinhalaText(post.icon)}</div>
             <div style="flex:1;padding:11px 13px;min-width:0;">

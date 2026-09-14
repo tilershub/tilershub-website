@@ -5,7 +5,7 @@ import { ADSENSE_CLIENT } from '../lib/adsense.js'
 /**
  * Current pathname, kept in sync with client-side navigation.
  *
- * TilersHub is an Astro MPA today, so this resolves once and never changes —
+ * වැඩHUB is an Astro MPA today, so this resolves once and never changes —
  * every navigation is a fresh document. It is written this way so the ad unit
  * stays correct if <ClientRouter> is ever switched on: there, a reused <ins>
  * throws "All 'ins' elements in the DOM with class=adsbygoogle already have ads

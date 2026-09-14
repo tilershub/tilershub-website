@@ -475,7 +475,7 @@ function SignIn() {
     <div style={{ minHeight: 'var(--th-fill)', display: 'flex', alignItems: 'center', justifyContent: 'center', background: '#EFEBE4' }}>
       <div style={{ ...S.card, maxWidth: 380, width: '100%', textAlign: 'center', padding: 36 }}>
         <div style={{ fontSize: 36, marginBottom: 12 }}>🔐</div>
-        <h1 style={{ fontSize: 20, fontWeight: 700, color: '#14171A', marginBottom: 6 }}>TilersHub පරිපාලනය</h1>
+        <h1 style={{ fontSize: 20, fontWeight: 700, color: '#14171A', marginBottom: 6 }}>වැඩHUB පරිපාලනය</h1>
         {sinhalaText(sent ? (
           <p style={{ fontSize: 14, color: '#6B7076', lineHeight: 1.7 }}>පිවිසුම් සබැඳිය යවන ලදී: <strong>{sinhalaText(email)}</strong>. පිවිසීමට එය ක්ලික් කරන්න.</p>
         ) : (
@@ -1149,7 +1149,7 @@ function BlogsTab() {
                         ✏️ සංස්කරණය
                       </a>
                       {sinhalaText(r.status === 'published' && (
-                        <a href={`/blog/${r.slug}`} target="_blank" rel="noopener"
+                        <a href={`https://tilershub.lk/blog/${r.slug}`} target="_blank" rel="noopener"
                           style={{ ...S.btn('#EFEBE4', '#3A4046'), textDecoration: 'none', display: 'inline-flex', alignItems: 'center' }}>
                           🔗
                         </a>
@@ -1424,7 +1424,7 @@ export default function AdminDashboard({ initialUser }) {
       {sinhalaText(!isMobile && (
         <aside style={S.sidebar}>
           <div style={{ padding: '24px 20px 20px' }}>
-            <div style={{ fontSize: 13, fontWeight: 800, letterSpacing: 1, marginBottom: 2 }}>TILERS<span style={{ color: TERRA }}>HUB</span></div>
+            <div style={{ fontSize: 13, fontWeight: 800, letterSpacing: 1, marginBottom: 2 }}>වැඩ<span style={{ color: TERRA }}>HUB</span></div>
             <div style={{ fontSize: 10, color: 'rgba(255,255,255,0.4)', fontWeight: 600, letterSpacing: 1 }}>පරිපාලනය</div>
           </div>
 

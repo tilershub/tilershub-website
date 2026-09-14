@@ -16,7 +16,7 @@ import JobCard from './JobCard.jsx'
 
 const T = {
   greetingIn:  { en: 'Welcome back',                si: 'නැවත සාදරයෙන් පිළිගනිමු' },
-  greetingOut: { en: 'Find trusted tilers near you', si: 'ඔබ අසල විශ්වාසනීය ටයිලර්වරු' },
+  greetingOut: { en: 'Find trusted professionals near you', si: 'ඔබ අසල විශ්වාසනීය සේවා සපයන්නන්' },
   free:        { en: 'Free to post',                si: 'නොමිලේ' },
   pitch:       { en: 'Describe the job. Get quotes by tomorrow.', si: 'රැකියාව විස්තර කරන්න. හෙට වන විට ලංසු ලබා ගන්න.' },
   postCta:     { en: 'Post your job',               si: 'රැකියාව පලකරන්න' },

@@ -67,11 +67,11 @@ function initials(name) {
 function waLink(phone, name) {
   const cleaned = phone.replace(/\D/g, '')
   const intl = cleaned.startsWith('0') ? '94' + cleaned.slice(1) : cleaned
-  return `https://wa.me/${intl}?text=${encodeURIComponent(`Hi, I found you on TilersHub. I'm looking for ${name}.`)}`
+  return `https://wa.me/${intl}?text=${encodeURIComponent(`Hi, I found you on වැඩHUB. I'm looking for ${name}.`)}`
 }
 
-const pageTitle = `ශ්‍රී ලංකාවේ ${serviceLabel} — සත්‍යාපිත විශේෂඥයන් | TilersHub`
-const pageDesc = `ශ්‍රී ලංකාව පුරා ${serviceLabel} සඳහා සත්‍යාපිත වෘත්තිකයන් සොයන්න. මිල ගණන් සසඳා, සමාලෝචන කියවා WhatsApp හරහා සෘජුව සම්බන්ධ වන්න. TilersHub හි නොමිලේ.`
+const pageTitle = `ශ්‍රී ලංකාවේ ${serviceLabel} — සත්‍යාපිත විශේෂඥයන් | වැඩHUB`
+const pageDesc = `ශ්‍රී ලංකාව පුරා ${serviceLabel} සඳහා සත්‍යාපිත වෘත්තිකයන් සොයන්න. මිල ගණන් සසඳා, සමාලෝචන කියවා WhatsApp හරහා සෘජුව සම්බන්ධ වන්න. වැඩHUB හි නොමිලේ.`
 const postUrl   = `/post-project?type=${encodeURIComponent(service.label)}`
 const total     = providers.length
 
@@ -80,9 +80,9 @@ const serviceSchema = JSON.stringify({
   '@type': 'Service',
   name: service.label,
   description: pageDesc,
-  provider: { '@type': 'Organization', name: 'TilersHub', url: 'https://tilershub.lk' },
+  provider: { '@type': 'Organization', name: 'වැඩHUB', url: 'https://wedahub.lk' },
   areaServed: { '@type': 'Country', name: 'Sri Lanka' },
-  url: `https://tilershub.lk/services/${service.slug}`,
+  url: `https://wedahub.lk/services/${service.slug}`,
 })
 
 const hasDistrictPages = LOCATION_SERVICE_SLUGS.includes(service.slug)
@@ -90,9 +90,9 @@ const topDistricts = DISTRICT_INFO.filter(d => ['colombo','gampaha','kandy','gal
 const cost = typicalCostPerSqft()
 
 const SERVICE_FAQS = [
-  { q: `ශ්‍රී ලංකාවේ ${serviceLabel} සඳහා වියදම කීයද?`, a: `${serviceLabel} සඳහා ශ්‍රම ගාස්තුව සාමාන්‍යයෙන් වර්ග අඩියකට රු. ${LABOUR.min}–${LABOUR.max} වේ. ද්‍රව්‍ය සමඟ, ටයිල් හෝ සවිකිරීම් මිල හැර වර්ග අඩියකට රු. ${cost.low}–${cost.high} පමණ වැය වේ. අයිතම අනුව ඇස්තමේන්තුවක් සඳහා නොමිලේ TilersHub ගණකය භාවිත කරන්න.` },
-  { q: `${serviceLabel} සඳහා මිල ගණන් ලබාගන්නේ කෙසේද?`, a: 'ප්‍රදේශයේ ප්‍රමාණය සහ ස්ථානය සමඟ ඔබේ ව්‍යාපෘතිය TilersHub හි නොමිලේ පළ කරන්න. සත්‍යාපිත වෘත්තිකයන් WhatsApp වෙත මිල ගණන් එවයි. කොමිස් හෝ අනිවාර්ය බැඳීමකින් තොරව සසඳා තෝරාගන්න.' },
-  { q: 'TilersHub වෘත්තිකයන් සත්‍යාපිතද?', a: 'සෑම සේවා සපයන්නෙකුගේම අයදුම්පත පැතිකඩ පළ කිරීමට පෙර සමාලෝචනය කෙරේ. අනන්‍යතා පරීක්ෂාව සම්පූර්ණ කළ පැතිකඩවල සත්‍යාපන ලාංඡන පෙන්වයි. පෙර පාරිභෝගිකයන්ගේ සමාලෝචනද පැතිකඩෙහි පෙන්වයි.' },
+  { q: `ශ්‍රී ලංකාවේ ${serviceLabel} සඳහා වියදම කීයද?`, a: `${serviceLabel} සඳහා ශ්‍රම ගාස්තුව සාමාන්‍යයෙන් වර්ග අඩියකට රු. ${LABOUR.min}–${LABOUR.max} වේ. ද්‍රව්‍ය සමඟ, ටයිල් හෝ සවිකිරීම් මිල හැර වර්ග අඩියකට රු. ${cost.low}–${cost.high} පමණ වැය වේ. අයිතම අනුව ඇස්තමේන්තුවක් සඳහා නොමිලේ වැඩHUB ගණකය භාවිත කරන්න.` },
+  { q: `${serviceLabel} සඳහා මිල ගණන් ලබාගන්නේ කෙසේද?`, a: 'ප්‍රදේශයේ ප්‍රමාණය සහ ස්ථානය සමඟ ඔබේ ව්‍යාපෘතිය වැඩHUB හි නොමිලේ පළ කරන්න. සත්‍යාපිත වෘත්තිකයන් WhatsApp වෙත මිල ගණන් එවයි. කොමිස් හෝ අනිවාර්ය බැඳීමකින් තොරව සසඳා තෝරාගන්න.' },
+  { q: 'වැඩHUB වෘත්තිකයන් සත්‍යාපිතද?', a: 'සෑම සේවා සපයන්නෙකුගේම අයදුම්පත පැතිකඩ පළ කිරීමට පෙර සමාලෝචනය කෙරේ. අනන්‍යතා පරීක්ෂාව සම්පූර්ණ කළ පැතිකඩවල සත්‍යාපන ලාංඡන පෙන්වයි. පෙර පාරිභෝගිකයන්ගේ සමාලෝචනද පැතිකඩෙහි පෙන්වයි.' },
 ]
 
 const serviceFaqSchema = JSON.stringify({
@@ -132,10 +132,10 @@ const serviceFaqSchema = JSON.stringify({
         <div style="font-size:40px;margin-bottom:12px;">{sinhalaText(service.icon)}</div>
         <h2 style="font-family: var(--th-display);font-size:18px;font-weight:700;color:#14171A;margin:0 0 8px;">තවම සේවා සපයන්නන් ලැයිස්තුගත කර නැත</h2>
         <p style="font-size:13px;color:#6B7076;margin:0 0 20px;line-height:1.7;">
-          පළමු සේවා සපයන්නා ලෙස එක්වන්න — {sinhalaText(service.label)} සඳහා TilersHub හි ලියාපදිංචි වන්න. නැතිනම් ලංසු ලබාගැනීමට ව්‍යාපෘතියක් පළ කරන්න.
+          පළමු සේවා සපයන්නා ලෙස එක්වන්න — {sinhalaText(service.label)} සඳහා වැඩHUB හි ලියාපදිංචි වන්න. නැතිනම් ලංසු ලබාගැනීමට ව්‍යාපෘතියක් පළ කරන්න.
         </p>
         <div style="display:flex;gap:10px;justify-content:center;flex-wrap:wrap;">
-          <a href="/join-tilershub" style="display:inline-flex;align-items:center;gap:6px;background:#C2542B;color:#fff;border-radius:12px;padding:10px 20px;font-size:13px;font-weight:700;text-decoration:none;">
+          <a href="/join-wedahub" style="display:inline-flex;align-items:center;gap:6px;background:#C2542B;color:#fff;border-radius:12px;padding:10px 20px;font-size:13px;font-weight:700;text-decoration:none;">
             ✅ සේවා සපයන්නෙකු ලෙස එක්වන්න
           </a>
           <a href={postUrl} style="display:inline-flex;align-items:center;gap:6px;background:#C2542B;color:#fff;border-radius:12px;padding:10px 20px;font-size:13px;font-weight:700;text-decoration:none;">

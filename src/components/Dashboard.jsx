@@ -531,7 +531,7 @@ function ProfileTab({ user, claimedProfile, submission, profileHref, lang }) {
   const [showEditor, setShowEditor]     = useState(false)
   const [showPortfolio, setShowPortfolio] = useState(false)
 
-  const T = { viewProfile:'🔗 View Listing', editProfile:'✏️ Edit Profile', managePhotos:'📸 Photos', noProfile:'Not Listed', noProfileDesc:'Get listed on TilersHub to receive project enquiries.', join:'✅ Apply as Provider' }
+  const T = { viewProfile:'🔗 View Listing', editProfile:'✏️ Edit Profile', managePhotos:'📸 Photos', noProfile:'Not Listed', noProfileDesc:'Get listed on වැඩHUB to receive project enquiries.', join:'✅ Apply as Provider' }
 
   return (
     <div style={{ display:'flex', flexDirection:'column', gap:16 }}>
@@ -558,7 +558,7 @@ function ProfileTab({ user, claimedProfile, submission, profileHref, lang }) {
             <div style={{ fontSize:36, marginBottom:12 }}>👷</div>
             <div style={{ fontSize:15, fontWeight:700, color:'var(--text)', marginBottom:8 }}>{sinhalaText(T.noProfile)}</div>
             <p style={{ fontSize:13, color:'var(--text-3)', lineHeight:1.7, marginBottom:16 }}>{sinhalaText(T.noProfileDesc)}</p>
-            <a href="/join-tilershub" style={{ display:'inline-flex', alignItems:'center', gap:6, padding:'10px 20px', background:'var(--navy)', color:'#fff', borderRadius:10, fontSize:13, fontWeight:700, textDecoration:'none' }}>{sinhalaText(T.join)}</a>
+            <a href="/join-wedahub" style={{ display:'inline-flex', alignItems:'center', gap:6, padding:'10px 20px', background:'var(--navy)', color:'#fff', borderRadius:10, fontSize:13, fontWeight:700, textDecoration:'none' }}>{sinhalaText(T.join)}</a>
           </div>
         </>
       ))}
@@ -750,9 +750,9 @@ function ConsumerDashboard({ user, projects, bids, submission, dataLoading, show
               <div style={{ marginTop:28, padding:'20px 22px', background:'var(--navy-50)', border:'1px solid var(--navy-100)', borderRadius:14 }}>
                 <div style={{ fontSize:13, fontWeight:700, color:'var(--navy)', marginBottom:4 }}>ඔබ ටයිල් කාර්මිකයෙක් හෝ කොන්ත්‍රාත්කරුවෙක්ද?</div>
                 <p style={{ fontSize:12, color:'var(--text-3)', marginBottom:12, lineHeight:1.65 }}>
-                  TilersHub හි ඔබේ සේවා ලැයිස්තුගත කරන්න. නිවාස හිමියන් ඔබව සොයා WhatsApp හරහා සෘජුව අමතයි.
+                  වැඩHUB හි ඔබේ සේවා ලැයිස්තුගත කරන්න. නිවාස හිමියන් ඔබව සොයා WhatsApp හරහා සෘජුව අමතයි.
                 </p>
-                <a href="/join-tilershub" style={{ display:'inline-flex', alignItems:'center', gap:6, padding:'9px 18px', background:'var(--navy)', color:'#fff', borderRadius:9, fontSize:12, fontWeight:700, textDecoration:'none' }}>
+                <a href="/join-wedahub" style={{ display:'inline-flex', alignItems:'center', gap:6, padding:'9px 18px', background:'var(--navy)', color:'#fff', borderRadius:9, fontSize:12, fontWeight:700, textDecoration:'none' }}>
                   ✅ සේවා සපයන්නෙකු ලෙස අයදුම් කරන්න →
                 </a>
               </div>
@@ -901,7 +901,7 @@ function ListingTab({ submission }) {
   const STATUS = {
     pending_review: { bg:'#F3E7DF', color:'#2A2F35', label:'Under Review', desc:"Your application is being reviewed. We'll contact you via WhatsApp within 1-2 business days." },
     approved:       { bg:'#E9F1EC', color:'#22513B', label:'Approved',      desc:'Your application has been approved. Your listing is being set up.'                            },
-    listed:         { bg:'#F7EFE9', color:'#7A3218', label:'Listed',        desc:"You're live on TilersHub! Customers can find and contact you."                               },
+    listed:         { bg:'#F7EFE9', color:'#7A3218', label:'Listed',        desc:"You're live on වැඩHUB! Customers can find and contact you."                               },
     rejected:       { bg:'#FBEDEB', color:'#8E2A1F', label:'Not Approved',  desc:'Your application was not approved. Contact us for details.'                                  },
   }
 
@@ -910,10 +910,10 @@ function ListingTab({ submission }) {
       <div style={{ fontSize:40, marginBottom:12 }}>👷</div>
       <div style={{ fontSize:15, fontWeight:700, color:'var(--text)', marginBottom:8 }}>ලැයිස්තුගත කර නැත</div>
       <p style={{ fontSize:13, color:'var(--text-3)', marginBottom:20, lineHeight:1.7 }}>
-        TilersHub හි ඔබේ සේවා ලැයිස්තුගත කිරීමට අයදුම් කර නොමිලේ විමසුම් ලබාගන්න.
+        වැඩHUB හි ඔබේ සේවා ලැයිස්තුගත කිරීමට අයදුම් කර නොමිලේ විමසුම් ලබාගන්න.
       </p>
       <div style={{ display:'flex', gap:10, justifyContent:'center', flexWrap:'wrap' }}>
-        <a href="/join-tilershub" style={{ display:'inline-flex', alignItems:'center', gap:6, padding:'11px 22px', background:'var(--navy)', color:'#fff', borderRadius:10, fontSize:13, fontWeight:700, textDecoration:'none' }}>✅ සේවා සපයන්නෙකු ලෙස අයදුම් කරන්න</a>
+        <a href="/join-wedahub" style={{ display:'inline-flex', alignItems:'center', gap:6, padding:'11px 22px', background:'var(--navy)', color:'#fff', borderRadius:10, fontSize:13, fontWeight:700, textDecoration:'none' }}>✅ සේවා සපයන්නෙකු ලෙස අයදුම් කරන්න</a>
         <a href="/providers"      style={{ display:'inline-flex', alignItems:'center', gap:6, padding:'11px 22px', background:'var(--surface-3)', color:'var(--text-2)', border:'1px solid var(--border)', borderRadius:10, fontSize:13, fontWeight:600, textDecoration:'none' }}>සේවා නාමාවලිය බලන්න</a>
       </div>
     </div>
@@ -942,8 +942,8 @@ function ListingTab({ submission }) {
         </div>
       ))}
       <div style={{ marginTop:18, paddingTop:16, borderTop:'1px solid var(--border)' }}>
-        <a href={`https://wa.me/94774503744?text=Hi TilersHub, I applied as a provider (${submission.name}) and want to check my listing status.`} target="_blank" rel="noopener" style={{ fontSize:12, fontWeight:600, color:'#2F6B4F', textDecoration:'none', display:'inline-flex', alignItems:'center', gap:5 }}>
-          💬 WhatsApp හරහා TilersHub අමතන්න
+        <a href={`https://wa.me/94774503744?text=Hi වැඩHUB, I applied as a provider (${submission.name}) and want to check my listing status.`} target="_blank" rel="noopener" style={{ fontSize:12, fontWeight:600, color:'#2F6B4F', textDecoration:'none', display:'inline-flex', alignItems:'center', gap:5 }}>
+          💬 WhatsApp හරහා වැඩHUB අමතන්න
         </a>
       </div>
     </div>

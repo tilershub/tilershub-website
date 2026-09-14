@@ -72,18 +72,18 @@ function initials(name) {
 function waLink(phone) {
   const cleaned = phone.replace(/\D/g, '')
   const intl = cleaned.startsWith('0') ? '94' + cleaned.slice(1) : cleaned
-  return `https://wa.me/${intl}?text=${encodeURIComponent(`Hi, I found you on TilersHub. I need ${service.label} in ${district.name}.`)}`
+  return `https://wa.me/${intl}?text=${encodeURIComponent(`Hi, I found you on වැඩHUB. I need ${service.label} in ${district.name}.`)}`
 }
 
-const SITE = 'https://tilershub.lk'
+const SITE = 'https://wedahub.lk'
 const pageUrl = `${SITE}${serviceDistrictPath(service.slug, district)}`
-const pageTitle = `${districtLabel} හි ${serviceLabel} — ගාස්තු සහ සත්‍යාපිත වෘත්තිකයන් (${year}) | TilersHub`
-const pageDesc = `${districtLabel} හි ${serviceLabel} සඳහා සත්‍යාපිත වෘත්තිකයන් සොයාගන්න. ${year} ශ්‍රම ගාස්තු වර්ග අඩියකට රු. ${LABOUR.min} සිට. TilersHub හරහා නොමිලේ WhatsApp මිල ගණන් සසඳන්න.`
+const pageTitle = `${districtLabel} හි ${serviceLabel} — ගාස්තු සහ සත්‍යාපිත වෘත්තිකයන් (${year}) | වැඩHUB`
+const pageDesc = `${districtLabel} හි ${serviceLabel} සඳහා සත්‍යාපිත වෘත්තිකයන් සොයාගන්න. ${year} ශ්‍රම ගාස්තු වර්ග අඩියකට රු. ${LABOUR.min} සිට. වැඩHUB හරහා නොමිලේ WhatsApp මිල ගණන් සසඳන්න.`
 
 const FAQS = [
-  { q: `${districtLabel} හි ${serviceLabel} සඳහා වියදම කීයද?`, a: `${districtLabel} හි ${serviceLabel} ශ්‍රම ගාස්තුව සාමාන්‍යයෙන් වර්ග අඩියකට රු. ${LABOUR.min}–${LABOUR.max} වේ. ඇලවුම් ද්‍රව්‍ය රු. ${ADHESIVE_TIERS[0].rate}–${ADHESIVE_TIERS[2].rate} සහ ග්‍රවුට් රු. ${EXTRAS.grout} බැගින් එක් කළ විට ටයිල් මිල හැර වර්ග අඩියකට රු. ${cost.low}–${cost.high} පමණ වේ. විස්තරාත්මක ඇස්තමේන්තුවක් සඳහා නොමිලේ TilersHub ගණකය භාවිත කරන්න.` },
-  { q: `${districtLabel} හි ${serviceLabel} වෘත්තිකයෙකු සම්බන්ධ කරගන්නේ කෙසේද?`, a: `ඔබේ ව්‍යාපෘතිය TilersHub හි නොමිලේ පළ කරන්න. ${townLabels.slice(0,3).join(', ')} සහ ${districtLabel} දිස්ත්‍රික්කයේ අනෙකුත් ප්‍රදේශවල සත්‍යාපිත වෘත්තිකයන් ඔබේ WhatsApp වෙත මිල ගණන් එවනු ඇත. කොමිස් හෝ අනිවාර්ය බැඳීමක් නැත.` },
-  { q: `${districtLabel} හි කුමන නගරවල සේවය ලැබේද?`, a: `TilersHub සේවා සපයන්නන් ${townLabels.join(', ')} සහ ${districtLabel} දිස්ත්‍රික්කයේ අවට ප්‍රදේශවල සේවය සපයයි.` },
+  { q: `${districtLabel} හි ${serviceLabel} සඳහා වියදම කීයද?`, a: `${districtLabel} හි ${serviceLabel} ශ්‍රම ගාස්තුව සාමාන්‍යයෙන් වර්ග අඩියකට රු. ${LABOUR.min}–${LABOUR.max} වේ. ඇලවුම් ද්‍රව්‍ය රු. ${ADHESIVE_TIERS[0].rate}–${ADHESIVE_TIERS[2].rate} සහ ග්‍රවුට් රු. ${EXTRAS.grout} බැගින් එක් කළ විට ටයිල් මිල හැර වර්ග අඩියකට රු. ${cost.low}–${cost.high} පමණ වේ. විස්තරාත්මක ඇස්තමේන්තුවක් සඳහා නොමිලේ වැඩHUB ගණකය භාවිත කරන්න.` },
+  { q: `${districtLabel} හි ${serviceLabel} වෘත්තිකයෙකු සම්බන්ධ කරගන්නේ කෙසේද?`, a: `ඔබේ ව්‍යාපෘතිය වැඩHUB හි නොමිලේ පළ කරන්න. ${townLabels.slice(0,3).join(', ')} සහ ${districtLabel} දිස්ත්‍රික්කයේ අනෙකුත් ප්‍රදේශවල සත්‍යාපිත වෘත්තිකයන් ඔබේ WhatsApp වෙත මිල ගණන් එවනු ඇත. කොමිස් හෝ අනිවාර්ය බැඳීමක් නැත.` },
+  { q: `${districtLabel} හි කුමන නගරවල සේවය ලැබේද?`, a: `වැඩHUB සේවා සපයන්නන් ${townLabels.join(', ')} සහ ${districtLabel} දිස්ත්‍රික්කයේ අවට ප්‍රදේශවල සේවය සපයයි.` },
 ]
 
 const faqSchema = JSON.stringify({
@@ -97,7 +97,7 @@ const serviceSchema = JSON.stringify({
   '@type': 'Service',
   name: `${service.label} in ${district.name}`,
   description: pageDesc,
-  provider: { '@type': 'Organization', name: 'TilersHub', url: SITE },
+  provider: { '@type': 'Organization', name: 'වැඩHUB', url: SITE },
   areaServed: { '@type': 'AdministrativeArea', name: `${district.name} District, Sri Lanka` },
   url: pageUrl,
 })
@@ -226,7 +226,7 @@ Astro.response.headers.set('Cache-Control', 'public, max-age=0, s-maxage=600')
           ශ්‍රම ගාස්තුව <strong>රු. {sinhalaText(LABOUR.min)}–{sinhalaText(LABOUR.max)}/වර්ග අඩි</strong>; ඇලවුම් ද්‍රව්‍ය, ග්‍රවුට් සහ ක්ලිප් සමඟ ආසන්න වශයෙන්
           <strong> රු. {sinhalaText(cost.low)}–{sinhalaText(cost.high)}/වර්ග අඩි</strong> ද්‍රව්‍යවලට පෙර. නොමිලේ ගණකයෙන් විස්තරාත්මක ඇස්තමේන්තුවක් ගන්න.
         </p>
-        <a href="/estimator" style="display:inline-flex;align-items:center;gap:7px;background:#C2542B;color:#fff;border-radius:12px;padding:10px 20px;font-size:13px;font-weight:700;text-decoration:none;">📐 ටයිල් වියදම් ගණකය →</a>
+        <a href="https://tilershub.lk/estimator" style="display:inline-flex;align-items:center;gap:7px;background:#C2542B;color:#fff;border-radius:12px;padding:10px 20px;font-size:13px;font-weight:700;text-decoration:none;">📐 ටයිල් වියදම් ගණකය →</a>
       </div>
 
       <div>

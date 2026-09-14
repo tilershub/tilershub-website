@@ -7,7 +7,7 @@ const supabase = Astro.locals.supabase
 function waLead(phone, name) {
   const n = (phone || '').replace(/\D/g, '')
   const normalized = n.startsWith('94') ? n : '94' + n.replace(/^0/, '')
-  const msg = encodeURIComponent(`ආයුබෝවන්! 🙏\n\nමම *TilersHub* (tilershub.lk) හරහා *${name}* සොයාගතිමි.\n\nඔබගේ සේවාව ගැන දැනගැනීමට කැමැත්තෙමි.\n\n📌 *TilersHub.lk* Lead\nස්තූතියි! 🏠`)
+  const msg = encodeURIComponent(`ආයුබෝවන්! 🙏\n\nමම *වැඩHUB* (tilershub.lk) හරහා *${name}* සොයාගතිමි.\n\nඔබගේ සේවාව ගැන දැනගැනීමට කැමැත්තෙමි.\n\n📌 *වැඩHUB.lk* Lead\nස්තූතියි! 🏠`)
   return `https://wa.me/${normalized}?text=${msg}`
 }
 
@@ -33,8 +33,8 @@ const TOOL_CATEGORIES = [
 ---
 
 <Layout
-  title="ටයිල් මෙවලම් සහ උපකරණ සැපයුම්කරුවන් · TilersHub"
-  description="ශ්‍රී ලංකාවේ ටයිල් මෙවලම්, සැපයුම්කරුවන් සහ කුලී සේවා සොයන්න. කැපුම් යන්ත්‍ර, ග්‍රයින්ඩර්, මට්ටම් උපාංග සහ තවත් දේ TilersHub හි."
+  title="ටයිල් මෙවලම් සහ උපකරණ සැපයුම්කරුවන් · වැඩHUB"
+  description="ශ්‍රී ලංකාවේ ටයිල් මෙවලම්, සැපයුම්කරුවන් සහ කුලී සේවා සොයන්න. කැපුම් යන්ත්‍ර, ග්‍රයින්ඩර්, මට්ටම් උපාංග සහ තවත් දේ වැඩHUB හි."
 >
 
   <!-- Hero -->
@@ -49,7 +49,7 @@ const TOOL_CATEGORIES = [
         ශ්‍රී ලංකාව පුරා මෙවලම් වෙළෙඳසැල්, උපකරණ සැපයුම්කරුවන් සහ කුලී සේවා සොයන්න. වෘත්තීය ටයිල් කාර්මිකයෙකුට අවශ්‍ය සියල්ල එකම තැනක.
       </p>
       <div style="display:flex;gap:10px;justify-content:center;flex-wrap:wrap;">
-        <a href="/join-tilershub" style="display:inline-flex;align-items:center;gap:7px;background:#F59E0B;color:#0d0b08;border-radius:11px;padding:12px 22px;font-size:13px;font-weight:800;text-decoration:none;">
+        <a href="/join-wedahub" style="display:inline-flex;align-items:center;gap:7px;background:#F59E0B;color:#0d0b08;border-radius:11px;padding:12px 22px;font-size:13px;font-weight:800;text-decoration:none;">
           🔧 ඔබේ මෙවලම් වෙළෙඳසැල එක් කරන්න
         </a>
         <a href="/providers?type=tool_supplier" style="display:inline-flex;align-items:center;gap:7px;background:rgba(255,255,255,0.08);color:rgba(255,255,255,0.75);border:1px solid rgba(255,255,255,0.15);border-radius:11px;padding:12px 20px;font-size:13px;font-weight:600;text-decoration:none;">
@@ -91,7 +91,7 @@ const TOOL_CATEGORIES = [
             {sinhalaText(suppliers.length > 0 ? `සැපයුම්කරුවන් ${suppliers.length} ක් ලැයිස්තුගත කර ඇත` : 'Be the first to list your tool shop')}
           </p>
         </div>
-        <a href="/join-tilershub" style="display:inline-flex;align-items:center;gap:7px;background:var(--navy);color:#fff;border-radius:11px;padding:10px 20px;font-size:13px;font-weight:700;text-decoration:none;">
+        <a href="/join-wedahub" style="display:inline-flex;align-items:center;gap:7px;background:var(--navy);color:#fff;border-radius:11px;padding:10px 20px;font-size:13px;font-weight:700;text-decoration:none;">
           + ඔබේ වෙළෙඳසැල එක් කරන්න
         </a>
       </div>
@@ -136,7 +136,7 @@ const TOOL_CATEGORIES = [
           <p style="font-size:13px;color:var(--text-3);line-height:1.8;margin-bottom:24px;max-width:380px;margin-left:auto;margin-right:auto;">
             ඔබ ටයිල් මෙවලම් අලෙවි කරනවාද හෝ කුලියට දෙනවාද? ශ්‍රී ලංකාව පුරා වෘත්තීය කාර්මිකයන් සිය ගණනක් වෙත ඔබේ වෙළෙඳසැල නොමිලේ ගෙනයන්න.
           </p>
-          <a href="/join-tilershub" style="display:inline-flex;align-items:center;gap:8px;background:var(--navy);color:#fff;border-radius:12px;padding:12px 26px;font-size:14px;font-weight:700;text-decoration:none;">
+          <a href="/join-wedahub" style="display:inline-flex;align-items:center;gap:8px;background:var(--navy);color:#fff;border-radius:12px;padding:12px 26px;font-size:14px;font-weight:700;text-decoration:none;">
             🔧 මගේ මෙවලම් වෙළෙඳසැල නොමිලේ එක් කරන්න
           </a>
           <p style="font-size:11px;color:var(--text-4);margin-top:14px;">නොමිලේ ලැයිස්තුගත කිරීම · සෘජු WhatsApp විමසුම් · කොමිස් නැත</p>

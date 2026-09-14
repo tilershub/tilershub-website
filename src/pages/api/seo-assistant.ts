@@ -7,7 +7,7 @@ import { serverSecret } from '../../lib/secrets'
 const MODEL = 'claude-3-5-sonnet-20241022'
 const ADMIN_EMAIL = 'tilershub@gmail.com'
 
-const SYSTEM_PROMPT = `You are an expert SEO content strategist and HTML content formatter for TilersHub.lk — Sri Lanka's leading tile and bathroom renovation marketplace.
+const SYSTEM_PROMPT = `You are an expert SEO content strategist and HTML content formatter for වැඩHUB.lk — Sri Lanka's leading tile and bathroom renovation marketplace.
 
 Your task: analyze raw blog content and return a single JSON object. No markdown fences, no preamble, no explanation — ONLY the JSON.
 

@@ -21,7 +21,7 @@ const T = {
   noReview: { en: 'No reviews yet', si: 'තවම සමාලෝචන නැත' },
 }
 
-const WA_TEXT = "Hi! 👋\n\nI saw your quote on TilersHub. Let's discuss it.\n\nThank you!"
+const WA_TEXT = "Hi! 👋\n\nI saw your quote on වැඩHUB. Let's discuss it.\n\nThank you!"
 
 function waLink(number) {
   const digits = String(number || '').replace(/\D/g, '')

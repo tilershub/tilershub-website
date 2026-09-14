@@ -63,18 +63,18 @@ function initials(name) {
 function waLink(phone, name) {
   const cleaned = phone.replace(/\D/g, '')
   const intl = cleaned.startsWith('0') ? '94' + cleaned.slice(1) : cleaned
-  return `https://wa.me/${intl}?text=${encodeURIComponent(`Hi, I found you on TilersHub. I'm looking for a tiler in ${district.name}.`)}`
+  return `https://wa.me/${intl}?text=${encodeURIComponent(`Hi, I found you on වැඩHUB. I'm looking for a tiler in ${district.name}.`)}`
 }
 
-const pageTitle = `${districtLabel} ටයිල් කාර්මිකයන් — සත්‍යාපිත වෘත්තිකයන් (${year}) | TilersHub`
+const pageTitle = `${districtLabel} ටයිල් කාර්මිකයන් — සත්‍යාපිත වෘත්තිකයන් (${year}) | වැඩHUB`
 const pageDesc = `${districtLabel} දිස්ත්‍රික්කයේ සත්‍යාපිත ටයිල් කාර්මිකයන් ${total > 0 ? total + "+" : ""} සොයන්න. WhatsApp මිල ගණන් සසඳන්න. ශ්‍රම ගාස්තුව වර්ග අඩියකට රු. ${LABOUR.min}–${LABOUR.max}. ඔබේ ව්‍යාපෘතිය නොමිලේ පළ කරන්න.`
-const SITE = 'https://tilershub.lk'
+const SITE = 'https://wedahub.lk'
 
 const FAQS = [
-  { q: `${districtLabel} හි ටයිල් කාර්මික ගාස්තු කීයද?`, a: `${districtLabel} හි ටයිල් ප්‍රමාණය සහ රටාව අනුව ශ්‍රම ගාස්තුව සාමාන්‍යයෙන් වර්ග අඩියකට රු. ${LABOUR.min}–${LABOUR.max} වේ. ඇලවුම් ද්‍රව්‍ය, ග්‍රවුට් සහ මට්ටම් කිරීමේ ක්ලිප් සමඟ, ටයිල් මිල හැර වර්ග අඩියකට රු. ${cost.low}–${cost.high} පමණ වැය වේ. සම්පූර්ණ ඇස්තමේන්තුවක් සඳහා නොමිලේ TilersHub ගණකය භාවිත කරන්න.` },
-  { q: `${districtLabel} හි විශ්වාසවන්ත ටයිල් කාර්මිකයෙකු සොයාගන්නේ කෙසේද?`, a: `වැඩ විස්තර සමඟ ඔබේ ව්‍යාපෘතිය TilersHub හි නොමිලේ පළ කරන්න. ${districtLabel} හි (${townLabels.slice(0,3).join(', ')} සහ අවට නගරවල) සත්‍යාපිත කාර්මිකයන් WhatsApp හරහා ලංසු එවනු ඇත. තෝරාගැනීමට පෙර පළපුරුද්ද, සමාලෝචන සහ මිල ගණන් සසඳන්න.` },
-  { q: `${districtLabel} හි සේවාව ලබාදෙන ප්‍රදේශ මොනවාද?`, a: `TilersHub සේවා සපයන්නන් ${townLabels.join(', ')} ඇතුළු ${districtLabel} දිස්ත්‍රික්කයේ ප්‍රධාන නගරවල සේවය සපයයි.` },
-  { q: 'TilersHub හරහා කාර්මිකයෙකු සොයාගැනීම නොමිලේද?', a: 'ඔව්. නිවාස හිමියන්ට ව්‍යාපෘති පළ කිරීම සහ ලංසු ලබාගැනීම සම්පූර්ණයෙන් නොමිලේය. TilersHub කොමිස් අය නොකරයි. ඔබ WhatsApp හරහා කාර්මිකයා සමඟ සෘජුව ගනුදෙනු කරයි.' },
+  { q: `${districtLabel} හි ටයිල් කාර්මික ගාස්තු කීයද?`, a: `${districtLabel} හි ටයිල් ප්‍රමාණය සහ රටාව අනුව ශ්‍රම ගාස්තුව සාමාන්‍යයෙන් වර්ග අඩියකට රු. ${LABOUR.min}–${LABOUR.max} වේ. ඇලවුම් ද්‍රව්‍ය, ග්‍රවුට් සහ මට්ටම් කිරීමේ ක්ලිප් සමඟ, ටයිල් මිල හැර වර්ග අඩියකට රු. ${cost.low}–${cost.high} පමණ වැය වේ. සම්පූර්ණ ඇස්තමේන්තුවක් සඳහා නොමිලේ වැඩHUB ගණකය භාවිත කරන්න.` },
+  { q: `${districtLabel} හි විශ්වාසවන්ත ටයිල් කාර්මිකයෙකු සොයාගන්නේ කෙසේද?`, a: `වැඩ විස්තර සමඟ ඔබේ ව්‍යාපෘතිය වැඩHUB හි නොමිලේ පළ කරන්න. ${districtLabel} හි (${townLabels.slice(0,3).join(', ')} සහ අවට නගරවල) සත්‍යාපිත කාර්මිකයන් WhatsApp හරහා ලංසු එවනු ඇත. තෝරාගැනීමට පෙර පළපුරුද්ද, සමාලෝචන සහ මිල ගණන් සසඳන්න.` },
+  { q: `${districtLabel} හි සේවාව ලබාදෙන ප්‍රදේශ මොනවාද?`, a: `වැඩHUB සේවා සපයන්නන් ${townLabels.join(', ')} ඇතුළු ${districtLabel} දිස්ත්‍රික්කයේ ප්‍රධාන නගරවල සේවය සපයයි.` },
+  { q: 'වැඩHUB හරහා කාර්මිකයෙකු සොයාගැනීම නොමිලේද?', a: 'ඔව්. නිවාස හිමියන්ට ව්‍යාපෘති පළ කිරීම සහ ලංසු ලබාගැනීම සම්පූර්ණයෙන් නොමිලේය. වැඩHUB කොමිස් අය නොකරයි. ඔබ WhatsApp හරහා කාර්මිකයා සමඟ සෘජුව ගනුදෙනු කරයි.' },
 ]
 
 const faqSchema = JSON.stringify({
@@ -88,7 +88,7 @@ const serviceSchema = JSON.stringify({
   '@type': 'Service',
   name: `Tiling services in ${district.name}`,
   description: pageDesc,
-  provider: { '@type': 'Organization', name: 'TilersHub', url: SITE },
+  provider: { '@type': 'Organization', name: 'වැඩHUB', url: SITE },
   areaServed: { '@type': 'AdministrativeArea', name: `${district.name} District, Sri Lanka` },
   url: `${SITE}${districtPath(district)}`,
 })
@@ -134,7 +134,7 @@ Astro.response.headers.set('Cache-Control', 'public, max-age=0, s-maxage=600')
           <p style="font-size:13px;color:#6B7076;margin:0 0 16px;line-height:1.7;">{sinhalaText(district.name)} හි තවම සේවා සපයන්නන් ලැයිස්තුගත වී නැත. අසල කාර්මිකයන්ගෙන් ලංසු ලබාගැනීමට ඔබේ ව්‍යාපෘතිය පළ කරන්න, නැතිනම් පළමු සේවා සපයන්නා ලෙස එක්වන්න.</p>
           <div style="display:flex;gap:10px;justify-content:center;flex-wrap:wrap;">
             <a href="/post-project" style="display:inline-flex;background:#C2542B;color:#fff;border-radius:12px;padding:10px 20px;font-size:13px;font-weight:700;text-decoration:none;">📋 ව්‍යාපෘතියක් පළ කරන්න</a>
-            <a href="/join-tilershub" style="display:inline-flex;background:#C2542B;color:#fff;border-radius:12px;padding:10px 20px;font-size:13px;font-weight:700;text-decoration:none;">✅ සේවා සපයන්නෙකු ලෙස එක්වන්න</a>
+            <a href="/join-wedahub" style="display:inline-flex;background:#C2542B;color:#fff;border-radius:12px;padding:10px 20px;font-size:13px;font-weight:700;text-decoration:none;">✅ සේවා සපයන්නෙකු ලෙස එක්වන්න</a>
           </div>
         </div>
       ) : (
@@ -228,7 +228,7 @@ Astro.response.headers.set('Cache-Control', 'public, max-age=0, s-maxage=600')
       <p style="font-size:13px;color:#3A4046;line-height:1.9;margin:0 0 14px;">
         {sinhalaText(district.name)} හි ටයිල් වැඩ ශ්‍රම ගාස්තුව <strong>රු. {sinhalaText(LABOUR.min)}–{sinhalaText(LABOUR.max)}/වර්ග අඩි</strong>. ඇලවුම් ද්‍රව්‍ය (C1 රු. {sinhalaText(ADHESIVE_TIERS[0].rate)} – C2TE Rs. {sinhalaText(ADHESIVE_TIERS[2].rate)}/වර්ග අඩි), ග්‍රවුට් රු. {sinhalaText(EXTRAS.grout)}/වර්ග අඩි සහ මට්ටම් කිරීමේ ක්ලිප් රු. {sinhalaText(EXTRAS.levelClips)}/වර්ග අඩි සමඟ ආසන්න වියදම <strong>රු. {sinhalaText(cost.low)}–{sinhalaText(cost.high)} වර්ග අඩියකට</strong> ටයිල් ද්‍රව්‍ය මිලට පෙර.
       </p>
-      <a href="/estimator" style="display:inline-flex;align-items:center;gap:7px;background:#C2542B;color:#fff;border-radius:12px;padding:10px 20px;font-size:13px;font-weight:700;text-decoration:none;">
+      <a href="https://tilershub.lk/estimator" style="display:inline-flex;align-items:center;gap:7px;background:#C2542B;color:#fff;border-radius:12px;padding:10px 20px;font-size:13px;font-weight:700;text-decoration:none;">
         📐 ඔබේ ටයිල් වැඩ වියදම ගණනය කරන්න →
       </a>
     </div>
@@ -250,7 +250,7 @@ Astro.response.headers.set('Cache-Control', 'public, max-age=0, s-maxage=600')
       <div>
         <h2 style="font-size:14px;font-weight:800;color:#14171A;margin:0 0 10px;">{sinhalaText(district.name)} දිස්ත්‍රික්කයේ සේවය සපයන ප්‍රදේශ</h2>
         <p style="font-size:13px;color:#6B7076;line-height:1.9;margin:0;">
-          TilersHub වෘත්තිකයන් {sinhalaText(townLabels.join(' · '))} සහ අවට ප්‍රදේශවල සේවය සපයයි.
+          වැඩHUB වෘත්තිකයන් {sinhalaText(townLabels.join(' · '))} සහ අවට ප්‍රදේශවල සේවය සපයයි.
         </p>
       </div>
 

@@ -34,14 +34,14 @@ const color = JOB_TYPE_COLORS[job.project_type] || '#C2542B'
 const isActive = job.status === 'active' || !job.status
 const locationLabel = job.city || job.district || 'Sri Lanka'
 
-const SITE = 'https://tilershub.lk'
+const SITE = 'https://wedahub.lk'
 const pageUrl = `${SITE}${canonicalPath}`
 const descText = (job.description || '').trim()
 const metaDescription = (descText
   ? `${sinhalaText(locationLabel)} හි ${sinhalaText(job.project_type)}: ${descText}`
-  : `${sinhalaText(locationLabel)} හි ${sinhalaText(job.project_type)} ව්‍යාපෘතිය. TilersHub හරහා නොමිලේ ලංසු ඉදිරිපත් කරන්න — පිවිසීමක් හෝ කොමිස් නැත.`
+  : `${sinhalaText(locationLabel)} හි ${sinhalaText(job.project_type)} ව්‍යාපෘතිය. වැඩHUB හරහා නොමිලේ ලංසු ඉදිරිපත් කරන්න — පිවිසීමක් හෝ කොමිස් නැත.`
 ).slice(0, 155)
-const pageTitle = `${sinhalaText(locationLabel)} හි ${sinhalaText(job.project_type)} — ටයිල් ව්‍යාපෘතිය | TilersHub`
+const pageTitle = `${sinhalaText(locationLabel)} හි ${sinhalaText(job.project_type)} — ටයිල් ව්‍යාපෘතිය | වැඩHUB`
 
 const datePosted = new Date(job.created_at)
 const validThrough = new Date(datePosted.getTime() + 30 * 24 * 3600 * 1000)
@@ -55,18 +55,18 @@ const jobSchema = JSON.stringify({
   '@context': 'https://schema.org',
   '@type': 'JobPosting',
   title: `${job.project_type} — ${locationLabel}`,
-  description: descText || `${job.project_type} project in ${locationLabel}, Sri Lanka. Posted by a homeowner on TilersHub.`,
+  description: descText || `${job.project_type} project in ${locationLabel}, Sri Lanka. Posted by a homeowner on වැඩHUB.`,
   datePosted: datePosted.toISOString(),
   validThrough: validThrough.toISOString(),
   employmentType: 'CONTRACTOR',
   directApply: true,
   hiringOrganization: {
     '@type': 'Organization',
-    name: 'TilersHub',
+    name: 'වැඩHUB',
     sameAs: SITE,
     logo: `${SITE}/favicon.svg`,
   },
-  identifier: { '@type': 'PropertyValue', name: 'TilersHub', value: job.id },
+  identifier: { '@type': 'PropertyValue', name: 'වැඩHUB', value: job.id },
   jobLocation: {
     '@type': 'Place',
     address: {
@@ -89,7 +89,7 @@ const jobSchema = JSON.stringify({
 
 Astro.response.headers.set('Cache-Control', 'public, max-age=0, s-maxage=300')
 
-const waShare = `https://wa.me/?text=${encodeURIComponent(`🏠 ${job.project_type} in ${locationLabel} — submit your bid on TilersHub: ${pageUrl}`)}`
+const waShare = `https://wa.me/?text=${encodeURIComponent(`🏠 ${job.project_type} in ${locationLabel} — submit your bid on වැඩHUB: ${pageUrl}`)}`
 ---
 
 <Layout title={sinhalaText(pageTitle)} description={sinhalaText(metaDescription)} noindex={!isActive}>

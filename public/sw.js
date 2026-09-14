@@ -1,4 +1,4 @@
-const CACHE = 'tilershub-v1'
+const CACHE = 'wedahub-v2'
 
 // Static assets to pre-cache on install
 const PRECACHE = [
@@ -33,7 +33,7 @@ self.addEventListener('fetch', event => {
   if (req.method !== 'GET' || url.origin !== self.location.origin) return
 
   // Skip auth / API paths — always go to network
-  if (url.pathname.startsWith('/auth/') || url.pathname.startsWith('/api/')) return
+  if (url.pathname.startsWith('/auth/') || url.pathname.startsWith('/api/') || ['/account', '/dashboard', '/admin', '/provider', '/login', '/notifications'].some(p => url.pathname === p || url.pathname.startsWith(p + '/'))) return
 
   // Static assets (_astro chunks, images, fonts) → cache-first
   if (
@@ -66,10 +66,7 @@ async function cacheFirst(req) {
 async function networkFirst(req) {
   try {
     const res = await fetch(req)
-    if (res.ok) {
-      const cache = await caches.open(CACHE)
-      cache.put(req, res.clone())
-    }
+    // Never persist personalised HTML; only static files are cached.
     return res
   } catch {
     const cached = await caches.match(req)

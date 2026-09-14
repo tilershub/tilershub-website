@@ -116,7 +116,7 @@ function ProviderGate({ previewProjects, bidCounts }) {
                 <button onClick={() => setShowAuth(true)} style={{ flex: 1, padding: '12px', background: '#C2542B', color: '#fff', border: 'none', borderRadius: 12, fontSize: 14, fontWeight: 700, cursor: 'pointer', minWidth: 140 }}>
                   {sinhalaText(t(`gateSignIn`))} →
                 </button>
-                <a href="/join-tilershub" style={{ flex: 1, display: 'flex', alignItems: 'center', justifyContent: 'center', padding: '12px', background: '#EFEBE4', color: '#C2542B', border: '1.5px solid #EDDFD5', borderRadius: 12, fontSize: 13, fontWeight: 700, textDecoration: 'none', minWidth: 140 }}>
+                <a href="/join-wedahub" style={{ flex: 1, display: 'flex', alignItems: 'center', justifyContent: 'center', padding: '12px', background: '#EFEBE4', color: '#C2542B', border: '1.5px solid #EDDFD5', borderRadius: 12, fontSize: 13, fontWeight: 700, textDecoration: 'none', minWidth: 140 }}>
                   {sinhalaText(t(`gateJoin`))}
                 </a>
               </div>

@@ -85,7 +85,7 @@ function AuthModal({ onClose }) {
         <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', marginBottom: 24 }}>
           <div>
             <div style={{ fontFamily: "var(--th-display)", fontSize: 20, fontWeight: 700, color: 'var(--text)' }}>
-              TilersHub වෙත පිවිසෙන්න
+              වැඩHUB වෙත පිවිසෙන්න
             </div>
             <div style={{ fontSize: 12, color: 'var(--text-3)', marginTop: 4 }}>ඉදිරියට යාමට ඔබේ Google ගිණුම භාවිත කරන්න</div>
           </div>

@@ -115,7 +115,7 @@ export function buildWhatsAppLink(phone, name) {
   const normalized = n.startsWith('94') ? n : '94' + n.replace(/^0/, '')
   const who = name ? `*${name}*` : 'ඔබව'
   const msg = encodeURIComponent(
-    `ආයුබෝවන්! 🙏\n\nමම *TilersHub* (tilershub.lk) හරහා ${who} සොයාගතිමි.\n\nඔබගේ සේවාව ගැන දැනගැනීමට කැමැත්තෙමි.\n\n📌 *TilersHub.lk* Lead\nස්තූතියි! 🏠`
+    `ආයුබෝවන්! 🙏\n\nමම *වැඩHUB* (tilershub.lk) හරහා ${who} සොයාගතිමි.\n\nඔබගේ සේවාව ගැන දැනගැනීමට කැමැත්තෙමි.\n\n📌 *වැඩHUB.lk* Lead\nස්තූතියි! 🏠`
   )
   return `https://wa.me/${normalized}?text=${msg}`
 }
@@ -192,7 +192,7 @@ export async function signInWithOtp(email) {
 export async function signInWithGoogle() {
   const redirectTo = typeof window !== 'undefined'
     ? `${window.location.origin}/auth/callback`
-    : 'https://tilershub.lk/auth/callback'
+    : 'https://wedahub.lk/auth/callback'
   return supabase.auth.signInWithOAuth({ provider: 'google', options: { redirectTo } })
 }
 

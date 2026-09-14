@@ -2,8 +2,8 @@ const API_URL = 'https://api.anthropic.com/v1/messages'
 const MODEL   = 'claude-sonnet-4-6'
 
 const CAMPAIGN_CTX = {
-  user:     'Target: Sri Lankan homeowners planning tiling or bathroom/kitchen renovation. Goal: get them to post a project free at tilershub.lk/post-project. TilersHub connects homeowners with verified local tilers — free, no registration. Tone: helpful, friendly, aspirational.',
-  provider: 'Target: Sri Lankan tilers and contractors seeking steady work. Goal: get them to join free at tilershub.lk/join-as-tiler. TilersHub sends verified job leads to registered pros. Tone: opportunity-focused, practical, income-driven.',
+  user:     'Target: Sri Lankan homeowners planning tiling or bathroom/kitchen renovation. Goal: get them to post a project free at tilershub.lk/post-project. වැඩHUB connects homeowners with verified local tilers — free, no registration. Tone: helpful, friendly, aspirational.',
+  provider: 'Target: Sri Lankan tilers and contractors seeking steady work. Goal: get them to join free at tilershub.lk/join-as-tiler. වැඩHUB sends verified job leads to registered pros. Tone: opportunity-focused, practical, income-driven.',
 }
 
 export const ANGLES = {
@@ -67,7 +67,7 @@ export async function generatePosts({ campaign, format, platform, angle, numPost
     ? 'Include "script": voiceover text broken into scene cues for a 15-30 second Reel.'
     : ''
 
-  const prompt = `You are a social media strategist for TilersHub.lk — Sri Lanka's #1 tiling & renovation platform.
+  const prompt = `You are a social media strategist for වැඩHUB.lk — Sri Lanka's #1 tiling & renovation platform.
 
 CAMPAIGN: ${campaign === 'user' ? '🏠 Homeowner Campaign' : '🔨 Provider Campaign'}
 ${CAMPAIGN_CTX[campaign]}
@@ -103,7 +103,7 @@ export async function planWeek({ campaign, stats }) {
 
   const angleValues = ANGLES[campaign].map(a => a.value).join(', ')
 
-  const prompt = `Plan a 7-day social media calendar for TilersHub.lk (${campaign === 'user' ? 'homeowner' : 'provider'} campaign).
+  const prompt = `Plan a 7-day social media calendar for වැඩHUB.lk (${campaign === 'user' ? 'homeowner' : 'provider'} campaign).
 Week: ${days[0]} (Mon) to ${days[6]} (Sun)
 Context: ${CAMPAIGN_CTX[campaign]}
 Stats: ${stats.projects} projects, ${stats.tilers} tilers, ${stats.bids} bids.

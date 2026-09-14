@@ -28,7 +28,7 @@ const T = {
     submitting: '⏳ ඉදිරිපත් කරමින්...',
     // Pending screen
     pendingTitle: 'අයදුම්පත ලැබුණි! 🎉',
-    pendingBody: 'ඔබේ ලියාපදිංචිය admin විසින් සමාලෝචනය කරයි. අනුමත වූ පසු ඔබ TilersHub හි ලැයිස්තුගත වේ — WhatsApp හරහා දැනුම් දෙන්නෙමු.',
+    pendingBody: 'ඔබේ ලියාපදිංචිය admin විසින් සමාලෝචනය කරයි. අනුමත වූ පසු ඔබ වැඩHUB හි ලැයිස්තුගත වේ — WhatsApp හරහා දැනුම් දෙන්නෙමු.',
     goDashboard: 'මගේ Dashboard →',
     signedInAs: 'පිවිසී ඇත:',
   },
@@ -56,7 +56,7 @@ const T = {
     submitting: '⏳ Submitting...',
     // Pending screen
     pendingTitle: 'Application Received! 🎉',
-    pendingBody: "Your registration is being reviewed by our admin. Once approved you'll be listed on TilersHub — we'll notify you on WhatsApp.",
+    pendingBody: "Your registration is being reviewed by our admin. Once approved you'll be listed on වැඩHUB — we'll notify you on WhatsApp.",
     goDashboard: 'Go to my Dashboard →',
     signedInAs: 'Signed in as:',
   },
@@ -113,7 +113,7 @@ export default function JoinForm({ initialUser = null }) {
   async function signInGoogle() {
     await supabase.auth.signInWithOAuth({
       provider: 'google',
-      options: { redirectTo: `${window.location.origin}/join-tilershub` },
+      options: { redirectTo: `${window.location.origin}/join-wedahub` },
     })
   }
 

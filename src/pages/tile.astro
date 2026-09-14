@@ -50,7 +50,7 @@ shops.forEach((shop, i) => {
     description: shop.description,
     services: shop.services || [],
     waLink: (shop.whatsapp || shop.phone)
-      ? `https://wa.me/${normPhone(shop.whatsapp || shop.phone)}?text=${encodeURIComponent(`ආයුබෝවන්! 🙏\n\nමම TilersHub හරහා ${shop.name} සොයාගතිමි.\nස්තූතියි!`)}`
+      ? `https://wa.me/${normPhone(shop.whatsapp || shop.phone)}?text=${encodeURIComponent(`ආයුබෝවන්! 🙏\n\nමම වැඩHUB හරහා ${shop.name} සොයාගතිමි.\nස්තූතියි!`)}`
       : null,
     phone: shop.phone,
     isFeatured: shop.is_featured,
@@ -67,7 +67,7 @@ shops.forEach((shop, i) => {
       services: t.services || [],
       experience_years: t.experience_years,
       initials: initials(t.full_name),
-      waLink: `https://wa.me/${normPhone(t.whatsapp || t.phone)}?text=${encodeURIComponent(`ආයුබෝවන්! 🙏\n\nමම TilersHub හරහා ${t.full_name} සොයාගතිමි.\nTiling සේවාව ගැන කතා කිරීමට කැමැත්තෙමි.\nස්තූතියි!`)}`,
+      waLink: `https://wa.me/${normPhone(t.whatsapp || t.phone)}?text=${encodeURIComponent(`ආයුබෝවන්! 🙏\n\nමම වැඩHUB හරහා ${t.full_name} සොයාගතිමි.\nTiling සේවාව ගැන කතා කිරීමට කැමැත්තෙමි.\nස්තූතියි!`)}`,
     })
   }
 })
@@ -89,7 +89,7 @@ import { brandHref, sponsorPage } from '../lib/sponsors.js'
 ---
 
 <Layout
-  title="ශ්‍රී ලංකාවේ ටයිල් වෙළෙඳසැල්, සන්නාම සහ ඇලවුම් ද්‍රව්‍ය · TilersHub"
+  title="ශ්‍රී ලංකාවේ ටයිල් වෙළෙඳසැල්, සන්නාම සහ ඇලවුම් ද්‍රව්‍ය · වැඩHUB"
   description="ශ්‍රී ලංකාවේ ටයිල් වෙළෙඳසැල්, Rocell, Lanka Tile, Megatile සන්නාම, Swisstek සහ Tokyo Super ඇලවුම් ද්‍රව්‍ය සහ සත්‍යාපිත ටයිල් විශේෂඥයන් සොයන්න."
 >
 
@@ -105,7 +105,7 @@ import { brandHref, sponsorPage } from '../lib/sponsors.js'
         ශ්‍රී ලංකාවේ ටයිල් වෙළෙඳසැල්, ප්‍රමුඛ සන්නාම, ඇලවුම් ද්‍රව්‍ය සහ ග්‍රවුට් බලා විශේෂඥ කාර්මිකයන් සමඟ සම්බන්ධ වන්න.
       </p>
       <div style="display:flex;gap:10px;justify-content:center;flex-wrap:wrap;">
-        <a href="/join-tilershub" style="display:inline-flex;align-items:center;gap:7px;background:#C2542B;color:#fff;border-radius:11px;padding:12px 22px;font-size:13px;font-weight:800;text-decoration:none;">
+        <a href="/join-wedahub" style="display:inline-flex;align-items:center;gap:7px;background:#C2542B;color:#fff;border-radius:11px;padding:12px 22px;font-size:13px;font-weight:800;text-decoration:none;">
           🪨 ඔබේ ටයිල් වෙළෙඳසැල එක් කරන්න
         </a>
         <a href="/providers" style="display:inline-flex;align-items:center;gap:7px;background:rgba(255,255,255,0.08);color:rgba(255,255,255,0.75);border:1px solid rgba(255,255,255,0.15);border-radius:11px;padding:12px 20px;font-size:13px;font-weight:600;text-decoration:none;">
@@ -183,7 +183,7 @@ import { brandHref, sponsorPage } from '../lib/sponsors.js'
               </div>
             </div>
           </div>
-          <a href="/join-tilershub" style="display:inline-flex;align-items:center;gap:7px;background:var(--navy);color:#fff;border-radius:11px;padding:10px 20px;font-size:13px;font-weight:700;text-decoration:none;">
+          <a href="/join-wedahub" style="display:inline-flex;align-items:center;gap:7px;background:var(--navy);color:#fff;border-radius:11px;padding:10px 20px;font-size:13px;font-weight:700;text-decoration:none;">
             + ඔබේ වෙළෙඳසැල එක් කරන්න
           </a>
         </div>
@@ -264,7 +264,7 @@ import { brandHref, sponsorPage } from '../lib/sponsors.js'
                 <div style="font-size:14px;font-weight:700;color:var(--text);margin-bottom:4px;">ඔබේ ටයිල් වෙළෙඳසැල ලැයිස්තුගත කරන්න</div>
                 <p style="font-size:12px;color:var(--text-3);line-height:1.6;margin:0;">ටයිල් ව්‍යාපෘති සැලසුම් කරන නිවාස හිමියන් සහ ඉදිකරන්නන් වෙත ළඟාවන්න — සම්පූර්ණයෙන් නොමිලේ.</p>
               </div>
-              <a href="/join-tilershub" style="display:inline-flex;align-items:center;gap:6px;background:var(--navy);color:#fff;border-radius:10px;padding:9px 18px;font-size:12px;font-weight:700;text-decoration:none;white-space:nowrap;">
+              <a href="/join-wedahub" style="display:inline-flex;align-items:center;gap:6px;background:var(--navy);color:#fff;border-radius:10px;padding:9px 18px;font-size:12px;font-weight:700;text-decoration:none;white-space:nowrap;">
                 + මගේ වෙළෙඳසැල නොමිලේ එක් කරන්න
               </a>
             </div>
@@ -276,7 +276,7 @@ import { brandHref, sponsorPage } from '../lib/sponsors.js'
             <p style="font-size:13px;color:var(--text-3);line-height:1.8;margin-bottom:24px;max-width:380px;margin-left:auto;margin-right:auto;">
               ඔබ ටයිල්, බිම් හෝ බිත්ති ආවරණ අලෙවි කරනවාද? ව්‍යාපෘති සැලසුම් කරන නිවාස හිමියන් සහ ඉදිකිරීම්කරුවන් වෙත නොමිලේ ළඟාවන්න.
             </p>
-            <a href="/join-tilershub" style="display:inline-flex;align-items:center;gap:8px;background:var(--navy);color:#fff;border-radius:12px;padding:12px 26px;font-size:14px;font-weight:700;text-decoration:none;">
+            <a href="/join-wedahub" style="display:inline-flex;align-items:center;gap:8px;background:var(--navy);color:#fff;border-radius:12px;padding:12px 26px;font-size:14px;font-weight:700;text-decoration:none;">
               🪨 මගේ ටයිල් වෙළෙඳසැල නොමිලේ එක් කරන්න
             </a>
             <p style="font-size:11px;color:var(--text-4);margin-top:14px;">නොමිලේ ලැයිස්තුගත කිරීම · සෘජු WhatsApp විමසුම් · කොමිස් නැත</p>

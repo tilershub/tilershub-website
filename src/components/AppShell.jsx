@@ -24,7 +24,7 @@ import AuthButton from './AuthButton.jsx'
 
 const T = {
   home:     { en: 'Home',      si: 'මුල්' },
-  tilers:   { en: 'Tilers',    si: 'ටයිලර්' },
+  tilers:   { en: 'Services',  si: 'සේවා' },
   post:     { en: 'Post',      si: 'දාන්න' },
   projects: { en: 'Projects',  si: 'ව්‍යාපෘති' },
   account:  { en: 'Account',   si: 'ගිණුම' },
@@ -79,11 +79,11 @@ export default function AppShell({ role = 'client', path = '/', initialUser = nu
   return (
     <>
       <header className="th-appbar">
-        <a href="/" className="th-brand" aria-label="TilersHub මුල් පිටුව">
+        <a href="/" className="th-brand" aria-label="වැඩHUB මුල් පිටුව">
           <span className="site-logo-grid" aria-hidden="true">
             {sinhalaText([0, 1, 2, 3, 4, 5, 6, 7, 8].map(i => <span key={i} className="site-logo-tile" />))}
           </span>
-          <span className="th-wordmark">TILERS<span>HUB</span></span>
+          <span className="th-wordmark">වැඩ<span>HUB</span></span>
         </a>
 
         <span className="th-appbar__spacer" />

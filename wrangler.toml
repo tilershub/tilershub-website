@@ -1,4 +1,4 @@
-name = "tilershub"
+name = "wedahub"
 compatibility_date = "2024-09-23"
 compatibility_flags = ["nodejs_compat"]
 
@@ -13,7 +13,7 @@ SUPABASE_URL = "https://ginrgwaciblcvxvkbeyd.supabase.co"
 SUPABASE_ANON_KEY = "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6ImdpbnJnd2FjaWJsY3Z4dmtiZXlkIiwicm9sZSI6ImFub24iLCJpYXQiOjE3NzkzNjUyODMsImV4cCI6MjA5NDk0MTI4M30.vcfg0gTKSdyKgqggK3OAFwUYwLSfr-QkN2mRFFr_R1M"
 
 # Set these in the Cloudflare dashboard:
-#   Workers & Pages → tilershub → Settings → Variables and Secrets
+#   Workers & Pages → wedahub → Settings → Variables and Secrets
 #
 #   ANTHROPIC_API_KEY     = sk-ant-...
 #   SUPABASE_URL          = https://ginrgwaciblcvxvkbeyd.supabase.co

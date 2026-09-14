@@ -144,7 +144,7 @@ function initials(name) {
 function waLink(phone, name) {
   const cleaned = (phone || '').replace(/\D/g, '')
   const intl = cleaned.startsWith('0') ? '94' + cleaned.slice(1) : cleaned
-  return `https://wa.me/${intl}?text=${encodeURIComponent(`Hi ${name}, I found you on TilersHub.`)}`
+  return `https://wa.me/${intl}?text=${encodeURIComponent(`Hi ${name}, I found you on වැඩHUB.`)}`
 }
 function timeAgo(ts) {
   const days = Math.floor((Date.now() - new Date(ts)) / 86400000)
@@ -224,7 +224,7 @@ function ProviderCard({ p }) {
 
 function BlogCard({ post }) {
   return (
-    <a href={`/blog/${post.slug}`}
+    <a href={`https://tilershub.lk/blog/${post.slug}`}
       style={{ flexShrink: 0, width: 195, background: '#fff', borderRadius: 16, border: '1px solid #E4E0D9', overflow: 'hidden', textDecoration: 'none', display: 'flex', flexDirection: 'column', boxShadow: '0 2px 8px rgba(0,0,0,0.04)' }}>
       <div style={{ height: 56, background: `${post.color}18`, display: 'flex', alignItems: 'center', justifyContent: 'center', fontSize: 26 }}>
         {sinhalaText(post.icon)}
@@ -342,7 +342,7 @@ export default function ServiceTabs() {
                 : providers.length > 0
                   ? providers.map(p => <ProviderCard key={p.id} p={p} />)
                   : <div style={{ fontSize: 12, color: '#8A8F95', padding: '8px 0' }}>
-                      තවම සේවා සපයන්නන් නැත — <a href="/join-tilershub" style={{ color: '#C2542B', textDecoration: 'none', fontWeight: 600 }}>TilersHub සමඟ එක්වන්න</a>
+                      තවම සේවා සපයන්නන් නැත — <a href="/join-wedahub" style={{ color: '#C2542B', textDecoration: 'none', fontWeight: 600 }}>වැඩHUB සමඟ එක්වන්න</a>
                     </div>)
               }
             </HRow>

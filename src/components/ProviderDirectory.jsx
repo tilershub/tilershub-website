@@ -37,8 +37,8 @@ const TRANS = {
     altNumber: '💬 Alt. Number',
     skilled: '✓ Skilled',
     unverified: 'Unverified',
-    unverifiedNotice: 'ℹ️ This profile was added from community-submitted information and has not yet been verified by TILERSHUB.',
-    communityProfile: 'Community-submitted profile — not yet verified by TilersHub.',
+    unverifiedNotice: 'ℹ️ This profile was added from community-submitted information and has not yet been verified by වැඩHUB.',
+    communityProfile: 'Community-submitted profile — not yet verified by වැඩHUB.',
     noTypeListed: type => `No ${type} listed yet`,
     noTypeHint: type => `We're onboarding ${type.toLowerCase()} now. Be the first to list yours — free, direct WhatsApp leads.`,
     joinAs: type => `✅ Join as ${type.replace(/s$/, '')}`,
@@ -80,8 +80,8 @@ const TRANS = {
     altNumber: '💬 වෙනත් අංකය',
     skilled: '✓ දක්ෂ',
     unverified: 'සත්‍යාපිත නොවේ',
-    unverifiedNotice: 'ℹ️ මෙම ගොනුව ප්‍රජාව ඉදිරිපත් කළ තොරතුරු ආශ්‍රිතව TILERSHUB විසින් තවම සත්‍යාපනය කර නොමැත.',
-    communityProfile: 'ප්‍රජා-ඉදිරිපත් ගොනුව — TilersHub විසින් තවම සත්‍යාපනය කර නොමැත.',
+    unverifiedNotice: 'ℹ️ මෙම ගොනුව ප්‍රජාව ඉදිරිපත් කළ තොරතුරු ආශ්‍රිතව වැඩHUB විසින් තවම සත්‍යාපනය කර නොමැත.',
+    communityProfile: 'ප්‍රජා-ඉදිරිපත් ගොනුව — වැඩHUB විසින් තවම සත්‍යාපනය කර නොමැත.',
     noTypeListed: type => `${type} ලැයිස්තු ගත නොවේ`,
     noTypeHint: () => 'නොමිලේ ලැයිස්තු කරන්න. WhatsApp ඇමතුම් ලබාගන්න.',
     joinAs: type => `✅ ${type} ලෙස එකතු වන්න`,
@@ -612,7 +612,7 @@ function SuggestedContent({ type, providers, onSelectProvider, T, savedIds, savi
         <p style={{ fontSize: 13, color: '#6B7076', marginBottom: 20, maxWidth: 360, margin: '0 auto 20px' }}>
           {sinhalaText(T.noTypeHint(typeLabel))}
         </p>
-        <a href="/join-tilershub" style={{ display: 'inline-flex', alignItems: 'center', gap: 7, background: '#C2542B', color: '#fff', borderRadius: 10, padding: '10px 22px', fontSize: 13, fontWeight: 700, textDecoration: 'none' }}>
+        <a href="/join-wedahub" style={{ display: 'inline-flex', alignItems: 'center', gap: 7, background: '#C2542B', color: '#fff', borderRadius: 10, padding: '10px 22px', fontSize: 13, fontWeight: 700, textDecoration: 'none' }}>
           {sinhalaText(T.joinAs(typeLabel))}
         </a>
       </div>

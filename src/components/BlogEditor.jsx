@@ -337,7 +337,7 @@ export default function BlogEditor({ mode = 'create', blogId = null }) {
           <div style={{ display: 'flex', gap: 10, alignItems: 'center' }}>
             {sinhalaText(!isCreate && (
               <a
-                href={`/blog/${slug}`}
+                href={`https://tilershub.lk/blog/${slug}`}
                 target="_blank"
                 rel="noopener"
                 style={{ fontSize: 12, color: '#C2542B', textDecoration: 'none', display: 'flex', alignItems: 'center', gap: 4 }}

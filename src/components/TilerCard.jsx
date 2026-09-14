@@ -179,7 +179,7 @@ export function TilerModal({ tiler, onClose }) {
             WhatsApp හරහා සම්බන්ධ වන්න
           </a>
           <p style={{ textAlign: 'center', fontSize: 11, color: 'var(--text-light)', marginTop: 10 }}>
-            ඔබ ළඟා වූ විට TilersHub.lk හරහා ආ බව ස්වයංක්‍රීයව ටයිලර්ට දැනුම් දෙනු ඇත
+            ඔබ ළඟා වූ විට වැඩHUB.lk හරහා ආ බව ස්වයංක්‍රීයව ටයිලර්ට දැනුම් දෙනු ඇත
           </p>
         </div>
       </div>

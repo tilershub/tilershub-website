@@ -24,14 +24,14 @@ if (user) {
 }
 
 const {
-  title = "TilersHub · Sri Lanka's Tile & Bathroom Marketplace",
+  title = "වැඩHUB · Sri Lanka's Services Marketplace",
   description = "Find tilers, contractors, tile shops, brands and products for your tile and bathroom project across Sri Lanka. Free — no login required.",
-  ogImage = 'https://tilershub.lk/og.png',
+  ogImage = 'https://wedahub.lk/og.png',
   ogType = 'website',
   noindex = false,
 } = Astro.props
 const path = Astro.url.pathname
-const SITE = 'https://tilershub.lk'
+const SITE = 'https://wedahub.lk'
 const FONT_HREF = 'https://fonts.googleapis.com/css2?family=Archivo:wght@500;600;700;800&family=Instrument+Sans:wght@400;500;600&family=Noto+Sans+Sinhala:wght@400;500;600;700&display=swap'
 const canonicalUrl = `${SITE}${path}`
 
@@ -48,7 +48,7 @@ const AD_FREE_PREFIXES = [
   '/notifications',
   '/admin',
   '/post-project',
-  '/join-tilershub',
+  '/join-wedahub',
   '/contact',
   '/verify-claim',
   '/offline',
@@ -62,7 +62,7 @@ const orgSchema = JSON.stringify({
     {
       '@type': 'Organization',
       '@id': `${SITE}/#organization`,
-      name: 'TilersHub',
+      name: 'වැඩHUB',
       url: SITE,
       logo: { '@type': 'ImageObject', url: `${SITE}/favicon.svg` },
       sameAs: [
@@ -75,8 +75,8 @@ const orgSchema = JSON.stringify({
       '@type': 'WebSite',
       '@id': `${SITE}/#website`,
       url: SITE,
-      name: 'TilersHub',
-      description: "Sri Lanka's tiling & home improvement marketplace",
+      name: 'වැඩHUB',
+      description: "Sri Lanka's services & home improvement marketplace",
       publisher: { '@id': `${SITE}/#organization` },
       potentialAction: { '@type': 'SearchAction', target: `${SITE}/providers?q={search_term_string}`, 'query-input': 'required name=search_term_string' },
     },
@@ -100,7 +100,7 @@ const orgSchema = JSON.stringify({
   <meta property="og:type" content={ogType} />
   <meta property="og:url" content={canonicalUrl} />
   <meta property="og:image" content={ogImage} />
-  <meta property="og:site_name" content="TilersHub" />
+  <meta property="og:site_name" content="වැඩHUB" />
   <meta property="og:locale" content="si_LK" />
   <!-- Twitter -->
   <meta name="twitter:card" content="summary_large_image" />
@@ -123,7 +123,7 @@ const orgSchema = JSON.stringify({
   <meta name="mobile-web-app-capable" content="yes" />
   <meta name="apple-mobile-web-app-capable" content="yes" />
   <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent" />
-  <meta name="apple-mobile-web-app-title" content="TilersHub" />
+  <meta name="apple-mobile-web-app-title" content="වැඩHUB" />
   <link rel="preconnect" href="https://fonts.googleapis.com" />
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
   <!-- A CSS @import would be render-blocking and serialised behind the sheet
@@ -203,7 +203,7 @@ const orgSchema = JSON.stringify({
         <div style={`border-radius:3px;background:${[1,3,4,5,7].includes(i)?'#8B5E3C':'#5E4130'};opacity:${[0,2,6,8].includes(i)?'0.55':'1'};`}></div>
       ))}
     </div>
-    <div style="font-family:var(--th-display);font-size:20px;font-weight:700;color:rgba(255,255,255,0.9);letter-spacing:1.5px;">TILERS<span style="color:#C2542B;">HUB</span></div>
+    <div style="font-family:var(--th-display);font-size:20px;font-weight:700;color:rgba(255,255,255,0.9);letter-spacing:1.5px;">වැඩ<span style="color:#C2542B;">HUB</span></div>
     <div style="width:32px;height:3px;border-radius:2px;background:rgba(255,255,255,0.15);overflow:hidden;margin-top:4px;">
       <div id="pwa-splash-bar" style="height:100%;width:0;background:#C2542B;border-radius:2px;transition:width 1.2s ease;"></div>
     </div>
@@ -237,7 +237,7 @@ const orgSchema = JSON.stringify({
   <div class="mobile-drawer-overlay" id="drawer-overlay"></div>
   <div class="mobile-drawer" id="mobile-drawer">
     <div class="drawer-header">
-      <span style="font-family: var(--th-display);font-size:16px;font-weight:700;color:#fff;">TILERS<span style="color:#C2542B;">HUB</span></span>
+      <span style="font-family: var(--th-display);font-size:16px;font-weight:700;color:#fff;">වැඩ<span style="color:#C2542B;">HUB</span></span>
       <button id="close-drawer" style="background:transparent;border:none;color:rgba(255,255,255,0.5);font-size:22px;cursor:pointer;padding:4px;">✕</button>
     </div>
     <a href="/" class={`drawer-link${path==='/'?' active':''}`}>🏠 මුල් පිටුව</a>
@@ -253,14 +253,14 @@ const orgSchema = JSON.stringify({
       ? <a href="/account?tab=quotes" class="drawer-link highlight">📋 මගේ මිල ගණන්</a>
       : <a href="/post-project" class="drawer-link highlight">📋 ව්‍යාපෘතියක් පළ කර මිල ගණන් ලබාගන්න</a>}
     {role !== 'provider' && (
-      <a href="/join-tilershub" class="drawer-link" style="color:rgba(255,255,255,0.6);">✅ සේවා සපයන්නෙකු ලෙස එක්වන්න</a>
+      <a href="/join-wedahub" class="drawer-link" style="color:rgba(255,255,255,0.6);">✅ සේවා සපයන්නෙකු ලෙස එක්වන්න</a>
     )}
     <div class="drawer-divider"></div>
-    <a href="/estimator" class={`drawer-link${path==='/estimator'?' active':''}`}>📐 වියදම් ගණකය</a>
-    <a href="/guides" class={`drawer-link${path.startsWith('/guides')?' active':''}`} style="color:rgba(255,255,255,0.6);">📖 මඟපෙන්වීම්</a>
-    <a href="/blog" class={`drawer-link${path.startsWith('/blog')?' active':''}`} style="color:rgba(255,255,255,0.6);">📰 ලිපි සහ උපදෙස්</a>
+    <a href="https://tilershub.lk/estimator" class={`drawer-link${path==='https://tilershub.lk/estimator'?' active':''}`}>📐 වියදම් ගණකය</a>
+    <a href="https://tilershub.lk/guides" class={`drawer-link${path.startsWith('https://tilershub.lk/guides')?' active':''}`} style="color:rgba(255,255,255,0.6);">📖 මඟපෙන්වීම්</a>
+    <a href="https://tilershub.lk/blog" class={`drawer-link${path.startsWith('https://tilershub.lk/blog')?' active':''}`} style="color:rgba(255,255,255,0.6);">📰 ලිපි සහ උපදෙස්</a>
     <div class="drawer-divider"></div>
-    <a href="/about" class={`drawer-link${path==='/about'?' active':''}`} style="color:rgba(255,255,255,0.5);font-size:13px;">ℹ️ TilersHub ගැන</a>
+    <a href="/about" class={`drawer-link${path==='/about'?' active':''}`} style="color:rgba(255,255,255,0.5);font-size:13px;">ℹ️ වැඩHUB ගැන</a>
     <a href="/contact" class={`drawer-link${path==='/contact'?' active':''}`} style="color:rgba(255,255,255,0.5);font-size:13px;">📬 අප අමතන්න</a>
     <div class="drawer-divider"></div>
     <!-- Language is a set-once preference, so it lives here rather than
@@ -282,7 +282,7 @@ const orgSchema = JSON.stringify({
       <div>
         <div style="display:flex;align-items:center;gap:8px;margin-bottom:10px;">
           <div class="site-logo-grid">{[0,1,2,3,4,5,6,7,8].map(()=><div class="site-logo-tile"></div>)}</div>
-          <span style="font-family: var(--th-display);font-size:16px;font-weight:700;color:rgba(255,255,255,0.88);">TILERS<strong>HUB</strong></span>
+          <span style="font-family: var(--th-display);font-size:16px;font-weight:700;color:rgba(255,255,255,0.88);">වැඩ<strong>HUB</strong></span>
         </div>
         <p class="footer-brand-text">ශ්‍රී ලංකාවේ ටයිල් ක්ෂේත්‍රයේ එකමුතුව — නිවාස හිමියන් නොමිලේ ව්‍යාපෘති පළ කරයි, කාර්මිකයන් වැඩ ලබාගනී, වෙළෙඳසැල් සහ සැපයුම්කරුවන් දිවයින පුරා පාරිභෝගිකයන් වෙත ළඟාවේ.</p>
         <div style="display:flex;gap:10px;margin-top:16px;">
@@ -296,7 +296,7 @@ const orgSchema = JSON.stringify({
         <nav class="footer-links">
           <a href="/providers?type=tiler">ටයිල් කාර්මිකයන් සොයන්න</a>
           <a href="/jobs">ව්‍යාපෘති බලන්න</a>
-          <a href="/estimator">වියදම් ගණකය</a>
+          <a href="https://tilershub.lk/estimator">වියදම් ගණකය</a>
           <a href="/tile">ටයිල් වෙළෙඳසැල් සහ සන්නාම</a>
           <a href="/bathrooms">නාන කාමර උපාංග</a>
           <a href="/tools">මෙවලම් සහ උපකරණ</a>
@@ -308,7 +308,7 @@ const orgSchema = JSON.stringify({
         <div class="footer-col-head">ආරම්භ කරන්න</div>
         <nav class="footer-links">
           <a href="/post-project">ව්‍යාපෘතියක් පළ කරන්න</a>
-          <a href="/join-tilershub">සේවා සපයන්නෙකු ලෙස එකතු වන්න</a>
+          <a href="/join-wedahub">සේවා සපයන්නෙකු ලෙස එකතු වන්න</a>
           <a href="/account">මගේ ගිණුම</a>
         </nav>
       </div>
@@ -328,8 +328,8 @@ const orgSchema = JSON.stringify({
       <div>
         <div class="footer-col-head">ආයතනය</div>
         <nav class="footer-links">
-          <a href="/blog">ලිපි සහ උපදෙස්</a>
-          <a href="/about">TilersHub ගැන</a>
+          <a href="https://tilershub.lk/blog">ලිපි සහ උපදෙස්</a>
+          <a href="/about">වැඩHUB ගැන</a>
           <a href="/contact">අප අමතන්න</a>
           <a href="/privacy-policy">පෞද්ගලිකත්ව ප්‍රතිපත්තිය</a>
           <a href="/terms">සේවා කොන්දේසි</a>
@@ -337,7 +337,7 @@ const orgSchema = JSON.stringify({
       </div>
     </div>
     <div class="footer-bottom">
-      <span>© 2025 <strong>TilersHub</strong> · tilershub.lk · 🇱🇰 ශ්‍රී ලංකාව</span>
+      <span>© {new Date().getFullYear()} <strong>වැඩHUB</strong> · wedahub.lk · 🇱🇰 ශ්‍රී ලංකාව</span>
       <span style="color:rgba(194,84,43,0.5);font-weight:600;">♥ ශ්‍රී ලංකාවේ නිර්මාණයකි</span>
     </div>
   </footer>

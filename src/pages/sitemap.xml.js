@@ -1,23 +1,18 @@
 import { SERVICES } from '../lib/services.js'
-import { BLOG_POSTS } from '../lib/blog-posts.js'
 import { jobPath } from '../lib/jobs.js'
-import { GUIDES } from '../data/guides.js'
 import { DISTRICT_INFO, LOCATION_SERVICE_SLUGS, districtPath, serviceDistrictPath } from '../lib/locations.js'
 
 export const prerender = false
 
-const BASE = 'https://tilershub.lk'
+const BASE = 'https://wedahub.lk'
 
 const STATIC = [
   { loc: '/',               priority: '1.0', changefreq: 'daily'   },
   { loc: '/providers',      priority: '0.9', changefreq: 'daily'   },
   { loc: '/jobs',           priority: '0.9', changefreq: 'hourly'  },
-  { loc: '/blog',           priority: '0.8', changefreq: 'weekly'  },
   { loc: '/post-project',   priority: '0.8', changefreq: 'monthly' },
-  { loc: '/join-tilershub', priority: '0.7', changefreq: 'monthly' },
+  { loc: '/join-wedahub', priority: '0.7', changefreq: 'monthly' },
   { loc: '/categories',     priority: '0.7', changefreq: 'weekly'  },
-  { loc: '/guides',         priority: '0.7', changefreq: 'weekly'  },
-  { loc: '/estimator',      priority: '0.6', changefreq: 'monthly' },
   { loc: '/bathrooms',      priority: '0.6', changefreq: 'weekly'  },
   { loc: '/tile',           priority: '0.6', changefreq: 'weekly'  },
   { loc: '/tools',          priority: '0.5', changefreq: 'monthly' },
@@ -63,14 +58,12 @@ export async function GET({ locals }) {
   const urls = [
     ...STATIC.map(u => url(u.loc, today, u.changefreq, u.priority)),
     ...SERVICES.map(s => url(`/services/${s.slug}`, today, 'weekly', '0.8')),
-    ...BLOG_POSTS.map(p => url(`/blog/${p.slug}`, today, 'monthly', '0.7')),
     ...(providerRows || []).filter(r => r.slug).map(p =>
       url(`/providers/${p.slug}`, p.updated_at ? p.updated_at.split('T')[0] : today, 'weekly', '0.7')
     ),
     ...(projectRows || []).map(p =>
       url(jobPath(p), p.created_at ? p.created_at.split('T')[0] : today, 'daily', '0.7')
     ),
-    ...GUIDES.map(g => url(`/guides/${g.slug}`, today, 'monthly', '0.7')),
     ...liveDistricts.map(d => url(districtPath(d), today, 'weekly', '0.8')),
     ...liveDistricts.flatMap(d =>
       LOCATION_SERVICE_SLUGS.map(s => url(serviceDistrictPath(s, d), today, 'weekly', '0.7'))

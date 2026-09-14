@@ -16,8 +16,8 @@ if (!user) {
 }
 
 const joinReturn = Astro.url.searchParams.get('join_return')
-if (joinReturn === '/join-tilershub') {
-  return Astro.redirect('/join-tilershub')
+if (['/join-wedahub', '/join-tilershub'].includes(joinReturn ?? '')) {
+  return Astro.redirect('/join-wedahub')
 }
 
 const ADMIN_EMAILS = ['tilershub@gmail.com']
