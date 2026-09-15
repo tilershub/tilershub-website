@@ -12,3 +12,18 @@ test('deployment is explicit during the split', () => {
  const workflow = readFileSync(new URL('../.github/workflows/deploy.yml', import.meta.url), 'utf8')
  assert.match(workflow, /workflow_dispatch/); assert.doesNotMatch(workflow, /branches: \[main\]/)
 })
+
+// The migration redirects above only ever run if an unmatched request can
+// reach Astro's middleware at all. With not_found_handling = "none" such a
+// request falls through to the Worker, and the adapter's no-route-matched
+// branch calls env.ASSETS.fetch() before rendering anything. If [assets] does
+// not declare a binding, env.ASSETS is undefined and every path that is not an
+// exact route match returns 500 instead of a 404 or one of these 301s — which
+// is exactly what both live sites did for two days after the split.
+test('[assets] binds ASSETS, so unmatched paths reach the middleware', () => {
+  const config = readFileSync(new URL('../wrangler.toml', import.meta.url), 'utf8')
+  const assets = config.split(/^\[/m).find(section => section.startsWith('assets]')) ?? ''
+  if (!/not_found_handling\s*=\s*"none"/.test(assets)) return
+  assert.match(assets, /^\s*binding\s*=\s*"ASSETS"/m,
+    'wrangler.toml [assets] sets not_found_handling = "none" but does not bind ASSETS')
+})
